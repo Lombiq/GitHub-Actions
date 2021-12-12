@@ -28,7 +28,7 @@ jobs:
         run: dotnet test ${{ inputs.project }} --no-restore
       - name: Pack
         run: |
-          echo "input ref { $inputs.ref }}"
+          echo "input ref ${{ inputs.ref }}"
           arrTag=(${inputs.ref//\// })
           VERSION="${arrTag[2]}"
           VERSION="${VERSION:1}"
