@@ -1,0 +1,42 @@
+name: publish
+
+on:
+  workflow_call:
+    inputs: 
+      project:
+        required: false
+        type: string
+      ref:
+        required: true
+        type: string
+    secrets:
+      apikey:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+      - name: Install dependencies
+        run: dotnet restore ${{ inputs.project }}
+      - name: Build
+        run: dotnet build ${{ inputs.project }} --configuration Release --no-restore
+      - name: Test
+        run: dotnet test ${{ inputs.project }} --no-restore
+      - name: Pack
+        run: |
+          arrTag=(${inputs.ref//\// })
+          VERSION="${arrTag[2]}"
+          VERSION="${VERSION:1}"
+          echo "VERSION $VERSION"       
+          dotnet pack ${{ inputs.project }} --output artifacts --configuration Release --no-restore --no-build -p:Version=$VERSION -p:TreatWarningsAsErrors=false 
+      - name: Push with dotnet
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: artifacts
+          path: artifacts          
