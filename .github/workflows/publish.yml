@@ -6,7 +6,7 @@ on:
       project:
         required: false
         type: string
-      ref:
+      version:
         required: true
         type: string
     secrets:
@@ -27,13 +27,7 @@ jobs:
       - name: Test
         run: dotnet test ${{ inputs.project }} --no-restore
       - name: Pack
-        run: |
-          echo "input ref ${{ inputs.ref }}"
-          arrTag=(${inputs.ref//\// })
-          VERSION="${arrTag[2]}"
-          VERSION="${VERSION:1}"
-          echo "VERSION $VERSION"       
-          dotnet pack ${{ inputs.project }} --output artifacts --configuration Release --no-restore --no-build -p:Version=$VERSION -p:TreatWarningsAsErrors=false 
+        run: dotnet pack ${{ inputs.project }} --output artifacts --configuration Release --no-restore --no-build -p:Version=${{ inputs.version }} -p:TreatWarningsAsErrors=false 
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source https://nuget.cloudsmith.io/orchardcore/preview/v3/index.json --skip-duplicate
       - name: Archive artifacts
