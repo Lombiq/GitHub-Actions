@@ -40,7 +40,7 @@ jobs:
       - name: Pack
         run: dotnet pack ${{ inputs.project }} --output artifacts --configuration Release --no-restore --no-build -p:Version=${{ steps.get_version.outputs.VERSION }} -p:TreatWarningsAsErrors=false 
       - name: Push with dotnet
-        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source {{ inputs.source }} --skip-duplicate
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source ${{ inputs.source }} --skip-duplicate
       - name: Archive artifacts
         uses: actions/upload-artifact@v1
         with:
