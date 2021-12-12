@@ -34,7 +34,7 @@ jobs:
           echo "VERSION $VERSION"       
           dotnet pack ${{ inputs.project }} --output artifacts --configuration Release --no-restore --no-build -p:Version=$VERSION -p:TreatWarningsAsErrors=false 
       - name: Push with dotnet
-        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source https://nuget.cloudsmith.io/orchardcore/preview/v3/index.json --skip-duplicate
       - name: Archive artifacts
         uses: actions/upload-artifact@v1
         with:
