@@ -21,7 +21,8 @@ jobs:
       - name: Get the version
         id: get_version
         run: |
-          VERSION="${{ inputs.version}}"
+          echo ${{ inputs.version }}
+          VERSION="${{ inputs.version }}"
           VERSION="${version//v}"
           echo VERSION:${VERSION}
           echo ::set-output name=VERSION::${VERSION}      
