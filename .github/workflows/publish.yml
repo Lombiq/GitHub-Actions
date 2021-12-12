@@ -29,7 +29,7 @@ jobs:
       - name: Pack
         run: |
           echo "input ref { $inputs.ref }}"
-          arrTag=(${{inputs.ref//\// }})
+          arrTag=(${inputs.ref//\// })
           VERSION="${arrTag[2]}"
           VERSION="${VERSION:1}"
           echo "VERSION $VERSION"       
