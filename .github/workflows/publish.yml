@@ -27,7 +27,7 @@ jobs:
       - name: Test
         run: dotnet test ${{ inputs.project }} --no-restore
       - name: Pack
-        run: dotnet pack ${{ inputs.project }} --output artifacts --configuration Release --no-restore --no-build -p:Version=${{ inputs.version }} -p:TreatWarningsAsErrors=false 
+        run: dotnet pack ${{ inputs.project }} --output artifacts --configuration Release --no-restore --no-build -p:Version=${{ inputs.version:1 }} -p:TreatWarningsAsErrors=false 
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source https://nuget.cloudsmith.io/orchardcore/preview/v3/index.json --skip-duplicate
       - name: Archive artifacts
