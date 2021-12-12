@@ -2,7 +2,7 @@ name: build
 
 on:
   workflow_call:
-    with: 
+    inputs: 
       project:
         required: false
         type: string
