@@ -23,7 +23,7 @@ jobs:
         run: |
           echo ${{ inputs.version }}
           VERSION="${{ inputs.version }}"
-          VERSION="${version//v}"
+          VERSION="${VERSION//v}"
           echo VERSION:${VERSION}
           echo ::set-output name=VERSION::${VERSION}      
       - name: Setup .NET Core
