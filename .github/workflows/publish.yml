@@ -24,11 +24,11 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore -p:NuGetBuild=True
       - name: Build
         run: dotnet build --configuration Release --no-restore -p:NuGetBuild=True
       - name: Test
-        run: dotnet test --no-restore  -p:NuGetBuild=True
+        run: dotnet test --no-restore -p:NuGetBuild=True
       - name: Pack
         run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:TreatWarningsAsErrors=false 
       - name: Push with dotnet
