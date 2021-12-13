@@ -3,9 +3,6 @@ name: publish
 on:
   workflow_call:
     inputs: 
-      project:
-        required: false
-        type: string
       source:
         required: true
         type: string
@@ -27,13 +24,13 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
       - name: Install dependencies
-        run: dotnet restore ${{ inputs.project }}
+        run: dotnet restore
       - name: Build
-        run: dotnet build ${{ inputs.project }} --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore -p:NuGetBuild=True
       - name: Test
-        run: dotnet test ${{ inputs.project }} --no-restore
+        run: dotnet test --no-restore  -p:NuGetBuild=True
       - name: Pack
-        run: dotnet pack ${{ inputs.project }} --output artifacts --configuration Release --no-restore --no-build -p:Version=${{ steps.get_version.outputs.VERSION }} -p:TreatWarningsAsErrors=false 
+        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:TreatWarningsAsErrors=false 
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source ${{ inputs.source }} --skip-duplicate
       - name: Archive artifacts

@@ -2,10 +2,6 @@ name: build
 
 on:
   workflow_call:
-    inputs: 
-      project:
-        required: false
-        type: string
 
 jobs:
   build:
@@ -16,8 +12,8 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
       - name: Install dependencies
-        run: dotnet restore ${{ inputs.project }}
+        run: dotnet restore -p:NuGetBuild=True
       - name: Build
-        run: dotnet build ${{ inputs.project }} --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore  -p:NuGetBuild=True
       - name: Test
-        run: dotnet test ${{ inputs.project }} --no-restore
+        run: dotnet test --no-restore  -p:NuGetBuild=True
