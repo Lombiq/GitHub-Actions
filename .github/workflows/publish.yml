@@ -17,13 +17,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Get the version
         id: get_version
         run: |
           VERSION="${GITHUB_REF_NAME//v}"
           echo VERSION:${VERSION}
-          echo ::set-output name=VERSION::${VERSION}      
+          echo ::set-output name=VERSION::${VERSION}  
+      - uses: actions/checkout@v2    
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
       - name: Install dependencies
