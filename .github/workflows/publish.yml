@@ -6,9 +6,6 @@ on:
       project:
         required: false
         type: string
-      version:
-        required: true
-        type: string
       source:
         required: true
         type: string
@@ -24,9 +21,7 @@ jobs:
       - name: Get the version
         id: get_version
         run: |
-          echo ${{ inputs.version }}
-          VERSION="${{ inputs.version }}"
-          VERSION="${VERSION//v}"
+          VERSION="${GITHUB_REF_NAME//v}"
           echo VERSION:${VERSION}
           echo ::set-output name=VERSION::${VERSION}      
       - name: Setup .NET Core
