@@ -35,11 +35,11 @@ jobs:
         with:
           dotnet-version: 5.0.*
       - name: Install dependencies
-        run: dotnet restore -p:NuGetBuild=True -p:LangVersion=Latest
+        run: dotnet restore -p:NuGetBuild=True
       - name: Build
         run: dotnet build --configuration Release --no-restore -p:NuGetBuild=True -p:LangVersion=Latest
       - name: Pack
-        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -p:LangVersion=Latest
+        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
       - name: Archive artifacts
