@@ -16,7 +16,13 @@ jobs:
     steps:
       - name: Dump environment variables
         id: dump_environment_variables
-        run: printenv      
+        run: |
+          printenv 
+          echo ${{ inputs.source }}
+      - name: if source
+        id: if-source     
+        if: ${{ inputs.source == '' }}
+        run: echo "no source"
       - name: Get the version
         id: get_version
         run: |
