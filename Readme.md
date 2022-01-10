@@ -1,4 +1,4 @@
-# Lombiq <add project name here>
+# Lombiq NuGet Publishing Github Actions
 
 
 
@@ -11,7 +11,69 @@ Do you want to quickly try out this project and see it in action? Check it out i
 
 ## Documentation
 
-Add detailed documentation here. If it's a lot of content then create documentation pages under the *Docs* folder and link pages here.
+Github actions shared between Lombiq projects.
+
+Refer [Github actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview)
+
+This includes two workflows that can be invoked through the `call-build-workflow` step.
+
+- build.yml
+- publish.yml
+
+
+To add to a project create a folder from the root of the repository that will call these actions `.github/workflows/build.yml` or `.github/workflows/publish.yml`
+
+Example `build.yml`
+
+```
+name: build
+
+on:
+  push:
+    branches: [dev]
+    paths-ignore:
+      - "Docs/**"
+      - "Readme.md"
+
+  pull_request:
+    branches: [dev]
+
+jobs:
+  call-build-workflow:
+    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/build.yml@v1
+```
+
+This workflow is triggered on push to `dev` and pull requests to `dev` and invokes the `build.yml` workflow from this repository. It takes no parameters.
+
+Example `publish.yml`
+
+```
+name: publish
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  call-publish-workflow:
+    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@v1
+    secrets:
+      apikey: ${{ secrets.LOMBIQ_NUGET_PUBLISH_API_KEY }}
+```
+
+The `publish.yml` workflow is triggered on a tag pushed to any branch with the prefix `v` and should contain a version number, i.e. `v1.0.1`, which will be extracted and used to version the NuGet packages produced.
+
+It takes one non optional secret parameter `apikey`, the organization API key for pushing to NuGet, and one optional parameter, `source`
+
+`source`
+```
+    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@v1
+    with:
+      source: `custom-nuget-source-to-push-too`
+```
+
+When `source` is not provided, it assumes a default value of pushing to the [Lombiq nuget feed](https://www.nuget.org/profiles/Lombiq).
 
 
 ## Contributing and support
