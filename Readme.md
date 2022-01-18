@@ -57,13 +57,16 @@ jobs:
 
 The _publish.yml_ workflow is triggered on a tag pushed to any branch with the prefix `v` and should contain a version number, e.g. `v1.0.1`, which will be extracted and used to version the NuGet packages produced.
 
-It takes one non-optional secret parameter, `apikey`, the organization API key for pushing to NuGet, and one optional parameter, `source`:
+It takes one non-optional secret parameter, `apikey`, the organization API key for pushing to NuGet, and one optional parameter, `source`. E.g.:
 
 ```yaml
-    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@v1
+jobs:
+  call-publish-workflow:
+    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@dev
     with:
-      # "https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json" would be a suitable Cloudsmith source.
-      source: `custom-nuget-source-to-push-too`
+      source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
+    secrets:
+      apikey: ${{ secrets.CLOUDSMITH_NUGET_PUBLISH_API_KEY }}
 ```
 
 When `source` is not provided, it assumes a default value of pushing to the [Lombiq NuGet feed](https://www.nuget.org/profiles/Lombiq).
