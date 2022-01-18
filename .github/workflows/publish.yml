@@ -18,7 +18,7 @@ jobs:
         id: sourceeval
         with:
           cond: ${{ inputs.source == '' }}
-          if_true: "https://api.nuget.org/v3/index.json
+          if_true: "https://api.nuget.org/v3/index.json"
           if_false: "${{ inputs.source == '' }}"
       - name: Print source
         run: echo Nuget Source:${{ steps.sourceeval.outputs.value }}
