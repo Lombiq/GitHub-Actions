@@ -52,7 +52,7 @@ jobs:
   call-publish-workflow:
     uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@dev
     secrets:
-      apikey: ${{ secrets.LOMBIQ_NUGET_PUBLISH_API_KEY }}
+      apikey: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
 ```
 
 The _publish.yml_ workflow is triggered on a tag pushed to any branch with the prefix `v` and should contain a version number, e.g. `v1.0.1`, which will be extracted and used to version the NuGet packages produced.
