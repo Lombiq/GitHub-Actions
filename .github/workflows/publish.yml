@@ -1,0 +1,49 @@
+name: publish
+
+on:
+  workflow_call:
+    inputs: 
+      source:
+        required: false
+        type: string
+    secrets:
+      apikey:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: haya14busa/action-cond@v1
+        id: sourceeval
+        with:
+          cond: ${{ inputs.source == '' }}
+          # default nuget source. TODO change to nuget.org
+          if_true: "https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json"
+          if_false: "${{ inputs.source == '' }}"
+      - name: Print source
+        run: echo Nuget Source:${{ steps.sourceeval.outputs.value }}
+      - name: Get the version
+        id: get_version
+        run: |
+          VERSION="${GITHUB_REF_NAME//v}"
+          echo VERSION:${VERSION}
+          echo ::set-output name=VERSION::${VERSION}         
+      - uses: actions/checkout@v2    
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.*
+      - name: Install dependencies
+        run: dotnet restore -p:NuGetBuild=True
+      - name: Build
+        run: dotnet build --configuration Release --no-restore -p:NuGetBuild=True -p:LangVersion=Latest
+      - name: Pack
+        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true
+      - name: Push with dotnet
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: artifacts
+          path: artifacts          

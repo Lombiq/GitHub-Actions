@@ -1,17 +1,73 @@
-# Lombiq <add project name here>
+# Lombiq NuGet Publishing Github Actions
 
 
 
 ## About
 
-Add a general overview of the project here. Don't forget to update the year in the Licence! Keep or remove the OSOCE note below as necessary.
-
-Do you want to quickly try out this project and see it in action? Check it out in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution and also see our other useful Orchard Core-related open-source projects!
+Github Actions shared between Lombiq projects, used to publish packages to NuGet.
 
 
 ## Documentation
 
-Add detailed documentation here. If it's a lot of content then create documentation pages under the *Docs* folder and link pages here.
+This includes two workflows that can be invoked through the `call-build-workflow` step:
+
+- _build.yml_: Builds the project with the .NET SDK.
+- _publish.yml_: Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed.
+
+To add to a project create a folder from the root of the repository that will call these actions, _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_.
+
+Example _build.yml_:
+
+```yaml
+name: build
+
+on:
+  push:
+    branches: [dev]
+    paths-ignore:
+      - "Docs/**"
+      - "Readme.md"
+
+  pull_request:
+    branches: [dev]
+
+jobs:
+  call-build-workflow:
+    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/build.yml@v1
+```
+
+This workflow is triggered on push to `dev` and pull requests to `dev` and invokes the _build.yml_ workflow from this repository. It takes no parameters.
+
+Example _publish.yml_:
+
+```yaml
+name: publish
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  call-publish-workflow:
+    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@v1
+    secrets:
+      apikey: ${{ secrets.LOMBIQ_NUGET_PUBLISH_API_KEY }}
+```
+
+The _publish.yml_ workflow is triggered on a tag pushed to any branch with the prefix `v` and should contain a version number, e.g. `v1.0.1`, which will be extracted and used to version the NuGet packages produced.
+
+It takes one non-optional secret parameter, `apikey`, the organization API key for pushing to NuGet, and one optional parameter, `source`:
+
+```yaml
+    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@v1
+    with:
+      source: `custom-nuget-source-to-push-too`
+```
+
+When `source` is not provided, it assumes a default value of pushing to the [Lombiq NuGet feed](https://www.nuget.org/profiles/Lombiq).
+
+Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
 
 
 ## Contributing and support
