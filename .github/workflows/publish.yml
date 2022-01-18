@@ -18,7 +18,6 @@ jobs:
         id: sourceeval
         with:
           cond: ${{ inputs.source == '' }}
-          # "https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json" would be a suitable Cloudsmith source.
           if_true: "https://api.nuget.org/v3/index.json
           if_false: "${{ inputs.source == '' }}"
       - name: Print source

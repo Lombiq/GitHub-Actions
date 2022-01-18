@@ -62,6 +62,7 @@ It takes one non-optional secret parameter, `apikey`, the organization API key f
 ```yaml
     uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@v1
     with:
+      # "https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json" would be a suitable Cloudsmith source.
       source: `custom-nuget-source-to-push-too`
 ```
 
