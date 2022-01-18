@@ -33,7 +33,7 @@ on:
 
 jobs:
   call-build-workflow:
-    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/build.yml@v1
+    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/build.yml@dev
 ```
 
 This workflow is triggered on push to `dev` and pull requests to `dev` and invokes the _build.yml_ workflow from this repository. It takes no parameters.
@@ -50,7 +50,7 @@ on:
 
 jobs:
   call-publish-workflow:
-    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@v1
+    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@dev
     secrets:
       apikey: ${{ secrets.LOMBIQ_NUGET_PUBLISH_API_KEY }}
 ```
