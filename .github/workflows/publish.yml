@@ -8,7 +8,7 @@ on:
         type: string
     secrets:
       apikey:
-        required: false
+        required: true
 
 jobs:
   build:
@@ -39,18 +39,8 @@ jobs:
         run: dotnet build --configuration Release --no-restore -p:NuGetBuild=True -p:LangVersion=Latest
       - name: Pack
         run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true
-      - uses: haya14busa/action-cond@v1
-        id: apikeyeval
-        with:
-          cond: ${{ secrets.apikey == '' }}
-          if_true: "${{ secrets.TEST_SECRET }}"
-          if_false: "${{ secrets.apikey }}"
-      - name: Print apikeyeval
-        run: echo apikeyeval:${{ steps.apikeyeval.outputs.value }}
-      - name: Print secret
-        run: echo secret:${{ secrets.TEST_SECRET }}
       - name: Push with dotnet
-        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ steps.apikeyeval.outputs.value }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
       - name: Archive artifacts
         uses: actions/upload-artifact@v1
         with:
