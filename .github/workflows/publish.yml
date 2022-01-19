@@ -7,7 +7,9 @@ on:
         required: false
         type: string
     secrets:
-      apikey:
+      # We can't access org secrets here so they need to be passed in, see:
+      # https://github.community/t/resuable-called-workflow-environment-variables-secrets-and-trigger-event-access/207723/2
+      API_KEY:
         required: true
 
 jobs:
@@ -40,7 +42,7 @@ jobs:
       - name: Pack
         run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true
       - name: Push with dotnet
-        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.apikey }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
       - name: Archive artifacts
         uses: actions/upload-artifact@v1
         with:
