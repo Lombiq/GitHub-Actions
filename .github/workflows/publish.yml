@@ -46,7 +46,9 @@ jobs:
           if_true: "${{ secrets.TEST_SECRET }}"
           if_false: "${{ secrets.apikey }}"
       - name: Print apikeyeval
-        run: echo apikeyeval:${{ steps.apikeyeval.outputs.value }} the secret: ${{ secrets.TEST_SECRET }}
+        run: echo apikeyeval:${{ steps.apikeyeval.outputs.value }}
+      - name: Print secret
+        run: echo secret:${{ secrets.TEST_SECRET }}
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ steps.apikeyeval.outputs.value }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
       - name: Archive artifacts
