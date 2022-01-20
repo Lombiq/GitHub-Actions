@@ -1,22 +1,18 @@
-# Lombiq NuGet Publishing Github Actions
+# Lombiq Github Actions
 
 
 
 ## About
 
-Github Actions shared between Lombiq projects, used to publish packages to NuGet.
+Some common Github Actions shared between Lombiq projects, e.g. to publish packages to NuGet. There workflows can be invoked through the `call-build-workflow` step from any other repository's workflow.
+
+To add them to a project create a folder in the root of the repository that will call these actions, e.g. _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_.
 
 
 ## Documentation
 
-This includes two workflows that can be invoked through the `call-build-workflow` step:
-
-- _build.yml_: Builds the project with the .NET SDK.
-- _publish.yml_: Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed.
-
-To add to a project create a folder from the root of the repository that will call these actions, _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_.
-
-Example _build.yml_:
+### .NET build workflow
+Builds the project with the .NET SDK. Example _build.yml_:
 
 ```yaml
 name: build
@@ -38,7 +34,8 @@ jobs:
 
 This workflow is triggered on push to `dev` and pull requests to `dev` and invokes the _build.yml_ workflow from this repository. It takes no parameters.
 
-Example _publish.yml_:
+### NuGet publish workflow
+Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed. Example _publish.yml_:
 
 ```yaml
 name: publish
@@ -50,7 +47,7 @@ on:
 
 jobs:
   call-publish-workflow:
-    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish.yml@dev
     secrets:
       apikey: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
 ```
@@ -62,7 +59,7 @@ It takes one non-optional secret parameter, `apikey`, the organization API key f
 ```yaml
 jobs:
   call-publish-workflow:
-    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/publish.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
     secrets:
