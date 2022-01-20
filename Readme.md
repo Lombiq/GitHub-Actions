@@ -6,10 +6,10 @@
 
 Some common Github Actions shared between Lombiq projects, e.g. to publish packages to NuGet. There workflows can be invoked through the `call-build-workflow` step from any other repository's workflow.
 
-To add them to a project create a folder in the root of the repository that will call these actions, e.g. _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_.
-
 
 ## Documentation
+
+To add the workflows to a project create a folder in the root of the repository that will call them, e.g. _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_. If you have multiple projects in the repository or if the project you want to build is in a subfolder then add a solution to the root of the repository that references all projects you want to build.
 
 ### .NET build workflow
 Builds the project with the .NET SDK. Example _build.yml_:
