@@ -40,7 +40,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore -p:NuGetBuild=True -p:LangVersion=Latest
       - name: Pack
-        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -p:WarnOnPackingNonPackableProject=True
+        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
       - name: Archive artifacts
