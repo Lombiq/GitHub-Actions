@@ -15,5 +15,11 @@ jobs:
           dotnet-version: 5.0.*
       - name: Install dependencies
         run: dotnet restore -p:NuGetBuild=True
+      - name: Add package
+        id: add_package
+        run: |
+          curl https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/scripts/add-github-sourcelink.sh >> add-github-sourcelink.sh
+          bash add-github-sourcelink.sh Microsoft.SourceLink.GitHub
+          rm add-github-sourcelink.sh
       - name: Build
         run: dotnet build --configuration Release --no-restore  -p:NuGetBuild=True -p:LangVersion=Latest
