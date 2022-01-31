@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###################################################################################################
-# add-github-sourcelink                                                                           #
+# add-package                                                                                     #
 ###################################################################################################
 # Adds a NuGet package to projects in the solution or the project file. Use it in the git         #
 # repository's root directory.                                                                    #

@@ -40,9 +40,9 @@ jobs:
       - name: Add package
         id: add_package
         run: |
-          curl https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/scripts/add-github-sourcelink.sh > add-github-sourcelink.sh
-          bash add-github-sourcelink.sh Microsoft.SourceLink.GitHub
-          rm add-github-sourcelink.sh
+          curl https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/scripts/add-package.sh > add-package.sh
+          bash add-package.sh Microsoft.SourceLink.GitHub
+          rm add-package.sh
       - name: Build
         # Notes on the configuration:
         # * -p:NuGetBuild=True is our property to load Lombiq dependencies from NuGet by switching project references
