@@ -40,8 +40,10 @@ jobs:
       - name: Add package
         id: add_package
         run: |
-          curl https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/scripts/add-package.sh > add-package.sh
+          git clone https://github.com/Lombiq/GitHub-Actions.git /tmp/GitHub-Actions
+          cp /tmp/GitHub-Actions/scripts/add-package.sh .
           bash add-package.sh Microsoft.SourceLink.GitHub
+          rm -Rf /tmp/GitHub-Actions
           rm add-package.sh
       - name: Build
         # Notes on the configuration:
