@@ -35,10 +35,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.*
-      - name: Install dependencies
-        run: dotnet restore -p:NuGetBuild=True
-      - name: Add package
-        id: add_package
+      - name: Add Source Link package
+        id: add_source_link_package
         run: |
           # Never edit this on its own. First update and test the scripts/add-package.sh file, then
           # copy the `program` function here and call it with `program Microsoft.SourceLink.GitHub`.
@@ -103,6 +101,8 @@ jobs:
               fi
           }
           program Microsoft.SourceLink.GitHub
+      - name: Install dependencies
+        run: dotnet restore -p:NuGetBuild=True
       - name: Build
         # Notes on the configuration:
         # * -p:NuGetBuild=True is our property to load Lombiq dependencies from NuGet by switching project references
