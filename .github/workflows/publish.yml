@@ -98,6 +98,8 @@ jobs:
             </PropertyGroup>
           </Project>" > Directory.build.props
                   
+                  echo $PWD
+                  
                   cat Directory.build.props
                   
                   if [ -f "$2" ]; then
