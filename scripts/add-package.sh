@@ -59,16 +59,26 @@ function program() {
         echo "solution.sln - Optional argument to provide the path to the solution file. If none are"
         echo "               provided then the script looks for .sln or if none found then for .??proj"
         echo "               (i.e. csproj, fsproj, vbproj) in the current working directory."
-    elif [ -f "$2" ]; then
-        alter-solution "$2"
-    elif solutions=(./*.sln) && ((${#solutions[@]})) && [ -f "${solutions[0]}" ]; then
-        for solution in "${solutions[@]}"; do
-            alter-solution "$solution"
-        done
     else
-        for project in ./*.??proj; do
-            alter-project "$project"
-        done
+        # The NuGetBuild property need to set so we don't get errors due to wrong references that are targeted at
+        # non-NuGet builds.
+        echo "<Project>
+  <PropertyGroup>
+    <NuGetBuild>true</NuGetBuild>
+  </PropertyGroup>
+</Project>" > Directory.build.props
+        
+        if [ -f "$2" ]; then
+            alter-solution "$2"
+        elif solutions=(./*.sln) && ((${#solutions[@]})) && [ -f "${solutions[0]}" ]; then
+            for solution in "${solutions[@]}"; do
+                alter-solution "$solution"
+            done
+        else
+            for project in ./*.??proj; do
+                alter-project "$project"
+            done
+        fi
     fi
 
 }
