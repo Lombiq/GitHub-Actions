@@ -68,6 +68,8 @@ function program() {
   </PropertyGroup>
 </Project>" > Directory.build.props
         
+        cat Directory.build.props
+
         if [ -f "$2" ]; then
             alter-solution "$2"
         elif solutions=(./*.sln) && ((${#solutions[@]})) && [ -f "${solutions[0]}" ]; then
