@@ -123,7 +123,7 @@ jobs:
         #   a non-packagable project.
         # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
         #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
-        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build  -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=True -p:Version=${{ steps.get_version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
       - name: Archive artifacts
