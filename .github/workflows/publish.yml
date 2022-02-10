@@ -92,19 +92,7 @@ jobs:
               else
                   # The NuGetBuild property need to set so we don't get errors due to wrong references that are targeted at
                   # non-NuGet builds.
-                  echo "<Project>
-            <PropertyGroup>
-              <NuGetBuild>true</NuGetBuild>
-            </PropertyGroup>
-          </Project>" > Directory.Build.props
-                  
-                  echo $PWD
-                  
-                  cat Directory.Build.props
-                  
-                  readlink -f Directory.Build.props
-                  
-                  ls -la
+                  printf "<Project>\n  <PropertyGroup>\n    <NuGetBuild>true</NuGetBuild>\n  </PropertyGroup>\n</Project>" > Directory.Build.props
                   
                   if [ -f "$2" ]; then
                       alter-solution "$2"

@@ -62,14 +62,8 @@ function program() {
     else
         # The NuGetBuild property need to set so we don't get errors due to wrong references that are targeted at
         # non-NuGet builds.
-        echo "<Project>
-  <PropertyGroup>
-    <NuGetBuild>true</NuGetBuild>
-  </PropertyGroup>
-</Project>" > Directory.build.props
+        printf "<Project>\n  <PropertyGroup>\n    <NuGetBuild>true</NuGetBuild>\n  </PropertyGroup>\n</Project>" > Directory.Build.props
         
-        cat Directory.build.props
-
         if [ -f "$2" ]; then
             alter-solution "$2"
         elif solutions=(./*.sln) && ((${#solutions[@]})) && [ -f "${solutions[0]}" ]; then
