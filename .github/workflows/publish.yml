@@ -96,11 +96,11 @@ jobs:
             <PropertyGroup>
               <NuGetBuild>true</NuGetBuild>
             </PropertyGroup>
-          </Project>" > Directory.build.props
+          </Project>" > Directory.Build.props
                   
                   echo $PWD
                   
-                  cat Directory.build.props
+                  cat Directory.Build.props
                   
                   readlink -f Directory.Build.props
                   
