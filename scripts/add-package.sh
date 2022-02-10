@@ -46,7 +46,7 @@ function program() {
         project_file="$1"
         [ -f "$project_file" ] || panic 4 "Couldn't find the project '$project_file' in '$PWD'."
 
-        dotnet add "$project_file" package "$package_name"
+        dotnet add "$project_file" package "$package_name" --no-restore
     }
 
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
