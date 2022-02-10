@@ -102,6 +102,8 @@ jobs:
                   
                   cat Directory.build.props
                   
+                  readlink -f Directory.Build.props
+                  
                   if [ -f "$2" ]; then
                       alter-solution "$2"
                   elif solutions=(./*.sln) && ((${#solutions[@]})) && [ -f "${solutions[0]}" ]; then
