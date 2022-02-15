@@ -9,7 +9,11 @@ Some common Github Actions shared between Lombiq projects, e.g. to publish packa
 
 ## Documentation
 
-To add the workflows to a project create a folder in the root of the repository that will call them, e.g. _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_. If you have multiple projects in the repository or if the project you want to build is in a subfolder then add a solution to the root of the repository that references all projects you want to build.
+To add the workflows to a project create a folder in the root of the repository that will call them, e.g. _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_. Things to keep in mind:
+
+- If you have multiple projects in the repository or if the project you want to build is in a subfolder then add a solution to the root of the repository that references all projects you want to build.
+- References to projects (`<ProjectReference>` elements) not in the repository won't work, these need to be changed to package references (`<PackageReference>` elements). Make the conditional based on `$(NuGetBuild)`. See the [Helpful Extensions project file](https://github.com/Lombiq/Helpful-Extensions/blob/dev/Lombiq.HelpfulExtensions.csproj) for an example. References to projects in the repository will work and those projects, if configured with the proper metadata, will be published together, with dependencies retained among the packages too.
+- Projects building client-side assets with [Gulp Extensions](https://github.com/Lombiq/Gulp-Extensions) won't work during such builds. Until [we fix this](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/issues/48), you have to commit the *wwwroot* folder to the repository.
 
 ### .NET build workflow
 Builds the project with the .NET SDK. Example _build.yml_:
