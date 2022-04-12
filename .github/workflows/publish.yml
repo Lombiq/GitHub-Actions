@@ -6,6 +6,8 @@ on:
       source:
         required: false
         type: string
+      verbosity:
+        default: 'minimal'
     secrets:
       # We can't access org secrets here so they need to be passed in, see:
       # https://github.community/t/resuable-called-workflow-environment-variables-secrets-and-trigger-event-access/207723/2
@@ -110,7 +112,7 @@ jobs:
           }
           program Microsoft.SourceLink.GitHub
       - name: Install dependencies
-        run: dotnet restore -p:NuGetBuild=true
+        run: dotnet restore -p:NuGetBuild=true --verbosity {{ inputs.verbosity }}
       - name: Build
         # Notes on the configuration:
         # * -p:NuGetBuild=true is our property to load Lombiq dependencies from NuGet by switching project references
@@ -122,7 +124,7 @@ jobs:
         # * -p:ContinuousIntegrationBuild=true is needed for Deterministic Builds:
         #   https://github.com/clairernovotny/DeterministicBuilds.
         # * -p:DebugSymbols=true and -p:DebugType=portable are needed to generate PDB files.
-        run: dotnet build --configuration Release --no-restore -p:NuGetBuild=true -p:LangVersion=Latest -p:GenerateDocumentationFile=True -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200 -p:EnableNETAnalyzers=false -p:ContinuousIntegrationBuild=true -p:DebugSymbols=true -p:DebugType=portable
+        run: dotnet build --configuration Release --no-restore -p:NuGetBuild=true -p:LangVersion=Latest -p:GenerateDocumentationFile=True -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200 -p:EnableNETAnalyzers=false -p:ContinuousIntegrationBuild=true -p:DebugSymbols=true -p:DebugType=portable --verbosity {{ inputs.verbosity }}
       - name: Pack
         # Notes on the configuration apart from what's also for dotnet build:
         # * NoWarn on NU5104 to not have warnings for prerelease dependencies, see: 
@@ -131,7 +133,7 @@ jobs:
         #   a non-packagable project.
         # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
         #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
-        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true -p:Version=${{ steps.get_version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true
+        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true -p:Version=${{ steps.get_version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity {{ inputs.verbosity }}
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
       - name: Archive artifacts
