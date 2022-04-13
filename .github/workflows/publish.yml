@@ -126,7 +126,7 @@ jobs:
         # * -p:ContinuousIntegrationBuild=true is needed for Deterministic Builds:
         #   https://github.com/clairernovotny/DeterministicBuilds.
         # * -p:DebugSymbols=true and -p:DebugType=portable are needed to generate PDB files.
-        run: dotnet build --configuration Release --no-restore -p:NuGetBuild=true -p:LangVersion=Latest -p:GenerateDocumentationFile=True -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200 -p:EnableNETAnalyzers=false -p:ContinuousIntegrationBuild=true -p:DebugSymbols=true -p:DebugType=portable --verbosity ${{ inputs.verbosity }}
+        run: dotnet build --configuration Release --no-restore -p:NuGetBuild=true -p:LangVersion=Latest -p:GenerateDocumentationFile=True -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200 -p:EnableNETAnalyzers=false -p:ContinuousIntegrationBuild=true -p:DebugSymbols=true -p:DebugType=portable --verbosity ${{ inputs.verbosity }} -binaryLogger:build.binlog
       - name: Pack
         # Notes on the configuration apart from what's also for dotnet build:
         # * NoWarn on NU5104 to not have warnings for prerelease dependencies, see:
@@ -148,3 +148,8 @@ jobs:
         with:
           name: NuGet-Files
           path: obj/*.nuget.*
+      - name: Archive log files
+        uses: actions/upload-artifact@v3
+        with:
+          name: Log-Files
+          path: *.binlog
