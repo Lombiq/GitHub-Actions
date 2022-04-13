@@ -152,4 +152,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Log-Files
-          path: *.binlog
+          path: ./*.binlog
