@@ -139,7 +139,12 @@ jobs:
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
       - name: Archive artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
-          name: artifacts
-          path: artifacts          
+          name: NuGet-Package
+          path: artifacts
+      - name: Archive NuGet files
+        uses: actions/upload-artifact@v3
+        with:
+          name: NuGet-Files
+          path: obj/*.nuget.*
