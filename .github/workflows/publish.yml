@@ -28,7 +28,7 @@ jobs:
           if_false: "${{ inputs.source }}"
 
       - name: Print source
-        run: echo Nuget Source:${{ steps.sourceeval.outputs.value }}
+        run: echo NuGet Source:${{ steps.sourceeval.outputs.value }}
 
       - name: Get the version
         id: get_version
