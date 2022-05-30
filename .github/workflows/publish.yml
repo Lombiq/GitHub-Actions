@@ -26,19 +26,24 @@ jobs:
           cond: ${{ inputs.source == '' }}
           if_true: "https://api.nuget.org/v3/index.json"
           if_false: "${{ inputs.source }}"
+
       - name: Print source
-        run: echo Nuget Source:${{ steps.sourceeval.outputs.value }}
+        run: echo NuGet Source:${{ steps.sourceeval.outputs.value }}
+
       - name: Get the version
         id: get_version
         run: |
           VERSION="${GITHUB_REF_NAME//v}"
           echo VERSION:${VERSION}
           echo ::set-output name=VERSION::${VERSION}
+
       - uses: actions/checkout@v2
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.*
+
       - name: Add Source Link package
         id: add_source_link_package
         run: |
@@ -113,8 +118,10 @@ jobs:
 
           }
           program Microsoft.SourceLink.GitHub
+
       - name: Install dependencies
         run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
+
       - name: Build
         # Notes on the configuration:
         # * -p:NuGetBuild=true is our property to load Lombiq dependencies from NuGet by switching project references
@@ -138,6 +145,7 @@ jobs:
         run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true -p:Version=${{ steps.get_version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity ${{ inputs.verbosity }}
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
+
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
