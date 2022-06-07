@@ -23,7 +23,7 @@ jobs:
       - name: Print PR Title
         run: echo $Env:PULL_REQUEST_TITLE
 
-      - name: Add Scripts
+      - name: Add Commands to Subsequent Workflow Steps
         run: |
           $code = @'
           <#
@@ -57,12 +57,12 @@ jobs:
 
           echo $code >> $Profile
 
-      - name: Current PR Title Includes Issue Code
+      - name: Ensure Current PR Title Includes Issue Code
         run: |
           if ($Env:PULL_REQUEST_TITLE -match '^\s*\w+-\d+\s*:') { exit 0 }
           Set-Failed 'The pull request is not in the right format. Please start with the issue code followed by a colon e.g. "PROJ-123: My PR Title".'
 
-      - name: Search Parent Repository for Matching PR
+      - name: Ensure Parent Repository Contains Matching PR
         run: |
           $issueCode = $Env:PULL_REQUEST_TITLE -replace '^\s*(\w+-\d+)\s*:.*$', '$1'
 
@@ -70,5 +70,5 @@ jobs:
           $titles = curl -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | % { $_.title }
 
           $lookFor = "${issueCode}:"
-          if ($titles | ? { $_ -and $_.Contains($lookFor) } | Any-Object) { exit 0 }
-          Set-Failed "Couldn't find an Open-Source-Orchard-Core-Extensions pull request whose title starts with `"$lookFor`"."
+          if ($titles | ? { $_ -and $_.Trim().StartsWith($lookFor) } | Any-Object) { exit 0 }
+          Set-Failed "Couldn't find any Open-Source-Orchard-Core-Extensions pull request whose title starts with `"$lookFor`"."
