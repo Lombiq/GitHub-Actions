@@ -31,7 +31,7 @@ jobs:
           Fails the current step with the provided message. Same as "core.setFailed()" from the official toolkit
           (https://github.com/actions/toolkit).
           #>
-          function Set-Failed([Parameter(Mandatory=$True)] [string] $Message)
+          function Set-Failed([Parameter(Mandatory = $True)] [string] $Message)
           {
               echo "::error::$Message"
               exit 1
@@ -41,7 +41,7 @@ jobs:
           .Synopsis
           Returns $True if any item is coming from the pipe.
           #>
-          function Any-Object([Parameter(Mandatory=$True, ValueFromPipeline = $True)] $Input)
+          function Any-Object([Parameter(Mandatory = $True, ValueFromPipeline = $True)] $Input)
           {
               foreach($item in $Input)
               {
@@ -52,8 +52,8 @@ jobs:
           }
           '@
 
-          $ProfileDirectory = [System.IO.Path]::GetDirectoryName($Profile)
-          [System.IO.Directory]::CreateDirectory($ProfileDirectory)
+          $profileDirectory = [System.IO.Path]::GetDirectoryName($Profile)
+          [System.IO.Directory]::CreateDirectory($profileDirectory)
 
           echo $code >> $Profile
 
