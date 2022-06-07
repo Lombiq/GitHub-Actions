@@ -139,7 +139,7 @@ jobs:
                     )
 
                     (Get-Content -Raw $Manifest) -replace 
-                        '(?<head>\[assembly:\s*Module\(([^\]]*Version\W*=\W*"))([^"]*)', '${head}${Version}' |
+                        '(?<head>\[assembly:\s*Module\(([^\]]*Version\W*=\W*"))([^"]*)', "`${head}$Version" |
                         Out-File $Manifest
 
                      Write-Output "Version updated in $Manifest to $Version"
