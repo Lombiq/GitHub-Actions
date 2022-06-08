@@ -41,7 +41,7 @@ jobs:
           $profileDirectory = [System.IO.Path]::GetDirectoryName($Profile)
           [System.IO.Directory]::CreateDirectory($profileDirectory)
 
-          code | Out-File $Profile
+          $code | Out-File $Profile
 
       - name: Ensure Current PR Title Includes Issue Code
         run: |
