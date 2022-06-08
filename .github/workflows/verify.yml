@@ -25,35 +25,17 @@ jobs:
 
       - name: Add Commands to Subsequent Workflow Steps
         run: |
-          $code = @'
-          <#
-          .Synopsis
-          Fails the current step with the provided message. Same as "core.setFailed()" from the official toolkit
-          (https://github.com/actions/toolkit).
-          #>
-          function Set-Failed([Parameter(Mandatory = $True)] [string] $Message)
-          {
-              Write-Output "::error::$Message"
-              exit 1
-          }
-          '@
-
           $profileDirectory = [System.IO.Path]::GetDirectoryName($Profile)
           [System.IO.Directory]::CreateDirectory($profileDirectory)
 
-          $code | Out-File $Profile
+          Write-Output "github.action_path = '${{ github.action_path }}'"
+          Get-Content -Raw '${{ github.action_path }}/scripts/verify/commands.ps1' | 
+              Out-File $Profile -Append
 
       - name: Ensure Current PR Title Includes Issue Code
         run: |
-          if ($Env:PULL_REQUEST_TITLE -match '^\s*\w+-\d+\s*:') { exit 0 }
-          Set-Failed 'The pull request title is not in the expected format. Please start with the issue code followed by a colon and the title, e.g. "PROJ-123: My PR Title".'
+          Exit-EnsureCurrentPullRequest $Env:PULL_REQUEST_TITLE
 
       - name: Ensure Parent Repository Contains Matching PR
         run: |
-          $url = 'https://api.github.com/repos/${{ inputs.repo }}/pulls?state=open&per_page=100'
-          $titles = curl -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | % { $_.title }
-
-          $issueCode = $Env:PULL_REQUEST_TITLE -replace '^\s*(\w+-\d+)\s*:.*$', '$1'
-          $lookFor = "${issueCode}:"
-          if (($titles | ? { $_ -and $_.Trim().StartsWith($lookFor) }).Count -gt 0) { exit 0 }
-          Set-Failed "Couldn't find any Open-Source-Orchard-Core-Extensions pull request whose title starts with `"$lookFor`". Please create one."
+          Exit-EnsureParentPullRequest '${{ inputs.repo }}' $Env:PULL_REQUEST_TITLE
