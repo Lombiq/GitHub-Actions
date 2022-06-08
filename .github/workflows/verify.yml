@@ -56,4 +56,4 @@ jobs:
           $issueCode = $Env:PULL_REQUEST_TITLE -replace '^\s*(\w+-\d+)\s*:.*$', '$1'
           $lookFor = "${issueCode}:"
           if (($titles | ? { $_ -and $_.Trim().StartsWith($lookFor) }).Count -gt 0) { exit 0 }
-          Set-Failed "Couldn't find any Open-Source-Orchard-Core-Extensions pull request whose title starts with `"$lookFor`"."
+          Set-Failed "Couldn't find any Open-Source-Orchard-Core-Extensions pull request whose title starts with `"$lookFor`". Please create one."
