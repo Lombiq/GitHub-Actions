@@ -18,7 +18,7 @@ defaults:
 jobs:
   parent-pull-request-exists:
     runs-on: ubuntu-latest
-    name: Parent PR Exists
+    name: Ensure Parent PR Exists
     steps:
       - name: Print PR Title
         run: echo $Env:PULL_REQUEST_TITLE
