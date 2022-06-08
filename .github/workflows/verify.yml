@@ -50,11 +50,10 @@ jobs:
 
       - name: Ensure Parent Repository Contains Matching PR
         run: |
-          $issueCode = $Env:PULL_REQUEST_TITLE -replace '^\s*(\w+-\d+)\s*:.*$', '$1'
-
           $url = 'https://api.github.com/repos/${{ inputs.repo }}/pulls?state=open&per_page=100'
           $titles = curl -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | % { $_.title }
 
+          $issueCode = $Env:PULL_REQUEST_TITLE -replace '^\s*(\w+-\d+)\s*:.*$', '$1'
           $lookFor = "${issueCode}:"
           if (($titles | ? { $_ -and $_.Trim().StartsWith($lookFor) }).Count -eq 0) { exit 0 }
           Set-Failed "Couldn't find any Open-Source-Orchard-Core-Extensions pull request whose title starts with `"$lookFor`"."
