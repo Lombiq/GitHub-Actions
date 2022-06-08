@@ -46,7 +46,7 @@ jobs:
       - name: Ensure Current PR Title Includes Issue Code
         run: |
           if ($Env:PULL_REQUEST_TITLE -match '^\s*\w+-\d+\s*:') { exit 0 }
-          Set-Failed 'The pull request is not in the right format. Please start with the issue code followed by a colon e.g. "PROJ-123: My PR Title".'
+          Set-Failed 'The pull request title is not in the expected format. Please start with the issue code followed by a colon and the title, e.g. "PROJ-123: My PR Title".'
 
       - name: Ensure Parent Repository Contains Matching PR
         run: |
