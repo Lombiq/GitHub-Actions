@@ -33,29 +33,15 @@ jobs:
           #>
           function Set-Failed([Parameter(Mandatory = $True)] [string] $Message)
           {
-              echo "::error::$Message"
+              Write-Output "::error::$Message"
               exit 1
-          }
-
-          <#
-          .Synopsis
-          Returns $True if any item is coming from the pipe.
-          #>
-          function Any-Object([Parameter(Mandatory = $True, ValueFromPipeline = $True)] $Input)
-          {
-              foreach($item in $Input)
-              {
-                  return $True
-              }
-
-              return $False
           }
           '@
 
           $profileDirectory = [System.IO.Path]::GetDirectoryName($Profile)
           [System.IO.Directory]::CreateDirectory($profileDirectory)
 
-          echo $code >> $Profile
+          code | Out-File $Profile
 
       - name: Ensure Current PR Title Includes Issue Code
         run: |
@@ -66,9 +52,9 @@ jobs:
         run: |
           $issueCode = $Env:PULL_REQUEST_TITLE -replace '^\s*(\w+-\d+)\s*:.*$', '$1'
 
-          $url = 'https://api.github.com/repos/Lombiq/Open-Source-Orchard-Core-Extensions/pulls?state=open&per_page=100'
-          $titles = curl -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | % { $_.title }
+          $url = 'https://api.github.com/repos/${{ inputs.repo }}/pulls?state=open&per_page=100'
+          $titles = curl -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | % { $_.title }
 
           $lookFor = "${issueCode}:"
-          if ($titles | ? { $_ -and $_.Trim().StartsWith($lookFor) } | Any-Object) { exit 0 }
+          if (($titles | ? { $_ -and $_.Trim().StartsWith($lookFor) }).Count -eq 0) { exit 0 }
           Set-Failed "Couldn't find any Open-Source-Orchard-Core-Extensions pull request whose title starts with `"$lookFor`"."
