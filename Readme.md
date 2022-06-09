@@ -78,6 +78,25 @@ When `source` is not provided, it assumes a default value of pushing to the [Lom
 
 Valid values for `verbosity` are those defined by [MSBuild](https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022#:~:text=you%20can%20specify%20the%20following%20verbosity%20levels). The default value is `minimal`.
 
+### Submodule verify workflow
+
+Verifies if the submodule contains a JIRA style issue code (e.g. PROJ-123) and if a pull request exists for the parent module. Example _publish.yml_:
+
+```yaml
+name: Verify Pull Request
+
+on:
+  pull_request:
+
+jobs:
+  call-verify-workflow:
+    uses: Lombiq/GitHub-Actions/.github/workflows/verify.yml@dev
+    with:
+      repo: Lombiq/Open-Source-Orchard-Core-Extensions
+```
+
+If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/), the `repo` input can be omitted, beucase the above is its default value. Otherwise use your parent repository's address in the `{owner}/{repo_name}` format.
+
 Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
 
 
