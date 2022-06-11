@@ -95,7 +95,7 @@ jobs:
       repo: Lombiq/Open-Source-Orchard-Core-Extensions
 ```
 
-If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/), the `repo` input can be omitted, beucase the above is its default value. Otherwise use your parent repository's address in the `{owner}/{repo_name}` format.
+If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/), the `repo` input can be omitted, because the above is its default value. Otherwise, use your parent repository's address in the `{owner}/{repo_name}` format.
 
 Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
 
