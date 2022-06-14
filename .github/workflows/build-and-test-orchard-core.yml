@@ -48,7 +48,7 @@ jobs:
 
     - name: Build and Static Code Analysis
       shell: pwsh
-      working-directory: ${{ inputs.build-directory }}
+      working-directory: ${{ matrix.build-directory }}
       run: |
         npm install pnpm -g
 
@@ -124,7 +124,7 @@ jobs:
       shell: bash
       run: |
         npm install -g azurite
-        azurite --silent --location ${{inputs.build-directory}}/azurite --debug ${{inputs.build-directory}}/azurite/debug.log &
+        azurite --silent --location ${{matrix.build-directory}}/azurite --debug ${{matrix.build-directory}}/azurite/debug.log &
 
     # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
     # (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output
@@ -135,7 +135,7 @@ jobs:
     # wrapping the output to the default buffer width.
     - name: Tests
       shell: pwsh
-      working-directory: ${{ inputs.build-directory }}
+      working-directory: ${{ matrix.build-directory }}
       run: |
         function Configure-Environment($hash) { Set-Item @hash }
 
@@ -194,22 +194,22 @@ jobs:
     # the tests are ultimately passed after retries. The same is true for the next step as well.
     - name: Merge FailureDumps
       shell: pwsh
-      if: always() && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
+      if: always() && hashFiles(format('{0}/test/**/FailureDumps', matrix.build-directory))
       run: |
-        New-Item -Type Directory "${{inputs.build-directory}}/FailureDumps"
-        Get-ChildItem "${{inputs.build-directory}}/test" -Recurse |
+        New-Item -Type Directory "${{matrix.build-directory}}/FailureDumps"
+        Get-ChildItem "${{matrix.build-directory}}/test" -Recurse |
           ? { $_.Name -eq 'FailureDumps' } |
           % { $_.GetDirectories() } |
-          % { Move-Item $_.FullName "${{inputs.build-directory}}/FailureDumps/${_.Name}" }
+          % { Move-Item $_.FullName "${{matrix.build-directory}}/FailureDumps/${_.Name}" }
 
     - name: Upload UI testing artifacts
       uses: actions/upload-artifact@v3
       # It's always as explained above. We don't need additional conditions, because of the "if-no-files-found" setting.
       if: always()
       with:
-        name: ui-test-failure-dump-${{ inputs.build-directory }}-${{ inputs.machine-type }}
+        name: ui-test-failure-dump-${{ matrix.build-directory }}-${{ matrix.machine-type }}
         path: |
-          ${{ inputs.build-directory }}/FailureDumps/
+          ${{ matrix.build-directory }}/FailureDumps/
           test.out
         if-no-files-found: ignore
 
@@ -217,7 +217,7 @@ jobs:
       uses: phoenix-actions/test-reporting@v8
       if: success() || failure()
       with:
-        name: Test Results (${{inputs.build-directory}} ${{inputs.machine-type}})
-        path: '${{inputs.build-directory}}/**/*.trx'
+        name: Test Results (${{matrix.build-directory}} ${{ matrix.machine-type }})
+        path: '${{matrix.build-directory}}/**/*.trx'
         reporter: dotnet-trx
         fail-on-error: 'false'
