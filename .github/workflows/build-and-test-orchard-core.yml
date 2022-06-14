@@ -187,7 +187,7 @@ jobs:
     # The same is true for the next step as well.
     - name: Merge FailureDumps
       shell: pwsh
-      if: success() || failure() && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
+      if: (success() || failure()) && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
       run: |
         New-Item -Type Directory "${{inputs.build-directory}}/FailureDumps"
         Get-ChildItem "${{inputs.build-directory}}/test" -Recurse |
