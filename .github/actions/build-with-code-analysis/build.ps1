@@ -1,6 +1,5 @@
 ﻿param ($verbosity)
 
-echo "$verbosity"
 npm install pnpm -g
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
@@ -16,7 +15,7 @@ $buildSwitches = @(
     '-p:RunAnalyzersDuringBuild=true',
     '-nologo',
     '-consoleLoggerParameters:NoSummary',
-    '-verbosity:$verbosity'
+    '--verbosity' + $verbosity
 )
 
 dotnet build (Get-ChildItem *.sln).FullName @buildSwitches
