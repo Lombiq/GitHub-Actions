@@ -1,5 +1,5 @@
 ﻿name: Build with Static Code Analysis
-description: Build all solutions in the given directory with static code analysis.
+description: Builds all solutions in the given directory with static code analysis.
 
 inputs:
   build-directory:
