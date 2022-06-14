@@ -15,30 +15,6 @@ To add the workflows to a project create a folder in the root of the repository 
 - References to projects (`<ProjectReference>` elements) not in the repository won't work, these need to be changed to package references (`<PackageReference>` elements). Make the conditional based on `$(NuGetBuild)`. See the [Helpful Extensions project file](https://github.com/Lombiq/Helpful-Extensions/blob/dev/Lombiq.HelpfulExtensions.csproj) for an example. References to projects in the repository will work and those projects, if configured with the proper metadata, will be published together, with dependencies retained among the packages too.
 - Projects building client-side assets with [Gulp Extensions](https://github.com/Lombiq/Gulp-Extensions) won't work during such builds. Until [we fix this](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/issues/48), you have to commit the *wwwroot* folder to the repository, and add the same conditional to the Gulp and NPM Import elements too ([example](https://github.com/Lombiq/Orchard-Data-Tables/blob/58458b5d6381c71c094cb8d960e12b15a59f62d7/Lombiq.DataTables/Lombiq.DataTables.csproj#L33-L35)).
 
-### .NET build workflow
-
-Builds the project with the .NET SDK. Example _build.yml_:
-
-```yaml
-name: build
-
-on:
-  push:
-    branches: [dev]
-    paths-ignore:
-      - "Docs/**"
-      - "Readme.md"
-
-  pull_request:
-    branches: [dev]
-
-jobs:
-  call-build-workflow:
-    uses: Lombiq/NuGet-Publishing-GitHub-Actions/.github/workflows/build.yml@dev
-```
-
-This workflow is triggered on push to `dev` and pull requests to `dev` and invokes the _build.yml_ workflow from this repository. It takes no parameters.
-
 ### NuGet publish workflow
 
 Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed. Example _publish.yml_:
