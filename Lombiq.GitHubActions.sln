@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lombiq.VisualStudio", "Lombiq.VisualStudio.csproj", "{A6AC200D-134C-4002-94D8-87E1A9AAAA8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lombiq.GitHubActions", "Lombiq.GitHubActions.csproj", "{A6AC200D-134C-4002-94D8-87E1A9AAAA8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
