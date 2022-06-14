@@ -1,5 +1,6 @@
 ﻿param ($verbosity)
 
+echo "$verbosity"
 npm install pnpm -g
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
