@@ -12,13 +12,10 @@ on:
         description: >
             Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
             "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]". Defaults to "[\"ubuntu-latest\"]".
-      build-directories:
+      build-directory:
         required: false
-        type: string
-        default: "[\".\"]"
-        description: >
-          Stringified JSON array with the  path to the directory where a solution file can be found, e.g. 
-          "[\".\", \"NuGetTest\"]". Defaults to "[\".\"]".
+        default: .
+        description: Path to the directory where a solution file can be found. Defaults to ".".
       build-verbosity:
         required: false
         type: string
@@ -31,7 +28,6 @@ jobs:
     name: Build and Test
     strategy:
       matrix:
-        build-directory: ${{fromJson(inputs.build-directories)}}
         machine-type: ${{fromJson(inputs.machine-types)}}
     steps:
     - uses: actions/checkout@v2
@@ -48,7 +44,7 @@ jobs:
 
     - name: Build and Static Code Analysis
       shell: pwsh
-      working-directory: ${{ matrix.build-directory }}
+      working-directory: ${{ inputs.build-directory }}
       run: |
         npm install pnpm -g
 
@@ -124,7 +120,7 @@ jobs:
       shell: bash
       run: |
         npm install -g azurite
-        azurite --silent --location ${{matrix.build-directory}}/azurite --debug ${{matrix.build-directory}}/azurite/debug.log &
+        azurite --silent --location ${{inputs.build-directory}}/azurite --debug ${{inputs.build-directory}}/azurite/debug.log &
 
     # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
     # (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output
@@ -135,7 +131,7 @@ jobs:
     # wrapping the output to the default buffer width.
     - name: Tests
       shell: pwsh
-      working-directory: ${{ matrix.build-directory }}
+      working-directory: ${{ inputs.build-directory }}
       run: |
         function Configure-Environment($hash) { Set-Item @hash }
 
@@ -195,22 +191,22 @@ jobs:
     # The same is true for the next step as well.
     - name: Merge FailureDumps
       shell: pwsh
-      if: success() || failure() && hashFiles(format('{0}/test/**/FailureDumps', matrix.build-directory))
+      if: success() || failure() && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
       run: |
-        New-Item -Type Directory "${{matrix.build-directory}}/FailureDumps"
-        Get-ChildItem "${{matrix.build-directory}}/test" -Recurse |
+        New-Item -Type Directory "${{inputs.build-directory}}/FailureDumps"
+        Get-ChildItem "${{inputs.build-directory}}/test" -Recurse |
           ? { $_.Name -eq 'FailureDumps' } |
           % { $_.GetDirectories() } |
-          % { Move-Item $_.FullName "${{matrix.build-directory}}/FailureDumps/${_.Name}" }
+          % { Move-Item $_.FullName "${{inputs.build-directory}}/FailureDumps/${_.Name}" }
 
     - name: Upload UI testing artifacts
       uses: actions/upload-artifact@v3
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: success() || failure()
       with:
-        name: ui-test-failure-dump-${{ matrix.build-directory }}-${{ matrix.machine-type }}
+        name: ui-test-failure-dump-${{ inputs.build-directory }}-${{ matrix.machine-type }}
         path: |
-          ${{ matrix.build-directory }}/FailureDumps/
+          ${{ inputs.build-directory }}/FailureDumps/
           test.out
         if-no-files-found: ignore
 
@@ -218,7 +214,7 @@ jobs:
       uses: phoenix-actions/test-reporting@v8
       if: success() || failure()
       with:
-        name: Test Results (${{matrix.build-directory}} ${{ matrix.machine-type }})
-        path: '${{matrix.build-directory}}/**/*.trx'
+        name: Test Results (${{inputs.build-directory}} ${{ matrix.machine-type }})
+        path: '${{inputs.build-directory}}/**/*.trx'
         reporter: dotnet-trx
         fail-on-error: 'false'
