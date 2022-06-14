@@ -50,7 +50,7 @@ jobs:
 
         if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
         {
-            dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj --configuration Release --verbosity ${{ inputs.verbosity }}
+            dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj --configuration Release --verbosity ${{ inputs.build-verbosity }}
         }
 
         $buildSwitches = @(
@@ -61,7 +61,7 @@ jobs:
             '-p:RunAnalyzersDuringBuild=true',
             '-nologo',
             '-consoleLoggerParameters:NoSummary',
-            '--verbosity ${{ inputs.verbosity }}'
+            '--verbosity ${{ inputs.build-verbosity }}'
         )
 
         dotnet build (Get-ChildItem *.sln).FullName @buildSwitches
@@ -157,12 +157,12 @@ jobs:
             Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
             Select-String -NotMatch 'Lombiq.Tests.csproj' |
             ? {
-                $result = dotnet test --no-restore --list-tests --verbosity ${{ inputs.verbosity }} $_ 2>&1 | Out-String -Width 9999
+                $result = dotnet test --no-restore --list-tests --verbosity ${{ inputs.build-verbosity }} $_ 2>&1 | Out-String -Width 9999
                 -not [string]::IsNullOrEmpty($result) -and $result.Contains('The following Tests are available')
             }
 
         foreach ($test in $tests) {
-            dotnet test -c Release --no-restore --no-build --nologo --logger "trx;LogFileName=test-results.trx" --verbosity ${{ inputs.verbosity }} $test 2>&1 >test.out
+            dotnet test -c Release --no-restore --no-build --nologo --logger "trx;LogFileName=test-results.trx" --verbosity ${{ inputs.build-verbosity }} $test 2>&1 >test.out
 
             if ($?)
             {
