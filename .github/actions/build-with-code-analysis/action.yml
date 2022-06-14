@@ -18,4 +18,4 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
-        ${{ github.action_path }}/build.ps1
+        ${{ github.action_path }}/build.ps1 -verbosity ${{ inputs.build-verbosity }}
