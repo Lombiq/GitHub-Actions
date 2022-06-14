@@ -16,5 +16,6 @@ runs:
   steps:
     - name: Build and Static Code Analysis
       shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
       run: |
-        ls
+        ${{ github.action_path }}/build.ps1
