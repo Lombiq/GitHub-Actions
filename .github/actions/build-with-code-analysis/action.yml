@@ -18,4 +18,4 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
-        build.ps1
+        ls
