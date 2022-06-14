@@ -41,6 +41,7 @@ jobs:
     # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
     # https://github.com/actions/runner/issues/1555.
     strategy:
+      fail-fast: false
       matrix:
         machine-type: ${{fromJson(inputs.machine-types)}}
         timeout-minutes:
