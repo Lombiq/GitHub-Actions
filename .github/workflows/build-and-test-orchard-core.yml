@@ -47,28 +47,10 @@ jobs:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Build and Static Code Analysis
-      shell: pwsh
-      working-directory: ${{ inputs.build-directory }}
-      run: |
-        npm install pnpm -g
-
-        if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
-        {
-            dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj --configuration Release --verbosity ${{ inputs.build-verbosity }}
-        }
-
-        $buildSwitches = @(
-            '--configuration',
-            'Release',
-            '-warnaserror',
-            '-p:TreatWarningsAsErrors=true',
-            '-p:RunAnalyzersDuringBuild=true',
-            '-nologo',
-            '-consoleLoggerParameters:NoSummary',
-            '-verbosity:${{ inputs.build-verbosity }}'
-        )
-
-        dotnet build (Get-ChildItem *.sln).FullName @buildSwitches
+      uses: Lombiq/GitHub-Actions/.github/actions/build-with-code-analysis@issue/NEST-314
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        build-verbosity: ${{ inputs.build-verbosity}}
 
     - name: Set up SQL Server
       shell: pwsh

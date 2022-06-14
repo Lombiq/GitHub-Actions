@@ -1,0 +1,39 @@
+﻿name: Build with Static Code Analysis
+description: Build all solutions in the given directory with static code analysis.
+
+inputs:
+  build-directory:
+    required: false
+    default: .
+    description: Path to the directory where a solution file can be found. Defaults to ".".
+  build-verbosity:
+    required: false
+    default: quiet
+    description: Verbosity parameter for dotnet build. Defaults to "quiet".
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build and Static Code Analysis
+      shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
+      run: |
+        npm install pnpm -g
+
+        if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
+        {
+            dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj --configuration Release --verbosity ${{ inputs.build-verbosity }}
+        }
+
+        $buildSwitches = @(
+            '--configuration',
+            'Release',
+            '-warnaserror',
+            '-p:TreatWarningsAsErrors=true',
+            '-p:RunAnalyzersDuringBuild=true',
+            '-nologo',
+            '-consoleLoggerParameters:NoSummary',
+            '-verbosity:${{ inputs.build-verbosity }}'
+        )
+
+        dotnet build (Get-ChildItem *.sln).FullName @buildSwitches
