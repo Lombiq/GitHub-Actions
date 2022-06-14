@@ -1,5 +1,4 @@
 ﻿name: Build and Test Orchard Core
-description: Build an Orchard Core solution, then run its tests.
 
 on:
   workflow_call:
@@ -8,18 +7,21 @@ on:
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
         required: false
+        type: string
         default: "[\"ubuntu-latest\"]"
         description: >
             Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
             "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]". Defaults to "[\"ubuntu-latest\"]".
       build-directories:
         required: false
+        type: string
         default: "[\".\"]"
         description: >
           Stringified JSON array with the  path to the directory where a solution file can be found, e.g. 
           "[\".\", \"NuGetTest\"]". Defaults to "[\".\"]".
       build-verbosity:
         required: false
+        type: string
         default: quiet
         description: Verbosity parameter for dotnet build. Defaults to "quiet".
 
