@@ -68,7 +68,6 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/publish.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
-    with:
       verbosity: detailed
     secrets:
       apikey: ${{ secrets.CLOUDSMITH_NUGET_PUBLISH_API_KEY }}
