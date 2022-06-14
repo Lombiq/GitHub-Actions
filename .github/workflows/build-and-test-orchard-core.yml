@@ -14,6 +14,7 @@ on:
             "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]". Defaults to "[\"ubuntu-latest\"]".
       build-directory:
         required: false
+        type: string
         default: .
         description: Path to the directory where a solution file can be found. Defaults to ".".
       build-verbosity:
