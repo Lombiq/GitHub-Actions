@@ -42,7 +42,7 @@ jobs:
         submodules: 'recursive'
 
     - name: Set up .NET
-      uses: ./.github/actions/setup-dotnet
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
