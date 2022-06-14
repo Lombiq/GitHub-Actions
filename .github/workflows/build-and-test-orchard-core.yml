@@ -31,7 +31,7 @@ defaults:
 
 jobs:
   build-and-test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ inputs.os }}
     name: Build and Test
     strategy:
       matrix:
@@ -49,7 +49,7 @@ jobs:
         dotnet-version: 6.0.*
 
     - name: Build and Static Code Analysis
-      working-directory: ${{ matrix.directory }}
+      working-directory: ${{ inputs.directory }}
       run: |
         npm install pnpm -g
 
@@ -123,7 +123,7 @@ jobs:
       shell: bash
       run: |
         npm install -g azurite
-        azurite --silent --location ${{matrix.directory}}/azurite --debug ${{matrix.directory}}/azurite/debug.log &
+        azurite --silent --location ${{inputs.directory}}/azurite --debug ${{inputs.directory}}/azurite/debug.log &
 
     # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
     # (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output
@@ -133,7 +133,7 @@ jobs:
     # output collapsible region on the Actions web UI. Note that we use bash to output the log using bash to avoid pwsh
     # wrapping the output to the default buffer width.
     - name: Tests
-      working-directory: ${{ matrix.directory }}
+      working-directory: ${{ inputs.directory }}
       run: |
         function Configure-Environment($hash) { Set-Item @hash }
 
@@ -191,22 +191,22 @@ jobs:
     # solution root. The following two steps need to be always(), so if there's a failure dump it'll be uploaded even if
     # the tests are ultimately passed after retries. The same is true for the next step as well.
     - name: Merge FailureDumps
-      if: always() && hashFiles(format('{0}/test/**/FailureDumps', matrix.directory))
+      if: always() && hashFiles(format('{0}/test/**/FailureDumps', inputs.directory))
       run: |
-        New-Item -Type Directory "${{matrix.directory}}/FailureDumps"
-        Get-ChildItem "${{matrix.directory}}/test" -Recurse |
+        New-Item -Type Directory "${{inputs.directory}}/FailureDumps"
+        Get-ChildItem "${{inputs.directory}}/test" -Recurse |
           ? { $_.Name -eq 'FailureDumps' } |
           % { $_.GetDirectories() } |
-          % { Move-Item $_.FullName "${{matrix.directory}}/FailureDumps/${_.Name}" }
+          % { Move-Item $_.FullName "${{inputs.directory}}/FailureDumps/${_.Name}" }
 
     - name: Upload UI testing artifacts
       uses: actions/upload-artifact@v3
       # It's always as explained above. We don't need additional conditions, because of the "if-no-files-found" setting.
       if: always()
       with:
-        name: ui-test-failure-dump-${{ matrix.directory }}-${{ matrix.os }}
+        name: ui-test-failure-dump-${{ inputs.directory }}-${{ inputs.os }}
         path: |
-          ${{ matrix.directory }}/FailureDumps/
+          ${{ inputs.directory }}/FailureDumps/
           test.out
         if-no-files-found: ignore
 
@@ -214,7 +214,7 @@ jobs:
       uses: phoenix-actions/test-reporting@v8
       if: success() || failure()
       with:
-        name: Test Results (${{matrix.directory}} ${{matrix.os}})
-        path: '${{matrix.directory}}/**/*.trx'
+        name: Test Results (${{inputs.directory}} ${{inputs.os}})
+        path: '${{inputs.directory}}/**/*.trx'
         reporter: dotnet-trx
         fail-on-error: 'false'
