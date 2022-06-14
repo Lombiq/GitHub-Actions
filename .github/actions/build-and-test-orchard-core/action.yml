@@ -6,7 +6,7 @@ inputs:
     required: false
     default: ubuntu-latest
     description: >
-        The name of the OS to run the workflow under, e.g. "ubunut-latest" or "windows-latest". Defaults to 
+        The name of the OS to run the workflow under, e.g. "ubuntu-latest" or "windows-latest". Defaults to 
         "ubuntu-latest".
   build-directory:
     required: false
