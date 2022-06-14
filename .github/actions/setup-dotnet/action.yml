@@ -4,7 +4,6 @@ description: Set up the .NET SDK with some Lombiq defaults.
 inputs:
   dotnet-version:
     required: false
-    type: string
     default: 6.0.*
     description: Version of the .NET SDK to set up. Defaults to 6.0.*.
 
