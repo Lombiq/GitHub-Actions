@@ -61,7 +61,7 @@ jobs:
             '-p:RunAnalyzersDuringBuild=true',
             '-nologo',
             '-consoleLoggerParameters:NoSummary',
-            '--verbosity ${{ inputs.build-verbosity }}'
+            '-verbosity:${{ inputs.build-verbosity }}'
         )
 
         dotnet build (Get-ChildItem *.sln).FullName @buildSwitches
