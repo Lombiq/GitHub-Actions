@@ -26,9 +26,8 @@ on:
       build-verbosity:
         required: false
         type: string
-        description: >
-          Verbosity parameter for dotnet build. Defaults to the version provided by the
-          ./.github/actions/build-with-code-analysis action.
+        default: quiet
+        description: Verbosity parameter for dotnet build. Defaults to "quiet".
 
 jobs:
   build-and-test:
