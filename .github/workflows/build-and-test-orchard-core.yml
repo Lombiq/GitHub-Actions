@@ -18,8 +18,8 @@ on:
       build-verbosity:
         required: false
         type: string
-        default: minimal
-        description: Verbosity parameter for dotnet build. Defaults to "minimal".
+        default: quiet
+        description: Verbosity parameter for dotnet build. Defaults to "quiet".
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
