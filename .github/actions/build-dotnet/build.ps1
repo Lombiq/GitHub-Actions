@@ -12,7 +12,7 @@ $buildSwitches = @(
     'Release',
     '-warnaserror',
     '-p:TreatWarningsAsErrors=true',
-    '-p:RunAnalyzersDuringBuild=' + $EnableCodeAnalysis,
+    "-p:RunAnalyzersDuringBuild=$EnableCodeAnalysis",
     '-nologo',
     '-consoleLoggerParameters:NoSummary',
     '--verbosity' + $Verbosity
