@@ -45,7 +45,6 @@ jobs:
           dotnet-version: 6.0.*
 
       - name: Add Source Link package
-        id: add_source_link_package
         run: |
           # Never edit this on its own. First update and test the scripts/add-package.sh file, then
           # copy the `program` function here and call it with `program Microsoft.SourceLink.GitHub`.
