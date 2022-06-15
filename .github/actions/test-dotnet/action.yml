@@ -5,7 +5,8 @@ inputs:
   build-directory:
     required: false
     default: .
-    description: Path to the directory where a solution file can be found. Defaults to ".".
+    description: >
+      Path to the directory where a solution file can be found and thus the .NET build has run. Defaults to ".".
   test-verbosity:
     required: false
     default: quiet
