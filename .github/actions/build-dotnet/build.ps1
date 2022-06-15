@@ -1,4 +1,4 @@
-﻿param ($Verbosity)
+﻿param ($Verbosity, $EnableCodeAnalysis)
 
 npm install pnpm -g
 
@@ -12,7 +12,7 @@ $buildSwitches = @(
     'Release',
     '-warnaserror',
     '-p:TreatWarningsAsErrors=true',
-    '-p:RunAnalyzersDuringBuild=true',
+    '-p:RunAnalyzersDuringBuild=' + $EnableCodeAnalysis,
     '-nologo',
     '-consoleLoggerParameters:NoSummary',
     '--verbosity' + $Verbosity

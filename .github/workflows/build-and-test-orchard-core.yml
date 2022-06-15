@@ -28,6 +28,11 @@ on:
         type: string
         default: quiet
         description: Verbosity parameter for dotnet build. Defaults to "quiet".
+      enable-code-analysis:
+        required: false
+        type: string
+        default: "true"
+        description: Indicates whether to enable static code analysis during dotnet build. Defaults to "true".
       timeout-minutes:
         required: false
         type: number
@@ -61,6 +66,7 @@ jobs:
       with:
         build-directory: ${{ inputs.build-directory}}
         build-verbosity: ${{ inputs.build-verbosity}}
+        enable-code-analysis: ${{ inputs.enable-code-analysis}}
 
     - name: Set up SQL Server
       uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/NEST-314

@@ -10,6 +10,10 @@ inputs:
     required: false
     default: quiet
     description: Verbosity parameter for dotnet build. Defaults to "quiet".
+  enable-code-analysis:
+    required: false
+    default: "true"
+    description: Indicates whether to enable static code analysis during build. Defaults to "true".
 
 runs:
   using: "composite"
@@ -18,4 +22,4 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
-        ${{ github.action_path }}/build.ps1 -Verbosity ${{ inputs.build-verbosity }}
+        ${{ github.action_path }}/build.ps1 -Verbosity ${{ inputs.build-verbosity }} -EnableCodeAnalysis ${{ inputs.enable-code-analysis }}
