@@ -1,19 +1,13 @@
 name: Export Action Context
 description: Exports the environment variables associated with the GitHub Actions Runtime so they can be used in subsequent steps
 
-inputs:
-  environment:
-    required: true
-    description: The path of the GITHUB_ENV file.
-
 runs:
   using: "composite"
   steps:
     - name: Export Environment Variables
       shell: pwsh
       run: |
-        echo "::echo::on"
-        echo $GITHUB_ENV
+        Write-Output "GITHUB_ENV: $Env:GITHUB_ENV"
         Write-Output "ACTIONS_RUNTIME_URL=$Env:ACTIONS_RUNTIME_URL" >> "${{ inputs.environment }}"
         Write-Output "ACTIONS_RUNTIME_TOKEN=$Env:ACTIONS_RUNTIME_TOKEN" >> "${{ inputs.environment }}"
         Write-Output "ACTIONS_CACHE_URL=$Env:ACTIONS_CACHE_URL" >> "${{ inputs.environment }}"
