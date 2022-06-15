@@ -32,7 +32,7 @@ on:
         required: false
         type: number
         default: 360
-        description: Configuration for the timeout-minutes parameter of the workflow. Defaults to 360.
+        description: Configuration for the timeout-minutes parameter of the workflow. Defaults to 360 (the GitHub default).
 
 jobs:
   build-and-test:
