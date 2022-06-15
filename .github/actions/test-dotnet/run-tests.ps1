@@ -1,4 +1,4 @@
-﻿param ($verbosity)
+﻿param ($Verbosity)
 
 function Configure-Environment($hash) { Set-Item @hash }
 
@@ -35,12 +35,12 @@ $tests = dotnet sln list |
     Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
     Select-String -NotMatch 'Lombiq.Tests.csproj' |
     ? {
-        $result = dotnet test --no-restore --list-tests --verbosity $verbosity $_ 2>&1 | Out-String -Width 9999
+        $result = dotnet test --no-restore --list-tests --verbosity $Verbosity $_ 2>&1 | Out-String -Width 9999
         -not [string]::IsNullOrEmpty($result) -and $result.Contains('The following Tests are available')
     }
 
 foreach ($test in $tests) {
-    dotnet test -c Release --no-restore --no-build --nologo --logger "trx;LogFileName=test-results.trx" --verbosity $verbosity $test 2>&1 >test.out
+    dotnet test -c Release --no-restore --no-build --nologo --logger "trx;LogFileName=test-results.trx" --verbosity $Verbosity $test 2>&1 >test.out
 
     if ($?)
     {

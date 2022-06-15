@@ -1,7 +1,7 @@
-﻿param ($directory)
+﻿param ($Directory)
 
-New-Item -Type Directory "$directory/FailureDumps"
-Get-ChildItem "$directory/test" -Recurse |
+New-Item -Type Directory "$Directory/FailureDumps"
+Get-ChildItem "$Directory/test" -Recurse |
     ? { $_.Name -eq 'FailureDumps' } |
     % { $_.GetDirectories() } |
-    % { Move-Item $_.FullName "$directory/FailureDumps/${_.Name}" }
+    % { Move-Item $_.FullName "$Directory/FailureDumps/${_.Name}" }

@@ -19,7 +19,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
-        ${{ github.action_path }}/run-tests.ps1 -verbosity ${{ inputs.test-verbosity }}
+        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
@@ -31,7 +31,7 @@ runs:
       shell: pwsh
       if: (success() || failure()) && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
       run: |
-        ${{ github.action_path }}/merge-failure-dumps.ps1 -directory "${{ inputs.build-directory }}"
+        ${{ github.action_path }}/merge-failure-dumps.ps1 -Directory "${{ inputs.build-directory }}"
 
     - name: Upload UI testing artifacts
       uses: actions/upload-artifact@v3
