@@ -21,17 +21,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: haya14busa/action-cond@v1
-        id: sourceeval
+        id: source-value
         with:
           cond: ${{ inputs.source == '' }}
           if_true: "https://api.nuget.org/v3/index.json"
           if_false: "${{ inputs.source }}"
 
       - name: Print source
-        run: echo NuGet Source:${{ steps.sourceeval.outputs.value }}
+        run: echo NuGet Source:${{ steps.source-value.outputs.value }}
 
       - name: Get the version
-        id: get_version
+        id: get-version
         run: |
           VERSION="${GITHUB_REF_NAME//v}"
           echo VERSION:${VERSION}
@@ -154,7 +154,7 @@ jobs:
                 }
             }
 
-            Program './' '${{ steps.get_version.outputs.VERSION }}'
+            Program './' '${{ steps.get-version.outputs.VERSION }}'
 
       - name: Install dependencies
         run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
@@ -179,9 +179,9 @@ jobs:
         #   a non-packagable project.
         # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
         #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
-        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true -p:Version=${{ steps.get_version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity ${{ inputs.verbosity }}
+        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true -p:Version=${{ steps.get-version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity ${{ inputs.verbosity }}
       - name: Push with dotnet
-        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.sourceeval.outputs.value }} --skip-duplicate
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.source-value.outputs.value }} --skip-duplicate
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
