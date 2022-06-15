@@ -28,7 +28,7 @@ on:
         type: string
         default: quiet
         description: Verbosity parameter for dotnet build. Defaults to "quiet".
-      enable-code-analysis:
+      build-enable-code-analysis:
         required: false
         type: string
         default: "true"
@@ -64,9 +64,9 @@ jobs:
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-314
       with:
-        build-directory: ${{ inputs.build-directory}}
-        build-verbosity: ${{ inputs.build-verbosity}}
-        enable-code-analysis: ${{ inputs.enable-code-analysis}}
+        directory: ${{ inputs.build-directory}}
+        verbosity: ${{ inputs.build-verbosity}}
+        enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
 
     - name: Set up SQL Server
       uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/NEST-314

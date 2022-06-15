@@ -2,11 +2,11 @@
 description: Builds all solutions in the given directory with static code analysis.
 
 inputs:
-  build-directory:
+  directory:
     required: false
     default: .
     description: Path to the directory where a solution file can be found. Defaults to ".".
-  build-verbosity:
+  verbosity:
     required: false
     default: quiet
     description: Verbosity parameter for dotnet build. Defaults to "quiet".
@@ -20,6 +20,6 @@ runs:
   steps:
     - name: Build and Static Code Analysis
       shell: pwsh
-      working-directory: ${{ inputs.build-directory }}
+      working-directory: ${{ inputs.directory }}
       run: |
-        ${{ github.action_path }}/build.ps1 -Verbosity ${{ inputs.build-verbosity }} -EnableCodeAnalysis ${{ inputs.enable-code-analysis }}
+        ${{ github.action_path }}/build.ps1 -Verbosity ${{ inputs.verbosity }} -EnableCodeAnalysis ${{ inputs.enable-code-analysis }}
