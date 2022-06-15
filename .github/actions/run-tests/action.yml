@@ -19,7 +19,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
-        ${{ github.action_path }}/run-tests.ps1 -verbosity ${{ inputs.build-verbosity }}
+        ${{ github.action_path }}/run-tests.ps1 -verbosity ${{ inputs.test-verbosity }}
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
