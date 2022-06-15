@@ -20,7 +20,7 @@ To add the workflows to a project create a folder in the root of the repository 
 Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed. Example _publish.yml_:
 
 ```yaml
-name: publish
+name: Publish to NuGet
 
 on:
   push:
