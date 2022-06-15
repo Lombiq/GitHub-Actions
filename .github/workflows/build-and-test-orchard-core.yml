@@ -42,7 +42,7 @@ jobs:
     # https://github.com/actions/runner/issues/1555.
     strategy:
       matrix:
-        machine-type: ${{fromJson(inputs.machine-types)}}
+        machine-type: ${{ fromJson(inputs.machine-types) }}
         timeout-minutes:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
