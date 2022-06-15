@@ -58,7 +58,7 @@ Valid values for `verbosity` are those defined by [MSBuild](https://docs.microso
 Verifies if the submodule contains a JIRA style issue code (e.g. PROJ-123) and if a pull request exists for the parent module. Example _publish.yml_:
 
 ```yaml
-name: Verify Pull Request
+name: Verify OSOCE Pull Request
 
 on:
   pull_request:
