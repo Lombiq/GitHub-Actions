@@ -57,7 +57,7 @@ jobs:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-with-code-analysis@issue/NEST-314
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-314
       with:
         build-directory: ${{ inputs.build-directory}}
         build-verbosity: ${{ inputs.build-verbosity}}
@@ -71,7 +71,7 @@ jobs:
         location: ${{ inputs.build-directory}}
 
     - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/run-tests@issue/NEST-314
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/NEST-314
       with:
         build-directory: ${{ inputs.build-directory}}
         test-verbosity: ${{ inputs.build-verbosity}}
