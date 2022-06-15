@@ -65,7 +65,7 @@ jobs:
     - name: Set up SQL Server
       uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/NEST-314
 
-    - name: Set up Azurite via NPM
+    - name: Set up Azurite
       uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@issue/NEST-314
       with:
         location: ${{ inputs.build-directory}}
