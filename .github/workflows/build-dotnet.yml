@@ -40,9 +40,30 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow. Defaults to 360 (the GitHub default).
 
 jobs:
-  call-build-and-test-workflow:
+  build:
+    runs-on: ${{ matrix.machine-type }}
     name: Build and Test
-    uses: Lombiq/GitHub-Actions/.github/workflows/build-and-test-orchard-core.yml@issue/NEST-314
-    with: 
-      machine-types: "[\"ubuntu-latest\"]"
-      timeout-minutes: 60
+    # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
+    # https://github.com/actions/runner/issues/1555.
+    strategy:
+      matrix:
+        machine-type: ${{ fromJson(inputs.machine-types) }}
+        timeout-minutes:
+        - ${{ inputs.timeout-minutes }}
+    timeout-minutes: ${{ matrix.timeout-minutes }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+
+    - name: Set up .NET
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/NEST-314
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Build and Static Code Analysis
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-314
+      with:
+        directory: ${{ inputs.build-directory}}
+        verbosity: ${{ inputs.build-verbosity}}
+        enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
