@@ -61,6 +61,9 @@ jobs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
+    - name: Set up PNPM
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-pnpm@issue/NEST-314
+
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-314
       with:

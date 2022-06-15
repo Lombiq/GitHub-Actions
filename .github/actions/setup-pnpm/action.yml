@@ -1,0 +1,10 @@
+﻿name: Set up PNPM
+description: Sets up the latest version of the PNPM package manager globally.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up PNPM
+      shell: pwsh
+      run: |
+        npm install pnpm -g
