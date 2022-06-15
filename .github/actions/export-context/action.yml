@@ -8,6 +8,6 @@ runs:
       shell: pwsh
       run: |
         Write-Output "GITHUB_ENV: $Env:GITHUB_ENV"
-        Write-Output "ACTIONS_RUNTIME_URL=$Env:ACTIONS_RUNTIME_URL" >> "${{ inputs.environment }}"
-        Write-Output "ACTIONS_RUNTIME_TOKEN=$Env:ACTIONS_RUNTIME_TOKEN" >> "${{ inputs.environment }}"
-        Write-Output "ACTIONS_CACHE_URL=$Env:ACTIONS_CACHE_URL" >> "${{ inputs.environment }}"
+        Write-Output "ACTIONS_RUNTIME_URL=$Env:ACTIONS_RUNTIME_URL"
+        Write-Output "ACTIONS_RUNTIME_TOKEN=$Env:ACTIONS_RUNTIME_TOKEN"
+        Write-Output "ACTIONS_CACHE_URL=$Env:ACTIONS_CACHE_URL"
