@@ -40,6 +40,9 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow. Defaults to 360 (the GitHub default).
 
 jobs:
+  # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call
+  # other workflows, they'd need to be encapsulated in a composite action. That, however, will result in a single step
+  # being shown under the build details with all below steps mushed together.
   build:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
