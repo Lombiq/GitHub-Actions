@@ -1,5 +1,5 @@
 ﻿name: Run tests
-description: Runs .NET unit and UI tests with Lombiq defaults.
+description: Runs .NET unit and UI tests, generates a test report and upload UI testing failure dumps to artifacts.
 
 inputs:
   build-directory:
