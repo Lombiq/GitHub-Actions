@@ -12,7 +12,7 @@ runs:
     - name: Export Environment Variables
       shell: pwsh
       run: |
-        ::echo::on
+        echo "::echo::on"
         echo $GITHUB_ENV
         Write-Output "ACTIONS_RUNTIME_URL=$Env:ACTIONS_RUNTIME_URL" >> "${{ inputs.environment }}"
         Write-Output "ACTIONS_RUNTIME_TOKEN=$Env:ACTIONS_RUNTIME_TOKEN" >> "${{ inputs.environment }}"
