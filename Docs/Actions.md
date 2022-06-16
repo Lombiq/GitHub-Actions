@@ -2,7 +2,7 @@
 
 
 
-These actions can be invoked through the `uses` step from any other repository's workflow. The're utilized by [our reusable workflows](Workflows.md).
+These actions can be invoked from a step in any other repository's workflow. The're utilized by [our reusable workflows](Workflows.md).
 
 In addition to the below short explanations, check out the inline documentation of the action you want to use, especially its parameters.
 

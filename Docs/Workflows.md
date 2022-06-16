@@ -2,7 +2,7 @@
 
 
 
-These workflows can be invoked through the `call-build-workflow` step from any other repository's workflow. The utilize [our composite actions](Actions.md).
+These workflows can be invoked from a step from any other repository's workflow. The utilize [our composite actions](Actions.md).
 
 In addition to the below short explanations and samples, check out the inline documentation of the workflow you want to use, especially its parameters. These examples don't necessarily utilize all parameters.
 
