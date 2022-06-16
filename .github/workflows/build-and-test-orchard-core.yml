@@ -62,7 +62,7 @@ jobs:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepackissue/NEST-314
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/NEST-314
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-314
