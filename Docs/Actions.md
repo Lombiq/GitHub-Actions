@@ -12,4 +12,4 @@ In addition to the below short explanations, check out the inline documentation 
 - `setup-azurite`: Sets up the [Azurite Azure Blob Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite) via NPM.
 - `setup-dotnet`: Sets up the .NET SDK.
 - `setup-sql-server`: Sets up SQL Server with Lombiq-recommended defaults.
-- `test-dotnet`: Runs .NET unit and UI tests (with the [Lombiq UI Testing Toolbox for Orchard Core](https://github.com/Lombiq/UI-Testing-Toolbox)), generates a test report and uploads UI testing failure dumps to artifacts.
+- `test-dotnet`: Runs .NET unit and UI tests (with the [Lombiq UI Testing Toolbox for Orchard Core](https://github.com/Lombiq/UI-Testing-Toolbox)), generates a test report, and uploads UI testing failure dumps to artifacts.
