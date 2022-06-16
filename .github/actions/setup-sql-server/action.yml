@@ -7,48 +7,10 @@ runs:
     - name: Set up SQL Server
       shell: pwsh
       run: |
-        if ($Env:RUNNER_OS -eq "Windows")
-        {
-            choco install sql-server-express --no-progress
-        }
-        else
-        {
-            docker pull mcr.microsoft.com/mssql/server &&
-            docker run --name sql2019 -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Password1!' -p 1433:1433 -d 'mcr.microsoft.com/mssql/server:2019-latest' &&
-            docker exec -u 0 sql2019 bash -c 'mkdir /data; chmod 777 /data -R; chown mssql:root /data'
-        }
+        ${{ github.action_path }}/setup-sql-server.ps1
 
     # Needs to be a separate step, otherwise the Chocolatey installation won't be visible.
     - name: Wait for SQL Server to start
       shell: pwsh
       run: |
-        $maxTryCount = 10
-
-        for ($i = 1; $i -le $maxTryCount; $i++)
-        {
-            echo "Waiting for SQL Server to start. Attempt $i/$maxTryCount."
-
-            if ($Env:RUNNER_OS -eq "Windows")
-            {
-                sqlcmd -b -S .\SQLEXPRESS -Q "SELECT @@SERVERNAME as ServerName" 2>&1>$null
-            }
-            else
-            {
-                sqlcmd -b -U sa -P 'Password1!' -Q "SELECT @@SERVERNAME as ServerName" 2>&1>$null
-            }
-
-            if ($?)
-            {
-                echo "SQL Server is successfully started."
-                Exit 0
-            }
-
-            if ($i -eq $maxTryCount)
-            {
-                echo "SQL Server couldn't be started."
-                Exit 1
-            }
-
-            echo "SQL Server is not ready. Waiting 1 second."
-            Start-Sleep -s 1
-        }
+        ${{ github.action_path }}/wait-for-sql-server.ps1
