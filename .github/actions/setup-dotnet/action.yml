@@ -1,5 +1,5 @@
 ﻿name: Set up .NET
-description: Sets up the .NET SDK with some Lombiq defaults.
+description: Sets up the .NET SDK.
 
 inputs:
   dotnet-version:

@@ -1,5 +1,8 @@
-﻿name: Run tests
-description: Runs .NET unit and UI tests, generates a test report and upload UI testing failure dumps to artifacts.
+﻿name: Run .NET tests
+description: >
+  Runs .NET unit and UI tests (with the Lombiq UI Testing Toolbox for Orchard Core:
+  https://github.com/Lombiq/UI-Testing-Toolbox), generates a test report and uploads UI testing failure dumps to
+  artifacts.
 
 inputs:
   build-directory:

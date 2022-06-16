@@ -1,5 +1,5 @@
 ﻿name: Set up SQL Server
-description: Sets up SQL Server with Lombiq defaults.
+description: Sets up SQL Server with Lombiq-recommended defaults.
 
 runs:
   using: "composite"

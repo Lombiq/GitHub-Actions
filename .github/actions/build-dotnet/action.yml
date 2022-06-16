@@ -1,5 +1,5 @@
-﻿name: Build with Static Code Analysis
-description: Builds all solutions in the given directory with static code analysis.
+﻿name: .NET Build with Static Code Analysis
+description: Builds all .NET solutions in the given directory with static code analysis.
 
 inputs:
   directory:
