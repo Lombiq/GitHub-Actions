@@ -22,4 +22,4 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        ${{ github.action_path }}/build.ps1 -Verbosity ${{ inputs.verbosity }} -EnableCodeAnalysis ${{ inputs.enable-code-analysis }}
+        ${{ github.action_path }}/build.ps1 -Verbosity ${{ inputs.verbosity }} -EnableCodeAnalysis ${{ inputs.enable-code-analysis }} -Version $Env:GITHUB_RUN_ID
