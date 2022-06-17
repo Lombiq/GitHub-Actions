@@ -19,6 +19,8 @@ $buildSwitches = @(
     "/p:Version=$Version"
 )
 
+Write-Output ".NET version number: $Version"
+
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
     Write-Output "Gulp Extensions found. Building it first because it requires it."
