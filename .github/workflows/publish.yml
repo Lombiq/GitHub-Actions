@@ -20,7 +20,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: haya14busa/action-cond@v1
+      # v1.1.0
+      - uses: haya14busa/action-cond@c69871f4d4693e93126e770d7c3588cb1d473462
         id: source-value
         with:
           cond: ${{ inputs.source == '' }}
