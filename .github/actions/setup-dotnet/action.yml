@@ -16,10 +16,10 @@ runs:
         # This ceremony is needed to make the env vars available in subsequent steps too, see:
         # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable.
         $Env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
-        $Env:DOTNET_CLI_TELEMETRY_OPTOUT = "true" >> $Env:$GITHUB_ENV
-        $Env:SOMETHING_ELSE_JUST_FOR_ME = "hehe" >> $Env:$GITHUB_ENV
+        $Env:DOTNET_CLI_TELEMETRY_OPTOUT = "true" >> $Env:GITHUB_ENV
+        $Env:SOMETHING_ELSE_JUST_FOR_ME = "hehe" >> $Env:GITHUB_ENV
         Write-Output "Did this work? $Env:SOMETHING_ELSE_JUST_FOR_ME"
-        $Env:SOMETHING_ELSE_JUST_FOR_ME2 = "haha" >> $Env:$GITHUB_ENV
+        $Env:SOMETHING_ELSE_JUST_FOR_ME2 = "haha" >> $Env:GITHUB_ENV
         $Env:SOMETHING_ELSE_JUST_FOR_ME2 = "haha" 
         Write-Output "And this? $Env:SOMETHING_ELSE_JUST_FOR_ME2"
     - name: Set up .NET
