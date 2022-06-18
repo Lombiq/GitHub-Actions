@@ -23,7 +23,7 @@ Write-Output ".NET version number: $Version"
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
-    Write-Output "Gulp Extensions found. Building it first because it requires it."
+    Write-Output "Gulp Extensions found. Building it first because it needs to be explicitly built before the solution."
 
     dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj @buildSwitches
 }
