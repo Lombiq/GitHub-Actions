@@ -1,6 +1,6 @@
 ﻿param ($Verbosity, $EnableCodeAnalysis, $Version)
 
-Write-Output "Env var test: $Env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE - $Env:DOTNET_CLI_TELEMETRY_OPTOUT - $Env:SOMETHING_ELSE_JUST_FOR_ME"
+Write-Output "Env var test: $Env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE - $Env:DOTNET_CLI_TELEMETRY_OPTOUT - $Env:SOMETHING_ELSE_JUST_FOR_ME - $Env:SOMETHING_ELSE_JUST_FOR_ME2"
 
 # Notes on build switches that aren't self-explanatory:
 # - /p:Retries and /p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
