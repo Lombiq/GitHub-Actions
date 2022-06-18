@@ -1,6 +1,6 @@
 ﻿name: Set up Azurite
 description: >
-  Sets up the Azurite Azure Blob Storage Emulator
+  Sets up the Azurite for local Azure Blob Storage emulation
   (https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite) via NPM.
 
 inputs:
