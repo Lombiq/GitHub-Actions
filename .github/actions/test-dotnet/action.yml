@@ -53,7 +53,7 @@ runs:
       uses: phoenix-actions/test-reporting@1e9b578818d03d6df50ce8e60d024a000bf3ab63
       if: success() || failure()
       with:
-        name: Test Results (${{inputs.build-directory}} ${{ matrix.machine-type }})
+        name: Test Results (${{inputs.build-directory}}|${{ matrix.machine-type }})
         path: '${{inputs.build-directory}}/**/*.trx'
         reporter: dotnet-trx
         fail-on-error: 'false'
