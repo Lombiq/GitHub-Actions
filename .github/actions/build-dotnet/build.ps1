@@ -1,6 +1,6 @@
 ﻿param ($Verbosity, $EnableCodeAnalysis, $Version)
 
-# Notes on build switches that aren't self-explanatory':
+# Notes on build switches that aren't self-explanatory:
 # - /p:Retries and /p:RetryDelayMilliseconds are to retry builds if due to random locks it fails the first time.
 # - -warnAsMessage:MSB3026 is also to prevent random locks along the lines of "warning MSB3026: Could not copy dlls
 #   errors." from breaking the build (since we treat warnings as errors).
