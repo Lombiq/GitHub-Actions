@@ -24,7 +24,7 @@ runs:
         Write-Output "SOMETHING_ELSE_JUST_FOR_ME = \"haha\"" >> $Env:GITHUB_ENV
         Write-Output "Did this work? $Env:SOMETHING_ELSE_JUST_FOR_ME"
 
-        Write-Output "SOMETHING_ELSE_JUST_FOR_ME2 = \"hehe\""" >> $Env:GITHUB_ENV
+        Write-Output "SOMETHING_ELSE_JUST_FOR_ME2 = \"hehe\"" >> $Env:GITHUB_ENV
         $Env:SOMETHING_ELSE_JUST_FOR_ME2 = "hehe"
         Write-Output "And this? $Env:SOMETHING_ELSE_JUST_FOR_ME2"
     - name: Set up .NET
