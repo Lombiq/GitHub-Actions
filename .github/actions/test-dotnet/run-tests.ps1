@@ -1,7 +1,5 @@
 ﻿param ($Verbosity)
 
-function Configure-Environment($hash) { Set-Item @hash }
-
 # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
 # (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output is
 # sanitized from unnecessary diagnostics messages from chromedriver if the output doesn't already contain groupings,
@@ -12,22 +10,18 @@ function Configure-Environment($hash) { Set-Item @hash }
 
 if ($Env:RUNNER_OS -eq "Windows")
 {
-    Configure-Environment @{
-        Path = 'Env:\Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate'
-        Value = 'Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True;MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5'
-    }
+    $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
+        'Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True;MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5'
 }
 else
 {
-    Configure-Environment @{
-        Path = 'Env:\Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate'
-        Value = 'Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!;MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5'
-    }
-    Configure-Environment @{
-        Path = 'Env:\Lombiq_Tests_UI__DockerConfiguration__ContainerName'
-        Value = 'sql2019'
-    }
+    $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
+        'Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!;MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5'
+
+    $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'sql2019'
 }
+
+$Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
 $tests = dotnet sln list |
     Select-Object -Skip 2 |
