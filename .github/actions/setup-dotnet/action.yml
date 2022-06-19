@@ -1,0 +1,28 @@
+﻿name: Set up .NET
+description: Sets up the .NET SDK.
+
+inputs:
+  dotnet-version:
+    required: false
+    default: 6.0.*
+    description: Version of the .NET SDK to set up. Defaults to 6.0.*.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set environment variables
+      shell: pwsh
+      run: |
+        # This ceremony is needed to make the env vars available in subsequent steps too, see:
+        # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable.
+        # Note that in PowerShell, somehow an echo is not needed. Be sure not to put spaces around the equal signs when
+        # writin to $Env:GITHUB_ENV.
+        "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true" >> $Env:GITHUB_ENV
+        $Env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
+
+        "DOTNET_CLI_TELEMETRY_OPTOUT=true" >> $Env:GITHUB_ENV
+        $Env:DOTNET_CLI_TELEMETRY_OPTOUT = "true"
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}

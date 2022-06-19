@@ -1,0 +1,20 @@
+﻿name: Set up Azurite
+description: >
+  Sets up the Azurite for local Azure Blob Storage emulation
+  (https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite) via NPM.
+
+inputs:
+  location:
+    required: false
+    default: .
+    description: Path to the directory where Azurite will be started and will store its logs. Defaults to ".".
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Azurite via NPM
+      # This needs to run in bash for some reason. Azurite properly starts in PS but still, connections fail.
+      shell: bash
+      run: |
+        npm install -g azurite
+        azurite --silent --location ${{inputs.location}}/azurite --debug ${{inputs.location}}/azurite/debug.log &
