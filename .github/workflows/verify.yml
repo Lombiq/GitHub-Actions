@@ -1,4 +1,4 @@
-name: Verify OSOCE Submodule Pull Request
+name: Verify Submodule Pull Request
 
 on:
   workflow_call:
