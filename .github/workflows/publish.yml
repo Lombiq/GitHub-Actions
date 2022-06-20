@@ -190,3 +190,11 @@ jobs:
         with:
           name: NuGet-Package
           path: artifacts
+
+      - name: Create Release
+        # v1.10.0
+        uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
+        with:
+          allowUpdates: true
+          generateReleaseNotes: true
+          artifacts: artifacts/*.nupkg, artifacts/*.snupkg
