@@ -194,6 +194,9 @@ jobs:
       - name: Create Release
         # v1.10.0
         uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
+        # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
+        # v4.3.1-alpha.osoe-86.
+        if: "!contains(github.ref, '-')"
         with:
           allowUpdates: true
           generateReleaseNotes: true
