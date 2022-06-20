@@ -19,6 +19,21 @@ runs:
   using: "composite"
   steps:
 
+    - name: Investigate State
+      working-directory: ${{ matrix.directory }}
+      shell: bash
+      run: |
+        echo "GITHUB_STEP_SUMMARY '$GITHUB_STEP_SUMMARY'"
+        echo "ACTIONS_RUNTIME_URL '$ACTIONS_RUNTIME_URL'"
+        echo "ACTIONS_RUNTIME_TOKEN '$ACTIONS_RUNTIME_TOKEN'"
+        echo "ACTIONS_CACHE_URL '$ACTIONS_CACHE_URL'"
+
+        echo '## Testing Job Summary' >> $GITHUB_STEP_SUMMARY
+        echo "❌ $PWD ❌" >> $GITHUB_STEP_SUMMARY
+        echo '' >> $GITHUB_STEP_SUMMARY
+
+        env >> $GITHUB_STEP_SUMMARY
+
     - name: Tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
