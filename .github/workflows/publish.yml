@@ -171,6 +171,7 @@ jobs:
         #   https://github.com/clairernovotny/DeterministicBuilds.
         # * -p:DebugSymbols=true and -p:DebugType=portable are needed to generate PDB files.
         run: dotnet build --configuration Release --no-restore -p:NuGetBuild=true -p:LangVersion=Latest -p:GenerateDocumentationFile=True -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200 -p:EnableNETAnalyzers=false -p:ContinuousIntegrationBuild=true -p:DebugSymbols=true -p:DebugType=portable --verbosity ${{ inputs.verbosity }}
+
       - name: Pack
         # Notes on the configuration apart from what's also for dotnet build:
         # * NoWarn on NU5104 to not have warnings for prerelease dependencies, see:
@@ -180,10 +181,11 @@ jobs:
         # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
         #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
         run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true -p:Version=${{ steps.get-version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity ${{ inputs.verbosity }}
+
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.source-value.outputs.value }} --skip-duplicate
 
-      - name: Archive artifacts
+      - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: NuGet-Package
