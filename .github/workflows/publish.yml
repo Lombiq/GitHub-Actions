@@ -182,8 +182,8 @@ jobs:
         #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
         run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true -p:Version=${{ steps.get-version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity ${{ inputs.verbosity }}
 
-      - name: Push with dotnet
-        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.source-value.outputs.value }} --skip-duplicate
+      #- name: Push with dotnet
+      #  run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.source-value.outputs.value }} --skip-duplicate
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
