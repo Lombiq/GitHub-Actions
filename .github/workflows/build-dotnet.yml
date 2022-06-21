@@ -16,7 +16,7 @@ on:
         required: false
         type: string
         default: 6.0.*
-        description: Version of the .NET SDK to set up. Defaults to "6.0.*".
+        description: Version of the .NET SDK to set up. Defaults to "${{ inputs.dotnet-version.default }}".
       build-directory:
         required: false
         type: string
