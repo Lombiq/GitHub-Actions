@@ -38,7 +38,7 @@ jobs:
 
       - name: Get the Version
         run: |
-          $version = $Env:GITHUB_REF_NAME.Trim().Substring(1)
+          $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
           Write-Output "Target Version: $version"
           "PUBLISH_VERSION=$version" >> $Env:GITHUB_ENV
 
