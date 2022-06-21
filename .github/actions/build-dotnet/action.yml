@@ -25,7 +25,8 @@ runs:
   using: "composite"
   steps:
     - name: Info build-dotnet/action.yml
-      run: echo "issue/OSOE-142: build-dotnet/action.yml"
+      run: |
+        echo "issue/OSOE-142: build-dotnet/action.yml"
 
     - name: Cache NuGet
       uses: actions/cache@v3

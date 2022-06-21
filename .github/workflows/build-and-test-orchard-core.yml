@@ -72,7 +72,8 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Info build-and-tesst-orchard-core.yml
-      run: echo "issue/OSOE-142: build-and-tesst-orchard-core.yml"
+      run: |
+        echo "issue/OSOE-142: build-and-tesst-orchard-core.yml"
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-142
