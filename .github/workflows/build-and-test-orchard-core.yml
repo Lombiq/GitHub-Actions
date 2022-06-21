@@ -32,6 +32,14 @@ on:
         type: string
         default: "true"
         description: Indicates whether to enable static code analysis during dotnet build.
+      build-cache-packages:
+        required: false
+        type: string
+        default: "true"
+        description: >
+          If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
+          packages, but negligible or even slower if you only have a handful. In this case disable it by setting the
+          input to "false".
       timeout-minutes:
         required: false
         type: number
@@ -64,11 +72,12 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-142
       with:
         directory: ${{ inputs.build-directory}}
         verbosity: ${{ inputs.build-verbosity}}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
+        cache-packages: ${{ inputs.build-cache-packages }}
 
     - name: Set up SQL Server
       uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
