@@ -9,11 +9,11 @@ inputs:
     required: false
     default: .
     description: >
-      Path to the directory where a solution file can be found and thus the .NET build has run. Defaults to ".".
+      Path to the directory where a solution file can be found and thus the .NET build has run.
   test-verbosity:
     required: false
     default: quiet
-    description: Verbosity parameter for dotnet test. Defaults to "quiet".
+    description: Verbosity parameter for dotnet test.
 
 runs:
   using: "composite"

@@ -7,9 +7,7 @@ on:
         required: false
         type: string
         default: https://api.nuget.org/v3/index.json
-        description: >
-          The NuGet server URL used by the `dotnet nuget push` command's `--source` argument. 
-          Defaults to "https://api.nuget.org/v3/index.json".
+        description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument. 
       verbosity:
         required: false
         type: string

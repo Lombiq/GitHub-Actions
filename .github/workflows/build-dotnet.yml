@@ -11,32 +11,32 @@ on:
         default: "[\"ubuntu-latest\"]"
         description: >
             Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]". Defaults to "[\"ubuntu-latest\"]".
+            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]".
       dotnet-version:
         required: false
         type: string
         default: 6.0.*
-        description: Version of the .NET SDK to set up. Defaults to "${{ inputs.dotnet-version.default }}".
+        description: Version of the .NET SDK to set up.
       build-directory:
         required: false
         type: string
         default: .
-        description: Path to the directory where a solution file can be found. Defaults to ".".
+        description: Path to the directory where a solution file can be found.
       build-verbosity:
         required: false
         type: string
         default: quiet
-        description: Verbosity parameter for dotnet build. Defaults to "quiet".
+        description: Verbosity parameter for dotnet build.
       build-enable-code-analysis:
         required: false
         type: string
         default: "true"
-        description: Indicates whether to enable static code analysis during dotnet build. Defaults to "true".
+        description: Indicates whether to enable static code analysis during dotnet build.
       timeout-minutes:
         required: false
         type: number
         default: 360
-        description: Configuration for the timeout-minutes parameter of the workflow. Defaults to 360 (the GitHub default).
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
 
 jobs:
   # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call
