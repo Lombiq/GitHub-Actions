@@ -14,10 +14,25 @@ inputs:
     required: false
     default: "true"
     description: If set to "true", static code analysis is enabled during the build.
+  cache-packages:
+    required: false
+    default: "true"
+    description: >
+      If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet packages,
+      but negligible or even slower if you only have a handful. In this case disable it by setting the input to "false".
 
 runs:
   using: "composite"
-  steps:
+  steps:  
+    - name: Cache NuGet
+      uses: actions/cache@v3
+      if: ${{ inputs.cache-packages == 'true' }}
+      with:
+        path: ~/.nuget/packages
+        key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.nuspec') }}
+        restore-keys: |
+          ${{ github.repository }}-${{ runner.os }}-${{ inputs.directory }}-nuget
+
     - name: Build and Static Code Analysis
       shell: pwsh
       working-directory: ${{ inputs.directory }}
