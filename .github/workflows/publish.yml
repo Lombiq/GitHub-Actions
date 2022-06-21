@@ -21,11 +21,15 @@ on:
       API_KEY:
         required: true
 
+defaults:
+  run:
+    shell: pwsh
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Print source
+      - name: Print Source
         shell: pwsh
         run: |
           $Source = @'
@@ -40,14 +44,13 @@ jobs:
           Write-Output "NuGet Source: $Source"
           "SOURCE_URL=$Source" >> $Env:GITHUB_ENV
 
-      - name: Get the version
-        id: get-version
+      - name: Get the Version
         run: |
-          VERSION="${GITHUB_REF_NAME//v}"
-          echo VERSION:${VERSION}
-          echo ::set-output name=VERSION::${VERSION}
+          $Version = $Env:GITHUB_REF_NAME.Trim().Substring(1)
+          Write-Output "VERSION: $Version"
+          "PUBLISH_VERSION=$Version" >> $Env:GITHUB_ENV
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v1
@@ -55,6 +58,7 @@ jobs:
           dotnet-version: 6.0.*
 
       - name: Add Source Link package
+        shell: bash
         run: |
           # Never edit this on its own. First update and test the scripts/add-package.sh file, then
           # copy the `program` function here and call it with `program Microsoft.SourceLink.GitHub`.
@@ -163,7 +167,7 @@ jobs:
                 }
             }
 
-            Program './' '${{ steps.get-version.outputs.VERSION }}'
+            Program './' $Env:PUBLISH_VERSION
 
       - name: Install dependencies
         run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
@@ -189,7 +193,7 @@ jobs:
         #   a non-packagable project.
         # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
         #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
-        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true -p:Version=${{ steps.get-version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity ${{ inputs.verbosity }}
+        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true "-p:Version=$Env:PUBLISH_VERSION" -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity ${{ inputs.verbosity }}
 
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source $Env:SOURCE_URL --skip-duplicate
