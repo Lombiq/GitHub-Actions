@@ -24,7 +24,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Info
+    - name: Info build-dotnet/action.yml
       run: echo "issue/OSOE-142: build-dotnet/action.yml"
 
     - name: Cache NuGet

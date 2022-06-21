@@ -71,7 +71,7 @@ jobs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
-    - name: Info
+    - name: Info build-dotnet.yml
       run: echo "issue/OSOE-142: build-dotnet.yml"
 
     - name: Build and Static Code Analysis
