@@ -64,12 +64,12 @@ jobs:
         submodules: 'recursive'
 
     - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-142
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-142
 
     - name: Info build-and-tesst-orchard-core.yml
       run: |
@@ -84,15 +84,15 @@ jobs:
         cache-packages: ${{ inputs.build-cache-packages }}
 
     - name: Set up SQL Server
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/OSOE-142
 
     - name: Set up Azurite
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@issue/OSOE-142
       with:
         location: ${{ inputs.build-directory}}
 
     - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-142
       with:
         build-directory: ${{ inputs.build-directory}}
         test-verbosity: ${{ inputs.build-verbosity}}
