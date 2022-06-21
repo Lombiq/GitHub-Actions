@@ -23,7 +23,10 @@ inputs:
 
 runs:
   using: "composite"
-  steps:  
+  steps:
+    - name: Info
+      run: echo "issue/OSOE-142: build-dotnet/action.yml"
+
     - name: Cache NuGet
       uses: actions/cache@v3
       if: ${{ inputs.cache-packages == 'true' }}
