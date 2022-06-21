@@ -20,16 +20,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # v1.1.0
-      - uses: haya14busa/action-cond@c69871f4d4693e93126e770d7c3588cb1d473462
-        id: source-value
-        with:
-          cond: ${{ inputs.source == '' }}
-          if_true: "https://api.nuget.org/v3/index.json"
-          if_false: "${{ inputs.source }}"
-
       - name: Print source
-        run: echo NuGet Source:${{ steps.source-value.outputs.value }}
+        shell: pwsh
+        run: |
+          $Source = @'
+          ${{ inputs.source }}
+          '@.Trim()
+
+          if ([string]::IsNullOrEmpty($Source)) 
+          {
+              $Source = 'https://api.nuget.org/v3/index.json';
+          }
+
+          Write-Output "NuGet Source: $Source"
+          "SOURCE_URL=$Source" >> $Env:GITHUB_ENV
 
       - name: Get the version
         id: get-version
@@ -183,7 +187,7 @@ jobs:
         run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true -p:Version=${{ steps.get-version.outputs.VERSION }} -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity ${{ inputs.verbosity }}
 
       - name: Push with dotnet
-        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source ${{ steps.source-value.outputs.value }} --skip-duplicate
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source $Env:SOURCE_URL --skip-duplicate
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
