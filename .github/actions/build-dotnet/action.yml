@@ -5,15 +5,15 @@ inputs:
   directory:
     required: false
     default: .
-    description: Path to the directory where a solution file can be found. Defaults to ".".
+    description: Path to the directory where a solution file can be found.
   verbosity:
     required: false
     default: quiet
-    description: Verbosity parameter for dotnet build. Defaults to "quiet".
+    description: Verbosity parameter for dotnet build.
   enable-code-analysis:
     required: false
     default: "true"
-    description: If set to "true", static code analysis is enabled during the build. Defaults to "true".
+    description: If set to "true", static code analysis is enabled during the build.
 
 runs:
   using: "composite"
