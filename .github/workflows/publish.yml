@@ -6,10 +6,15 @@ on:
       source:
         required: false
         type: string
+        default: https://api.nuget.org/v3/index.json
+        description: >
+          The NuGet server URL used by the `dotnet nuget push` command's `--source` argument. 
+          Defaults to "https://api.nuget.org/v3/index.json".
       verbosity:
         required: false
         type: string
         default: minimal
+        description: The logging verbosity type used by the `dotnet` command.
     secrets:
       # We can't access org secrets here so they need to be passed in, see:
       # https://github.community/t/resuable-called-workflow-environment-variables-secrets-and-trigger-event-access/207723/2
