@@ -28,7 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Source
-        shell: pwsh
         run: |
           $source = @'
           ${{ inputs.source }}
@@ -126,7 +125,6 @@ jobs:
           program Microsoft.SourceLink.GitHub
 
       - name: Update package manifest version
-        shell: pwsh
         run: |
             function Program {
                 param(
