@@ -77,7 +77,7 @@ jobs:
 
     - name: Cache NuGet
       uses: actions/cache@v3
-      if: ${{ inputs.cache-packages == 'true' }}
+      if: ${{ inputs.build-cache-packages == 'true' }}
       with:
         path: ~/.nuget/packages
         key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.nuspec') }}
