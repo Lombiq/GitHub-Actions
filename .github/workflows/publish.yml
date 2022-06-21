@@ -32,23 +32,23 @@ jobs:
       - name: Print Source
         shell: pwsh
         run: |
-          $Source = @'
+          $source = @'
           ${{ inputs.source }}
           '@.Trim()
 
-          if ([string]::IsNullOrEmpty($Source)) 
+          if ([string]::IsNullOrEmpty($source)) 
           {
-              $Source = 'https://api.nuget.org/v3/index.json';
+              $source = 'https://api.nuget.org/v3/index.json';
           }
 
-          Write-Output "NuGet Source: $Source"
-          "SOURCE_URL=$Source" >> $Env:GITHUB_ENV
+          Write-Output "NuGet Source: $source"
+          "SOURCE_URL=$source" >> $Env:GITHUB_ENV
 
       - name: Get the Version
         run: |
-          $Version = $Env:GITHUB_REF_NAME.Trim().Substring(1)
-          Write-Output "VERSION: $Version"
-          "PUBLISH_VERSION=$Version" >> $Env:GITHUB_ENV
+          $version = $Env:GITHUB_REF_NAME.Trim().Substring(1)
+          Write-Output "Target Version: $version"
+          "PUBLISH_VERSION=$version" >> $Env:GITHUB_ENV
 
       - uses: actions/checkout@v3
 
@@ -184,7 +184,7 @@ jobs:
         #   https://github.com/clairernovotny/DeterministicBuilds.
         # * -p:DebugSymbols=true and -p:DebugType=portable are needed to generate PDB files.
         run: |
-          $Arguments = @(
+          $arguments = @(
               "--configuration:Release",
               "--no-restore",
               "--verbosity:${{ inputs.verbosity }}",
@@ -197,7 +197,7 @@ jobs:
               "-p:DebugSymbols=true",
               "-p:DebugType=portable"
           )
-          dotnet build @Arguments
+          dotnet build @arguments
 
       - name: Pack
         # Notes on the configuration apart from what's also for dotnet build:
@@ -208,7 +208,7 @@ jobs:
         # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
         #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
         run: |
-          $Arguments = @(
+          $arguments = @(
               "--configuration:Release",
               "--warnaserror",
               "--no-restore",
@@ -225,7 +225,7 @@ jobs:
               "-p:SymbolPackageFormat=snupkg",
               "-p:NoDefaultExcludes=true"
           )
-          dotnet pack @Arguments   
+          dotnet pack @arguments   
 
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source $Env:SOURCE_URL --skip-duplicate
