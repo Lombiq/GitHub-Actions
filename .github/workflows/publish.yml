@@ -183,7 +183,21 @@ jobs:
         # * -p:ContinuousIntegrationBuild=true is needed for Deterministic Builds:
         #   https://github.com/clairernovotny/DeterministicBuilds.
         # * -p:DebugSymbols=true and -p:DebugType=portable are needed to generate PDB files.
-        run: dotnet build --configuration Release --no-restore -p:NuGetBuild=true -p:LangVersion=Latest -p:GenerateDocumentationFile=True -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200 -p:EnableNETAnalyzers=false -p:ContinuousIntegrationBuild=true -p:DebugSymbols=true -p:DebugType=portable --verbosity ${{ inputs.verbosity }}
+        run: |
+          $Arguments = @(
+              "--configuration:Release",
+              "--no-restore",
+              "--verbosity:${{ inputs.verbosity }}",
+              "-p:NuGetBuild=true",
+              "-p:LangVersion=Latest",
+              "-p:GenerateDocumentationFile=True",
+              "-p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200",
+              "-p:EnableNETAnalyzers=false",
+              "-p:ContinuousIntegrationBuild=true",
+              "-p:DebugSymbols=true",
+              "-p:DebugType=portable"
+          )
+          dotnet build @Arguments
 
       - name: Pack
         # Notes on the configuration apart from what's also for dotnet build:
@@ -193,7 +207,25 @@ jobs:
         #   a non-packagable project.
         # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
         #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
-        run: dotnet pack --output artifacts --configuration Release --no-restore --no-build -p:NuGetBuild=true "-p:Version=$Env:PUBLISH_VERSION" -p:GenerateDocumentationFile=True -p:NoWarn=NU5104 -p:TreatWarningsAsErrors=true -warnaserror -p:WarnOnPackingNonPackableProject=True -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:NoDefaultExcludes=true --verbosity ${{ inputs.verbosity }}
+        run: |
+          $Arguments = @(
+              "--configuration:Release",
+              "--warnaserror",
+              "--no-restore",
+              "--no-build",
+              "--output:artifacts",
+              "--verbosity:${{ inputs.verbosity }}",
+              "-p:NuGetBuild=true",
+              "-p:Version=$Env:PUBLISH_VERSION",
+              "-p:GenerateDocumentationFile=True",
+              "-p:NoWarn=NU5104",
+              "-p:TreatWarningsAsErrors=true",
+              "-p:WarnOnPackingNonPackableProject=True",
+              "-p:IncludeSymbols=true",
+              "-p:SymbolPackageFormat=snupkg",
+              "-p:NoDefaultExcludes=true"
+          )
+          dotnet pack @Arguments   
 
       - name: Push with dotnet
         run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source $Env:SOURCE_URL --skip-duplicate
