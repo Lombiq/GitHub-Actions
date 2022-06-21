@@ -71,9 +71,18 @@ jobs:
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-142
 
-    - name: Info build-and-tesst-orchard-core.yml
+    - name: Info build-and-test-orchard-core.yml
       run: |
-        echo "issue/OSOE-142: build-and-tesst-orchard-core.yml"
+        echo "issue/OSOE-142: build-and-test-orchard-core.yml"
+
+    - name: Cache NuGet
+      uses: actions/cache@v3
+      if: ${{ inputs.cache-packages == 'true' }}
+      with:
+        path: ~/.nuget/packages
+        key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.nuspec') }}
+        restore-keys: |
+          ${{ github.repository }}-${{ runner.os }}-${{ inputs.directory }}-nuget
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-142
