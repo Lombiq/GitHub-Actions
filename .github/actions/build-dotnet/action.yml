@@ -35,7 +35,7 @@ runs:
       if: ${{ inputs.cache-packages == 'true' }}
       with:
         path: ~/.nuget/packages
-        key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.nuspec') }}
+        key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
           ${{ github.repository }}-${{ runner.os }}-${{ inputs.directory }}-nuget
 
