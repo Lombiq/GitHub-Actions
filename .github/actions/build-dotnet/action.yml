@@ -25,6 +25,8 @@ runs:
   using: "composite"
   steps:
     - name: Info build-dotnet/action.yml
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
       run: |
         echo "issue/OSOE-142: build-dotnet/action.yml"
 
