@@ -34,11 +34,6 @@ jobs:
           ${{ inputs.source }}
           '@.Trim()
 
-          if ([string]::IsNullOrEmpty($source)) 
-          {
-              $source = 'https://api.nuget.org/v3/index.json';
-          }
-
           Write-Output "NuGet Source: $source"
           "SOURCE_URL=$source" >> $Env:GITHUB_ENV
 
