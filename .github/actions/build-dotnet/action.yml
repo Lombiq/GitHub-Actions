@@ -36,9 +36,9 @@ runs:
       if: ${{ inputs.cache-packages == 'true' }}
       with:
         path: ~/.nuget/packages
-        key: ${{ github.repository }}-${{ runner.os }}-${{ cache-version }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.csproj') }}
+        key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
-          ${{ github.repository }}-${{ runner.os }}-${{ cache-version }}-${{ inputs.directory }}-nuget
+          ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}-nuget
 
     - name: Build and Static Code Analysis
       shell: pwsh
