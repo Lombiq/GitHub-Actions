@@ -40,6 +40,13 @@ on:
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
           packages, but negligible or even slower if you only have a handful. In this case disable it by setting the
           input to "false".
+      build-cache-version:
+        required: false
+        default: "0"
+        description: >
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
+          only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
+          until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
       timeout-minutes:
         required: false
         type: number
@@ -71,10 +78,6 @@ jobs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
-    - name: Info build-dotnet.yml
-      run: |
-        echo "issue/OSOE-142: build-dotnet.yml"
-
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-142
       with:
@@ -82,3 +85,4 @@ jobs:
         verbosity: ${{ inputs.build-verbosity}}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
         cache-packages: ${{ inputs.build-cache-packages }}
+        cache-version: ${{ inputs.build-cache-version }}
