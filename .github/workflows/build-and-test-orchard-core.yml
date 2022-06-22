@@ -64,26 +64,17 @@ jobs:
         submodules: 'recursive'
 
     - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-142
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-142
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Info build-and-test-orchard-core.yml
       run: |
         echo "issue/OSOE-142: build-and-test-orchard-core.yml"
         echo "${{ github.repository }}-${{ runner.os }}-${{ inputs.build-directory }}-nuget-${{ hashFiles('**/*.csproj') }}"
-
-    - name: Cache NuGet
-      uses: actions/cache@v3
-      if: ${{ inputs.build-cache-packages == 'true' }}
-      with:
-        path: ~/.nuget/packages
-        key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.build-directory }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ github.repository }}-${{ runner.os }}-${{ inputs.build-directory }}-nuget
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-142
@@ -94,15 +85,15 @@ jobs:
         cache-packages: ${{ inputs.build-cache-packages }}
 
     - name: Set up SQL Server
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/OSOE-142
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
 
     - name: Set up Azurite
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@issue/OSOE-142
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
       with:
         location: ${{ inputs.build-directory}}
 
     - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-142
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
         build-directory: ${{ inputs.build-directory}}
         test-verbosity: ${{ inputs.build-verbosity}}
