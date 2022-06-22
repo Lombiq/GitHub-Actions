@@ -42,6 +42,7 @@ on:
           input to "false".
       build-cache-version:
         required: false
+        type: string
         default: "0"
         description: >
           Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
