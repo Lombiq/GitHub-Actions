@@ -74,6 +74,7 @@ jobs:
     - name: Info build-and-test-orchard-core.yml
       run: |
         echo "issue/OSOE-142: build-and-test-orchard-core.yml"
+        echo "${{ github.repository }}-${{ runner.os }}-${{ inputs.build-directory }}-nuget-${{ hashFiles('**/*.csproj') }}"
 
     - name: Cache NuGet
       uses: actions/cache@v3
