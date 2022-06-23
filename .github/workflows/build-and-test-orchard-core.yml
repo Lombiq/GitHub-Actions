@@ -35,11 +35,10 @@ on:
       build-enable-nuget-caching:
         required: false
         type: string
-        default: "true"
+        default: "false"
         description: >
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
-          packages, but negligible or even slower if you only have a handful. In this case disable it by setting the
-          input to "false".
+          packages, but negligible or even slower if you only have a handful.
       build-cache-version:
         required: false
         type: string
