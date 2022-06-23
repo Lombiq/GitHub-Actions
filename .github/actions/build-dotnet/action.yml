@@ -14,10 +14,32 @@ inputs:
     required: false
     default: "true"
     description: If set to "true", static code analysis is enabled during the build.
+  enable-nuget-caching:
+    required: false
+    default: "false"
+    description: >
+      If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet packages,
+      but negligible or even slower if you only have a handful.
+  cache-version:
+    required: false
+    default: "0"
+    description: >
+      Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the only
+      current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
+      until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
 
 runs:
   using: "composite"
   steps:
+    - name: Cache NuGet
+      uses: actions/cache@v3
+      if: ${{ inputs.enable-nuget-caching == 'true' }}
+      with:
+        path: ~/.nuget/packages
+        key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}-nuget
+
     - name: Build and Static Code Analysis
       shell: pwsh
       working-directory: ${{ inputs.directory }}
@@ -28,4 +50,8 @@ runs:
             Version = "1.$Env:GITHUB_RUN_NUMBER.$Env:GITHUB_RUN_ATTEMPT-$Env:GITHUB_RUN_ID"
         }
 
+        $startTime = [DateTime]::Now
         ${{ github.action_path }}/build.ps1 @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Solution build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)

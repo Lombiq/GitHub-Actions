@@ -25,7 +25,12 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 {
     Write-Output "Gulp Extensions found. Building it first because it needs to be explicitly built before the solution."
 
+    
+    $startTime = [DateTime]::Now
     dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj @buildSwitches
+    $endTime = [DateTime]::Now
+
+    Write-Output ("Gulp Extensions build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
 }
 
 Write-Output "Building solution."
