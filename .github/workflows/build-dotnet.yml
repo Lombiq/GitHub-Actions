@@ -1,4 +1,4 @@
-﻿name: Build .NET solution
+name: Build .NET solution
 
 on:
   workflow_call:
@@ -79,7 +79,7 @@ jobs:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-142
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory}}
         verbosity: ${{ inputs.build-verbosity}}
