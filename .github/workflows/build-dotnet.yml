@@ -32,7 +32,7 @@ on:
         type: string
         default: "true"
         description: Indicates whether to enable static code analysis during dotnet build.
-      build-cache-packages:
+      build-enable-nuget-caching:
         required: false
         type: string
         default: "true"
@@ -85,5 +85,5 @@ jobs:
         directory: ${{ inputs.build-directory}}
         verbosity: ${{ inputs.build-verbosity}}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
-        cache-packages: ${{ inputs.build-cache-packages }}
+        enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         cache-version: ${{ inputs.build-cache-version }}

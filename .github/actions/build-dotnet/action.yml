@@ -14,7 +14,7 @@ inputs:
     required: false
     default: "true"
     description: If set to "true", static code analysis is enabled during the build.
-  cache-packages:
+  enable-nuget-caching:
     required: false
     default: "true"
     description: >
@@ -33,7 +33,7 @@ runs:
   steps:
     - name: Cache NuGet
       uses: actions/cache@v3
-      if: ${{ inputs.cache-packages == 'true' }}
+      if: ${{ inputs.enable-nuget-caching == 'true' }}
       with:
         path: ~/.nuget/packages
         key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.csproj') }}
