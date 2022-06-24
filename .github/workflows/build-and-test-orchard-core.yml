@@ -1,4 +1,4 @@
-﻿name: Build and Test Orchard Core solution
+name: Build and Test Orchard Core solution
 
 on:
   workflow_call:
@@ -11,33 +11,47 @@ on:
         default: "[\"ubuntu-latest\"]"
         description: >
             Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]". Defaults to "[\"ubuntu-latest\"]".
+            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]".
       dotnet-version:
         required: false
         type: string
         default: 6.0.*
-        description: >
-          Version of the .NET SDK to set up. Defaults to 6.0.*.
+        description: Version of the .NET SDK to set up.
       build-directory:
         required: false
         type: string
         default: .
-        description: Path to the directory where a solution file can be found. Defaults to ".".
+        description: Path to the directory where a solution file can be found.
       build-verbosity:
         required: false
         type: string
         default: quiet
-        description: Verbosity parameter for dotnet build. Defaults to "quiet".
+        description: Verbosity parameter for dotnet build.
       build-enable-code-analysis:
         required: false
         type: string
         default: "true"
-        description: Indicates whether to enable static code analysis during dotnet build. Defaults to "true".
+        description: Indicates whether to enable static code analysis during dotnet build.
+      build-enable-nuget-caching:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
+          packages, but negligible or even slower if you only have a handful.
+      build-cache-version:
+        required: false
+        type: string
+        default: "0"
+        description: >
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
+          only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
+          until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
       timeout-minutes:
         required: false
         type: number
         default: 360
-        description: Configuration for the timeout-minutes parameter of the workflow. Defaults to 360 (the GitHub default).
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
 
 jobs:
   build-and-test:
@@ -67,9 +81,11 @@ jobs:
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
-        directory: ${{ inputs.build-directory}}
-        verbosity: ${{ inputs.build-verbosity}}
-        enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
+        directory: ${{ inputs.build-directory }}
+        verbosity: ${{ inputs.build-verbosity }}
+        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+        enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+        cache-version: ${{ inputs.build-cache-version }}
 
     - name: Set up SQL Server
       uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
