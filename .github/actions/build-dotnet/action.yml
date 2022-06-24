@@ -52,7 +52,7 @@ runs:
 
         if ($isNuget -and $isNpm) 
         {
-            $restoreKeys = "${key}-nuget+npm"
+            $restoreKeys = "${key}-nuget-npm"
             $hash = '${{ hashFiles('**/*.csproj', '**/package-lock.json', '**/pnpm-lock.yaml') }}'
 
             # Multiple paths must be separaters by "\n", but we can't include newline in the 
