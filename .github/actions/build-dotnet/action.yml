@@ -37,14 +37,57 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Detect Cache Configuration
+      id: detect-cache-configuration
+      shell: pwsh
+      run: |
+        function Set-Output($Key, $Value) { Write-Output "::set-output name=$Key::$Value" }
+
+        $isNuget = ${{ inputs.enable-nuget-caching == 'true' ? '$True' : '$False' }}
+        $isNpm = ${{ inputs.enable-npm-caching == 'true' ? '$True' : '$False' }}
+        $npmPath = if ($isNpm) { npm config get cache }
+        $key = @'
+        ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}
+        '@.Trim()
+
+        if ($isNuget -and $isNpm) 
+        {
+            $restoreKeys = "${key}-nuget+npm"
+            $hash = '${{ hashFiles('**/*.csproj', '**/package-lock.json', '**/pnpm-lock.yaml') }}'
+
+            # Multiple paths must be separaters by "\n", but we can't include newline in the 
+            # workflow command so we have to mususe the format function like this.
+            Set-Output 'paths' ('~/.nuget/packages', $npmPath -join '{0}')
+        }
+        elseif ($isNuget)
+        {
+            $restoreKeys = "${key}-nuget"
+            $hash = '${{ hashFiles('**/*.csproj') }}'
+            Set-Output 'paths' '~/.nuget/packages'
+        }
+        elseif ($isNpm)
+        {
+            $restoreKeys = "${key}-npm"
+            $hash = '${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml') }}'
+            Set-Output 'paths' $npmPath
+        }
+        else
+        {
+            Set-Output 'cache-enabled' 'false'
+            exit 0
+        }
+        
+        Set-Output 'cache-enabled' 'true'
+        Set-Output 'key' "${restoreKeys}-$hash"
+        Set-Output 'restore-keys' $restoreKeys
+
     - name: Cache NuGet
       uses: actions/cache@v3
-      if: ${{ inputs.enable-nuget-caching == 'true' }}
+      if: ${{ outputs.detect-cache-configuration.cache-enabled != 'false' }}
       with:
-        path: ~/.nuget/packages
-        key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}-nuget
+        path: ${{ format(outputs.detect-cache-configuration.paths, '\n') }}
+        key: ${{ outputs.detect-cache-configuration.key }}
+        restore-keys: ${{ outputs.detect-cache-configuration.restore-keys }}
 
     - name: Build and Static Code Analysis
       shell: pwsh
