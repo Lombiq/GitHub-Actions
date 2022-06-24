@@ -43,8 +43,8 @@ runs:
       run: |
         function Set-Output($Key, $Value) { Write-Output "::set-output name=$Key::$Value" }
 
-        $isNuget = ${{ inputs.enable-nuget-caching == 'true' ? '$True' : '$False' }}
-        $isNpm = ${{ inputs.enable-npm-caching == 'true' ? '$True' : '$False' }}
+        $isNuget = $${{ inputs.enable-nuget-caching == 'true' }}
+        $isNpm = $${{ inputs.enable-npm-caching == 'true' }}
         $npmPath = if ($isNpm) { npm config get cache }
         $key = @'
         ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}
