@@ -20,6 +20,12 @@ inputs:
     description: >
       If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet packages,
       but negligible or even slower if you only have a handful.
+  enable-npm-caching:
+    required: false
+    default: "false"
+    description: >
+      If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages, but 
+      negligible or even slower if you only have a handful.
   cache-version:
     required: false
     default: "0"
