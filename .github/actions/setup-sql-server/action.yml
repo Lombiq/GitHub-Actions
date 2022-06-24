@@ -1,0 +1,16 @@
+﻿name: Set up SQL Server
+description: Sets up SQL Server with Lombiq-recommended defaults.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up SQL Server
+      shell: pwsh
+      run: |
+        ${{ github.action_path }}/setup-sql-server.ps1
+
+    # Needs to be a separate step, otherwise the Chocolatey installation won't be visible.
+    - name: Wait for SQL Server to start
+      shell: pwsh
+      run: |
+        ${{ github.action_path }}/wait-for-sql-server.ps1
