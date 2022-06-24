@@ -83,11 +83,11 @@ runs:
 
     - name: Cache NuGet
       uses: actions/cache@v3
-      if: ${{ outputs.detect-cache-configuration.cache-enabled != 'false' }}
+      if: ${{ steps.detect-cache-configuration.outputs.cache-enabled != 'false' }}
       with:
-        path: ${{ format(outputs.detect-cache-configuration.paths, '\n') }}
-        key: ${{ outputs.detect-cache-configuration.key }}
-        restore-keys: ${{ outputs.detect-cache-configuration.restore-keys }}
+        path: ${{ format(steps.detect-cache-configuration.outputs.paths, '\n') }}
+        key: ${{ steps.detect-cache-configuration.outputs.key }}
+        restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
     - name: Build and Static Code Analysis
       shell: pwsh
