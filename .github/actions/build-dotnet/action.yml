@@ -41,51 +41,42 @@ runs:
       id: detect-cache-configuration
       shell: pwsh
       run: |
-        function Set-Output($Key, $Value) { Write-Output "::set-output name=$Key::$Value" }
-
         $isNuget = $${{ inputs.enable-nuget-caching == 'true' }}
         $isNpm = $${{ inputs.enable-npm-caching == 'true' }}
-        $npmPath = if ($isNpm) { npm config get cache }
         $key = @'
         ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}
         '@.Trim()
 
+        $hashes = @{
+            'nuget' = '${{ hashFiles('**/*.csproj') }}';
+            'npm' = '${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml') }}';
+            'nugetnpm' = '${{ hashFiles('**/*.csproj', '**/package-lock.json', '**/pnpm-lock.yaml') }}';
+        }
+
         if ($isNuget -and $isNpm) 
         {
-            $restoreKeys = "${key}-nugetnpm"
-            $hash = '${{ hashFiles('**/*.csproj', '**/package-lock.json', '**/pnpm-lock.yaml') }}'
-
-            # Multiple paths must be separaters by "\n", but we can't include newline in the 
-            # workflow command so we have to mususe the format function like this.
-            Set-Output 'paths' ('~/.nuget/packages', $npmPath -join '{0}')
+            $type = 'nugetnpm'
         }
         elseif ($isNuget)
         {
-            $restoreKeys = "${key}-nuget"
-            $hash = '${{ hashFiles('**/*.csproj') }}'
-            Set-Output 'paths' '~/.nuget/packages'
+            $type = 'nuget'
         }
         elseif ($isNpm)
         {
-            $restoreKeys = "${key}-npm"
-            $hash = '${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml') }}'
-            Set-Output 'paths' $npmPath
+            $type = 'npm'
         }
         else
         {
-            Set-Output 'cache-enabled' 'false'
             exit 0
         }
-        
-        Set-Output 'cache-enabled' 'true'
-        Set-Output 'key' "${restoreKeys}-$hash"
-        Set-Output 'restore-keys' $restoreKeys
+
+        ${{ github.action_path }}/write-cache-configuration.ps1 $isNuget $isNpm "${key}-${type}" $hashes[$type]
 
     - name: Cache NuGet
       uses: actions/cache@v3
-      if: ${{ steps.detect-cache-configuration.outputs.cache-enabled != 'false' }}
+      if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' }}
       with:
-        path: ${{ format(steps.detect-cache-configuration.outputs.paths, '\n') }}
+        path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('\n')) }}
         key: ${{ steps.detect-cache-configuration.outputs.key }}
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
