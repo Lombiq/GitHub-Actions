@@ -95,16 +95,16 @@ jobs:
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
 
-#    - name: Set up SQL Server
-#      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
-#
-#    - name: Set up Azurite
-#      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
-#      with:
-#        location: ${{ inputs.build-directory}}
-#
-#    - name: Tests
-#      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
-#      with:
-#        build-directory: ${{ inputs.build-directory}}
-#        test-verbosity: ${{ inputs.build-verbosity}}
+    - name: Set up SQL Server
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+
+    - name: Set up Azurite
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
+      with:
+        location: ${{ inputs.build-directory}}
+
+    - name: Tests
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
