@@ -1,4 +1,4 @@
-name: Build and Test Orchard Core solution
+﻿name: Build and Test Orchard Core solution
 
 on:
   workflow_call:
@@ -39,6 +39,13 @@ on:
         description: >
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
           packages, but negligible or even slower if you only have a handful.
+      build-enable-npm-caching:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
+          but negligible or even slower if you only have a handful.
       build-cache-version:
         required: false
         type: string
@@ -79,12 +86,13 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-143
       with:
         directory: ${{ inputs.build-directory }}
         verbosity: ${{ inputs.build-verbosity }}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+        enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
 
     - name: Set up SQL Server
