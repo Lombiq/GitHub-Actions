@@ -1,4 +1,4 @@
-﻿name: Build and Test Orchard Core solution
+name: Build and Test Orchard Core solution
 
 on:
   workflow_call:
@@ -86,7 +86,7 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-143
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory }}
         verbosity: ${{ inputs.build-verbosity }}
