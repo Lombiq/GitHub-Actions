@@ -17,7 +17,7 @@ if ($IsNpm)
 # Ensure the paths exist.
 $paths | % { New-Item -ItemType Directory -Force $_ } | Out-Null
 
-# Multiple paths must be separated by "\n", but we can't include newline in the workflow command so we have to mususe 
+# Multiple paths must be separated by "\n", but we can't include newline in the workflow command so we have to misuse 
 # the format function like this.
 Set-Output 'paths' ($paths -join '{0}')
 
