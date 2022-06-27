@@ -1,4 +1,4 @@
-﻿name: Run .NET tests
+name: Run .NET tests
 description: >
   Runs .NET unit and UI tests (with the Lombiq UI Testing Toolbox for Orchard Core:
   https://github.com/Lombiq/UI-Testing-Toolbox), generates a test report and uploads UI testing failure dumps to
@@ -9,6 +9,12 @@ inputs:
     required: false
     default: .
     description: Path to the directory where a solution file can be found and thus the .NET build has run.
+  ui-test-parallelism:
+    required: false
+    default: "0"
+    description: >
+      Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
+      MaxParallelTests configuration of Lombiq UI Testing Toolbox.
   test-verbosity:
     required: false
     default: quiet
@@ -17,8 +23,15 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Set UI Test Parallelization
+      shell: pwsh
+      run: |
+        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
+        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "${{ inputs.ui-test-parallelism }}"
 
-    - name: Tests
+        ${{ github.action_path }}/replace-xunit-maxParallelThreads.ps1 -$MaxParallelThreads ${{ inputs.ui-test-parallelism }}
+    
+    - name: Run Tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |

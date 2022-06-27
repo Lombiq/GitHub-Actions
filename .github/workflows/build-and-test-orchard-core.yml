@@ -54,6 +54,13 @@ on:
           Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
           only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
           until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+      ui-test-parallelism:
+        required: false
+        type: string
+        default: "0"
+        description: >
+          Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
+          the MaxParallelTests configuration of Lombiq UI Testing Toolbox.
       timeout-minutes:
         required: false
         type: number
