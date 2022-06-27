@@ -9,16 +9,16 @@ inputs:
     required: false
     default: .
     description: Path to the directory where a solution file can be found and thus the .NET build has run.
+  test-verbosity:
+    required: false
+    default: quiet
+    description: Verbosity parameter for dotnet test.
   ui-test-parallelism:
     required: false
     default: "0"
     description: >
       Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
       MaxParallelTests configuration of Lombiq UI Testing Toolbox.
-  test-verbosity:
-    required: false
-    default: quiet
-    description: Verbosity parameter for dotnet test.
 
 runs:
   using: "composite"
