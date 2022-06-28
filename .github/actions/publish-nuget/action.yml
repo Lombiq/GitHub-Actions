@@ -40,7 +40,7 @@ runs:
       run: add-package.sh Microsoft.SourceLink.GitHub
 
     - name: Update package manifest version
-      run: Manifest-Version './' $Env:PUBLISH_VERSION
+      run: Update-ManifestVersion './' $Env:PUBLISH_VERSION
 
     - name: Install dependencies
       run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
