@@ -20,9 +20,10 @@ runs:
       run: |
         echo "Pull Request Title: ${{ inputs.title }}"
 
+        echo "${{ github.action_path }}"
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
-        New-Item -ItemType File -Force $Profile
+        New-Item -ItemType File -Force $Profile | Out-Null
         Get-Content -Raw ${{ github.action_path }}/functions.ps1 >> $Profile
 
     - name: Ensure Current PR Title Includes Issue Code
