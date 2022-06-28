@@ -11,7 +11,7 @@ runs:
   using: "composite"
   steps:
     - name: Set up Microsoft Edge
-      if: {{ runner.os == 'Linux' }}
+      if: ${{ runner.os == 'Linux' }}
       shell: pwsh
       run: |
         ${{ github.action_path }}/setup-edge.ps1 ${{ inputs.edge-version }}
