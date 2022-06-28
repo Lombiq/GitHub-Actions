@@ -78,7 +78,7 @@ jobs:
         submodules: 'recursive'
 
     - name: Set up Edge
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-edge@issue/OSOE-111
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-edge-linux@issue/OSOE-111
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
