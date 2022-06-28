@@ -29,7 +29,7 @@ runs:
       run: |
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
-            Write-Output "The UI test parallelism configuration isn't overridden.".
+            Write-Output "The UI test parallelism configuration isn't overridden."
             Exit 0
         }
 
