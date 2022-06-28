@@ -65,7 +65,6 @@ runs:
         publish-version: ${{ steps.setup.outputs.publish-version }}
         dotnet-build-switches: |
             --no-restore
-            --configuration:Release
             -p:NuGetBuild=true
             -p:LangVersion=Latest
             -p:GenerateDocumentationFile=True

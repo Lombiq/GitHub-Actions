@@ -11,7 +11,7 @@ Write-Output ".NET version number: $Version"
 # - --warnAsMessage:MSB3026 is also to prevent random locks along the lines of "warning MSB3026: Could not copy dlls
 #   errors." from breaking the build (since we treat warnings as errors).
 
-$defaultBuildSwitches = @"
+$rawBuildSwitches = @"
     --configuration:Release
     --nologo
     --verbosity:$Verbosity
@@ -26,7 +26,7 @@ $defaultBuildSwitches = @"
     $Switches
 "@
 
-$buildSwitches = $defaultBuildSwitches.Split("`n") |
+$buildSwitches = $rawBuildSwitches.Split("`n") |
     % { $_.Trim() } |
     ? { -not [string]::IsNullOrEmpty($_) }
 
