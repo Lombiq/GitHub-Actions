@@ -8,7 +8,8 @@ function Program {
 
     if ($Env:RUNNER_OS -eq "Windows")
     {
-        choco install microsoft-edge --version $EdgeWindowsVersion -y
+        Get-AppxPackage -Name "Microsoft.MicrosoftEdge.Stable"
+        #choco install microsoft-edge --version $EdgeWindowsVersion -y
     }
     else
     {
