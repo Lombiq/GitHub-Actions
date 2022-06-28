@@ -110,23 +110,26 @@ jobs:
       with:
         location: ${{ inputs.build-directory}}
 
-    - name: Run Tests with default parallelism1
-      shell: pwsh
-      working-directory: ${{ inputs.build-directory }}
-      run: |
-        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+    - name: Tests-11
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: -1
 
-    - name: Run Tests with default parallelism2
-      shell: pwsh
-      working-directory: ${{ inputs.build-directory }}
-      run: |
-        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+    - name: Tests-12
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: -1
 
-    - name: Run Tests with default parallelism3
-      shell: pwsh
-      working-directory: ${{ inputs.build-directory }}
-      run: |
-        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+    - name: Tests-13
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: -1
 
     - name: Tests01
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149

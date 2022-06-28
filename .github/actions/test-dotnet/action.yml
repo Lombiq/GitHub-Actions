@@ -18,7 +18,8 @@ inputs:
     default: "0"
     description: >
       Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
-      MaxParallelTests configuration of Lombiq UI Testing Toolbox.
+      MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming from the
+      code won't be overridden.
 
 runs:
   using: "composite"
@@ -26,6 +27,12 @@ runs:
     - name: Set UI Test Parallelization
       shell: pwsh
       run: |
+        if (${{ inputs.ui-test-parallelism }} -eq -1)
+        {
+            Write-Output "The UI test parallelism configuration isn't overridden.".
+            Exit 0
+        }
+
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
         $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "${{ inputs.ui-test-parallelism }}"
 
