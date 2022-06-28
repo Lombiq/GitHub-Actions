@@ -59,7 +59,7 @@ on:
       ui-test-parallelism:
         required: false
         type: string
-        default: "0"
+        default: "-1"
         description: >
           Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
           the MaxParallelTests configuration of Lombiq UI Testing Toolbox.

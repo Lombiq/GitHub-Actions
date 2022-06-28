@@ -15,7 +15,7 @@ inputs:
     description: Verbosity parameter for dotnet test.
   ui-test-parallelism:
     required: false
-    default: "0"
+    default: "-1"
     description: >
       Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
       MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming from the
