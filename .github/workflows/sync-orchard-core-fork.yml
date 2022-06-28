@@ -1,0 +1,38 @@
+name: Sync Orchard Core fork from official repository
+
+on:
+  schedule:
+    # Run every hour (i.e. at "minute 0").
+    - cron:  0 * * * *
+
+  workflow_dispatch:
+
+jobs:
+  sync-fork-from-upstream:
+    runs-on: ubuntu-latest
+    name: Sync latest commits from the Orchard Core repo to fork
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Sync upstream changes
+      id: sync
+      # v3.3
+      uses: aormsby/Fork-Sync-With-Upstream-action@e69257aeed505f74f773a286939fb083cc6466a3
+      with:
+        target_sync_branch: main
+        target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+        upstream_sync_branch: main
+        upstream_sync_repo: Lombiq/OrchardCore-Test
+
+        test_mode: true
+      
+    - name: New commits found
+      if: steps.sync.outputs.has_new_commits == 'true'
+      run: echo "New commits were found to sync."
+    
+    - name: No new commits
+      if: steps.sync.outputs.has_new_commits == 'false'
+      run: echo "There were no new commits."
+      
+    - name: Show value of 'has_new_commits'
+      run: echo ${{ steps.sync.outputs.has_new_commits }}
