@@ -43,9 +43,4 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 }
 
 Write-Output "Building solution."
-
-# info
-echo "SWITCHES PARAMETER: '$Switches'"
-echo "BUILD SWITCHES" @buildSwitches
-
 dotnet build (Get-ChildItem *.sln).FullName @buildSwitches
