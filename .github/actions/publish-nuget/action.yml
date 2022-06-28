@@ -40,9 +40,11 @@ runs:
       run: add-package.sh Microsoft.SourceLink.GitHub
 
     - name: Update package manifest version
+      shell: pwsh
       run: Update-ManifestVersion './' $Env:PUBLISH_VERSION
 
     - name: Install dependencies
+      shell: pwsh
       run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
 
     - name: Build
@@ -100,6 +102,7 @@ runs:
           -p:NoDefaultExcludes=true 
 
     - name: Push with dotnet
+      shell: pwsh
       run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source $Env:SOURCE_URL --skip-duplicate
 
     - name: Publish Artifacts
@@ -108,7 +111,7 @@ runs:
         name: NuGet-Package
         path: artifacts
 
-    # This is not in its own action becasuse it's all very specific to this NuGet publishing workflow.
+    # This is not in its own action becasuse it's all very specific to this NuGet publishing.
     - name: Create Release
       # v1.10.0
       uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
