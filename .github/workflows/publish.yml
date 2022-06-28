@@ -53,4 +53,5 @@ jobs:
       with:
         source: ${{ inputs.source }}
         verbosity: ${{ inputs.verbosity }}
+      env:
         API_KEY: ${{ secrets.API_KEY }}
