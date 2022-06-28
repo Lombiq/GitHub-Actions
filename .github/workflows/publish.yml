@@ -36,7 +36,7 @@ jobs:
     # https://github.com/actions/runner/issues/1555.
     strategy:
       matrix:
-        timeout-minutes: ${{ inputs.timeout-minutes }}
+        timeout-minutes: [ ${{ inputs.timeout-minutes }} ]
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
     - uses: actions/checkout@v3
