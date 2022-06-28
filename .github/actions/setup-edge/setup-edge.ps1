@@ -3,7 +3,7 @@ function Program {
         [string]
         $EdgeLinuxVersion,
         [string]
-        $EdgeWindowsVersion,
+        $EdgeWindowsVersion
     )
 
     if ($Env:RUNNER_OS -eq "Windows")
