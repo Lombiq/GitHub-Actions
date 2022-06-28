@@ -23,45 +23,141 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set UI Test Parallelization
+    - name: Set UI Test Parallelization0
       shell: pwsh
       run: |
-        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
-        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "${{ inputs.ui-test-parallelism }}"
+        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=0" >> $Env:GITHUB_ENV
+        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "0"
 
-        ${{ github.action_path }}/replace-xunit-maxParallelThreads.ps1 -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
+        ${{ github.action_path }}/replace-xunit-maxParallelThreads.ps1 -MaxParallelThreads 0
     
-    - name: Run Tests1
+    - name: Run Tests01
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
         ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
 
-    - name: Run Tests2
+    - name: Run Tests02
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
         ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
 
-    - name: Run Tests3
+    - name: Set UI Test Parallelization1
+      shell: pwsh
+      run: |
+        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=1" >> $Env:GITHUB_ENV
+        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "1"
+
+        ${{ github.action_path }}/replace-xunit-maxParallelThreads.ps1 -MaxParallelThreads 1
+
+    - name: Run Tests11
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
         ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
 
-    - name: Run Tests4
+    - name: Run Tests12
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
         ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
 
-    - name: Run Tests5
+    - name: Set UI Test Parallelization2
+      shell: pwsh
+      run: |
+        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=2" >> $Env:GITHUB_ENV
+        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "2"
+
+        ${{ github.action_path }}/replace-xunit-maxParallelThreads.ps1 -MaxParallelThreads 2
+
+    - name: Run Tests21
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
         ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
 
-    - name: Run Tests6
+    - name: Run Tests22
+      shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
+      run: |
+        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+
+    - name: Set UI Test Parallelization3
+      shell: pwsh
+      run: |
+        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=3" >> $Env:GITHUB_ENV
+        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "3"
+
+        ${{ github.action_path }}/replace-xunit-maxParallelThreads.ps1 -MaxParallelThreads 3
+    
+    - name: Run Tests31
+      shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
+      run: |
+        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+
+    - name: Run Tests32
+      shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
+      run: |
+        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+
+    - name: Set UI Test Parallelization4
+      shell: pwsh
+      run: |
+        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=4" >> $Env:GITHUB_ENV
+        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "4"
+
+        ${{ github.action_path }}/replace-xunit-maxParallelThreads.ps1 -MaxParallelThreads 4
+    
+    - name: Run Tests41
+      shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
+      run: |
+        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+
+    - name: Run Tests42
+      shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
+      run: |
+        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+
+    - name: Set UI Test Parallelization5
+      shell: pwsh
+      run: |
+        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=5" >> $Env:GITHUB_ENV
+        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "5"
+
+        ${{ github.action_path }}/replace-xunit-maxParallelThreads.ps1 -MaxParallelThreads 5
+    
+    - name: Run Tests51
+      shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
+      run: |
+        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+
+    - name: Run Tests52
+      shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
+      run: |
+        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+
+    - name: Set UI Test Parallelization6
+      shell: pwsh
+      run: |
+        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=6" >> $Env:GITHUB_ENV
+        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "6"
+
+        ${{ github.action_path }}/replace-xunit-maxParallelThreads.ps1 -MaxParallelThreads 6
+    
+    - name: Run Tests61
+      shell: pwsh
+      working-directory: ${{ inputs.build-directory }}
+      run: |
+        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+
+    - name: Run Tests62
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
