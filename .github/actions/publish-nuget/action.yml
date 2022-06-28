@@ -17,13 +17,6 @@ secrets:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.*
-
     - name: Setup
       shell: pwsh
       run: |
