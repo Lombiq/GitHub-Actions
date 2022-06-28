@@ -110,9 +110,149 @@ jobs:
       with:
         location: ${{ inputs.build-directory}}
 
-    - name: Tests
+    - name: Tests01
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
       with:
         build-directory: ${{ inputs.build-directory}}
         test-verbosity: ${{ inputs.build-verbosity}}
-        ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+        ui-test-parallelism: 0
+
+    - name: Tests02
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 0
+
+    - name: Tests03
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 0
+
+    - name: Tests11
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 1
+
+    - name: Tests12
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 1
+
+    - name: Tests13
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 1
+
+    - name: Tests21
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 2
+
+    - name: Tests22
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 2
+
+    - name: Tests23
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 2
+
+    - name: Tests31
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 3
+
+    - name: Tests32
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 3
+
+    - name: Tests33
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 3
+
+    - name: Tests41
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 4
+
+    - name: Tests42
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 4
+
+    - name: Tests43
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 4
+
+    - name: Tests51
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 5
+
+    - name: Tests52
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 5
+
+    - name: Tests53
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 5
+
+    - name: Tests61
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 6
+
+    - name: Tests62
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 6
+
+    - name: Tests63
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
+      with:
+        build-directory: ${{ inputs.build-directory}}
+        test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: 6
