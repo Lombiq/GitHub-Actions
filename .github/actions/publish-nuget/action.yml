@@ -37,7 +37,7 @@ runs:
 
     - name: Add Source Link package
       shell: bash
-      run: add-package.sh Microsoft.SourceLink.GitHub
+      run: bash add-package.sh Microsoft.SourceLink.GitHub
 
     - name: Update package manifest version
       shell: pwsh
