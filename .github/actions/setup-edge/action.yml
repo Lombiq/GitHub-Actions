@@ -1,0 +1,20 @@
+name: Set up Microsoft Edge
+description: Sets up Microsoft Edge.
+
+inputs:
+  edge-linux-version:
+    required: false
+    default: 102.0.1245.39-1
+    description: Version of Microsoft Edge to set up on Linux.
+  edge-windows-version:
+    required: false
+    default: 102.0.1245.39
+    description: Version of Microsoft Edge to set up on Linux.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Microsoft Edge
+      shell: pwsh
+      run: |
+        ${{ github.action_path }}/setup-edge.ps1 ${{ inputs.edge-linux-version }} ${{ inputs.edge-windows-version }}
