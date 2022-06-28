@@ -26,8 +26,6 @@ $buildSwitches = @(
 $switchEntries = ($Switches -split "`n") |
     % { $_.Trim() } |
     ? { -not [string]::IsNullOrEmpty($_) }
-$a = $switchEntries | ? { $_ -notin $buildSwitches }
-echo "SWITCH-ENTRIES: " @a
 $switchEntries |
     ? { $_ -notin $buildSwitches }
     % { $buildSwitches += ,$_ }

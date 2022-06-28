@@ -92,10 +92,15 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        buildSwitches = @'
+        ${{ inputs.dotnet-build-switches }}
+        '@
+
         $switches = @{
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
         }
 
         $startTime = [DateTime]::Now
