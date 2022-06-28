@@ -20,7 +20,6 @@ runs:
       run: |
         echo "Pull Request Title: ${{ inputs.title }}"
 
-        echo "${{ github.action_path }}"
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
         New-Item -ItemType File -Force $Profile | Out-Null
