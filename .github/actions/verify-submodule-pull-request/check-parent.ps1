@@ -1,6 +1,7 @@
 param(
     [string] $Repository,
-    [string] $Title)
+    [string] $Title
+)
 
 $url = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
 $titles = curl -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | % { $_.title }
