@@ -26,6 +26,8 @@ $buildSwitches = @(
 $switchEntries = ($Switches -split "`n") |
     % { $_.Trim() } |
     ? { -not [string]::IsNullOrEmpty($_) }
+$a = $switchEntries | ? { $_ -notin $buildSwitches }
+echo "SWITCH-ENTRIES: " @a
 $switchEntries |
     ? { $_ -notin $buildSwitches }
     % { $buildSwitches += ,$_ }
@@ -46,5 +48,8 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 
 Write-Output "Building solution."
 
+# info
+echo "SWITCHES PARAMETER: '$Switches'"
 echo "BUILD SWITCHES" @buildSwitches
+
 dotnet build (Get-ChildItem *.sln).FullName @buildSwitches
