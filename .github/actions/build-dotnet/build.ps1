@@ -34,6 +34,7 @@ Write-Output ".NET version number: $Version"
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
+    Write-Output "::group::Building Gulp Extensions"
     Write-Output "Gulp Extensions found. Building it first because it needs to be explicitly built before the solution."
 
     $startTime = [DateTime]::Now
@@ -41,6 +42,7 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     $endTime = [DateTime]::Now
 
     Write-Output ("Gulp Extensions build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+    Write-Output "::endgroup::"
 }
 
 Write-Output "Building solution."

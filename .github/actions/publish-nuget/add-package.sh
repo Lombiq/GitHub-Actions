@@ -79,4 +79,6 @@ function program() {
 
 }
 
+echo "::group::$*"
 program "$@"
+echo "::endgroup::"
