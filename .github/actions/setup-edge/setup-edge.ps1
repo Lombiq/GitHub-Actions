@@ -8,8 +8,16 @@ function Program {
 
     if ($Env:RUNNER_OS -eq "Windows")
     {
-        Get-AppxPackage -Name "Microsoft.MicrosoftEdge.Stable"
-        #choco install microsoft-edge --version $EdgeWindowsVersion -y
+        $installedVersion = (Get-ItemProperty -Path HKCU:\Software\Microsoft\Edge\BLBeacon -Name version).version
+        
+        if ([string]::IsNullOrEmpty($installedVersion))
+        {
+            #choco install microsoft-edge --version $EdgeWindowsVersion -y
+        }
+        else
+        {
+            Write-Output "Installed edge version: ${installedVersion}"
+        }
     }
     else
     {
