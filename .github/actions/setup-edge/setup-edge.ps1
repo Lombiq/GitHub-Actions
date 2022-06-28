@@ -12,8 +12,8 @@ function Program {
     }
     else
     {
-        bash -c "curl -O https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_$EdgeLinuxVersion_amd64.deb"
-        bash -c "sudo apt install ./microsoft-edge-stable_$EdgeLinuxVersion_amd64.deb"
+        bash -c "curl -O https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_${EdgeLinuxVersion}_amd64.deb"
+        bash -c "sudo apt install ./microsoft-edge-stable_${EdgeLinuxVersion}_amd64.deb"
     }
 }
 
