@@ -75,7 +75,7 @@ runs:
             -p:DebugType=portable
 
     - name: Pack
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-139
+      shell: pwsh
       # Notes on the configuration apart from what's also for dotnet build:
       # * NoWarn on NU5104 to not have warnings for prerelease dependencies, see:
       #   https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5104.
@@ -83,21 +83,25 @@ runs:
       #   a non-packagable project.
       # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
       #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
-      with:
-        verbosity: ${{ inputs.verbosity }}
-        enable-code-analysis: false
-        publish-version: ${{ steps.setup.outputs.publish-version }}
-        dotnet-build-switches: |
-          --no-restore
-          --no-build
-          --output:artifacts
-          -p:NuGetBuild=true
-          -p:GenerateDocumentationFile=True
-          -p:NoWarn=NU5104
-          -p:WarnOnPackingNonPackableProject=True
-          -p:IncludeSymbols=true
-          -p:SymbolPackageFormat=snupkg
-          -p:NoDefaultExcludes=true 
+      run: |
+        $arguments = @(
+            "--configuration:Release",
+            "--warnaserror",
+            "--no-restore",
+            "--no-build",
+            "--output:artifacts",
+            "--verbosity:${{ inputs.verbosity }}",
+            "-p:NuGetBuild=true",
+            "-p:Version=$Env:PUBLISH_VERSION",
+            "-p:GenerateDocumentationFile=True",
+            "-p:NoWarn=NU5104",
+            "-p:TreatWarningsAsErrors=true",
+            "-p:WarnOnPackingNonPackableProject=True",
+            "-p:IncludeSymbols=true",
+            "-p:SymbolPackageFormat=snupkg",
+            "-p:NoDefaultExcludes=true"
+        )
+        dotnet pack @arguments
 
     - name: Push with dotnet
       shell: pwsh
