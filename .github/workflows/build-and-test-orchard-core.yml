@@ -161,27 +161,6 @@ jobs:
         test-verbosity: ${{ inputs.build-verbosity}}
         ui-test-parallelism: 1
 
-    - name: Tests21
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
-      with:
-        build-directory: ${{ inputs.build-directory}}
-        test-verbosity: ${{ inputs.build-verbosity}}
-        ui-test-parallelism: 2
-
-    - name: Tests22
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
-      with:
-        build-directory: ${{ inputs.build-directory}}
-        test-verbosity: ${{ inputs.build-verbosity}}
-        ui-test-parallelism: 2
-
-    - name: Tests23
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
-      with:
-        build-directory: ${{ inputs.build-directory}}
-        test-verbosity: ${{ inputs.build-verbosity}}
-        ui-test-parallelism: 2
-
     - name: Tests31
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-149
       with:
