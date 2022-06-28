@@ -92,7 +92,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        buildSwitches = @'
+        $buildSwitches = @'
         ${{ inputs.dotnet-build-switches }}
         '@
 
