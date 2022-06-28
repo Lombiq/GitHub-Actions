@@ -34,8 +34,7 @@ Write-Output ".NET version number: $Version"
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
-    Write-Output "::group::Building Gulp Extensions"
-    Write-Output "Gulp Extensions found. Building it first because it needs to be explicitly built before the solution."
+    Write-Output "::group::Gulp Extensions found. It needs to be explicitly built before the solution."
 
     $startTime = [DateTime]::Now
     dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj @buildSwitches
@@ -47,4 +46,5 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 
 Write-Output "Building solution."
 
+echo "BUILD SWITCHES" @buildSwitches
 dotnet build (Get-ChildItem *.sln).FullName @buildSwitches
