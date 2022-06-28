@@ -18,6 +18,7 @@ runs:
   using: "composite"
   steps:
     - name: Setup
+      id: setup
       shell: pwsh
       run: |
         $source = @'
@@ -30,6 +31,7 @@ runs:
         $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
         Write-Output "Target Version: $version"
         "PUBLISH_VERSION=$version" >> $Env:GITHUB_ENV
+        Write-Output "::set-output name=publish-version::$version"
         
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
@@ -44,6 +46,7 @@ runs:
       run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
 
     - name: Build
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-139
       # Notes on the configuration:
       # * -p:NuGetBuild=true is our property to load Lombiq dependencies from NuGet by switching project references
       #   to package references.
@@ -54,23 +57,25 @@ runs:
       # * -p:ContinuousIntegrationBuild=true is needed for Deterministic Builds:
       #   https://github.com/clairernovotny/DeterministicBuilds.
       # * -p:DebugSymbols=true and -p:DebugType=portable are needed to generate PDB files.
-      run: |
-        $arguments = @(
-            "--configuration:Release",
-            "--no-restore",
-            "--verbosity:${{ inputs.verbosity }}",
-            "-p:NuGetBuild=true",
-            "-p:LangVersion=Latest",
-            "-p:GenerateDocumentationFile=True",
-            "-p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200",
-            "-p:EnableNETAnalyzers=false",
-            "-p:ContinuousIntegrationBuild=true",
-            "-p:DebugSymbols=true",
-            "-p:DebugType=portable"
-        )
-        dotnet build @arguments
+      with:
+        verbosity: ${{ inputs.verbosity }}
+        enable-code-analysis: false
+        publish-version: ${{ steps.setup.outputs.publish-version }}
+        dotnet-build-switches: |
+            --no-restore
+            --configuration:Release
+            --verbosity:${{ inputs.verbosity }}
+            -p:NuGetBuild=true
+            -p:LangVersion=Latest
+            -p:GenerateDocumentationFile=True
+            -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200
+            -p:EnableNETAnalyzers=false
+            -p:ContinuousIntegrationBuild=true
+            -p:DebugSymbols=true
+            -p:DebugType=portable
 
     - name: Pack
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-139
       # Notes on the configuration apart from what's also for dotnet build:
       # * NoWarn on NU5104 to not have warnings for prerelease dependencies, see:
       #   https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5104.
@@ -78,25 +83,21 @@ runs:
       #   a non-packagable project.
       # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
       #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
-      run: |
-        $arguments = @(
-            "--configuration:Release",
-            "--warnaserror",
-            "--no-restore",
-            "--no-build",
-            "--output:artifacts",
-            "--verbosity:${{ inputs.verbosity }}",
-            "-p:NuGetBuild=true",
-            "-p:Version=$Env:PUBLISH_VERSION",
-            "-p:GenerateDocumentationFile=True",
-            "-p:NoWarn=NU5104",
-            "-p:TreatWarningsAsErrors=true",
-            "-p:WarnOnPackingNonPackableProject=True",
-            "-p:IncludeSymbols=true",
-            "-p:SymbolPackageFormat=snupkg",
-            "-p:NoDefaultExcludes=true"
-        )
-        dotnet pack @arguments   
+      with:
+        verbosity: ${{ inputs.verbosity }}
+        enable-code-analysis: false
+        publish-version: ${{ steps.setup.outputs.publish-version }}
+        dotnet-build-switches: |
+          --no-restore
+          --no-build
+          --output:artifacts
+          -p:NuGetBuild=true
+          -p:GenerateDocumentationFile=True
+          -p:NoWarn=NU5104
+          -p:WarnOnPackingNonPackableProject=True
+          -p:IncludeSymbols=true
+          -p:SymbolPackageFormat=snupkg
+          -p:NoDefaultExcludes=true 
 
     - name: Push with dotnet
       run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.API_KEY }} --source $Env:SOURCE_URL --skip-duplicate

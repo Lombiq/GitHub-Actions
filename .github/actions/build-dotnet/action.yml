@@ -33,6 +33,14 @@ inputs:
       Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the only
       current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
       until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+  publish-version:
+    required: false
+    default: "1.${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}"
+    description: The value given to `dotnet build`'s `-Version` switch.
+  dotnet-build-switches:
+    required: false
+    default: ""
+    description: Additional command line switches given to `dotnet build`. You can split these into multiple lines.
 
 runs:
   using: "composite"
@@ -87,7 +95,7 @@ runs:
         $switches = @{
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
-            Version = "1.$Env:GITHUB_RUN_NUMBER.$Env:GITHUB_RUN_ATTEMPT-$Env:GITHUB_RUN_ID"
+            Version = "${{ inputs.publish-version }}"
         }
 
         $startTime = [DateTime]::Now

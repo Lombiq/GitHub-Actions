@@ -1,4 +1,8 @@
-﻿param ($Verbosity, $EnableCodeAnalysis, $Version)
+﻿param (
+    [string] $Verbosity,
+    [string] $EnableCodeAnalysis,
+    [string] $Version,
+    [string] $Switches = "")
 
 # Notes on build switches that aren't self-explanatory:
 # - -p:Retries and -p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
@@ -19,13 +23,19 @@ $buildSwitches = @(
     "-p:Version=$Version"
 )
 
+$switchEntries = ($Switches -split "`n") |
+    % { $_.Trim() } |
+    ? { -not [string]::IsNullOrEmpty($_) }
+$switchEntries |
+    ? { $_ -notin $buildSwitches }
+    % { $buildSwitches += ,$_ }
+
 Write-Output ".NET version number: $Version"
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
     Write-Output "Gulp Extensions found. Building it first because it needs to be explicitly built before the solution."
 
-    
     $startTime = [DateTime]::Now
     dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj @buildSwitches
     $endTime = [DateTime]::Now
