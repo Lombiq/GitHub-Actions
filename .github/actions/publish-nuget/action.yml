@@ -1,5 +1,5 @@
 name: Publish to NuGet
-description: Builds all .NET solutions in the given directory with static code analysis.
+description: Publishes the project or solution in the current directory to a NuGet source.
 
 inputs:
   source:
@@ -30,7 +30,6 @@ runs:
         
         $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
         Write-Output "Target Version: $version"
-        "PUBLISH_VERSION=$version" >> $Env:GITHUB_ENV
         Write-Output "::set-output name=publish-version::$version"
         
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
@@ -41,7 +40,7 @@ runs:
 
     - name: Update package manifest version
       shell: pwsh
-      run: Update-ManifestVersion './' $Env:PUBLISH_VERSION
+      run: Update-ManifestVersion './' '${{ steps.setup.outputs.publish-version }}'
 
     - name: Install dependencies
       shell: pwsh
@@ -92,7 +91,7 @@ runs:
             "--output:artifacts",
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
-            "-p:Version=$Env:PUBLISH_VERSION",
+            "-p:Version=${{ steps.setup.outputs.publish-version }}",
             "-p:GenerateDocumentationFile=True",
             "-p:NoWarn=NU5104",
             "-p:TreatWarningsAsErrors=true",
