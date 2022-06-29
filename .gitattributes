@@ -1,6 +1,6 @@
 * text=auto
 
-# This is to satisfy shellcheck(SC1017).
+# This is to satisfy shellcheck (SC1017).
 *.sh text eol=lf
 
 # Enforce Windows newlines for C# files to avoid false positives with IDE0055 warning.
