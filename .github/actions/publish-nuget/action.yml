@@ -104,7 +104,7 @@ runs:
 
     - name: Push with dotnet
       shell: pwsh
-      run: dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source $Env:SOURCE_URL --skip-duplicate
+      run: dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
 
     - name: Publish Artifacts
       uses: actions/upload-artifact@v3
