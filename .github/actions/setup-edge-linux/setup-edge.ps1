@@ -1,13 +1,11 @@
-function Program {
-    param(
-        [string]
-        $EdgeVersion
-    )
+# Issue for tool request: https://github.com/actions/virtual-environments/issues/5845.
 
-    bash -c "curl -O https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_${EdgeVersion}_amd64.deb"
-    bash -c "sudo apt install ./microsoft-edge-stable_${EdgeVersion}_amd64.deb"
+param(
+    [string]
+    $EdgeVersion
+)
 
-    Write-Output "/opt/microsoft/msedge" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-}
+bash -c "curl -O https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_${EdgeVersion}_amd64.deb"
+bash -c "sudo apt install ./microsoft-edge-stable_${EdgeVersion}_amd64.deb"
 
-Program $args[0]
+Write-Output "/opt/microsoft/msedge" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append

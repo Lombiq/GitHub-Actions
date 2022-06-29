@@ -59,6 +59,11 @@ on:
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      setup-edge-on-linux:
+        required: false
+        type: boolean
+        default: false
+        description: Indicates whether to enable setup Edge on Linux.
 
 jobs:
   build-and-test:
@@ -73,14 +78,15 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: 'recursive'
     # Firefox and Chrome browsers are installed by default on ubuntu-latest and windows-latest, and Edge is installed by
     # default on windows-latest, so here we install Edge on ubuntu-latest. It seems Linux support is planned here
     # (https://github.com/browser-actions/setup-edge), after this completes we can use it.
     - name: Set up Edge
       uses: Lombiq/GitHub-Actions/.github/actions/setup-edge-linux@issue/OSOE-111
+      if: ${{ inputs.setup-edge-on-linux }}
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
