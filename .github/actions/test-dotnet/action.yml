@@ -34,7 +34,6 @@ runs:
         }
 
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
-        $Env:Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests = "${{ inputs.ui-test-parallelism }}"
 
         ${{ github.action_path }}/replace-xunit-max-parallel-threads.ps1 -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
     
