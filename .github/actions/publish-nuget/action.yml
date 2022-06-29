@@ -113,7 +113,7 @@ runs:
         name: NuGet-Package
         path: artifacts
 
-    # This is not in its own action becasuse it's all very specific to this NuGet publishing.
+    # This is not in its own action because it's all very specific to this NuGet publishing.
     - name: Create Release
       # v1.10.0
       uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
