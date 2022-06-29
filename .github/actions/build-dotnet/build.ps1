@@ -1,4 +1,5 @@
 ﻿param (
+    [string] $Solution,
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
     [string] $Version,
@@ -43,4 +44,4 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 }
 
 Write-Output "Building solution."
-dotnet build (Get-ChildItem *.sln).FullName @buildSwitches
+dotnet build $Solution @buildSwitches
