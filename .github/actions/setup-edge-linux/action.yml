@@ -1,5 +1,5 @@
 name: Set up Microsoft Edge on Linux
-description: Sets up Microsoft Edge.
+description: Sets up Microsoft Edge on Linux.
 
 inputs:
   edge-version:

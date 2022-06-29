@@ -76,7 +76,9 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: 'recursive'
-
+    # Firefox and Chrome browsers are installed by default on ubuntu-latest and windows-latest, and Edge is installed by
+    # default on windows-latest, so here we install Edge on ubuntu-latest. It seems Linux support is planned here
+    # (https://github.com/browser-actions/setup-edge), after this completes we can use it.
     - name: Set up Edge
       uses: Lombiq/GitHub-Actions/.github/actions/setup-edge-linux@issue/OSOE-111
 
