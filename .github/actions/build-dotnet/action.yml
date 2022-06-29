@@ -93,7 +93,7 @@ runs:
       working-directory: ${{ inputs.directory }}
       run: |
         $buildSwitches = @'
-        ${{ inputs.dotnet-build-switches }}
+            ${{ inputs.dotnet-build-switches }}
         '@
 
         $switches = @{
