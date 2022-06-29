@@ -26,7 +26,7 @@ runs:
         '@.Trim()
 
         Write-Output "NuGet Source: $source"
-        "SOURCE_URL=$source" >> $Env:GITHUB_ENV
+        Write-Output "::set-output name=source-url::$source"
         
         $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
         Write-Output "Target Version: $version"
