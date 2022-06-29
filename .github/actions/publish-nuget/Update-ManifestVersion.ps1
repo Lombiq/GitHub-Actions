@@ -13,7 +13,7 @@ function Update-Manifest-Version {
         $Version
     )
 
-    (Get-Content -Raw $Manifest) -replace 
+    (Get-Content -Raw $Manifest) -replace
         '(?<head>\[assembly:\s*(Module|Theme)\(([^\]]*Version\W*=\W*"))([^"]*)', "`${head}$Version" |
         Out-File $Manifest
 
@@ -21,7 +21,7 @@ function Update-Manifest-Version {
 }
 
 $manifests = Get-ChildItem $WorkDir -File -Recurse -Filter "Manifest.cs" |
-    Select-String -List -Pattern '(OrchardCore.Modules.Manifest|OrchardCore.DisplayManagement.Manifest)' | 
+    Select-String -List -Pattern '(OrchardCore.Modules.Manifest|OrchardCore.DisplayManagement.Manifest)' |
     Select-Object -ExpandProperty Path
 
 foreach ($manifest in $manifests) {
