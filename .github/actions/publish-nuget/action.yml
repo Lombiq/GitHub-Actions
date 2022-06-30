@@ -102,6 +102,11 @@ runs:
         )
         dotnet pack @arguments
 
+    - name: Update nuspec dependencies
+      working-directory: artifacts
+      shell: pwsh
+      run: Update-ManifestVersion
+
     - name: Push with dotnet
       shell: pwsh
       run: dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
