@@ -42,6 +42,9 @@ runs:
       shell: pwsh
       run: Update-ManifestVersion './' '${{ steps.setup.outputs.publish-version }}'
 
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
     - name: Install dependencies
       shell: pwsh
       run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
