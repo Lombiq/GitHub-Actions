@@ -121,11 +121,11 @@ jobs:
     # default on windows-latest, so here we install Edge on ubuntu-latest. It seems Linux support is planned here
     # (https://github.com/browser-actions/setup-edge), after this completes we can use it.
     - name: Set up Edge
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-edge-linux@issue/OSOE-111
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-edge-linux@dev
       if: ${{ inputs.setup-edge-on-linux }}
 
     - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-111
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
         build-directory: ${{ inputs.build-directory}}
         test-verbosity: ${{ inputs.build-verbosity}}
