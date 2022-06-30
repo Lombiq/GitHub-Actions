@@ -11,7 +11,7 @@ In addition to the below short explanations, check out the inline documentation 
 - `publish-nuget`: Publishes the content of the current directory as a NuGet package.
 - `setup-azurite`: Sets up the [Azurite Azure Blob Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite) via NPM.
 - `setup-dotnet`: Sets up the .NET SDK.
+- `setup-edge-linux`: Sets up the Microsoft Edge on Linux. 
 - `setup-sql-server`: Sets up SQL Server with Lombiq-recommended defaults.
 - `test-dotnet`: Runs .NET unit and UI tests (with the [Lombiq UI Testing Toolbox for Orchard Core](https://github.com/Lombiq/UI-Testing-Toolbox)), generates a test report, and uploads UI testing failure dumps to artifacts.
 - `verify-submodule-pull-request`: Assuming that the current repository is a submodule in another repository, this action verifies that a pull request with a matching issue code has been opened there as well.
-- `setup-edge-linux`: Sets up the Microsoft Edge on Linux. 
