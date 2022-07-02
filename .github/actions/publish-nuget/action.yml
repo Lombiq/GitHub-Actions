@@ -91,7 +91,7 @@ runs:
       # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
       #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
       run: |
-        $arguments = @(
+        New-NugetPackages  @(
             "--configuration:Release",
             "--warnaserror",
             "--no-restore",
@@ -109,23 +109,6 @@ runs:
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true"
         )
-
-        foreach ($project in (dotnet sln list | Select-Object -Skip 2 | % { Get-ChildItem $_ }))
-        {
-            Push-Location $project.Directory
-
-            $nuspecFile = (Get-ChildItem *.nuspec).Name
-            if ($nuspecFile.Count -eq 1)
-            {
-                dotnet pack $project -p:NuspecFile="$nuspecFile" @arguments
-            }
-            else
-            {
-                dotnet pack $project @arguments
-            }
-
-            Pop-Location
-          }
 
     - name: Push with dotnet
       shell: pwsh
