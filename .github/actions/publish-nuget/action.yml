@@ -100,7 +100,7 @@ runs:
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
             "-p:Version=${{ steps.setup.outputs.publish-version }}",
-            "-p:NuspecProperties=${{ steps.setup.outputs.publish-version }}",
+            "-p:NuspecProperties=version=${{ steps.setup.outputs.publish-version }}",
             "-p:GenerateDocumentationFile=True",
             "-p:NoWarn=NU5104",
             "-p:TreatWarningsAsErrors=true",
