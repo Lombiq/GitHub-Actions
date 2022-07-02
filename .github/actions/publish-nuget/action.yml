@@ -96,7 +96,7 @@ runs:
             "--warnaserror",
             "--no-restore",
             "--no-build",
-            "--output:artifacts",
+            "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
             "-p:Version=${{ steps.setup.outputs.publish-version }}",
@@ -109,8 +109,23 @@ runs:
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true"
         )
-        dotnet pack @arguments
 
+        foreach ($project in (dotnet sln list | Select-Object -Skip 2 | % { Get-ChildItem $_ }))
+        {
+            Push-Location $project.Directory
+
+            $nuspecFile = (Get-ChildItem *.nuspec).Name
+            if ($nuspecFile.Count -eq 1)
+            {
+                dotnet pack $project -p:NuspecFile="$nuspecFile" @arguments
+            }
+            else
+            {
+                dotnet pack $project @arguments
+            }
+
+            Pop-Location
+          }
 
     - name: Push with dotnet
       shell: pwsh
