@@ -40,7 +40,7 @@ runs:
 
     - name: Update package manifest version
       shell: pwsh
-      run: Update-ManifestVersion $PWD '${{ steps.setup.outputs.publish-version }}'
+      run: Update-ManifestVersion './' '${{ steps.setup.outputs.publish-version }}'
 
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
