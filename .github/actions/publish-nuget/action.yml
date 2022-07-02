@@ -50,7 +50,7 @@ runs:
       run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
 
     - name: Generate nuspec file if needed
-      if: hashFile('ConvertTo-Nuspec.ps1')
+      if: hashFiles('ConvertTo-Nuspec.ps1')
       shell: pwsh
       run: ./ConvertTo-Nuspec.ps1 '${{ steps.setup.outputs.publish-version }}'
 
