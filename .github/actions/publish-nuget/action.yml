@@ -81,6 +81,11 @@ runs:
             -p:DebugSymbols=true
             -p:DebugType=portable
 
+    - name: Actions prior to dotnet pack
+      if: hashFiles('Invoke-BeforePack.ps1')
+      shell: pwsh
+      run: ./Invoke-BeforePack.ps1
+
     - name: Pack
       shell: pwsh
       # Notes on the configuration apart from what's also for dotnet build:
