@@ -14,4 +14,4 @@ runs:
       if: ${{ runner.os == 'Linux' }}
       shell: pwsh
       run: |
-        ${{ github.action_path }}/setup-edge.ps1 ${{ inputs.edge-version }}
+        ${{ github.action_path }}/Initialize-Edge.ps1 ${{ inputs.edge-version }}
