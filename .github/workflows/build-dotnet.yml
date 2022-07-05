@@ -54,6 +54,13 @@ on:
           Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
           only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
           until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+      build-powershell-analyzer-path:
+        required: false
+        type: string
+        default: "./tools/Lombiq.Analyzers.PowerShell/Invoke-Analyzer.ps1"
+        description: >
+          The path of the "Invoke-Analyzer.ps1" file to be used for linting PowerShell script files. If not found, 
+          nothing happens. So if you have no use for it, feel free to ignore.
       timeout-minutes:
         required: false
         type: number
@@ -86,7 +93,7 @@ jobs:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-150
       with:
         directory: ${{ inputs.build-directory}}
         verbosity: ${{ inputs.build-verbosity}}
@@ -94,3 +101,4 @@ jobs:
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
+        powershell-analyzer-path: ${{ inputs.build-powershell-analyzer-path }}
