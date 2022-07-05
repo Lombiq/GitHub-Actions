@@ -3,8 +3,7 @@
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
     [string] $Version,
-    [string] $Switches,
-    [string] $PowerShellAnalyzerPath)
+    [string] $Switches)
 
 Write-Output ".NET version number: $Version"
 
@@ -31,12 +30,6 @@ $rawBuildSwitches = @"
 $buildSwitches = $rawBuildSwitches.Split("`n") |
     % { $_.Trim() } |
     ? { -not [string]::IsNullOrEmpty($_) }
-
-
-if (Test-Path $PowerShellAnalyzerPath)
-{
-    & $PowerShellAnalyzerPath -ForGitHubActions
-}
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {

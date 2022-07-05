@@ -24,7 +24,7 @@ inputs:
     required: false
     default: "false"
     description: >
-      If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages, but 
+      If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages, but
       negligible or even slower if you only have a handful.
   cache-version:
     required: false
@@ -46,15 +46,15 @@ inputs:
     required: false
     default: "*.sln"
     description: >
-      The path of the solution file to be built. If you have exactly one .sln file in the current directory then this 
+      The path of the solution file to be built. If you have exactly one .sln file in the current directory then this
       can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be specified." error
-      that is thrown when the `*.sln` wildcard results in multiple files. The value is given to PowerShell's 
+      that is thrown when the `*.sln` wildcard results in multiple files. The value is given to PowerShell's
       `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with spaces must be escaped separately.
   powershell-analyzer-path:
     required: false
     default: "./tools/Lombiq.Analyzers.PowerShell/Invoke-Analyzer.ps1"
     description: >
-      The path of the "Invoke-Analyzer.ps1" file to be used for linting PowerShell script files. If not found, nothing 
+      The path of the "Invoke-Analyzer.ps1" file to be used for linting PowerShell script files. If not found, nothing
       happens. So if you have no use for it, feel free to ignore.
 
 runs:
@@ -76,7 +76,7 @@ runs:
             'nugetnpm' = '${{ hashFiles('**/*.csproj', '**/package-lock.json', '**/pnpm-lock.yaml') }}';
         }
 
-        if ($isNuget -and $isNpm) 
+        if ($isNuget -and $isNpm)
         {
             $type = 'nugetnpm'
         }
@@ -103,6 +103,12 @@ runs:
         key: ${{ steps.detect-cache-configuration.outputs.key }}
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
+    - name: PowerShell Static Code Analysis
+      if: hashFiles(inputs.powershell-analyzer-path)
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: ${{ inputs.powershell-analyzer-path }} -ForGitHubActions
+
     - name: Build and Static Code Analysis
       shell: pwsh
       working-directory: ${{ inputs.directory }}
@@ -117,7 +123,6 @@ runs:
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"
             Switches = $buildSwitches
-            PowerShellAnalyzerPath = "${{ inputs.powershell-analyzer-path }}"
         }
 
         $startTime = [DateTime]::Now
