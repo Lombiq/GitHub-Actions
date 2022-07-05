@@ -117,7 +117,7 @@ runs:
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"
             Switches = $buildSwitches
-            PowerShellAnalyzerPath = 
+            PowerShellAnalyzerPath = "${{ inputs.powershell-analyzer-path }}"
         }
 
         $startTime = [DateTime]::Now
