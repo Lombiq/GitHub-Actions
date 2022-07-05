@@ -107,7 +107,7 @@ runs:
       if: hashFiles(inputs.powershell-analyzer-path)
       shell: pwsh
       working-directory: ${{ inputs.directory }}
-      run: ${{ inputs.powershell-analyzer-path }} -ForGitHubActions
+      run: pwsh ${{ inputs.powershell-analyzer-path }} -ForGitHubActions
 
     - name: Build and Static Code Analysis
       shell: pwsh
