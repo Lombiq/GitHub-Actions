@@ -23,6 +23,13 @@ on:
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      dotnet-pack-ignore-warning:
+        required: false
+        type: string
+        default: ""
+        description: >
+        Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be 
+        separated by any whitespace, including newlines.
     secrets:
       # We can't access org secrets here so they need to be passed in, see:
       # https://github.community/t/resuable-called-workflow-environment-variables-secrets-and-trigger-event-access/207723/2
@@ -49,9 +56,10 @@ jobs:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Publish to NuGet
-      uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/OSOE-150
       with:
         source: ${{ inputs.source }}
         verbosity: ${{ inputs.verbosity }}
+        dotnet-pack-ignore-warning: ${{ inputs.dotnet-pack-ignore-warning }}
       env:
         API_KEY: ${{ secrets.API_KEY }}
