@@ -116,7 +116,7 @@ runs:
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"
-            Switches = $buildSwitches,
+            Switches = $buildSwitches
             PowerShellAnalyzerPath = 
         }
 
