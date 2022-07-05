@@ -60,10 +60,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Detect Cache Configuration
+    - name: Setup & Detect Cache Configuration
       id: detect-cache-configuration
       shell: pwsh
       run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
         $isNuget = $${{ inputs.enable-nuget-caching == 'true' }}
         $isNpm = $${{ inputs.enable-npm-caching == 'true' }}
         $key = @'
@@ -93,7 +95,7 @@ runs:
             exit 0
         }
 
-        ${{ github.action_path }}/write-cache-configuration.ps1 $isNuget $isNpm "${key}-${type}" $hashes[$type]
+        Write-CacheConfiguration $isNuget $isNpm "${key}-${type}" $hashes[$type]
 
     - name: Cache NuGet
       uses: actions/cache@v3
@@ -129,7 +131,7 @@ runs:
         }
 
         $startTime = [DateTime]::Now
-        ${{ github.action_path }}/build.ps1 @switches
+        Build-DotNetSolution @switches
         $endTime = [DateTime]::Now
 
         Write-Output ("Solution build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
