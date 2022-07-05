@@ -1,4 +1,4 @@
-﻿# Reusable GitHub Actions workflows
+# Reusable GitHub Actions workflows
 
 
 
@@ -58,7 +58,7 @@ on:
 
 jobs:
   call-publish-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/publish.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     secrets:
       apikey: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
 ```
@@ -72,7 +72,7 @@ It takes one non-optional secret parameter, `apikey`, the organization API key f
 ```yaml
 jobs:
   call-publish-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/publish.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
       verbosity: detailed
@@ -96,7 +96,7 @@ on:
 
 jobs:
   call-verify-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/verify.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/verify-submodule-pull-request.yml@dev
     with:
       repo: Lombiq/Open-Source-Orchard-Core-Extensions
 ```
