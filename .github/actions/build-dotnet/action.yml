@@ -104,10 +104,13 @@ runs:
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
     - name: PowerShell Static Code Analysis
-      if: hashFiles(inputs.powershell-analyzer-path)
       shell: pwsh
       working-directory: ${{ inputs.directory }}
-      run: pwsh ${{ inputs.powershell-analyzer-path }} -ForGitHubActions
+      run: |
+        if (Test-Path '${{ inputs.powershell-analyzer-path }}')
+        {
+            pwsh '${{ inputs.powershell-analyzer-path }}' -ForGitHubActions
+        }
 
     - name: Build and Static Code Analysis
       shell: pwsh
