@@ -50,12 +50,6 @@ inputs:
       can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be specified." error
       that is thrown when the `*.sln` wildcard results in multiple files. The value is given to PowerShell's
       `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with spaces must be escaped separately.
-  powershell-analyzer-path:
-    required: false
-    default: "./tools/Lombiq.Analyzers.PowerShell/Invoke-Analyzer.ps1"
-    description: >
-      The path of the "Invoke-Analyzer.ps1" file to be used for linting PowerShell script files. If not found, nothing
-      happens. So if you have no use for it, feel free to ignore.
 
 runs:
   using: "composite"
@@ -104,15 +98,6 @@ runs:
         path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
         key: ${{ steps.detect-cache-configuration.outputs.key }}
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
-
-    - name: PowerShell Static Code Analysis
-      shell: pwsh
-      working-directory: ${{ inputs.directory }}
-      run: |
-        if (Test-Path '${{ inputs.powershell-analyzer-path }}')
-        {
-            pwsh '${{ inputs.powershell-analyzer-path }}' -ForGitHubActions
-        }
 
     - name: Build and Static Code Analysis
       shell: pwsh

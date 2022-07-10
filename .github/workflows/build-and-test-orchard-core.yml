@@ -46,13 +46,6 @@ on:
         description: >
           If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
           but negligible or even slower if you only have a handful.
-      build-powershell-analyzer-path:
-        required: false
-        type: string
-        default: "./tools/Lombiq.Analyzers.PowerShell/Invoke-Analyzer.ps1"
-        description: >
-          The path of the "Invoke-Analyzer.ps1" file to be used for linting PowerShell script files. If not found, 
-          nothing happens. So if you have no use for it, feel free to ignore.
       build-cache-version:
         required: false
         type: string
@@ -115,7 +108,6 @@ jobs:
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
-        powershell-analyzer-path: ${{ inputs.build-powershell-analyzer-path }}
 
     - name: Set up SQL Server
       uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
