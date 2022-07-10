@@ -44,4 +44,10 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 }
 
 Write-Output "Building solution."
-dotnet build $Solution @buildSwitches
+$errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
+foreach ($line in (dotnet build $Solution @buildSwitches))
+{
+    if ($line -notmatch $errorFormat) { return $line }
+    ($null, $file, $line, $column, $message) = [regex]::Match($line, $errorFormat).Groups.Value
+    Write-Output "::error file=$file,line=$line,col=$column::$message"
+}
