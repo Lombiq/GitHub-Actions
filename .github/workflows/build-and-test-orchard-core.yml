@@ -39,19 +39,40 @@ on:
         description: >
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
           packages, but negligible or even slower if you only have a handful.
+      build-enable-npm-caching:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
+          but negligible or even slower if you only have a handful.
       build-cache-version:
         required: false
         type: string
         default: "0"
         description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
-          only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
-          until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
+          easiest current way to force "clear" the cache
+          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
+          (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
+          API.
+      ui-test-parallelism:
+        required: false
+        type: string
+        default: "-1"
+        description: >
+          Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
+          the MaxParallelTests configuration of Lombiq UI Testing Toolbox.
       timeout-minutes:
         required: false
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      setup-edge-on-linux:
+        required: false
+        type: boolean
+        default: false
+        description: Indicates whether to enable setup Edge on Linux.
 
 jobs:
   build-and-test:
@@ -85,6 +106,7 @@ jobs:
         verbosity: ${{ inputs.build-verbosity }}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+        enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
 
     - name: Set up SQL Server
@@ -95,8 +117,16 @@ jobs:
       with:
         location: ${{ inputs.build-directory}}
 
+    # Firefox and Chrome browsers are installed by default on ubuntu-latest and windows-latest, and Edge is installed by
+    # default on windows-latest, so here we install Edge on ubuntu-latest. It seems Linux support is planned here
+    # (https://github.com/browser-actions/setup-edge), after this completes we can use it.
+    - name: Set up Edge
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-edge-linux@dev
+      if: ${{ inputs.setup-edge-on-linux }}
+
     - name: Tests
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
         build-directory: ${{ inputs.build-directory}}
         test-verbosity: ${{ inputs.build-verbosity}}
+        ui-test-parallelism: ${{ inputs.ui-test-parallelism }}

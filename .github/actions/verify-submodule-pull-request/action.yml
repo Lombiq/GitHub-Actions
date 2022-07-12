@@ -1,0 +1,34 @@
+name: Verify Submodule Pull Request
+description: >
+  Assuming that the current repository is a submodule in another repository, this action verifies that a pull request 
+  with a matching issue code has been opened there as well.
+
+inputs:
+  title:
+    required: true
+    description: The title of the current pull request.
+  repository:
+    required: false
+    default: Lombiq/Open-Source-Orchard-Core-Extensions
+    description: The parent repository's full name in "{owner}/{repository}" format.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup and Print PR Title
+      shell: pwsh
+      run: |
+        echo "Pull Request Title: ${{ inputs.title }}"
+
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
+        New-Item -ItemType File -Force $Profile | Out-Null
+        Get-Content -Raw ${{ github.action_path }}/functions.ps1 >> $Profile
+
+    - name: Ensure Current PR Title Includes Issue Code
+      shell: pwsh
+      run: Check-Current '${{ inputs.title }}'
+
+    - name: Ensure Parent Repository Contains Matching PR
+      shell: pwsh
+      run: Check-Parent '${{ inputs.repository }}' '${{ inputs.title }}'

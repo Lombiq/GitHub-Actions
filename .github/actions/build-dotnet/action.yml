@@ -1,5 +1,5 @@
-﻿name: .NET Build with Static Code Analysis
-description: Builds all .NET solutions in the given directory with static code analysis.
+name: .NET Build with Static Code Analysis
+description: Builds the .NET solution in the given directory with static code analysis.
 
 inputs:
   directory:
@@ -20,25 +20,82 @@ inputs:
     description: >
       If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet packages,
       but negligible or even slower if you only have a handful.
+  enable-npm-caching:
+    required: false
+    default: "false"
+    description: >
+      If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages, but 
+      negligible or even slower if you only have a handful.
   cache-version:
     required: false
     default: "0"
     description: >
-      Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the only
-      current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
-      until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+      Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
+      easiest current way to force "clear" the cache
+      (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
+      (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful API.
+  publish-version:
+    required: false
+    default: "1.${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}"
+    description: The value given to `dotnet build`'s `-Version` switch.
+  dotnet-build-switches:
+    required: false
+    default: ""
+    description: Additional command line switches given to `dotnet build`. You can split these into multiple lines.
+  solution-path:
+    required: false
+    default: "*.sln"
+    description: >
+      The path of the solution file to be built. If you have exactly one .sln file in the current directory then this 
+      can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be specified." error
+      that is thrown when the `*.sln` wildcard results in multiple files. The value is given to PowerShell's 
+      `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with spaces must be escaped separately.
 
 runs:
   using: "composite"
   steps:
+    - name: Detect Cache Configuration
+      id: detect-cache-configuration
+      shell: pwsh
+      run: |
+        $isNuget = $${{ inputs.enable-nuget-caching == 'true' }}
+        $isNpm = $${{ inputs.enable-npm-caching == 'true' }}
+        $key = @'
+        ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}
+        '@.Trim()
+
+        $hashes = @{
+            'nuget' = '${{ hashFiles('**/*.csproj') }}';
+            'npm' = '${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml') }}';
+            'nugetnpm' = '${{ hashFiles('**/*.csproj', '**/package-lock.json', '**/pnpm-lock.yaml') }}';
+        }
+
+        if ($isNuget -and $isNpm) 
+        {
+            $type = 'nugetnpm'
+        }
+        elseif ($isNuget)
+        {
+            $type = 'nuget'
+        }
+        elseif ($isNpm)
+        {
+            $type = 'npm'
+        }
+        else
+        {
+            exit 0
+        }
+
+        ${{ github.action_path }}/write-cache-configuration.ps1 $isNuget $isNpm "${key}-${type}" $hashes[$type]
+
     - name: Cache NuGet
       uses: actions/cache@v3
-      if: ${{ inputs.enable-nuget-caching == 'true' }}
+      if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' }}
       with:
-        path: ~/.nuget/packages
-        key: ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ github.repository }}-${{ runner.os }}-${{ inputs.cache-version }}-${{ inputs.directory }}-nuget
+        path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
+        key: ${{ steps.detect-cache-configuration.outputs.key }}
+        restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
     - name: Build and Static Code Analysis
       shell: pwsh
@@ -52,10 +109,16 @@ runs:
             Write-Output "The current working directory is now (Get-Location)"
         }
 
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
         $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
-            Version = "1.$Env:GITHUB_RUN_NUMBER.$Env:GITHUB_RUN_ATTEMPT-$Env:GITHUB_RUN_ID"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
         }
 
         $startTime = [DateTime]::Now

@@ -1,0 +1,57 @@
+name: Publish to NuGet
+
+on:
+  workflow_call:
+    inputs:
+      source:
+        required: false
+        type: string
+        default: https://api.nuget.org/v3/index.json
+        description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument. 
+      verbosity:
+        required: false
+        type: string
+        default: minimal
+        description: The logging verbosity type used by the `dotnet` command.
+      dotnet-version:
+        required: false
+        type: string
+        default: 6.0.*
+        description: Version of the .NET SDK to set up.
+      timeout-minutes:
+        required: false
+        type: number
+        default: 360
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+    secrets:
+      # We can't access org secrets here so they need to be passed in, see:
+      # https://github.community/t/resuable-called-workflow-environment-variables-secrets-and-trigger-event-access/207723/2
+      API_KEY:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
+    # https://github.com/actions/runner/issues/1555.
+    strategy:
+      matrix:
+        timeout-minutes: ${{ fromJSON(format('[ {0} ]', inputs.timeout-minutes)) }}
+    timeout-minutes: ${{ matrix.timeout-minutes }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+
+    - name: Set up .NET
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Publish to NuGet
+      uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
+      with:
+        source: ${{ inputs.source }}
+        verbosity: ${{ inputs.verbosity }}
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
