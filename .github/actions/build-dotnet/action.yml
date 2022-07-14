@@ -106,7 +106,7 @@ runs:
         {
             subst X: (Get-Location)
             cd X:
-            Write-Output "The current working directory is now (Get-Location)"
+            Write-Output "The current working directory is now $(Get-Location)"
         }
 
         $buildSwitches = @'
