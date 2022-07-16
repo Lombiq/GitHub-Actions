@@ -54,7 +54,10 @@ Write-Output "Building solution."
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
-foreach ($output in (dotnet build $Solution @buildSwitches))
+
+# Since dotnet build will allways emit an error message when it fails, we don't need to care about its exit code. To
+# dismiss it, this line calls Out-Null when dotnet build has a non-zero exit code. This has no effect.
+foreach ($output in (dotnet build $Solution @buildSwitches 2>&1 || Out-Null))
 {
     if ($output -notmatch $errorFormat) { return $output }
 
