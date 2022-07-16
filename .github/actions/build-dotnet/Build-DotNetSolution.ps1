@@ -8,7 +8,7 @@
 
 function ConvertTo-Array([string] $rawInput)
 {
-    $rawInput.Split("`n") |
+    $rawInput.Replace("`r", "").Split("`n") |
         % { $_.Trim() } |
         ? { -not [string]::IsNullOrEmpty($_) }
 }
@@ -35,7 +35,7 @@ $buildSwitches = ConvertTo-Array @"
     $Switches
 "@
 
-[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors
+[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | Sort-Object
 $noErrors = $expectedErrorCodes.Count -eq 0
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
@@ -66,6 +66,7 @@ foreach ($line in (dotnet build $Solution @buildSwitches))
 
 if ($expectedErrorCodes)
 {
+    $errorCodes = $errorCodes | Sort-Object
     $fail = 0
     $report = New-Object "System.Text.StringBuilder" "`n"
 
