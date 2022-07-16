@@ -52,14 +52,11 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 
 Write-Output "Building solution with ``dotnet build $Solution $($buildSwitches -join " ")``."
 
-$errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
-dotnet build $Solution @buildSwitches 2>&1 >build.log
-[array] $log = (Get-Content -Raw build.log).Replace("`r", "") -split "`n"
-
-$log | % {
+$errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
+dotnet build $Solution @buildSwitches 2>&1 | % {
     if ($_ -notmatch $errorFormat) { return $_ }
 
     ($null, $file, $line, $column, $message) = [regex]::Match($_, $errorFormat).Groups.Value
