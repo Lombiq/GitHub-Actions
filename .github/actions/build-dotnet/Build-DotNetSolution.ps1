@@ -60,7 +60,7 @@ foreach ($line in (dotnet build $Solution @buildSwitches))
     ($null, $file, $line, $column, $message) = [regex]::Match($line, $errorFormat).Groups.Value
 
     $errorLines.Add($line)
-    if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0]) }
+    if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
 
@@ -86,7 +86,7 @@ if ($expectedErrorCodes)
         }
 
         if ($fail -gt 0) {
-            Write-Error $report.ToString()
+            Write-Warning $report.ToString() # We use warning so it doesn't stop prematurely.
             Write-Output ("::error::Verification Mismatch " + ($errorLines -join " "))
         }
     }
