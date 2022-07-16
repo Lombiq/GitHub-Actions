@@ -56,11 +56,12 @@ $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
-dotnet build $Solution @buildSwitches 2>&1 >build.log
-bash -c "exit 0" # This command clears the output, so we don't halt early on in Windows.
-Write-Output "--------------`nBUILD.LOG`n--------------`n$(Get-Content -Raw build.log)`n--------------"
+$logPath = Join-Path $PWD build.log
+dotnet build $Solution @buildSwitches 2>&1 >$logPath
+bash -c "exit 0" # This command clears the output, so we don't halt early in Windows.
+Write-Output "--------------`nBUILD.LOG`n--------------`n$(Get-Content -Raw $logPath)`n--------------"
 
-foreach ($rawLine in [System.IO.File]::ReadAllLines('build.log'))
+foreach ($rawLine in [System.IO.File]::ReadAllLines($logPath))
 {
     Write-Output "ASD 0: '$?' '$rawLine'"
 
