@@ -56,10 +56,9 @@ $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
-$logPath = Join-Path $PWD build.log
-dotnet build $Solution @buildSwitches 2>&1 >$logPath
+dotnet build $Solution @buildSwitches 2>&1 >build.log
 [array] $log = [System.IO.File]::ReadAllLines($logPath)
-Write-Output "--------------`n$logPath`n--------------`n$($log -join [System.Environment]::NewLine)`n--------------"
+Write-Output "--------------`n$logPath`n--------------`n$(($log | % { "'$_'" }) -join [System.Environment]::NewLine)`n--------------"
 
 foreach ($rawLine in $log)
 {
