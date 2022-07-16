@@ -58,9 +58,10 @@ $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
 $logPath = Join-Path $PWD build.log
 dotnet build $Solution @buildSwitches 2>&1 >$logPath
-Write-Output "--------------`n$logPath`n--------------`n$([System.IO.File]::ReadAllLines($logPath))`n--------------"
+[array] $log = [System.IO.File]::ReadAllLines($logPath)
+Write-Output "--------------`n$logPath`n--------------`n$($log -join [System.Environment]::NewLine)`n--------------"
 
-foreach ($rawLine in [System.IO.File]::ReadAllLines($logPath))
+foreach ($rawLine in $log)
 {
     Write-Output "ASD 0: '$?' '$rawLine'"
 
