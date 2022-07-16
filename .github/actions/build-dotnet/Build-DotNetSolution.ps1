@@ -57,8 +57,8 @@ $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
 dotnet build $Solution @buildSwitches 2>&1 >build.log
-[array] $log = [System.IO.File]::ReadAllLines($logPath)
-Write-Output "--------------`n$logPath`n--------------`n$(($log | % { "'$_'" }) -join [System.Environment]::NewLine)`n--------------"
+[array] $log = (Get-Content -Raw build.log).Replace("`r", "") -split "`n"
+Write-Output "--------------`nBUILD.LOG ($($log.Count) lines)`n--------------`n$(($log | % { "'$_'" }) -join [System.Environment]::NewLine)`n--------------"
 
 foreach ($rawLine in $log)
 {
