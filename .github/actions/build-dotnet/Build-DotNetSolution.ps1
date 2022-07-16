@@ -51,12 +51,17 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 }
 
 Write-Output "Building solution."
+
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
+# Since dotnet build will allways emit an error message when it fails, we don't need to care about its exit code. To
+# dismiss it, this line calls Out-Null when dotnet build has a non-zero exit code. This has no effect.
 foreach ($output in (dotnet build $Solution @buildSwitches 2>&1))
 {
+    Write-Output "ASD 0: $? $output"
+
     if ($output -notmatch $errorFormat) { return $output }
 
     ($null, $file, $line, $column, $message) = [regex]::Match($output, $errorFormat).Groups.Value
@@ -66,12 +71,7 @@ foreach ($output in (dotnet build $Solution @buildSwitches 2>&1))
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
 
-# Since dotnet build will allways emit an error message when it fails, we don't need to care about its exit code. To
-# dismiss it, this line calls Out-Null when dotnet build has a non-zero exit code. This has no effect.
-Write-Output "Clearing exit code."
-bash -c "exit 0"
-Write-Output "Exit code cleared."
-
+Write-Output "ASD 1: $expectedErrorCodes"
 if ($expectedErrorCodes)
 {
     $errorCodes = $errorCodes | Sort-Object
@@ -79,10 +79,12 @@ if ($expectedErrorCodes)
     $report = New-Object "System.Text.StringBuilder" "`n"
 
     $length = [System.Math]::Max($errorCodes.Count, $expectedErrorCodes.Count)
+    Write-Output "ASD 2: $length"
     foreach ($index in 0..($length - 1))
     {
         $actual = $errorCodes[$index]
         $expected = $expectedErrorCodes[$index]
+        Write-Output "ASD 3: '$actual' - '$expected' : $($actual -eq $expected)"
 
         if ($actual -eq $expected)
         {
@@ -92,14 +94,18 @@ if ($expectedErrorCodes)
             $report.AppendLine("#$index FAIL (expected: $expected; actual: $actual)") | Out-Null
             $fail++
         }
+
+        Write-Output ("ASD4: $fail`n" + $report.ToString())
     }
 
+    Write-Output "ASD 5: $fail"
     if ($fail -gt 0) {
         Write-Warning $report.ToString() # We use warning so it doesn't stop prematurely.
         Write-Output ("::error::Verification Mismatch " + ($errorLines -join " "))
         exit 1
     }
 
+    Write-Output "ASD 6: EXIT"
     Write-Output "Verification complete, the solution only has the expected errors!"
     exit 0
 }
