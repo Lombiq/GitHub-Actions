@@ -1,5 +1,5 @@
 name: Test Analysis Failure
-description: Tests to verify that the build of an intentionally bad solution yields the expected analyzer violations.
+# Tests to verify that the build of an intentionally bad solution yields the expected analyzer violations.
 
 on:
   workflow_call:
