@@ -55,9 +55,7 @@ $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
-# Since dotnet build will allways emit an error message when it fails, we don't need to care about its exit code. To
-# dismiss it, this line calls Out-Null when dotnet build has a non-zero exit code. This has no effect.
-foreach ($output in (dotnet build $Solution @buildSwitches 2>&1 || Out-Null))
+foreach ($output in (dotnet build $Solution @buildSwitches 2>&1))
 {
     if ($output -notmatch $errorFormat) { return $output }
 
@@ -67,6 +65,12 @@ foreach ($output in (dotnet build $Solution @buildSwitches 2>&1 || Out-Null))
     if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
+
+# Since dotnet build will allways emit an error message when it fails, we don't need to care about its exit code. To
+# dismiss it, this line calls Out-Null when dotnet build has a non-zero exit code. This has no effect.
+Write-Output "Clearing exit code."
+bash -c "exit 0"
+Write-Output "Exit code cleared."
 
 if ($expectedErrorCodes)
 {
