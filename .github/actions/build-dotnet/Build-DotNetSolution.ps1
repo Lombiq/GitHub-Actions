@@ -60,15 +60,15 @@ dotnet build $Solution @buildSwitches 2>&1 >build.log
 bash -c "exit 0" # This command clears the output, so we don't halt early on in Windows.
 Write-Output "--------------`nBUILD.LOG`n--------------`n$(Get-Content -Raw build.log)`n--------------"
 
-foreach ($output in [System.IO.File]::ReadAllLines('build.log'))
+foreach ($rawLine in [System.IO.File]::ReadAllLines('build.log'))
 {
-    Write-Output "ASD 0: $? $output"
+    Write-Output "ASD 0: '$?' '$rawLine'"
 
-    if ($output -notmatch $errorFormat) { return $output }
+    if ($rawLine -notmatch $errorFormat) { return $rawLine }
 
-    ($null, $file, $line, $column, $message) = [regex]::Match($output, $errorFormat).Groups.Value
+    ($null, $file, $line, $column, $message) = [regex]::Match($rawLine, $errorFormat).Groups.Value
 
-    $errorLines.Add($output)
+    $errorLines.Add($rawLine)
     if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
