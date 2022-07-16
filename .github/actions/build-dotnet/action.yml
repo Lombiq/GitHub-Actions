@@ -56,7 +56,7 @@ inputs:
     description: >
       If not empty, it indicates that the static code analysis should fail. Then each line should contain one error
       code. The static code analysis should yield these and only these errors. This is ignored if `enable-code-analysis`
-      is not "true".
+      is not "true". You may add a colon and then an explanation of the expected error.
 
 runs:
   using: "composite"
