@@ -50,7 +50,7 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output "::endgroup::"
 }
 
-Write-Output "Building solution."
+Write-Output "Building solution with ``dotnet build $Solution $($buildSwitches -join " ")``."
 
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 $errorLines = New-Object "System.Collections.Generic.List[string]"
@@ -60,6 +60,7 @@ $errorCodes = New-Object "System.Collections.Generic.List[string]"
 # dismiss it, this line calls Out-Null when dotnet build has a non-zero exit code. This has no effect.
 foreach ($output in (dotnet build $Solution @buildSwitches 2>&1))
 {
+    bash -c "exit 0" # This command clears the output, so the loop doesn't halt early on in Windows.
     Write-Output "ASD 0: $? $output"
 
     if ($output -notmatch $errorFormat) { return $output }
