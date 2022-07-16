@@ -60,15 +60,14 @@ dotnet build $Solution @buildSwitches 2>&1 >build.log
 [array] $log = (Get-Content -Raw build.log).Replace("`r", "") -split "`n"
 Write-Output "--------------`nBUILD.LOG ($($log.Count) lines)`n--------------`n$(($log | % { "'$_'" }) -join [System.Environment]::NewLine)`n--------------"
 
-foreach ($rawLine in $log)
-{
-    Write-Output "ASD 0: '$?' '$rawLine'"
+$log | % {
+    Write-Output "ASD 0: '$?' '$_'"
 
-    if ($rawLine -notmatch $errorFormat) { return $rawLine }
+    if ($_ -notmatch $errorFormat) { return $_ }
 
-    ($null, $file, $line, $column, $message) = [regex]::Match($rawLine, $errorFormat).Groups.Value
+    ($null, $file, $line, $column, $message) = [regex]::Match($_, $errorFormat).Groups.Value
 
-    $errorLines.Add($rawLine)
+    $errorLines.Add($_)
     if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
