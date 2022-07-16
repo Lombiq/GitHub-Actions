@@ -84,11 +84,11 @@ if ($expectedErrorCodes)
             $report.AppendLine("#$index FAIL (expected: $expected; actual: $actual)") | Out-Null
             $fail++
         }
+    }
 
-        if ($fail -gt 0) {
-            Write-Warning $report.ToString() # We use warning so it doesn't stop prematurely.
-            Write-Output ("::error::Verification Mismatch " + ($errorLines -join " "))
-        }
+    if ($fail -gt 0) {
+        Write-Warning $report.ToString() # We use warning so it doesn't stop prematurely.
+        Write-Output ("::error::Verification Mismatch " + ($errorLines -join " "))
     }
 }
 
