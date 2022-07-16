@@ -56,11 +56,12 @@ $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
-# Since dotnet build will allways emit an error message when it fails, we don't need to care about its exit code. To
-# dismiss it, this line calls Out-Null when dotnet build has a non-zero exit code. This has no effect.
-foreach ($output in (dotnet build $Solution @buildSwitches 2>&1))
+dotnet build $Solution @buildSwitches 2>&1 >build.log
+bash -c "exit 0" # This command clears the output, so we don't halt early on in Windows.
+Write-Output "--------------`nBUILD.LOG`n--------------`n$(Get-Content -Raw build.log)`n--------------"
+
+foreach ($output in [System.IO.File]::ReadAllLines('build.log'))
 {
-    bash -c "exit 0" # This command clears the output, so the loop doesn't halt early on in Windows.
     Write-Output "ASD 0: $? $output"
 
     if ($output -notmatch $errorFormat) { return $output }
