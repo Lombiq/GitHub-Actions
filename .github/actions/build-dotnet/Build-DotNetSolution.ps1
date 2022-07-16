@@ -54,12 +54,13 @@ Write-Output "Building solution."
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
-foreach ($line in (dotnet build $Solution @buildSwitches))
+foreach ($output in (dotnet build $Solution @buildSwitches))
 {
-    if ($line -notmatch $errorFormat) { return $line }
-    ($null, $file, $line, $column, $message) = [regex]::Match($line, $errorFormat).Groups.Value
+    if ($output -notmatch $errorFormat) { return $output }
 
-    $errorLines.Add($line)
+    ($null, $file, $line, $column, $message) = [regex]::Match($output, $errorFormat).Groups.Value
+
+    $errorLines.Add($output)
     if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
