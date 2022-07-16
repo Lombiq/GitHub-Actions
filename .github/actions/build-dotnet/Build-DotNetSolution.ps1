@@ -58,11 +58,8 @@ $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
 dotnet build $Solution @buildSwitches 2>&1 >build.log
 [array] $log = (Get-Content -Raw build.log).Replace("`r", "") -split "`n"
-Write-Output "--------------`nBUILD.LOG ($($log.Count) lines)`n--------------`n$(($log | % { "'$_'" }) -join [System.Environment]::NewLine)`n--------------"
 
 $log | % {
-    Write-Output "ASD 0: '$?' '$_'"
-
     if ($_ -notmatch $errorFormat) { return $_ }
 
     ($null, $file, $line, $column, $message) = [regex]::Match($_, $errorFormat).Groups.Value
@@ -72,7 +69,6 @@ $log | % {
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
 
-Write-Output "ASD 1: $expectedErrorCodes"
 if ($expectedErrorCodes)
 {
     $errorCodes = $errorCodes | Sort-Object
@@ -80,12 +76,10 @@ if ($expectedErrorCodes)
     $report = New-Object "System.Text.StringBuilder" "`n"
 
     $length = [System.Math]::Max($errorCodes.Count, $expectedErrorCodes.Count)
-    Write-Output "ASD 2: $length"
     foreach ($index in 0..($length - 1))
     {
         $actual = $errorCodes[$index]
         $expected = $expectedErrorCodes[$index]
-        Write-Output "ASD 3: '$actual' - '$expected' : $($actual -eq $expected)"
 
         if ($actual -eq $expected)
         {
@@ -95,18 +89,14 @@ if ($expectedErrorCodes)
             $report.AppendLine("#$index FAIL (expected: $expected; actual: $actual)") | Out-Null
             $fail++
         }
-
-        Write-Output ("ASD4: $fail`n" + $report.ToString())
     }
 
-    Write-Output "ASD 5: $fail"
     if ($fail -gt 0) {
         Write-Warning $report.ToString() # We use warning so it doesn't stop prematurely.
         Write-Output ("::error::Verification Mismatch " + ($errorLines -join " "))
         exit 1
     }
 
-    Write-Output "ASD 6: EXIT"
     Write-Output "Verification complete, the solution only has the expected errors!"
     exit 0
 }
