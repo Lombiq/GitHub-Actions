@@ -58,8 +58,7 @@ $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
 $logPath = Join-Path $PWD build.log
 dotnet build $Solution @buildSwitches 2>&1 >$logPath
-bash -c "exit 0" # This command clears the output, so we don't halt early in Windows.
-Write-Output "--------------`nBUILD.LOG`n--------------`n$(Get-Content -Raw $logPath)`n--------------"
+Write-Output "--------------`n$logPath`n--------------`n$([System.IO.File]::ReadAllLines($logPath))`n--------------"
 
 foreach ($rawLine in [System.IO.File]::ReadAllLines($logPath))
 {
