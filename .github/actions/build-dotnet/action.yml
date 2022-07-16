@@ -50,6 +50,13 @@ inputs:
       can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be specified." error
       that is thrown when the `*.sln` wildcard results in multiple files. The value is given to PowerShell's
       `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with spaces must be escaped separately.
+  expected-code-analysis-errors:
+    required: false
+    default: ""
+    description: >
+      If not empty, it indicates that the static code analysis should fail. Then each line should contain one error
+      code. The static code analysis should yield these and only these errors. This is ignored if `enable-code-analysis`
+      is not "true".
 
 runs:
   using: "composite"
@@ -107,12 +114,17 @@ runs:
             ${{ inputs.dotnet-build-switches }}
         '@
 
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
         $switches = @{
             Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"
             Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
         }
 
         $startTime = [DateTime]::Now
