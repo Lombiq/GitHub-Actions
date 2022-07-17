@@ -1,17 +1,13 @@
 # Lombiq Github Actions
 
-
-
 ## About
 
 Some common workflows and actions for Github Actions shared between Lombiq projects, e.g. to publish packages to NuGet. These can be invoked from any other repository's build.
-
 
 ## Documentation
 
 - [Reusable workflows](Docs/Workflows.md)
 - [Composite actions](Docs/Actions.md)
-
 
 ## Contributing and support
 
