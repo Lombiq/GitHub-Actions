@@ -1,11 +1,11 @@
 name: Check Spelling
 description: Checks for spelling errors in files.
 
-inputs:
-  debug:
-    type: string
-    description: 'Debug'
-    required: false
+# inputs:
+#   debug:
+#     type: string
+#     description: 'Debug'
+#     required: false
 
 runs:
   using: "composite"

@@ -1,12 +1,12 @@
 name: Check Spelling
 
-on:
-  workflow_call:
-    inputs:
-      debug:
-        type: string
-        description: 'Debug'
-        required: false
+# on:
+#   workflow_call:
+#     inputs:
+#       debug:
+#         type: string
+#         description: 'Debug'
+#         required: false
 
 jobs:
   check-spelling:
