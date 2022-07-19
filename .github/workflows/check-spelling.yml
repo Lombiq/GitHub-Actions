@@ -1,12 +1,12 @@
 name: Check Spelling
 
-# on:
-#   workflow_call:
-#     inputs:
-#       debug:
-#         type: string
-#         description: 'Debug'
-#         required: false
+on:
+  workflow_call:
+    inputs:
+      example-input:
+        type: string
+        description: 'Debug'
+        required: false
 
 jobs:
   check-spelling:
@@ -17,3 +17,5 @@ jobs:
         uses: actions/checkout@v3
       - name: Check Spelling
         uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
+        with:
+          expamle-input: ${{ inputs.example-input }}
