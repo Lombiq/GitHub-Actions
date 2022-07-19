@@ -154,9 +154,9 @@ on:
         description: 'Used for passing internal state from the (default) check mode to the comment module'
         value: ${{ steps.spelling.outputs.internal_state_directory }}
 
-  jobs:
-    check-spelling:
-      name: Check Spelling
-      steps:
-        - name: Check Spelling
-          uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
+jobs:
+  check-spelling:
+    name: Check Spelling
+    steps:
+      - name: Check Spelling
+        uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
