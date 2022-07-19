@@ -158,6 +158,5 @@ on:
       check-spelling:
         name: Check Spelling
         steps:
-          - uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
-            with: 
-              someconfig: 'e'
+          - name: Check Spelling
+            uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
