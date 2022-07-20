@@ -81,7 +81,8 @@ if ($expectedErrorCodes)
         if ($actual -eq $expected)
         {
             $report.AppendLine("#$index OK ($actual)") | Out-Null
-        } else
+        }
+        else
         {
             $report.AppendLine("#$index FAIL (expected: $expected; actual: $actual)") | Out-Null
             $fail++
