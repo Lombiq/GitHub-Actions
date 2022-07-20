@@ -59,7 +59,7 @@ $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 dotnet build $Solution @buildSwitches 2>&1 | % {
     if ($_ -notmatch $errorFormat) { return $_ }
 
-    ($null, $file, $line, $column, $message) = [regex]::Match($_, $errorFormat).Groups.Value
+    ($null, $file, $line, $column, $message) = [regex]::Match($_, $errorFormat, 'Compiled').Groups.Value
 
     $errorLines.Add($_)
     if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
