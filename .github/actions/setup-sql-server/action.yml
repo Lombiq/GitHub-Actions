@@ -7,6 +7,7 @@ runs:
     - name: Set up SQL Server
       shell: pwsh
       run: |
+        $Env:PATH += "${{ github.action_path }}"
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         Initialize-SqlServer
 
