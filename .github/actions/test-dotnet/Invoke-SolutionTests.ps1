@@ -38,17 +38,17 @@ foreach ($test in $tests) {
 
     if ($?)
     {
-        echo "Test Successful: $test"
+        Write-Output "Test Successful: $test"
         continue
     }
 
     $needsGrouping = (Select-String "::group::" test.out).Length -eq 0
 
-    if ($needsGrouping) { echo "::group::Test Failed: $test" }
+    if ($needsGrouping) { Write-Output "::group::Test Failed: $test" }
 
     bash -c "cat test.out | grep -v 'Connection refused \[::ffff:127.0.0.1\]' | grep -v 'ChromeDriver was started successfully'"
 
-    if ($needsGrouping) { echo "::endgroup::" }
+    if ($needsGrouping) { Write-Output "::endgroup::" }
 
     exit 100
 }

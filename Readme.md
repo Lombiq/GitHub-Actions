@@ -1,4 +1,4 @@
-# Lombiq Github Actions
+# Lombiq GitHub Actions
 
 
 

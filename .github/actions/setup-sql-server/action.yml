@@ -7,10 +7,10 @@ runs:
     - name: Set up SQL Server
       shell: pwsh
       run: |
-        ${{ github.action_path }}/setup-sql-server.ps1
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        Initialize-SqlServer
 
     # Needs to be a separate step, otherwise the Chocolatey installation won't be visible.
     - name: Wait for SQL Server to start
       shell: pwsh
-      run: |
-        ${{ github.action_path }}/wait-for-sql-server.ps1
+      run: Wait-SqlServer

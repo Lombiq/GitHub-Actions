@@ -1,9 +1,10 @@
-﻿name: Build .NET solution
+name: Test Analysis Failure
+# Tests to verify that the build of an intentionally bad solution yields the expected analyzer violations.
 
 on:
   workflow_call:
     inputs:
-      # This needs to be stringified JSON because inputs don't support arrays, see 
+      # This needs to be stringified JSON because inputs don't support arrays, see
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
         required: false
@@ -22,16 +23,6 @@ on:
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
-      build-verbosity:
-        required: false
-        type: string
-        default: quiet
-        description: Verbosity parameter for dotnet build.
-      build-enable-code-analysis:
-        required: false
-        type: string
-        default: "true"
-        description: Indicates whether to enable static code analysis during dotnet build.
       build-enable-nuget-caching:
         required: false
         type: string
@@ -51,9 +42,19 @@ on:
         type: string
         default: "0"
         description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
-          only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
-          until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
+          easiest current way to force "clear" the cache
+          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
+          (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
+          API.
+      build-expected-code-analysis-errors:
+          required: false
+          type: string
+          default: ""
+          description: >
+              If not empty, it indicates that the static code analysis should fail. Then each line should contain one error
+              code. The static code analysis should yield these and only these errors. This is ignored if
+              `enable-code-analysis` is not "true". You may add a colon and then an explanation of the expected error.
       timeout-minutes:
         required: false
         type: number
@@ -61,10 +62,7 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
 
 jobs:
-  # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call
-  # other workflows, they'd need to be encapsulated in a composite action. That, however, will result in a single step
-  # being shown under the build details with all below steps mushed together.
-  build:
+  build-and-test:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
     # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
@@ -85,12 +83,17 @@ jobs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-150
       with:
-        directory: ${{ inputs.build-directory}}
-        verbosity: ${{ inputs.build-verbosity}}
-        enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
+        directory: ${{ inputs.build-directory }}
+        verbosity: quiet
+        enable-code-analysis: true
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
+        expected-code-analysis-errors: ${{ inputs.build-expected-code-analysis-errors }}
+
