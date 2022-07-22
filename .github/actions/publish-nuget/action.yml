@@ -10,6 +10,12 @@ inputs:
     required: false
     default: minimal
     description: The logging verbosity type used by the `dotnet` command.
+  dotnet-pack-ignore-warning:
+    required: false
+    default: ""
+    description: >
+      Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be 
+      separated by any whitespace, including newlines.
 secrets:
   API_KEY:
     required: true
@@ -86,6 +92,10 @@ runs:
       # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
       #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
       run: |
+        $noWarn = @('NU5104') + @'
+        ${{ inputs.dotnet-pack-ignore-warning }}
+        '@.Split() | ? { $_ }
+
         $arguments = @(
             "--configuration:Release",
             "--warnaserror",
@@ -96,7 +106,7 @@ runs:
             "-p:NuGetBuild=true",
             "-p:Version=${{ steps.setup.outputs.publish-version }}",
             "-p:GenerateDocumentationFile=True",
-            "-p:NoWarn=NU5104",
+            "-p:NoWarn=$($noWarn -join '%3B')",
             "-p:TreatWarningsAsErrors=true",
             "-p:WarnOnPackingNonPackableProject=True",
             "-p:IncludeSymbols=true",
