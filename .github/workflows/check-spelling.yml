@@ -10,20 +10,12 @@ on:
 
 jobs:
   check-spelling:
-    permissions:
-      contents: read
-      pull-requests: read
-      actions: read
-    outputs:
-      followup: ${{ steps.spelling.outputs.followup }}
+    name: Check Spelling
     runs-on: ubuntu-latest
     steps:
-    - name: check-spelling
-      id: spelling
-      uses: check-spelling/check-spelling@prerelease
-      with:
-        experimental_apply_changes_via_bot: 1
-        suppress_push_for_open_pull_request: 1
-        checkout: true
-        spell_check_this: check-spelling/spell-check-this@prerelease
-        post_comment: 0
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: Check Spelling
+        uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
+        with:
+          expamle-input: ${{ inputs.example-input }}
