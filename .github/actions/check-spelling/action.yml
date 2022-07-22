@@ -10,8 +10,8 @@ permissions:
   contents: read
   pull-requests: read
   actions: read
-outputs:
-  followup: ${{ steps.spelling.outputs.followup }}
+# outputs:
+#   followup: ${{ steps.spelling.outputs.followup }}
 runs-on: ubuntu-latest
 
 runs:
