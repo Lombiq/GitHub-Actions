@@ -6,16 +6,16 @@ inputs:
     type: string
     description: 'Debug'
     required: false
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+outputs:
+  followup: ${{ steps.spelling.outputs.followup }}
+runs-on: ubuntu-latest
 
 runs:
   using: "composite"
-  permissions:
-    contents: read
-    pull-requests: read
-    actions: read
-  outputs:
-    followup: ${{ steps.spelling.outputs.followup }}
-  runs-on: ubuntu-latest
   steps:
   - name: check-spelling
     id: spelling
