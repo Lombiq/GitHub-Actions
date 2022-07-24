@@ -56,8 +56,6 @@ $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
-dotnet build $Solution @buildSwitches 2>&1 | Out-Null
-bash -c 'true'
 dotnet build $Solution @buildSwitches 2>&1 | % {
     if ($_ -notmatch $errorFormat) { return $_ }
 
