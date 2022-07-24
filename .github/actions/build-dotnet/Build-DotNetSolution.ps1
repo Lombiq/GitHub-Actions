@@ -72,6 +72,15 @@ if ($expectedErrorCodes)
     $fail = 0
     $report = New-Object "System.Text.StringBuilder" "`n"
 
+    if ($null -eq $errorCodes -or -not $errorCodes.Count)
+    {
+        $expectedCount = $expectedErrorCodes.Count
+        $expectedCodesJoined = $expectedErrorCodes -join ', '
+
+        Write-Output "::error::Expected $expectedCount error codes ($expectedCodesJoined), but none were displayed."
+        exit 1
+    }
+
     $length = [System.Math]::Max($errorCodes.Count, $expectedErrorCodes.Count)
     foreach ($index in 0..($length - 1))
     {
