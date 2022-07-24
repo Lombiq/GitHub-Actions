@@ -24,9 +24,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set UI Test Parallelization
+    - name: Setup & Set UI Test Parallelization
       shell: pwsh
       run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
             Write-Output "The UI test parallelism configuration isn't overridden."
@@ -35,13 +37,12 @@ runs:
 
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
 
-        ${{ github.action_path }}/replace-xunit-max-parallel-threads.ps1 -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
+        Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
     
     - name: Run Tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
-      run: |
-        ${{ github.action_path }}/run-tests.ps1 -Verbosity ${{ inputs.test-verbosity }}
+      run: Invoke-SolutionTests -Verbosity ${{ inputs.test-verbosity }}
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
@@ -52,8 +53,7 @@ runs:
     - name: Merge FailureDumps
       shell: pwsh
       if: (success() || failure()) && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
-      run: |
-        ${{ github.action_path }}/merge-failure-dumps.ps1 -Directory "${{ inputs.build-directory }}"
+      run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
     - name: Upload UI testing artifacts
       uses: actions/upload-artifact@v3

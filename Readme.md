@@ -1,10 +1,10 @@
-# Lombiq Github Actions
+# Lombiq GitHub Actions
 
 
 
 ## About
 
-Some common workflows and actions for Github Actions shared between Lombiq projects, e.g. to publish packages to NuGet. These can be invoked from any other repository's build.
+Some common workflows and actions for Github Actions shared between Lombiq projects, e.g. to build and test [Orchard Core](https://www.orchardcore.net/) apps, publish packages to NuGet, verify that a Git submodule pull request has a corresponding superproject one. These can be invoked from any other repository's build.
 
 
 ## Documentation
