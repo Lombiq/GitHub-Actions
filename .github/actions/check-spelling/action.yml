@@ -30,6 +30,6 @@ runs:
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       checkout: true
-      config: ./tools/Lombiq.GitHub.Actions/.github/actions/check-spelling/spelling
+      config: spelling/configs
       spell_check_this: check-spelling/spell-check-this@prerelease
       post_comment: 1
