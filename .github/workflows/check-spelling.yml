@@ -1,0 +1,21 @@
+name: Check Spelling
+
+on:
+  workflow_call:
+    inputs:
+      example-input:
+        type: string
+        description: 'Debug'
+        required: false
+
+jobs:
+  check-spelling:
+    name: Check Spelling
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: Check Spelling
+        uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
+        with:
+          expamle-input: ${{ inputs.example-input }}
