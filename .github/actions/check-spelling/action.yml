@@ -21,6 +21,12 @@ runs:
     id: spelling
     uses: check-spelling/check-spelling@prerelease
     with:
+      extra_dictionaries:
+          cspell:filetypes/filetypes.txt
+          cspell:django/django.txt
+          cspell:aws/aws.txt
+          cspell:html/html.txt
+          cspell:css/css.txt
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       checkout: true
