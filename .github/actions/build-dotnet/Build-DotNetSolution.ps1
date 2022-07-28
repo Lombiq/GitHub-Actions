@@ -50,6 +50,11 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output "::endgroup::"
 }
 
+# This prepares the solution with the Lombiq.Analyzers files. The output and exit code are dismissed because they will
+# be in error if there is a project without the LombiqNetAnalyzers target. Then there is nothing to do, and the target 
+# will still run on the projects that have it.
+dotnet msbuild -target:LombiqNetAnalyzers $Solution | Out-Null; bash -c 'true'
+
 Write-Output "Building solution with ``dotnet build $Solution $($buildSwitches -join " ")``."
 
 $errorLines = New-Object "System.Collections.Generic.List[string]"
