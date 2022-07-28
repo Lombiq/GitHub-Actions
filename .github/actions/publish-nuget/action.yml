@@ -55,6 +55,11 @@ runs:
       shell: pwsh
       run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
 
+    - name: Generate nuspec file if needed
+      if: hashFiles('ConvertTo-Nuspec.ps1')
+      shell: pwsh
+      run: ./ConvertTo-Nuspec.ps1 '${{ steps.setup.outputs.publish-version }}'
+
     - name: Build
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       # Notes on the configuration:
@@ -82,6 +87,11 @@ runs:
             -p:DebugSymbols=true
             -p:DebugType=portable
 
+    - name: Actions prior to dotnet pack
+      if: hashFiles('Invoke-BeforePack.ps1')
+      shell: pwsh
+      run: ./Invoke-BeforePack.ps1
+
     - name: Pack
       shell: pwsh
       # Notes on the configuration apart from what's also for dotnet build:
@@ -92,19 +102,20 @@ runs:
       # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
       #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
       run: |
-        $noWarn = @('NU5104') + @'
+        $noWarn = @('NU5104', 'NU5100') + @'
         ${{ inputs.dotnet-pack-ignore-warning }}
         '@.Split() | ? { $_ }
 
-        $arguments = @(
+        New-NugetPackages @(
             "--configuration:Release",
             "--warnaserror",
             "--no-restore",
             "--no-build",
-            "--output:artifacts",
+            "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
             "-p:Version=${{ steps.setup.outputs.publish-version }}",
+            "-p:NuspecProperties=version=${{ steps.setup.outputs.publish-version }}",
             "-p:GenerateDocumentationFile=True",
             "-p:NoWarn=$($noWarn -join '%3B')",
             "-p:TreatWarningsAsErrors=true",
@@ -113,7 +124,6 @@ runs:
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true"
         )
-        dotnet pack @arguments
 
     - name: Push with dotnet
       shell: pwsh
