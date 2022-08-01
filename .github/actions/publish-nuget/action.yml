@@ -106,7 +106,7 @@ runs:
         ${{ inputs.dotnet-pack-ignore-warning }}
         '@.Split() | ? { $_ }
 
-        New-NugetPackages @(
+        New-NugetPackage @(
             "--configuration:Release",
             "--warnaserror",
             "--no-restore",
