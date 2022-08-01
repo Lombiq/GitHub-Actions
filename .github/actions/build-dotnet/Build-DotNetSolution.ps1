@@ -8,9 +8,7 @@
 
 function ConvertTo-Array([string] $rawInput)
 {
-    $rawInput.Replace("`r", "").Split("`n") |
-        % { $_.Trim() } |
-        ? { -not [string]::IsNullOrEmpty($_) }
+    $rawInput.Replace("`r", "").Split("`n") | % { $_.Trim() } | ? { $_ }
 }
 
 Write-Output ".NET version number: $Version"
@@ -53,8 +51,7 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 # This prepares the solution with the Lombiq.Analyzers files. The output and exit code are dismissed because they will
 # be in error if there is a project without the LombiqNetAnalyzers target. Then there is nothing to do, and the target 
 # will still run on the projects that have it.
-dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $Solution | Out-Null
-bash -c 'true'
+dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $Solution | Out-Null || bash -c 'true'
 
 Write-Output "Building solution with ``dotnet build $Solution $($buildSwitches -join " ")``."
 
