@@ -1,4 +1,3 @@
-
 <#
 .SYNOPSIS
     Creates a NuGet package from each project in the sln file in the current directory.
