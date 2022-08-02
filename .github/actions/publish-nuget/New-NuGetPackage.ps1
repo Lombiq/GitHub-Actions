@@ -13,6 +13,7 @@
 
 param([array] $Arguments)
 
+# We go through the projects individually, because the "-p:NuspecFile=" parameter can't be passed to a solution.
 foreach ($project in (dotnet sln list | Select-Object -Skip 2 | Get-Item))
 {
     Push-Location $project.Directory
