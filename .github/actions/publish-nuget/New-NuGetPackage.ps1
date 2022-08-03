@@ -6,6 +6,9 @@
     exactly one sln file in it. Then calls "dotnet pack" for each csproj file with the provided arguments. If there is
     a nuspec file in the project's directory too, then it is used to generate the package description instead of the 
     regular auto-generation.
+.NOTES
+    We go through the projects individually in a foreach loop, because the "-p:NuspecFile=" parameter can't be passed 
+    to a solution.
 .EXAMPLE
     New-NugetPackage @("--configuration:Release", "--warnaserror")
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
@@ -13,7 +16,6 @@
 
 param([array] $Arguments)
 
-# We go through the projects individually, because the "-p:NuspecFile=" parameter can't be passed to a solution.
 foreach ($project in (dotnet sln list | Select-Object -Skip 2 | Get-Item))
 {
     Push-Location $project.Directory
