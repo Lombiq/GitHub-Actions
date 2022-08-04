@@ -16,6 +16,10 @@ inputs:
     description: >
       Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be 
       separated by any whitespace, including newlines.
+  dotnet-pack-include-symbols:
+    required: false
+    default: "true"
+    description: If set to "true", a symbol package will be created together with the NuGet package.
 secrets:
   API_KEY:
     required: true
@@ -120,7 +124,7 @@ runs:
             "-p:NoWarn=$($noWarn -join '%3B')",
             "-p:TreatWarningsAsErrors=true",
             "-p:WarnOnPackingNonPackableProject=True",
-            "-p:IncludeSymbols=true",
+            "-p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true"
         )
