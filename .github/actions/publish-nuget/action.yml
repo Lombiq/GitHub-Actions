@@ -105,7 +105,7 @@ runs:
       # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
       #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
       run: |
-        $noWarn = @('NU5100', 'NU5104') + @'
+        $noWarn = @('NU5100') + @'
         ${{ inputs.dotnet-pack-ignore-warning }}
         '@.Split() | ? { $_ }
 
