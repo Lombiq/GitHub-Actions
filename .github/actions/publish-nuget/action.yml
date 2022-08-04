@@ -16,6 +16,10 @@ inputs:
     description: >
       Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be 
       separated by any whitespace, including newlines.
+  dotnet-pack-include-symbols:
+    required: false
+    default: "true"
+    description: If set to "true", a symbol package will be created together with the NuGet package.
 secrets:
   API_KEY:
     required: true
@@ -55,6 +59,11 @@ runs:
       shell: pwsh
       run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
 
+    - name: Generate nuspec file if needed
+      if: hashFiles('ConvertTo-Nuspec.ps1')
+      shell: pwsh
+      run: ./ConvertTo-Nuspec.ps1 '${{ steps.setup.outputs.publish-version }}'
+
     - name: Build
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       # Notes on the configuration:
@@ -82,6 +91,11 @@ runs:
             -p:DebugSymbols=true
             -p:DebugType=portable
 
+    - name: Actions prior to dotnet pack
+      if: hashFiles('Invoke-BeforePack.ps1')
+      shell: pwsh
+      run: ./Invoke-BeforePack.ps1
+
     - name: Pack
       shell: pwsh
       # Notes on the configuration apart from what's also for dotnet build:
@@ -96,24 +110,24 @@ runs:
         ${{ inputs.dotnet-pack-ignore-warning }}
         '@.Split() | ? { $_ }
 
-        $arguments = @(
+        New-NuGetPackage @(
             "--configuration:Release",
             "--warnaserror",
             "--no-restore",
             "--no-build",
-            "--output:artifacts",
+            "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
             "-p:Version=${{ steps.setup.outputs.publish-version }}",
+            "-p:NuspecProperties=version=${{ steps.setup.outputs.publish-version }}",
             "-p:GenerateDocumentationFile=True",
             "-p:NoWarn=$($noWarn -join '%3B')",
             "-p:TreatWarningsAsErrors=true",
             "-p:WarnOnPackingNonPackableProject=True",
-            "-p:IncludeSymbols=true",
+            "-p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true"
         )
-        dotnet pack @arguments
 
     - name: Push with dotnet
       shell: pwsh
