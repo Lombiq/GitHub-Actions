@@ -16,14 +16,7 @@
 
 param([array] $Arguments)
 
-if (Test-Path *.sln)
-{
-    $projects = (dotnet sln list | Select-Object -Skip 2 | Get-Item)
-}
-else
-{
-    $projects = Get-ChildItem *.csproj
-}
+$projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
 {
