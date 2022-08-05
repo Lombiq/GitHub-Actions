@@ -16,7 +16,18 @@
 
 param([array] $Arguments)
 
-foreach ($project in (dotnet sln list | Select-Object -Skip 2 | Get-Item))
+if (!(Get-ChildItem *.sln))
+{
+    $projects = Get-ChildItem *.csproj
+}
+else
+{
+    $projects = (dotnet sln list | Select-Object -Skip 2 | Get-Item)
+}
+
+echo $projects
+
+foreach ($project in $projects)
 {
     Push-Location $project.Directory
 
