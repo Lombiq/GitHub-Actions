@@ -25,8 +25,6 @@ else
     $projects = (dotnet sln list | Select-Object -Skip 2 | Get-Item)
 }
 
-echo $projects
-
 foreach ($project in $projects)
 {
     Push-Location $project.Directory
