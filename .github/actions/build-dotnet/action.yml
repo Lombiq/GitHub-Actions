@@ -128,7 +128,307 @@ runs:
         }
 
         $startTime = [DateTime]::Now
-        Build-DotNetSolution @switches
+        Build-DotNetSolutionWithoutStaticGraph @switches
         $endTime = [DateTime]::Now
 
         Write-Output ("Solution build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build without static graph 1
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolutionWithoutStaticGraph @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build without static graph 1 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build without static graph 2
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolutionWithoutStaticGraph @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build without static graph 2 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build without static graph 3
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolutionWithoutStaticGraph @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build without static graph 3 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build without static graph 4
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolutionWithoutStaticGraph @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build without static graph 4 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build without static graph 5
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolutionWithoutStaticGraph @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build without static graph 5 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build with static graph 1
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolution @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build with static graph 1 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build with static graph 2
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolution @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build with static graph 2 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build with static graph 3
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolution @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build with static graph 3 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build with static graph 4
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolution @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build with static graph 4 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Build with static graph 5
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        git clean -fxd
+        git submodule foreach --recursive git clean -fxd
+
+        $buildSwitches = @'
+            ${{ inputs.dotnet-build-switches }}
+        '@
+
+        $expectedCodeAnalysisErrors = @'
+            ${{ inputs.expected-code-analysis-errors }}
+        '@
+
+        $switches = @{
+            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+            Verbosity = "${{ inputs.verbosity }}"
+            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
+            Version = "${{ inputs.publish-version }}"
+            Switches = $buildSwitches
+            ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+        }
+
+        $startTime = [DateTime]::Now
+        Build-DotNetSolution @switches
+        $endTime = [DateTime]::Now
+
+        Write-Output ("Build with static graph 5 took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
