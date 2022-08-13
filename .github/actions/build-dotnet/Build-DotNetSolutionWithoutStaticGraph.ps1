@@ -30,6 +30,7 @@ $buildSwitches = ConvertTo-Array @"
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
+    /nodeReuse:false
     $Switches
 "@
 
@@ -51,7 +52,7 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 # This prepares the solution with the Lombiq.Analyzers files. The output and exit code are discarded because they will
 # be in error if there is a project without the LombiqNetAnalyzers target. Then there is nothing to do, and the target 
 # will still run on the projects that have it.
-dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $Solution | Out-Null || bash -c 'true'
+dotnet msbuild '-target:Restore;LombiqNetAnalyzers /nodeReuse:false' $Solution | Out-Null || bash -c 'true'
 
 Write-Output "Building solution with ``dotnet build $Solution $($buildSwitches -join " ")``."
 
