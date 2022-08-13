@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string] $Solution,
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
@@ -17,6 +17,8 @@ Write-Output ".NET version number: $Version"
 # - -p:Retries and -p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
 # - --warnAsMessage:MSB3026 is also to prevent random locks along the lines of "warning MSB3026: Could not copy dlls
 #   errors." from breaking the build (since we treat warnings as errors).
+# - -p:RestoreUseStaticGraphEvaluation=true Makes NuGet restores faster, see:
+#   https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#restoring-with-msbuild-static-graph-evaluation.
 
 $buildSwitches = ConvertTo-Array @"
     --configuration:Release
@@ -30,6 +32,7 @@ $buildSwitches = ConvertTo-Array @"
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
+    -p:RestoreUseStaticGraphEvaluation=true
     $Switches
 "@
 
@@ -51,7 +54,7 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 # This prepares the solution with the Lombiq.Analyzers files. The output and exit code are discarded because they will
 # be in error if there is a project without the LombiqNetAnalyzers target. Then there is nothing to do, and the target 
 # will still run on the projects that have it.
-dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $Solution | Out-Null || bash -c 'true'
+dotnet msbuild '-target:Restore;LombiqNetAnalyzers /p:RestoreUseStaticGraphEvaluation=true' $Solution | Out-Null || bash -c 'true'
 
 Write-Output "Building solution with ``dotnet build $Solution $($buildSwitches -join " ")``."
 
