@@ -137,6 +137,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
@@ -167,6 +168,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
@@ -197,6 +199,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
@@ -227,6 +230,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
@@ -257,6 +261,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
@@ -287,6 +292,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
@@ -317,6 +323,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
@@ -347,6 +354,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
@@ -377,6 +385,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
@@ -407,6 +416,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        nuget locals all -clear
         git clean -fxd
         git submodule foreach --recursive git clean -fxd
 
