@@ -110,6 +110,8 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        git config --system core.longpaths true
+
         $buildSwitches = @'
             ${{ inputs.dotnet-build-switches }}
         '@
