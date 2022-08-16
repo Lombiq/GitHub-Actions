@@ -25,7 +25,8 @@ inputs:
     default: "USE_GITHUB_REF_NAME"
     description: >
       The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment variable
-      is used which is suitable if the version is derived from a git tag.
+      is used which is suitable if the version is derived from a git tag. If "USE_GITHUB_RUN_NUMBER" is used, then the
+      version is derived from the latest non-prerelease version tag and the current run number.
 secrets:
   API_KEY:
     required: true
@@ -49,6 +50,16 @@ runs:
         '@.Trim()
 
         if ($version -eq 'USE_GITHUB_REF_NAME') { $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v") }
+        if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
+          $current = (git tag | 
+            ? { $_ -match '^v?\d+(\.\d+){0,3}$' } | 
+            % { [version]($_.TrimStart("v")) } | 
+            Sort-Object -Descending)[0]
+
+          $next = New-Object "System.Version" $current.Major, $current.Minor, ($current.Build + 1)
+
+          $version = "$next-preview-$Env:GITHUB_RUN_NUMBER"
+        }
         
         Write-Output "Target Version: $version"
         Write-Output "::set-output name=publish-version::$version"
