@@ -20,6 +20,12 @@ inputs:
     required: false
     default: "true"
     description: If set to "true", a symbol package will be created together with the NuGet package.
+  publish-version:
+    required: false
+    default: "USE_GITHUB_REF_NAME"
+    description: >
+      The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment variable
+      is used which is suitable if the version is derived from a git tag.
 secrets:
   API_KEY:
     required: true
