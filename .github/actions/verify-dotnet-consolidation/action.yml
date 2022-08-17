@@ -33,5 +33,4 @@ runs:
     - name: Verify consolidation status
       shell: pwsh
       working-directory: ${{ inputs.directory }}
-      run: |
-        dotnet consolidate -s (Get-ChildItem ${{ inputs.solution-path }}).FullName
+      run: dotnet consolidate -s (Get-ChildItem ${{ inputs.solution-path }}).FullName
