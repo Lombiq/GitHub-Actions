@@ -92,6 +92,12 @@ jobs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
+    # Temporary until https://github.com/olsh/dotnet-consolidate/issues/15 is addressed.
+    - name: Set up .NET 3.1
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+      with:
+        dotnet-version: 3.1
+
     - name: Verify that .NET packages are consolidated
       if: ${{ inputs.verify-dotnet-consolidation }}
       uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-172
