@@ -73,8 +73,8 @@ on:
         type: boolean
         default: true
         description:  >
-          Verifies that the NuGet packages of the .NET solution are consolidated, i.e. the same version of a given
-          package is used in all projects.
+          When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
+          the same version of a given package is used in all projects.
 
 jobs:
   build-and-test:
