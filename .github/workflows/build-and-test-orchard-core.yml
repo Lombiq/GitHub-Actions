@@ -104,14 +104,14 @@ jobs:
       with:
         dotnet-version: 3.1
 
-    - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
-
     - name: Verify that .NET packages are consolidated
       if: ${{ inputs.verify-dotnet-consolidation }}
       uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-172
       with:
         directory: ${{ inputs.build-directory }}
+
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
