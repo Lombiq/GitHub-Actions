@@ -11,4 +11,5 @@ In addition to the below short explanations, check out the inline documentation 
 - `setup-dotnet`: Sets up the .NET SDK.
 - `setup-sql-server`: Sets up SQL Server with Lombiq-recommended defaults.
 - `test-dotnet`: Runs .NET unit and UI tests (with the [Lombiq UI Testing Toolbox for Orchard Core](https://github.com/Lombiq/UI-Testing-Toolbox)), generates a test report, and uploads UI testing failure dumps to artifacts.
+- `verify-dotnet-consolidation`: Verifies that the NuGet packages of a .NET solution are consolidated, i.e. the same version of a given package is used in all projects.
 - `verify-submodule-pull-request`: Assuming that the current repository is a submodule in another repository, this action verifies that a pull request with a matching issue code has been opened there as well.

@@ -1,4 +1,4 @@
-﻿name: Build .NET solution
+name: Build .NET solution
 
 on:
   workflow_call:
@@ -59,6 +59,13 @@ on:
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      verify-dotnet-consolidation:
+        required: false
+        type: boolean
+        default: true
+        description:  >
+          When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
+          the same version of a given package is used in all projects.
 
 jobs:
   # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call
@@ -84,6 +91,12 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Verify that .NET packages are consolidated
+      if: ${{ inputs.verify-dotnet-consolidation }}
+      uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-172
+      with:
+        directory: ${{ inputs.build-directory }}
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
