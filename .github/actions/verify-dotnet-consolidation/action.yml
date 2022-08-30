@@ -20,8 +20,7 @@ runs:
   steps:
     - name: Setup
       shell: pwsh
-      run: dotnet tool install dotnet-consolidate --global
-
+      run: dotnet tool install dotnet-consolidate --global --version 2.0.0
     - name: Verify consolidation status
       shell: pwsh
       working-directory: ${{ inputs.directory }}
