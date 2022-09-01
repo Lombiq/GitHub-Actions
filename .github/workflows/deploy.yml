@@ -56,13 +56,6 @@ on:
           (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
           (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
           API.
-      ui-test-parallelism:
-        required: false
-        type: string
-        default: "-1"
-        description: >
-          Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
-          the MaxParallelTests configuration of Lombiq UI Testing Toolbox.
       timeout-minutes:
         required: false
         type: number
@@ -111,21 +104,6 @@ jobs:
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
-
-    - name: Set up SQL Server
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
-
-    - name: Set up Azurite
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
-      with:
-        location: ${{ inputs.build-directory}}
-
-    - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
-      with:
-        build-directory: ${{ inputs.build-directory}}
-        test-verbosity: ${{ inputs.build-verbosity}}
-        ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
 
     # For deployment, we don't need the node_modules folders, but they cause the deployment to fail because of the long
     # path.
