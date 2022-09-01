@@ -69,6 +69,10 @@ on:
         required: true
         type: string
         description: Name of the slot.
+      url:
+        required: true
+        type: string
+        description: The URL of the website.
 
 jobs:
   deploy:
@@ -121,4 +125,7 @@ jobs:
         app-name: ${{ inputs.app-name }}
         slot-name: ${{ inputs.slot-name }}
         publish-profile: ${{ secrets.DOTNEST_TENANTS_CORE_STAGING_AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-        package: '${{ inputs.build-directory}}'
+        package: '${{ inputs.build-directory }}'
+
+    - name: Ping website
+      run: curl --connect-timeout 100 --retry 3 --retry-delay 15 ${{ inputs.url }}
