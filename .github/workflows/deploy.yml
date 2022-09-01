@@ -120,7 +120,7 @@ jobs:
       run: find ${{ inputs.build-directory}} -type d -name 'node_modules' -prune -exec rm -r -f {} +
 
     - name: Login
-      uses: azure/login@24848bc
+      uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
       with:
         creds: ${{ secrets.DOTNEST_TENANTS_CORE_EUS_STAGING_AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
