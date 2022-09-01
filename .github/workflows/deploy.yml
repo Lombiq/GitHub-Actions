@@ -124,8 +124,12 @@ jobs:
         creds: ${{ secrets.DOTNEST_TENANTS_CORE_EUS_STAGING_AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
-    - run: |
-        Get-AzVM -ResourceGroupName ${{ inputs.resource-group-name }}
+    - name: Stop Web App Slot
+      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
+      with:
+        inlineScript: |
+          Stop-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
+        azPSVersion: "latest" 
 
     - name: Deploy
       uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
@@ -135,8 +139,12 @@ jobs:
         publish-profile: ${{ secrets.DOTNEST_TENANTS_CORE_STAGING_AZURE_APP_SERVICE_PUBLISH_PROFILE }}
         package: '${{ inputs.build-directory }}'
 
-    #- name: Start Web App Slot
-     # run: Start-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
+    - name: Start Web App Slot
+      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
+      with:
+        inlineScript: |
+          Start-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
+        azPSVersion: "latest" 
 
     - name: Ping Web App Slot
       run: curl --connect-timeout 100 --retry 3 --retry-delay 15 ${{ inputs.url }}
