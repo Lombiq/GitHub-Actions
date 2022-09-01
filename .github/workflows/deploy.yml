@@ -70,9 +70,8 @@ on:
         type: string
         description: Name of the web app slot.
       resource-group-name:
-        required: false
+        required: true
         type: string
-        default: ${{ inputs.app-name }}
         description: Name of the resource group.
       url:
         required: true
@@ -126,8 +125,7 @@ jobs:
         enable-AzPSSession: true
 
     - name: Stop Web App Slot
-      run: echo ${{ inputs.resource-group-name }}
-      # Stop-AzWebAppSlot -ResourceGroupName "Default-Web-WestUS" -Name "ContosoWebApp" -Slot "Slot001"
+      run: Stop-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
 
     - name: Deploy
       uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
@@ -136,6 +134,9 @@ jobs:
         slot-name: ${{ inputs.slot-name }}
         publish-profile: ${{ secrets.DOTNEST_TENANTS_CORE_STAGING_AZURE_APP_SERVICE_PUBLISH_PROFILE }}
         package: '${{ inputs.build-directory }}'
+
+    - name: Start Web App Slot
+      run: Start-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
 
     - name: Ping Web App Slot
       run: curl --connect-timeout 100 --retry 3 --retry-delay 15 ${{ inputs.url }}
