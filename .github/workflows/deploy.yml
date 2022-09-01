@@ -115,17 +115,18 @@ jobs:
       run: find ${{ inputs.build-directory}} -type d -name 'node_modules' -prune -exec rm -r -f {} +
 
     - name: Login
-      uses: azure/login@v1
+      uses: azure/login@24848bc
       with:
         creds: ${{ secrets.DOTNEST_TENANTS_CORE_EUS_STAGING_AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+        enable-AzPSSession: true
 
     - name: Deploy
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@0b651ed
       with:
         app-name: ${{ inputs.app-name }}
         slot-name: ${{ inputs.slot-name }}
         publish-profile: ${{ secrets.DOTNEST_TENANTS_CORE_STAGING_AZURE_APP_SERVICE_PUBLISH_PROFILE }}
         package: '${{ inputs.build-directory }}'
 
-    - name: Ping website
+    - name: Ping Web App Slot
       run: curl --connect-timeout 100 --retry 3 --retry-delay 15 ${{ inputs.url }}
