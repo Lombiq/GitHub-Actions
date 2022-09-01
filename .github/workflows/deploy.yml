@@ -72,7 +72,7 @@ on:
       resource-group-name:
         required: false
         type: string
-        default: ${{ app-name }}
+        default: ${{ inputs.app-name }}
         description: Name of the resource group.
       url:
         required: true
