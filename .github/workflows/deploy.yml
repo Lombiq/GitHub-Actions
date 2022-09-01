@@ -130,7 +130,7 @@ jobs:
       # Stop-AzWebAppSlot -ResourceGroupName "Default-Web-WestUS" -Name "ContosoWebApp" -Slot "Slot001"
 
     - name: Deploy
-      uses: azure/webapps-deploy@0b651ed
+      uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
       with:
         app-name: ${{ inputs.app-name }}
         slot-name: ${{ inputs.slot-name }}
