@@ -68,11 +68,16 @@ on:
       slot-name:
         required: true
         type: string
-        description: Name of the slot.
+        description: Name of the web app slot.
+      resource-group-name:
+        required: false
+        type: string
+        default: ${{ app-name }}
+        description: Name of the resource group.
       url:
         required: true
         type: string
-        description: The URL of the website.
+        description: The URL of the web app slot.
 
 jobs:
   deploy:
@@ -119,6 +124,10 @@ jobs:
       with:
         creds: ${{ secrets.DOTNEST_TENANTS_CORE_EUS_STAGING_AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
+
+    - name: Stop Web App Slot
+      run: echo ${{ inputs.resource-group-name }}
+      # Stop-AzWebAppSlot -ResourceGroupName "Default-Web-WestUS" -Name "ContosoWebApp" -Slot "Slot001"
 
     - name: Deploy
       uses: azure/webapps-deploy@0b651ed
