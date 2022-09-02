@@ -100,9 +100,6 @@ jobs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
-    - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
-
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
@@ -124,6 +121,13 @@ jobs:
         creds: ${{ secrets.DOTNEST_TENANTS_CORE_EUS_STAGING_AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
+    - name: Stop Web App Slot
+      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
+      with:
+        inlineScript: |
+          Stop-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
+        azPSVersion: "latest" 
+
     - name: Deploy
       uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
       with:
@@ -132,11 +136,11 @@ jobs:
         publish-profile: ${{ secrets.DOTNEST_TENANTS_CORE_STAGING_AZURE_APP_SERVICE_PUBLISH_PROFILE }}
         package: '${{ inputs.build-directory }}'
 
-    - name: Restart Web App Slot
+    - name: Start Web App Slot
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
       with:
         inlineScript: |
-          Restart-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
+          Start-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
         azPSVersion: "latest" 
 
     - name: Ping Web App Slot
