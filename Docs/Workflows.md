@@ -100,7 +100,7 @@ If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](htt
 
 ## Deploy to Azure App Service
 
-This workflow checks out the code, installs dependencies, builds the solution, and then deploys the app to Azure App Service:
+This workflow builds a .NET solution with static code analysis, and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). _Example deploy.yml_:
 
 ```yaml
 name: Deploy
