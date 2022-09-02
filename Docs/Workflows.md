@@ -98,4 +98,28 @@ jobs:
 
 If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/), the `repo` input can be omitted, because the above is its default value. Otherwise, use your parent repository's address in the `{owner}/{repo_name}` format.
 
+## Deploy to Azure App Service
+
+This workflow checks out the code, installs dependencies, builds the solution, and then deploys the app to Azure App Service:
+
+```yaml
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-deploy-workflow:
+    name: Deploy
+    uses: Lombiq/GitHub-Actions/.github/workflows/deploy.yml@dev
+    with:
+      machine-types: "[\"ubuntu-latest\"]"
+      timeout-minutes: 60
+      app-name: AppName
+      resource-group-name: ResourceGroupName
+      slot-name: Staging
+      url: https://www.myapp.com
+    secrets: inherit
+```
+
 Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
