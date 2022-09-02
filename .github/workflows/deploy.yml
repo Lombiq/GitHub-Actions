@@ -113,10 +113,14 @@ jobs:
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
 
+    - name: Publish
+      run: |
+        dotnet publish -c Release -o '${{ inputs.build-directory }}/Published' 
+
     # For deployment, we don't need the node_modules folders, but they cause the deployment to fail because of the long
     # path.
-    - name: Remove node_modules folders
-      run: find ${{ inputs.build-directory}} -type d -name 'node_modules' -prune -exec rm -r -f {} +
+    #- name: Remove node_modules folders
+    # run: find ${{ inputs.build-directory}} -type d -name 'node_modules' -prune -exec rm -r -f {} +
 
     - name: Login
       uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
@@ -137,7 +141,7 @@ jobs:
         app-name: ${{ inputs.app-name }}
         slot-name: ${{ inputs.slot-name }}
         publish-profile: ${{ secrets.DOTNEST_TENANTS_CORE_STAGING_AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-        package: '${{ inputs.build-directory }}'
+        package: '${{ inputs.build-directory }}/Published'
 
     - name: Start Web App Slot
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
