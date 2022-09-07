@@ -24,11 +24,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup & Set UI Test Parallelization
+    - name: Scripts Setup
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
+    - name: Setup & Set UI Test Parallelization
+      shell: pwsh
+      run: |
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
             Write-Output "The UI test parallelism configuration isn't overridden."
