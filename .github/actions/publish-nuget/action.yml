@@ -136,7 +136,7 @@ runs:
           exit 1
         }
 
-        $noWarn = @('NU5104') + @'
+        $noWarn = @('NU5104%3BCS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200') + @'
         ${{ inputs.dotnet-pack-ignore-warning }}
         '@.Split() | ? { $_ }
 
