@@ -1,17 +1,10 @@
 name: Check Spelling
 description: Checks for spelling errors in files.
 
-inputs:
-  example-input:
-    type: string
-    description: 'Debug'
-    required: false
 permissions:
   contents: read
   pull-requests: read
   actions: read
-# outputs:
-#   followup: ${{ steps.spelling.outputs.followup }}
 runs-on: ubuntu-latest
 
 runs:
@@ -35,6 +28,5 @@ runs:
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       checkout: true
-      #config: spelling/configs
       spell_check_this: check-spelling/spell-check-this@v0.0.20
       post_comment: 1

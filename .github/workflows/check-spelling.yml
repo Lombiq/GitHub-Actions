@@ -2,11 +2,6 @@ name: Check Spelling
 
 on:
   workflow_call:
-    inputs:
-      example-input:
-        type: string
-        description: 'Debug'
-        required: false
 
 jobs:
   check-spelling:
