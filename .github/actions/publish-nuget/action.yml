@@ -144,7 +144,6 @@ runs:
             "--configuration:Release",
             "--warnaserror",
             "--no-restore",
-            "--no-build",
             "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
