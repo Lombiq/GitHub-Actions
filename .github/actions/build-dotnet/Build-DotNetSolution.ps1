@@ -8,9 +8,7 @@
 
 function ConvertTo-Array([string] $rawInput)
 {
-    $rawInput.Replace("`r", "").Split("`n") |
-        % { $_.Trim() } |
-        ? { -not [string]::IsNullOrEmpty($_) }
+    $rawInput.Replace("`r", "").Split("`n") | % { $_.Trim() } | ? { $_ }
 }
 
 Write-Output ".NET version number: $Version"
@@ -50,6 +48,11 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output "::endgroup::"
 }
 
+# This prepares the solution with the Lombiq.Analyzers files. The output and exit code are discarded because they will
+# be in error if there is a project without the LombiqNetAnalyzers target. Then there is nothing to do, and the target 
+# will still run on the projects that have it.
+dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $Solution | Out-Null || bash -c 'true'
+
 Write-Output "Building solution with ``dotnet build $Solution $($buildSwitches -join " ")``."
 
 $errorLines = New-Object "System.Collections.Generic.List[string]"
@@ -71,6 +74,15 @@ if ($expectedErrorCodes)
     $errorCodes = $errorCodes | Sort-Object
     $fail = 0
     $report = New-Object "System.Text.StringBuilder" "`n"
+
+    if ($null -eq $errorCodes -or -not $errorCodes.Count)
+    {
+        $expectedCount = $expectedErrorCodes.Count
+        $expectedCodesJoined = $expectedErrorCodes -join ', '
+
+        Write-Output "::error::Expected $expectedCount error codes ($expectedCodesJoined), but none were displayed."
+        exit 1
+    }
 
     $length = [System.Math]::Max($errorCodes.Count, $expectedErrorCodes.Count)
     foreach ($index in 0..($length - 1))

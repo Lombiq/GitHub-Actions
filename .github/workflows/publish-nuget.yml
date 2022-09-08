@@ -30,6 +30,18 @@ on:
         description: >
           Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be 
           separated by any whitespace, including newlines.
+      dotnet-pack-include-symbols:
+        required: false
+        type: string
+        default: "true"
+        description: If set to "true", a symbol package will be created together with the NuGet package.
+      publish-version:
+        required: false
+        type: string
+        default: "USE_GITHUB_REF_NAME"
+        description: >
+          The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment
+          variable is used which is suitable if the version is derived from a git tag.
     secrets:
       # We can't access org secrets here so they need to be passed in, see:
       # https://github.community/t/resuable-called-workflow-environment-variables-secrets-and-trigger-event-access/207723/2
@@ -61,5 +73,7 @@ jobs:
         source: ${{ inputs.source }}
         verbosity: ${{ inputs.verbosity }}
         dotnet-pack-ignore-warning: ${{ inputs.dotnet-pack-ignore-warning }}
+        dotnet-pack-include-symbols: ${{ inputs.dotnet-pack-include-symbols }}
+        publish-version: ${{ inputs.publish-version }}
       env:
         API_KEY: ${{ secrets.API_KEY }}

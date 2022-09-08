@@ -16,6 +16,17 @@ inputs:
     description: >
       Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be 
       separated by any whitespace, including newlines.
+  dotnet-pack-include-symbols:
+    required: false
+    default: "true"
+    description: If set to "true", a symbol package will be created together with the NuGet package.
+  publish-version:
+    required: false
+    default: "USE_GITHUB_REF_NAME"
+    description: >
+      The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment variable
+      is used which is suitable if the version is derived from a git tag. If "USE_GITHUB_RUN_NUMBER" is used, then the
+      version is derived from the latest non-prerelease version tag and the current run number.
 secrets:
   API_KEY:
     required: true
@@ -33,8 +44,24 @@ runs:
 
         Write-Output "NuGet Source: $source"
         Write-Output "::set-output name=source-url::$source"
+
+        $version = @'
+        ${{ inputs.publish-version }}
+        '@.Trim()
+
+        if ($version -eq 'USE_GITHUB_REF_NAME') { $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v") }
+        if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
+          $tags = git tag | 
+            ? { $_ -match '^v?\d+(\.\d+){0,3}$' } | 
+            % { [version]($_.TrimStart("v")) } | 
+            Sort-Object -Descending
+          $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
+
+          $next = New-Object "System.Version" $current.Major, $current.Minor, ($current.Build + 1)
+
+          $version = "$next-preview-$Env:GITHUB_RUN_NUMBER"
+        }
         
-        $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
         Write-Output "Target Version: $version"
         Write-Output "::set-output name=publish-version::$version"
         
@@ -54,6 +81,11 @@ runs:
     - name: Install dependencies
       shell: pwsh
       run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
+
+    - name: Generate nuspec file if needed
+      if: hashFiles('ConvertTo-Nuspec.ps1')
+      shell: pwsh
+      run: ./ConvertTo-Nuspec.ps1 '${{ steps.setup.outputs.publish-version }}'
 
     - name: Build
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
@@ -82,6 +114,11 @@ runs:
             -p:DebugSymbols=true
             -p:DebugType=portable
 
+    - name: Actions prior to dotnet pack
+      if: hashFiles('Invoke-BeforePack.ps1')
+      shell: pwsh
+      run: ./Invoke-BeforePack.ps1
+
     - name: Pack
       shell: pwsh
       # Notes on the configuration apart from what's also for dotnet build:
@@ -92,28 +129,33 @@ runs:
       # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
       #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
       run: |
+        if ([string]::IsNullOrWhiteSpace($Env:API_KEY)) {
+          Write-Output "::error::API_KEY is missing or empty."
+          exit 1
+        }
+
         $noWarn = @('NU5104') + @'
         ${{ inputs.dotnet-pack-ignore-warning }}
         '@.Split() | ? { $_ }
 
-        $arguments = @(
+        New-NuGetPackage @(
             "--configuration:Release",
             "--warnaserror",
             "--no-restore",
             "--no-build",
-            "--output:artifacts",
+            "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
             "-p:Version=${{ steps.setup.outputs.publish-version }}",
+            "-p:NuspecProperties=version=${{ steps.setup.outputs.publish-version }}",
             "-p:GenerateDocumentationFile=True",
             "-p:NoWarn=$($noWarn -join '%3B')",
             "-p:TreatWarningsAsErrors=true",
             "-p:WarnOnPackingNonPackableProject=True",
-            "-p:IncludeSymbols=true",
+            "-p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true"
         )
-        dotnet pack @arguments
 
     - name: Push with dotnet
       shell: pwsh
@@ -131,7 +173,7 @@ runs:
       uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
       # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
       # v4.3.1-alpha.osoe-86.
-      if: "!contains(github.ref, '-')"
+      if: "!contains(steps.setup.outputs.publish-version, '-')"
       with:
         allowUpdates: true
         generateReleaseNotes: true
