@@ -27,6 +27,11 @@ runs:
           cspell:aws/aws.txt
           cspell:html/html.txt
           cspell:css/css.txt
+          cspell:csharp/csharp.txt
+          cspell:rust/rust.txt
+          cspell:npm/npm.txt
+          cspell:dotnet/dotnet.txt
+          cspell:scala/scala.txt
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       checkout: true
