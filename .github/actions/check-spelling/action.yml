@@ -10,6 +10,9 @@ runs-on: ubuntu-latest
 runs:
   using: "composite"
   steps:
+  - name: copy-files
+    shell: pwsh
+    run: CopyConfigFiles
   - name: check-spelling
     id: spelling
     uses: check-spelling/check-spelling@v0.0.20
