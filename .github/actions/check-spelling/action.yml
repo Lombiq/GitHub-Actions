@@ -10,13 +10,15 @@ runs-on: ubuntu-latest
 runs:
   using: "composite"
   steps:
-  - name: copy-files
-    shell: pwsh
-    run: CopyConfigFiles
+  # - name: copy-files
+  #   shell: pwsh
+  #   run: CopyConfigFiles
+    
   - name: check-spelling
     id: spelling
     uses: check-spelling/check-spelling@v0.0.20
     with:
+    dictionary_source_prefixes: '{"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220427/dictionaries/","lombiq": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-158/.github/actions/check-spelling/spelling/"}'
       extra_dictionaries:
           cspell:filetypes/filetypes.txt
           cspell:django/django.txt
@@ -28,6 +30,7 @@ runs:
           cspell:npm/npm.txt
           cspell:dotnet/dotnet.txt
           cspell:scala/scala.txt
+          lombiq:expect.txt
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       checkout: true
