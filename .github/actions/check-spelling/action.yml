@@ -18,7 +18,7 @@ runs:
     id: spelling
     uses: check-spelling/check-spelling@v0.0.20
     with:
-    dictionary_source_prefixes: {"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220427/dictionaries/","lombiq": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-158/.github/actions/check-spelling/spelling/"}
+      dictionary_source_prefixes: {"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220427/dictionaries/","lombiq": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-158/.github/actions/check-spelling/spelling/"}
       extra_dictionaries:
           cspell:filetypes/filetypes.txt
           cspell:django/django.txt
