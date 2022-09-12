@@ -61,12 +61,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup & Detect Cache Configuration
-      id: detect-cache-configuration
+    - name: Scripts Setup
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
+    - name: Setup & Detect Cache Configuration
+      id: detect-cache-configuration
+      shell: pwsh
+      run: |
         $isNuget = $${{ inputs.enable-nuget-caching == 'true' }}
         $isNpm = $${{ inputs.enable-npm-caching == 'true' }}
         $key = @'
