@@ -1,9 +1,10 @@
-name: Build and Test Orchard Core solution
+name: Test Analysis Failure
+# Tests to verify that the build of an intentionally bad solution yields the expected analyzer violations.
 
 on:
   workflow_call:
     inputs:
-      # This needs to be stringified JSON because inputs don't support arrays, see 
+      # This needs to be stringified JSON because inputs don't support arrays, see
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
         required: false
@@ -22,16 +23,6 @@ on:
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
-      build-verbosity:
-        required: false
-        type: string
-        default: quiet
-        description: Verbosity parameter for dotnet build.
-      build-enable-code-analysis:
-        required: false
-        type: string
-        default: "true"
-        description: Indicates whether to enable static code analysis during dotnet build.
       build-enable-nuget-caching:
         required: false
         type: string
@@ -56,25 +47,19 @@ on:
           (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
           (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
           API.
-      ui-test-parallelism:
-        required: false
-        type: string
-        default: "-1"
-        description: >
-          Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
-          the MaxParallelTests configuration of Lombiq UI Testing Toolbox.
+      build-expected-code-analysis-errors:
+          required: false
+          type: string
+          default: ""
+          description: >
+              If not empty, it indicates that the static code analysis should fail. Then each line should contain one error
+              code. The static code analysis should yield these and only these errors. This is ignored if
+              `enable-code-analysis` is not "true". You may add a colon and then an explanation of the expected error.
       timeout-minutes:
         required: false
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
-      verify-dotnet-consolidation:
-        required: false
-        type: boolean
-        default: true
-        description:  >
-          When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
-          the same version of a given package is used in all projects.
 
 jobs:
   build-and-test:
@@ -98,12 +83,6 @@ jobs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
-    - name: Verify that .NET packages are consolidated
-      if: ${{ inputs.verify-dotnet-consolidation }}
-      uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
-      with:
-        directory: ${{ inputs.build-directory }}
-
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
@@ -111,23 +90,10 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory }}
-        verbosity: ${{ inputs.build-verbosity }}
-        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+        verbosity: quiet
+        enable-code-analysis: true
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
+        expected-code-analysis-errors: ${{ inputs.build-expected-code-analysis-errors }}
 
-    - name: Set up SQL Server
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
-
-    - name: Set up Azurite
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
-      with:
-        location: ${{ inputs.build-directory}}
-
-    - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-134-alt
-      with:
-        build-directory: ${{ inputs.build-directory}}
-        test-verbosity: ${{ inputs.build-verbosity}}
-        ui-test-parallelism: ${{ inputs.ui-test-parallelism }}

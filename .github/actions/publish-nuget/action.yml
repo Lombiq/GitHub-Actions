@@ -1,0 +1,182 @@
+name: Publish to NuGet
+description: Publishes the project or solution in the current directory to a NuGet source.
+
+inputs:
+  source:
+    required: false
+    default: https://api.nuget.org/v3/index.json
+    description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument. 
+  verbosity:
+    required: false
+    default: minimal
+    description: The logging verbosity type used by the `dotnet` command.
+  dotnet-pack-ignore-warning:
+    required: false
+    default: ""
+    description: >
+      Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be 
+      separated by any whitespace, including newlines.
+  dotnet-pack-include-symbols:
+    required: false
+    default: "true"
+    description: If set to "true", a symbol package will be created together with the NuGet package.
+  publish-version:
+    required: false
+    default: "USE_GITHUB_REF_NAME"
+    description: >
+      The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment variable
+      is used which is suitable if the version is derived from a git tag. If "USE_GITHUB_RUN_NUMBER" is used, then the
+      version is derived from the latest non-prerelease version tag and the current run number.
+secrets:
+  API_KEY:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup
+      id: setup
+      shell: pwsh
+      run: |
+        $source = @'
+        ${{ inputs.source }}
+        '@.Trim()
+
+        Write-Output "NuGet Source: $source"
+        Write-Output "::set-output name=source-url::$source"
+
+        $version = @'
+        ${{ inputs.publish-version }}
+        '@.Trim()
+
+        if ($version -eq 'USE_GITHUB_REF_NAME') { $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v") }
+        if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
+          $tags = git tag | 
+            ? { $_ -match '^v?\d+(\.\d+){0,3}$' } | 
+            % { [version]($_.TrimStart("v")) } | 
+            Sort-Object -Descending
+          $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
+
+          $next = New-Object "System.Version" $current.Major, $current.Minor, ($current.Build + 1)
+
+          $version = "$next-preview-$Env:GITHUB_RUN_NUMBER"
+        }
+        
+        Write-Output "Target Version: $version"
+        Write-Output "::set-output name=publish-version::$version"
+        
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
+    - name: Add Source Link package
+      shell: bash
+      run: bash add-package.sh Microsoft.SourceLink.GitHub
+
+    - name: Update package manifest version
+      shell: pwsh
+      run: Update-ManifestVersion './' '${{ steps.setup.outputs.publish-version }}'
+
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+    - name: Install dependencies
+      shell: pwsh
+      run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
+
+    - name: Generate nuspec file if needed
+      if: hashFiles('ConvertTo-Nuspec.ps1')
+      shell: pwsh
+      run: ./ConvertTo-Nuspec.ps1 '${{ steps.setup.outputs.publish-version }}'
+
+    - name: Build
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      # Notes on the configuration:
+      # * -p:NuGetBuild=true is our property to load Lombiq dependencies from NuGet by switching project references
+      #   to package references.
+      # * -p:GenerateDocumentationFile=True is for generating XML doc files. Needed both for build and pack. It'd
+      #   cause CS* warnings but we handle that centrally from .NET Analyzers so disabling them here.
+      # * VSTHRD* rules come from somewhere unknown, disabling them.
+      # * -p:EnableNETAnalyzers=false is to disable further .NET analyzer we don't need here.
+      # * -p:ContinuousIntegrationBuild=true is needed for Deterministic Builds:
+      #   https://github.com/clairernovotny/DeterministicBuilds.
+      # * -p:DebugSymbols=true and -p:DebugType=portable are needed to generate PDB files.
+      with:
+        verbosity: ${{ inputs.verbosity }}
+        enable-code-analysis: false
+        publish-version: ${{ steps.setup.outputs.publish-version }}
+        dotnet-build-switches: |
+            --no-restore
+            -p:NuGetBuild=true
+            -p:LangVersion=Latest
+            -p:GenerateDocumentationFile=True
+            -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200
+            -p:EnableNETAnalyzers=false
+            -p:ContinuousIntegrationBuild=true
+            -p:DebugSymbols=true
+            -p:DebugType=portable
+
+    - name: Actions prior to dotnet pack
+      if: hashFiles('Invoke-BeforePack.ps1')
+      shell: pwsh
+      run: ./Invoke-BeforePack.ps1
+
+    - name: Pack
+      shell: pwsh
+      # Notes on the configuration apart from what's also for dotnet build:
+      # * NoWarn on NU5104 to not have warnings for prerelease dependencies, see:
+      #   https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5104.
+      # * -p:WarnOnPackingNonPackableProject=True will cause a build warning (converted to error) if we try to pack a
+      #   non-packagable project.
+      # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
+      #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
+      # * p:EnablePackageValidation=true is for package validation, see:
+      #   https://docs.microsoft.com/en-us/dotnet/fundamentals/package-validation/overview.
+      run: |
+        if ([string]::IsNullOrWhiteSpace($Env:API_KEY)) {
+          Write-Output "::error::API_KEY is missing or empty."
+          exit 1
+        }
+
+        $noWarn = @('NU5104%3BCS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200') + @'
+        ${{ inputs.dotnet-pack-ignore-warning }}
+        '@.Split() | ? { $_ }
+
+        New-NuGetPackage @(
+            "--configuration:Release",
+            "--warnaserror",
+            "--no-restore",
+            "--output:" + (Join-Path $PWD artifacts),
+            "--verbosity:${{ inputs.verbosity }}",
+            "-p:NuGetBuild=true",
+            "-p:Version=${{ steps.setup.outputs.publish-version }}",
+            "-p:NuspecProperties=version=${{ steps.setup.outputs.publish-version }}",
+            "-p:GenerateDocumentationFile=True",
+            "-p:NoWarn=$($noWarn -join '%3B')",
+            "-p:TreatWarningsAsErrors=true",
+            "-p:WarnOnPackingNonPackableProject=True",
+            "-p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
+            "-p:SymbolPackageFormat=snupkg",
+            "-p:NoDefaultExcludes=true",
+            "-p:EnablePackageValidation=true"
+        )
+
+    - name: Push with dotnet
+      shell: pwsh
+      run: dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
+
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: NuGet-Package
+        path: artifacts
+
+    # This is not in its own action because it's all very specific to this NuGet publishing.
+    - name: Create Release
+      # v1.10.0
+      uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
+      # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
+      # v4.3.1-alpha.osoe-86.
+      if: "!contains(steps.setup.outputs.publish-version, '-')"
+      with:
+        allowUpdates: true
+        generateReleaseNotes: true
+        artifacts: artifacts/*.nupkg, artifacts/*.snupkg

@@ -1,6 +1,4 @@
-﻿# Reusable GitHub Actions workflows
-
-
+# Reusable GitHub Actions workflows
 
 These workflows can be invoked from a step from any other repository's workflow. The utilize [our composite actions](Actions.md).
 
@@ -10,15 +8,13 @@ To add the workflows to a project create a folder in the root of the repository 
 
 - If you have multiple projects in the repository or if the project you want to build is in a subfolder, then add a solution to the root of the repository that references all projects you want to build.
 - References to projects (`<ProjectReference>` elements) not in the repository won't work, these need to be changed to package references (`<PackageReference>` elements). Make the conditional based on `$(NuGetBuild)`. See the [Helpful Extensions project file](https://github.com/Lombiq/Helpful-Extensions/blob/dev/Lombiq.HelpfulExtensions.csproj) for an example. References to projects in the repository will work and those projects, if configured with the proper metadata, will be published together, with dependencies retained among the packages too.
-- Projects building client-side assets with [Gulp Extensions](https://github.com/Lombiq/Gulp-Extensions) won't work during such builds. Until [we fix this](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/issues/48), you have to commit the *wwwroot* folder to the repository and add the same conditional to the Gulp and NPM Import elements too ([example](https://github.com/Lombiq/Orchard-Data-Tables/blob/58458b5d6381c71c094cb8d960e12b15a59f62d7/Lombiq.DataTables/Lombiq.DataTables.csproj#L33-L35)).
-
+- Projects building client-side assets with [Gulp Extensions](https://github.com/Lombiq/Gulp-Extensions) won't work during such builds. Until [we fix this](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/issues/48), you have to commit the _wwwroot_ folder to the repository and add the same conditional to the Gulp and NPM Import elements too ([example](https://github.com/Lombiq/Orchard-Data-Tables/blob/58458b5d6381c71c094cb8d960e12b15a59f62d7/Lombiq.DataTables/Lombiq.DataTables.csproj#L33-L35)).
 
 ## Build and Test Orchard Core solution workflow
 
-Meant to be used with [Orchard Core](https://www.orchardcore.net/) solutions, this workflow checks out the code, installs dependencies, builds the solution, runs unit and UI tests (with [Lombiq UI Testing Toolbox for Orchard Core](https://github.com/Lombiq/UI-Testing-Toolbox)), and publishes artifacts as well as a test report.
+Meant to be used with [Orchard Core](https://orchardcore.net/) solutions; this workflow checks out the code, installs dependencies, builds the solution, runs unit and UI tests (with [Lombiq UI Testing Toolbox for Orchard Core](https://github.com/Lombiq/UI-Testing-Toolbox)), and publishes artifacts as well as a test report.
 
 For an example of this, see the workflow of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions).
-
 
 ## Build .NET solution workflow
 
@@ -43,7 +39,6 @@ jobs:
       timeout-minutes: 10
 ```
 
-
 ## NuGet publish workflow
 
 Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed. Example _publish.yml_:
@@ -58,7 +53,7 @@ on:
 
 jobs:
   call-publish-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/publish.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     secrets:
       apikey: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
 ```
@@ -72,7 +67,7 @@ It takes one non-optional secret parameter, `apikey`, the organization API key f
 ```yaml
 jobs:
   call-publish-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/publish.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
       verbosity: detailed
@@ -96,7 +91,7 @@ on:
 
 jobs:
   call-verify-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/verify.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/verify-submodule-pull-request.yml@dev
     with:
       repo: Lombiq/Open-Source-Orchard-Core-Extensions
 ```
