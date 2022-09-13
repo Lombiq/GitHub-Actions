@@ -36,7 +36,7 @@ runs:
   - name: copy-files
     shell: pwsh
     run: | 
-      ./CopyConfigFiles.ps1
+      Get-Location
     
   - name: check-spelling
     id: spelling
