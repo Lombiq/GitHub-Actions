@@ -35,7 +35,8 @@ runs:
   steps:
   - name: copy-files
     shell: pwsh
-    run: ./CopyConfigFiles.ps1
+    run: | 
+      ./CopyConfigFiles.ps1
     
   - name: check-spelling
     id: spelling
