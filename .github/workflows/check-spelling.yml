@@ -2,6 +2,28 @@ name: Check Spelling
 
 on:
   workflow_call:
+    inputs:
+      dictionary_source_prefixes:
+      description: JSON map of prefixes for dictionary urls, "cspell" is necessary
+      required: false
+      type: string
+      default: '{"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220427/dictionaries/","lombiq": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-158/.github/actions/check-spelling/spelling/"}'
+    extra_dictionaries:
+      description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
+      required: false
+      type: string
+      default:
+        cspell:filetypes/filetypes.txt
+        cspell:django/django.txt
+        cspell:aws/aws.txt
+        cspell:html/html.txt
+        cspell:css/css.txt
+        cspell:csharp/csharp.txt
+        cspell:rust/rust.txt
+        cspell:npm/npm.txt
+        cspell:dotnet/dotnet.txt
+        cspell:scala/scala.txt
+        lombiq:expect.txt
 
 jobs:
   check-spelling:
@@ -13,4 +35,5 @@ jobs:
       - name: Check Spelling
         uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
         with:
-          expamle-input: ${{ inputs.example-input }}
+          dictionary_source_prefixes: ${{ inputs.dictionary_source_prefixes }}
+          extra_dictionaries: ${{ inputs.extra_dictionaries }}
