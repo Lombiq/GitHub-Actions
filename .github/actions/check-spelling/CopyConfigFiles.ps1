@@ -1,1 +1,1 @@
-cp Get-Location
+Get-Location

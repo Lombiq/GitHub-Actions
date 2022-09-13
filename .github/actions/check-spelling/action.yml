@@ -33,9 +33,9 @@ runs-on: ubuntu-latest
 runs:
   using: "composite"
   steps:
-  # - name: copy-files
-  #   shell: pwsh
-  #   run: CopyConfigFiles
+  - name: copy-files
+    shell: pwsh
+    run: ./CopyConfigFiles.ps1
     
   - name: check-spelling
     id: spelling
