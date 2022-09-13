@@ -36,7 +36,7 @@ runs:
   - name: copy-files
     shell: pwsh
     run: | 
-      cp .github/actions/spelling/patterns.txt .github/actions/spelling/patterns2.txt
+      cp .github/actions/spelling/patterns.txt tools/Lombiq.GitHub.Actions/patterns.txt
       ls tools/Lombiq.GitHub.Actions
     # cp tools/Lombiq.GitHub.Actions/.github/actions/check-spelling/spelling/excludes.txt .github/actions/spelling/excludes.txt
     
