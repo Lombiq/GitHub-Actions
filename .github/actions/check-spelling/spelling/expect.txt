@@ -24,3 +24,10 @@ superproject
 submenu
 registrationworkflow
 registrationhttpevent
+dotnet
+homepage
+linq
+localhost
+Lombiq
+mvc
+Uncomment
