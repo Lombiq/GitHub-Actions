@@ -36,8 +36,7 @@ runs:
   - name: copy-files
     shell: pwsh
     run: | 
-      Get-ChildItem -Filter excludes.txt -Recurse
-      echo Hello
+      cp License.md src/License.md
     # cp tools/Lombiq.GitHub.Actions/.github/actions/check-spelling/spelling/excludes.txt .github/actions/spelling/excludes.txt
     
   - name: check-spelling
