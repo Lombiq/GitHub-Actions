@@ -36,7 +36,8 @@ runs:
   - name: copy-files
     shell: pwsh
     run: | 
-      Get-Location
+      $curDir = Get-Location
+      Write-Host "Current Working Directory: $curDir"
     
   - name: check-spelling
     id: spelling
