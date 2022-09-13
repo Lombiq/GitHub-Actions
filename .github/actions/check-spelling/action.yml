@@ -38,7 +38,8 @@ runs:
     run: | 
       $curDir = Get-Location
       Write-Host "Current Working Directory: $curDir"
-      cp tools/Lombiq.GitHub.Actions/.github/actions/check-spelling/spelling/excludes.txt .github/actions/spelling/excludes.txt
+      Get-ChildItem -Filter excludes.txt -Recurse
+    # cp tools/Lombiq.GitHub.Actions/.github/actions/check-spelling/spelling/excludes.txt .github/actions/spelling/excludes.txt
     
   - name: check-spelling
     id: spelling
