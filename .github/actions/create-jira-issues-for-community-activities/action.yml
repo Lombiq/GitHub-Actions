@@ -21,6 +21,14 @@ runs:
         JIRA_USER_EMAIL: ${{ env.JIRA_USER_EMAIL }}
         JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
 
+    - name: Prepare Issue Details
+      id: issue-details
+      shell: pwsh
+      run: |
+        Write-Output ${{ github.event.discussion }}
+        Write-Output ${{ github.event.issue }}
+        Write-Output ${{ github.event.pull_request }}
+
     - name: Create Jira issue
       id: create-issue
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
@@ -37,10 +45,6 @@ runs:
     - name: Log created issue
       shell: bash
       run: echo "Issue ${{ steps.create-issue.outputs.issue }} was created."
-
-    - shell: pwsh
-      run: |
-        echo "${{ github.event.issue.body }}"
 
     - name: Handle Discussions
       if: github.event.discussion
