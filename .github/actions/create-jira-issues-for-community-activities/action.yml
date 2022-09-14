@@ -70,6 +70,7 @@ runs:
             }
         }
 
+         Write-Output "Type: $type"
          Write-Output "::set-output name=summary::$summary"
          Write-Output "::set-output name=$type::$type"
 
