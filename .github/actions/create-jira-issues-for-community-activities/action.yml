@@ -58,6 +58,6 @@ runs:
         issue-number: ${{ github.event.issue.number }}
         title: "${{ github.event.issue.title }} (${{ steps.create-issue.outputs.issue }})"
         body: |
-          |
+          
           [Jira issue](${{ env.JIRA_BASE_URL }}browse/${{ steps.create-issue.outputs.issue }})
         update-mode: 'append'
