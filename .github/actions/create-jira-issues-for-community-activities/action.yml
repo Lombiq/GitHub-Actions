@@ -13,4 +13,4 @@ runs:
 
     - shell: bash
       run: |
-        echo "${{ toJSON(github.event) }}"
+        echo "${{ github.event.issue.body }}"
