@@ -25,25 +25,26 @@ runs:
       id: issue-details
       shell: pwsh
       run: |
-        Write-Output "${{ github.event.discussion }}"
-        Write-Output "${{ github.event.issue }}"
-        Write-Output "${{ github.event.pull_request }}"
-        Write-Output "${{ github.event_name }}"
         switch ("${{ github.event_name }}")
         {
             "discussion"
             {
                 Write-Output "Discussion"
+                $summary = "Respond to \"${{ github.event.discussion.title }}\""
             }
             "issues"
             {
                 Write-Output "Issue"
+                $summary = "${{ github.event.issue.title }} in ${{ github.repository }}"
             }
             "pull_request"
             {
                 Write-Output "Pull Request"
+                $summary = "Review \"${{ github.event.pull_request.title }}\""
             }
         }
+
+         Write-Output "::set-output name=summary::$summary"
 
     - name: Create Jira issue
       id: create-issue
@@ -51,8 +52,7 @@ runs:
       with:
         project: OSOE
         issuetype: Task
-        summary: |
-          Test for ${{ github.repository }}
+        summary: ${{ steps.issue-details.outputs.summary }
         description: |
           See the linked GitHub issue, including all the comments.
           [This works.|https://lombiq.com]
