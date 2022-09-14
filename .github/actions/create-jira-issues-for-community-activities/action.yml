@@ -21,55 +21,16 @@ runs:
         JIRA_USER_EMAIL: ${{ env.JIRA_USER_EMAIL }}
         JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
 
-    - name: Prepare Issue Details
+    - name: Initialize Issue Details
       id: issue-details
       shell: pwsh
       run: |
-        switch ("${{ github.event_name }}")
-        {
-            "discussion"
-            {
-                $summary = "Respond to `"${{ github.event.discussion.title }}`""
-            }
-            "issues"
-            {
-                $summary = "${{ github.event.issue.title }} in ${{ github.repository }}"
-
-                # The funny indentation is necessary for here-strings.
-                $labels = @"
-                ${{ toJSON(github.event.issue.labels) }}
+        # The funny indentation is necessary for here-strings.
+        $github = @"
+        ${{ toJSON(github) }}
         "@ | ConvertFrom-Json
 
-                $i = 0
-                while($i -lt $labels.Length -and $type -eq $null)
-                {
-                    $labelName = $labels[$i].name
-
-                    if ($labelName -eq "bug")
-                    {
-                        $type = "Bug"
-                    }
-                    elseif ($labelName -eq "enhancement")
-                    {
-                        $type = "New Feature"
-                    }
-
-                    $i++
-                }
-            }
-            "pull_request"
-            {
-                $summary = "Review `"${{ github.event.pull_request.title }}`""
-            }
-        }
-
-        if ($type -eq $null)
-        {
-            $type = "Task"
-        }
-
-         Write-Output "::set-output name=summary::$summary"
-         Write-Output "::set-output name=type::$type"
+        Initialize-IssueDetails $github
 
     - name: Create Jira issue
       id: create-issue
