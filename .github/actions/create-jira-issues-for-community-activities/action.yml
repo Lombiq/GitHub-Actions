@@ -11,6 +11,14 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
+    - name: Login to Jira
+      # Latest source as of 14.09.2022, post-v1.0.0.
+      uses: atlassian/gajira-login@b6748fd0ba56297ad6842e7bb4289722ba7a4d6e
+      env:
+        JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
+        JIRA_USER_EMAIL: ${{ secrets.DEFAULT_JIRA_USER_EMAIL }}
+        JIRA_API_TOKEN: ${{ secrets.DEFAULT_JIRA_API_TOKEN }}
+
     - shell: pwsh
       run: |
         echo "${{ github.event.issue.body }}"
