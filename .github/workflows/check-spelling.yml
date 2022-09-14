@@ -7,7 +7,7 @@ on:
         description: JSON map of prefixes for dictionary urls, "cspell" is necessary
         required: false
         type: string
-        default: '{"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220427/dictionaries/","lombiq": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-158/.github/actions/check-spelling/spelling/"}'
+        default: '{"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220427/dictionaries/"}'
       extra_dictionaries:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
         required: false
@@ -23,7 +23,6 @@ on:
           cspell:npm/npm.txt
           cspell:dotnet/dotnet.txt
           cspell:scala/scala.txt
-          lombiq:expect.txt
 
 jobs:
   check-spelling:

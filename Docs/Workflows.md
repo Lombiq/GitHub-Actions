@@ -39,6 +39,16 @@ jobs:
       timeout-minutes: 10
 ```
 
+## Check Spelling workflow
+
+Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. There are 3 example files for filtering false positives:
+- `excludes.txt`: This file includes file names and extensions to be ignored
+- `expect.txt`: This file contains plain text words that would be considered a spelling mistake.
+- `patterns.txt`: This file contains patterns that would be considered a spelling mistake.
+
+You should copy or create these files in the `.github/actions/spelling/` folder, 
+For more information visit the action's [wiki](https://github.com/check-spelling/check-spelling/wiki/Configuration#files).
+
 ## NuGet publish workflow
 
 Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed. Example _publish.yml_:
