@@ -38,8 +38,8 @@ runs:
                 Write-Output "Issue"
 
                 $summary = "${{ github.event.issue.title }} in ${{ github.repository }}"
-                $labels = ${{ github.event.issue.labels }}
-                $labels
+                $labels = ${{ toJSON(github.event.issue.labels) }} | ConvertFrom-Json
+                Write-Output ($labels | Format-Table | Out-String)
 
                 $i = 0
                 while($i -lt $labels.Length -and $type -eq $null)
