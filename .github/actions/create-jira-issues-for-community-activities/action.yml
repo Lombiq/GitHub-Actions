@@ -39,9 +39,10 @@ runs:
 
                 $summary = "${{ github.event.issue.title }} in ${{ github.repository }}"
                 $labels = ${{ github.event.issue.labels }}
+                $labels
 
                 $i = 0
-                while($i -lt $labels.length -and $type -eq $null)
+                while($i -lt $labels.Length -and $type -eq $null)
                 {
                     $labelName = $labels[i].name
 
