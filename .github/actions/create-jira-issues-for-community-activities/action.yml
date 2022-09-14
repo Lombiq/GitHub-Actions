@@ -41,7 +41,7 @@ runs:
                 $labels = ${{ github.event.issue.labels }}
 
                 $i = 0
-                while($i -lt $labels.length -and $type -eq null)
+                while($i -lt $labels.length -and $type -eq $null)
                 {
                     $labelName = $labels[i].name
 
@@ -57,7 +57,7 @@ runs:
                     $i++
                 }
 
-                if ($type -eq null)
+                if ($type -eq $null)
                 {
                     $type = "Task"
                 }
