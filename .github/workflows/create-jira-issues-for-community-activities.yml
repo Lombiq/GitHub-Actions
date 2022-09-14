@@ -16,6 +16,11 @@ on:
         required: true
       PULL_REQUEST_JIRA_ISSUE_DESCRIPTION:
         required: true
+    inputs:
+      issue-component:
+        required: false
+        type: string
+        description: Optional component of the issues being created.
 
 jobs:
   build:
@@ -31,3 +36,5 @@ jobs:
         ISSUE_JIRA_ISSUE_DESCRIPTION: ${{ secrets.ISSUE_JIRA_ISSUE_DESCRIPTION }}
         PULL_REQUEST_JIRA_ISSUE_DESCRIPTION: ${{ secrets.PULL_REQUEST_JIRA_ISSUE_DESCRIPTION }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        issue-component: ${{ issue-component }}

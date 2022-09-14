@@ -4,10 +4,9 @@ description: >
   opened.
 
 inputs:
-  source:
+  issue-component:
     required: false
-    default: https://api.nuget.org/v3/index.json
-    description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument.
+    description: Optional component of the issues being created.
 
 runs:
   using: "composite"
@@ -46,7 +45,7 @@ runs:
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
         description: ${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
-        fields: '{"labels": ["created-from-github"], "components": [{"name": "Lombiq.GitHub.Actions"}]}'
+        fields: '{"labels": ["created-from-github"], "components": [{"name": "${{ issue-component }}"}]}'
 
     - name: Update Issue
       if: github.event.issue
