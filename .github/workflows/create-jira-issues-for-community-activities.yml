@@ -10,6 +10,12 @@ on:
         required: true
       JIRA_API_TOKEN:
         required: true
+      DISCUSSION_JIRA_ISSUE_DESCRIPTION:
+        required: true
+      ISSUE_JIRA_ISSUE_DESCRIPTION:
+        required: true
+      PULL_REQUEST_JIRA_ISSUE_DESCRIPTION:
+        required: true
 
 jobs:
   build:
