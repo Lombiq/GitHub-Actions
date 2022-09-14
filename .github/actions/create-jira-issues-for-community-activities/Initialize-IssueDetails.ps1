@@ -42,5 +42,7 @@ if ($type -eq $null)
 }
 
 Write-Output "::set-output name=summary::$summary"
-Write-Output "::set-output name=description::$description"
 Write-Output "::set-output name=type::$type"
+
+# Outputs can't contain multi-line strings, only the first line will be passed.
+$Env:ISSUE_DESCRIPTION = $description

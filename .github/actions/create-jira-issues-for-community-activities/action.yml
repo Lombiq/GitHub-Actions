@@ -37,6 +37,7 @@ runs:
         "@ | ConvertFrom-Json
 
         Initialize-IssueDetails $github
+        Write-Output "::set-output name=description::${{ toJSON($Env:ISSUE_DESCRIPTION) }}}"
 
     - name: Create Jira issue
       id: create-issue
@@ -45,8 +46,7 @@ runs:
         project: OSOE
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
-        description: |
-          ${{ env.ISSUE_JIRA_ISSUE_DESCRIPTION }}
+        description: ${{ steps.issue-details.outputs.description }}
         fields: '{"labels": ["created-from-github"]}'
 
     - name: Log created issue
