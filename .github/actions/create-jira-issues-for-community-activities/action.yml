@@ -44,8 +44,6 @@ runs:
         }
         $fields += '}'
 
-        Write-Output "::set-output name=fields::'$fields'"
-
     - name: Create Jira issue
       id: create-issue
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
@@ -54,6 +52,7 @@ runs:
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
         description: ${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
+        fields: '${{ steps.issue-details.outputs.fields }}'
 
     - name: Update Issue
       if: github.event.issue
