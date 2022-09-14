@@ -46,7 +46,7 @@ runs:
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
         description: ${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
-        fields: '{"labels": ["created-from-github"]}'
+        fields: '{"labels": ["created-from-github"], "components": [{"name": "Lombiq.GitHub.Actions"}]}'
 
     - name: Update Issue
       if: github.event.issue
