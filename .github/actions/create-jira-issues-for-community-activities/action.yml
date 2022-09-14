@@ -50,7 +50,7 @@ runs:
                     {
                         $type = "Bug"
                     }
-                    else if ($labelName -eq "enhancement")
+                    elseif ($labelName -eq "enhancement")
                     {
                         $type = "New Feature"
                     }
