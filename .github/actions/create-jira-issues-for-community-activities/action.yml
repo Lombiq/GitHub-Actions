@@ -51,7 +51,7 @@ runs:
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
         description: ${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
-        fields: ${{ steps.issue-details.outputs.fields }}
+        fields: '{"labels": ["created-from-github"]}'
 
     - name: Update Issue
       if: github.event.issue
