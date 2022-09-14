@@ -27,9 +27,6 @@ inputs:
       The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment variable
       is used which is suitable if the version is derived from a git tag. If "USE_GITHUB_RUN_NUMBER" is used, then the
       version is derived from the latest non-prerelease version tag and the current run number.
-secrets:
-  API_KEY:
-    required: true
 
 runs:
   using: "composite"
