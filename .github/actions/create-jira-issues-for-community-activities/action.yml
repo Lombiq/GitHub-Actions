@@ -75,18 +75,18 @@ runs:
          Write-Output "::set-output name=summary::$summary"
          Write-Output "::set-output name=$type::$type"
 
-    #- name: Create Jira issue
-    #  id: create-issue
-    #  uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
-    #  with:
-    #    project: OSOE
-    #    issuetype: ${{ steps.issue-details.outputs.$type }}
-    #    summary: ${{ steps.issue-details.outputs.summary }}
-    #    description: |
-    #      See the linked GitHub issue, including all the comments.
-    #      [This works.|https://lombiq.com]
-    #    fields: '{"labels": ["created-from-github"]}'
+    - name: Create Jira issue
+      id: create-issue
+      uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
+      with:
+        project: OSOE
+        issuetype: ${{ steps.issue-details.outputs.$type }}
+        summary: ${{ steps.issue-details.outputs.summary }}
+        description: |
+          See the linked GitHub issue, including all the comments.
+          [This works.|https://lombiq.com]
+        fields: '{"labels": ["created-from-github"]}'
 
-    #- name: Log created issue
-    #  shell: bash
-    #  run: echo "Issue ${{ steps.create-issue.outputs.issue }} was created."
+    - name: Log created issue
+      shell: bash
+      run: echo "Issue ${{ steps.create-issue.outputs.issue }} was created."
