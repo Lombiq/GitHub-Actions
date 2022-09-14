@@ -13,9 +13,9 @@ switch ($GitHub.event_name)
         $description = $Env:ISSUE_JIRA_ISSUE_DESCRIPTION
 
         $i = 0
-        while($i -lt $GitHub.labels.Length -and $type -eq $null)
+        while($i -lt $GitHub.event.issue.labels.Length -and $type -eq $null)
         {
-            $labelName = $GitHub.labels[$i].name
+            $labelName = $GitHub.event.issue.labels[$i].name
 
             if ($labelName -eq "bug")
             {
