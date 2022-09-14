@@ -39,7 +39,8 @@ runs:
         project: OSOE
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
-        description: ${{ steps.issue-details.outputs.description }}
+        description: |
+          ${{ steps.issue-details.outputs.description }}
         fields: '{"labels": ["created-from-github"]}'
 
     - name: Log created issue
