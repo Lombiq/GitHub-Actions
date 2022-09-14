@@ -21,6 +21,23 @@ runs:
         JIRA_USER_EMAIL: ${{ env.JIRA_USER_EMAIL }}
         JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
 
+    - name: Create Jira issue
+      id: create-issue
+      uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
+      with:
+        project: OSOE
+        issuetype: Task
+        summary: |
+          Test for ${{ github.repository }}
+        description: |
+          See the linked GitHub issue, including all the comments.
+          [Does this link work?](https://lombiq.com)
+          [Or does this?|https://lombiq.com]
+
+    - name: Log created issue
+      shell: bash
+      run: echo "Issue ${{ steps.create-issue.outputs.issue }} was created."
+
     - shell: pwsh
       run: |
         echo "${{ github.event.issue.body }}"
