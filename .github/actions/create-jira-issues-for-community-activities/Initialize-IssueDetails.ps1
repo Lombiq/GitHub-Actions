@@ -4,11 +4,11 @@ switch ($GitHub.event_name)
 {
     "discussion"
     {
-        $summary = "Respond to `"$GitHub.event.discussion.title`""
+        $summary = "Respond to `"$($GitHub.event.discussion.title)`""
     }
     "issues"
     {
-        $summary = "$GitHub.event.issue.title in $GitHub.repository"
+        $summary = "$($GitHub.event.issue.title) in $($GitHub.repository)"
 
         $i = 0
         while($i -lt $GitHub.labels.Length -and $type -eq $null)
@@ -29,7 +29,7 @@ switch ($GitHub.event_name)
     }
     "pull_request"
     {
-        $summary = "Review `"$GitHub.event.pull_request.title`""
+        $summary = "Review `"$($GitHub.event.pull_request.title)`""
     }
 }
 
