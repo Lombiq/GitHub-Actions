@@ -3,6 +3,12 @@ description: >
   Creates Jira issues for community activities happening on GitHub, like issues, discussions, pull requests being
   opened.
 
+inputs:
+  source:
+    required: false
+    default: https://api.nuget.org/v3/index.json
+    description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument.
+
 runs:
   using: "composite"
   steps:
@@ -40,7 +46,7 @@ runs:
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
         description: |
-          ${{ env.DISCUSSION_JIRA_ISSUE_DESCRIPTION }}
+          ${{ env.ISSUE_JIRA_ISSUE_DESCRIPTION }}
         fields: '{"labels": ["created-from-github"]}'
 
     - name: Log created issue
