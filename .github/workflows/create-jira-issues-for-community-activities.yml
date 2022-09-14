@@ -12,7 +12,5 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - env:
-          EVENT_CONTEXT: ${{ toJSON(github.event) }}
-        run: |
-          echo $EVENT_CONTEXT
+    - name: Create Jira issues for community activities
+      uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-community-activities@issue/OSOE-173

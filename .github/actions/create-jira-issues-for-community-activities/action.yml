@@ -1,0 +1,16 @@
+name: Create Jira issues for community activities
+description: >
+  Creates Jira issues for community activities happening on GitHub, like issues, discussions, pull requests being
+  opened.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Scripts Setup
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
+    - shell: bash
+      run: |
+        echo ${{ toJSON(github.event) }}
