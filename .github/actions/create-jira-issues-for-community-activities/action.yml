@@ -30,7 +30,6 @@ runs:
             "discussion"
             {
                 $summary = "Respond to `"${{ github.event.discussion.title }}`""
-                $type = "Task"
             }
             "issues"
             {
@@ -57,17 +56,16 @@ runs:
 
                     $i++
                 }
-
-                if ($type -eq $null)
-                {
-                    $type = "Task"
-                }
             }
             "pull_request"
             {
                 $summary = "Review `"${{ github.event.pull_request.title }}`""
-                $type = "Task"
             }
+        }
+
+        if ($type -eq $null)
+        {
+            $type = "Task"
         }
 
          Write-Output "::set-output name=summary::$summary"
