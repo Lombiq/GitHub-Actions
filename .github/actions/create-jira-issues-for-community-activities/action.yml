@@ -36,9 +36,31 @@ runs:
             "issues"
             {
                 Write-Output "Issue"
+
                 $summary = "${{ github.event.issue.title }} in ${{ github.repository }}"
-                $type = "Task"
-                Write-Output ${{ github.event.issue.labels }}
+                $labels = ${{ github.event.issue.labels }}
+
+                $i = 0
+                while($i -lt $labels.length -and $type -eq null)
+                {
+                    $labelName = $labels[i].name
+
+                    if ($labelName -eq "bug")
+                    {
+                        $type = "Bug"
+                    }
+                    else if ($labelName -eq "enhancement")
+                    {
+                        $type = "New Feature"
+                    }
+
+                    $i++
+                }
+
+                if ($type -eq null)
+                {
+                    $type = "Task"
+                }
             }
             "pull_request"
             {
