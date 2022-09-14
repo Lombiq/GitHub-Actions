@@ -60,5 +60,5 @@ runs:
         actions: "update-issue"
         token: ${{ env.GITHUB_TOKEN }}
         issue-number: ${{ github.event.issue.number }}
-        title: "(${{ steps.create-issue.outputs.issue }})"
+        title: "${{ github.event.issue.title }} (${{ steps.create-issue.outputs.issue }})"
         update-mode: 'append'
