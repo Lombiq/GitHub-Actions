@@ -52,8 +52,7 @@ runs:
       with:
         project: OSOE
         issuetype: Task
-        summary: |
-          ${{ steps.issue-details.outputs.summary }
+        summary: ${{ steps.issue-details.outputs.summary }}
         description: |
           See the linked GitHub issue, including all the comments.
           [This works.|https://lombiq.com]
