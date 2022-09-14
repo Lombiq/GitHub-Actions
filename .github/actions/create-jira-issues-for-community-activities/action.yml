@@ -41,7 +41,9 @@ runs:
 
         $fields += '}'
 
-        $fields = '{"labels": ["created-from-github"]}'
+        $fields = @"
+        {"labels": ["created-from-github"]}
+        "@
         Write-Output "::set-output name=fields::'$fields'"
 
     - name: Create Jira issue
