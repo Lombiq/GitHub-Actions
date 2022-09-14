@@ -39,9 +39,7 @@ runs:
         project: OSOE
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
-        description: |
-          See the linked GitHub issue, including all the comments.
-          [This works.|https://lombiq.com]
+        description: ${{ steps.issue-details.outputs.description }}
         fields: '{"labels": ["created-from-github"]}'
 
     - name: Log created issue
