@@ -48,10 +48,6 @@ runs:
         description: ${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
         fields: '{"labels": ["created-from-github"]}'
 
-    - name: Log created issue
-      shell: bash
-      run: echo "Issue ${{ steps.create-issue.outputs.issue }} was created."
-
     - name: Update Issue
       if: github.event.issue
       # v3.3.0
