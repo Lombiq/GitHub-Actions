@@ -30,7 +30,7 @@ runs:
             "discussion"
             {
                 Write-Output "Discussion"
-                $summary = "Respond to \"${{ github.event.discussion.title }}\""
+                $summary = "Respond to `"${{ github.event.discussion.title }}`""
             }
             "issues"
             {
@@ -40,7 +40,7 @@ runs:
             "pull_request"
             {
                 Write-Output "Pull Request"
-                $summary = "Review \"${{ github.event.pull_request.title }}\""
+                $summary = "Review `"${{ github.event.pull_request.title }}`""
             }
         }
 
