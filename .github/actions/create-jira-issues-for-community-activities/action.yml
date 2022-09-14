@@ -11,6 +11,24 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
-    - shell: bash
+    - shell: pwsh
       run: |
         echo "${{ github.event.issue.body }}"
+
+    - name: Handle Discussions
+      if: github.event.discussion
+      shell: pwsh
+      run: |
+        echo A discussion was opened.
+
+    - name: Handle Issues
+      if: github.event.issue
+      shell: pwsh
+      run: |
+        echo An issue was opened.
+
+    - name: Handle Pull Requests
+      if: github.event.pull_request
+      shell: pwsh
+      run: |
+        echo A pull request was opened.
