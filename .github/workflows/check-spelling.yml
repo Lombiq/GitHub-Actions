@@ -1,6 +1,10 @@
 name: Check Spelling
 
 on:
+  pull_request:
+  push:
+    branches:
+      - dev
   workflow_call:
     inputs:
       dictionary_source_prefixes:
