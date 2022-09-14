@@ -37,7 +37,7 @@ runs:
         "@ | ConvertFrom-Json
 
         Initialize-IssueDetails $github
-        Write-Output "::set-output name=description::${{ toJSON($Env:ISSUE_DESCRIPTION) }}}"
+        Write-Output "::set-output name=description::${{ toJSON(env.ISSUE_DESCRIPTION) }}}"
 
     - name: Create Jira issue
       id: create-issue
