@@ -40,7 +40,7 @@ runs:
                 $summary = "${{ github.event.issue.title }} in ${{ github.repository }}"
                 $labels = @"
                 ${{ toJSON(github.event.issue.labels) }}
-                "@ | ConvertFrom-Json
+        "@ | ConvertFrom-Json
                 Write-Output ($labels | Format-Table | Out-String)
 
                 $i = 0
