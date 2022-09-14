@@ -40,7 +40,7 @@ runs:
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
         description: |
-          ${{ steps.issue-details.outputs.description }}
+          ${{ env.DISCUSSION_JIRA_ISSUE_DESCRIPTION }}
         fields: '{"labels": ["created-from-github"]}'
 
     - name: Log created issue
