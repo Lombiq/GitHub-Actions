@@ -51,3 +51,14 @@ runs:
     - name: Log created issue
       shell: bash
       run: echo "Issue ${{ steps.create-issue.outputs.issue }} was created."
+
+    - name: Update Issue
+      if: github.event.issue
+      # v3.3.0
+      uses: actions-cool/issues-helper@dad28fdb88da5f082c04659b7373d85790f9b135
+      with:
+        actions: "update-issue"
+        token: ${{ env.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.issue.number }}
+        title: "(${{ steps.create-issue.outputs.issue }})"
+        update-mode: 'append'

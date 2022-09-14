@@ -16,6 +16,8 @@ on:
         required: true
       PULL_REQUEST_JIRA_ISSUE_DESCRIPTION:
         required: true
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
   build:
@@ -30,3 +32,4 @@ jobs:
         DISCUSSION_JIRA_ISSUE_DESCRIPTION: ${{ secrets.DISCUSSION_JIRA_ISSUE_DESCRIPTION }}
         ISSUE_JIRA_ISSUE_DESCRIPTION: ${{ secrets.ISSUE_JIRA_ISSUE_DESCRIPTION }}
         PULL_REQUEST_JIRA_ISSUE_DESCRIPTION: ${{ secrets.PULL_REQUEST_JIRA_ISSUE_DESCRIPTION }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
