@@ -29,19 +29,17 @@ runs:
         {
             "discussion"
             {
-                Write-Output "Discussion"
                 $summary = "Respond to `"${{ github.event.discussion.title }}`""
                 $type = "Task"
             }
             "issues"
             {
-                Write-Output "Issue"
-
                 $summary = "${{ github.event.issue.title }} in ${{ github.repository }}"
+
+                # The funny indentation is necessary for here-strings.
                 $labels = @"
                 ${{ toJSON(github.event.issue.labels) }}
         "@ | ConvertFrom-Json
-                Write-Output ($labels | Format-Table | Out-String)
 
                 $i = 0
                 while($i -lt $labels.Length -and $type -eq $null)
@@ -67,13 +65,11 @@ runs:
             }
             "pull_request"
             {
-                Write-Output "Pull Request"
                 $summary = "Review `"${{ github.event.pull_request.title }}`""
                 $type = "Task"
             }
         }
 
-         Write-Output "Type: $type"
          Write-Output "::set-output name=summary::$summary"
          Write-Output "::set-output name=type::$type"
 
