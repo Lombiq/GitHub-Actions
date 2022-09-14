@@ -57,5 +57,5 @@ runs:
         token: ${{ env.GITHUB_TOKEN }}
         issue-number: ${{ github.event.issue.number }}
         title: "${{ github.event.issue.title }} (${{ steps.create-issue.outputs.issue }})"
-        body: "[Jira issue](${{ env.JIRA_BASE_URL }})"
+        body: "[Jira issue](${{ env.JIRA_BASE_URL }}${{ steps.create-issue.outputs.issue }})"
         update-mode: 'append'
