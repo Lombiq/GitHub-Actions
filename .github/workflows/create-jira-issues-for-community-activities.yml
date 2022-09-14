@@ -16,8 +16,6 @@ on:
         required: true
       PULL_REQUEST_JIRA_ISSUE_DESCRIPTION:
         required: true
-      GITHUB_TOKEN:
-        required: true
 
 jobs:
   build:
