@@ -41,7 +41,7 @@ runs:
         {"labels": ["created-from-github"]
         "@
 
-        if ("${{ inputs.issue-component}}" -neq "")
+        if ("${{ inputs.issue-component}}" -ne "")
         {
             $fields += ', "components": [{"name": "${{ inputs.issue-component }}"}]'
         }
