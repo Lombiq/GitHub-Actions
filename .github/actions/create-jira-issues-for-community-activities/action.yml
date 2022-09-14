@@ -44,7 +44,7 @@ runs:
         }
         $fields += '}'
 
-        Write-Output "::set-output name=fields::$fields"
+        Write-Output "::set-output name=fields::'$fields'"
 
     - name: Create Jira issue
       id: create-issue
