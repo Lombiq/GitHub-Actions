@@ -37,4 +37,4 @@ jobs:
         PULL_REQUEST_JIRA_ISSUE_DESCRIPTION: ${{ secrets.PULL_REQUEST_JIRA_ISSUE_DESCRIPTION }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        issue-component: ${{ issue-component }}
+        issue-component: ${{ inputs.issue-component }}
