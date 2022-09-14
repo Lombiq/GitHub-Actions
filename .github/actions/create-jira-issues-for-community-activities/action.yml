@@ -31,33 +31,38 @@ runs:
             {
                 Write-Output "Discussion"
                 $summary = "Respond to `"${{ github.event.discussion.title }}`""
+                $type = "Task"
             }
             "issues"
             {
                 Write-Output "Issue"
                 $summary = "${{ github.event.issue.title }} in ${{ github.repository }}"
+                $type = "Task"
+                Write-Output ${{ github.event.issue.labels }}
             }
             "pull_request"
             {
                 Write-Output "Pull Request"
                 $summary = "Review `"${{ github.event.pull_request.title }}`""
+                $type = "Task"
             }
         }
 
          Write-Output "::set-output name=summary::$summary"
+         Write-Output "::set-output name=$type::$type"
 
-    - name: Create Jira issue
-      id: create-issue
-      uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
-      with:
-        project: OSOE
-        issuetype: Task
-        summary: ${{ steps.issue-details.outputs.summary }}
-        description: |
-          See the linked GitHub issue, including all the comments.
-          [This works.|https://lombiq.com]
-        fields: '{"labels": ["created-from-github"]}'
+    #- name: Create Jira issue
+    #  id: create-issue
+    #  uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
+    #  with:
+    #    project: OSOE
+    #    issuetype: ${{ steps.issue-details.outputs.$type }}
+    #    summary: ${{ steps.issue-details.outputs.summary }}
+    #    description: |
+    #      See the linked GitHub issue, including all the comments.
+    #      [This works.|https://lombiq.com]
+    #    fields: '{"labels": ["created-from-github"]}'
 
-    - name: Log created issue
-      shell: bash
-      run: echo "Issue ${{ steps.create-issue.outputs.issue }} was created."
+    #- name: Log created issue
+    #  shell: bash
+    #  run: echo "Issue ${{ steps.create-issue.outputs.issue }} was created."
