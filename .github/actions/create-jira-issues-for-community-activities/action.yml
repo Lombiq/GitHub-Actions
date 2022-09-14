@@ -38,11 +38,10 @@ runs:
         Initialize-IssueDetails $github
 
         $fields = '{"labels": ["created-from-github"]'
-        if (${{ inputs.issue-component != ''}})
-        {
-            $fields += ', "components": [{"name": "${{ inputs.issue-component }}"}]'
-        }
+
         $fields += '}'
+
+        Write-Output "::set-output name=fields::'$fields'"
 
     - name: Create Jira issue
       id: create-issue
