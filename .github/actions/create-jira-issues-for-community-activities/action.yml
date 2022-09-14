@@ -44,7 +44,7 @@ runs:
                 $i = 0
                 while($i -lt $labels.Length -and $type -eq $null)
                 {
-                    $labelName = $labels[i].name
+                    $labelName = $labels[$i].name
 
                     if ($labelName -eq "bug")
                     {
