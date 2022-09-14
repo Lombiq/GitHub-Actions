@@ -32,7 +32,7 @@ runs:
         description: |
           See the linked GitHub issue, including all the comments.
           [This works.|https://lombiq.com]
-        fields: '{"labels": "created-from-github"}'
+        fields: '{"labels": ["created-from-github"]}'
 
     - name: Log created issue
       shell: bash
