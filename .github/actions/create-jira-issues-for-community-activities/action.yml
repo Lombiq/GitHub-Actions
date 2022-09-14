@@ -12,7 +12,9 @@ runs:
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
     - name: Login to Jira
-      # Latest source as of 14.09.2022, post-v1.0.0.
+      # v1.0.0.
+      # This will show a "Logged in as: undefined" message if the login works, see:
+      # https://github.com/atlassian/gajira-login/issues/30.
       uses: atlassian/gajira-login@90a599561baaf8c05b080645ed73db7391c246ed
       env:
         JIRA_BASE_URL: ${{ env.JIRA_BASE_URL }}
