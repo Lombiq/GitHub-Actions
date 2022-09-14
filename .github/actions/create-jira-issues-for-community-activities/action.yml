@@ -31,8 +31,8 @@ runs:
           Test for ${{ github.repository }}
         description: |
           See the linked GitHub issue, including all the comments.
-          [Does this link work?](https://lombiq.com)
-          [Or does this?|https://lombiq.com]
+          [This works.|https://lombiq.com]
+        fields: '{"labels": "created-from-github"}'
 
     - name: Log created issue
       shell: bash
