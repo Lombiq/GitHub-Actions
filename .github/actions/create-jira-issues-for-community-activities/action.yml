@@ -25,9 +25,10 @@ runs:
       id: issue-details
       shell: pwsh
       run: |
-        Write-Output ""${{ github.event.discussion }}""
-        Write-Output ""${{ github.event.issue }}""
-        Write-Output ""${{ github.event.pull_request }}""
+        Write-Output "${{ github.event.discussion }}"
+        Write-Output "${{ github.event.issue }}"
+        Write-Output "${{ github.event.pull_request }}"
+        Write-Output "${{ github.event_name }}"
 
     - name: Create Jira issue
       id: create-issue
