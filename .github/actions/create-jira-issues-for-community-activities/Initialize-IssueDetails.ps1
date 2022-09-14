@@ -42,7 +42,6 @@ if ($type -eq $null)
 }
 
 Write-Output "::set-output name=summary::$summary"
+$jsonDescription = $description | ConvertTo-Json
+Write-Output "::set-output name=jsonDescription::$jsonDescription"
 Write-Output "::set-output name=type::$type"
-
-# Outputs can't contain multi-line strings, only the first line will be passed.
-$Env:ISSUE_DESCRIPTION = $description
