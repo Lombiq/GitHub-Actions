@@ -29,6 +29,21 @@ runs:
         Write-Output "${{ github.event.issue }}"
         Write-Output "${{ github.event.pull_request }}"
         Write-Output "${{ github.event_name }}"
+        switch ("${{ github.event_name }}")
+        {
+            "discussion"
+            {
+                Write-Output "Discussion"
+            }
+            "issues"
+            {
+                Write-Output "Issue"
+            }
+            "pull_request"
+            {
+                Write-Output "Pull Request"
+            }
+        }
 
     - name: Create Jira issue
       id: create-issue
@@ -46,21 +61,3 @@ runs:
     - name: Log created issue
       shell: bash
       run: echo "Issue ${{ steps.create-issue.outputs.issue }} was created."
-
-    - name: Handle Discussions
-      if: github.event.discussion
-      shell: pwsh
-      run: |
-        echo A discussion was opened.
-
-    - name: Handle Issues
-      if: github.event.issue
-      shell: pwsh
-      run: |
-        echo An issue was opened.
-
-    - name: Handle Pull Requests
-      if: github.event.pull_request
-      shell: pwsh
-      run: |
-        echo A pull request was opened.
