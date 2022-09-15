@@ -26,7 +26,7 @@ runs:
         JIRA_USER_EMAIL: ${{ env.JIRA_USER_EMAIL }}
         JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
 
-    - name: Initialize Issue Details
+    - name: Initialize Jira Issue Details
       id: issue-details
       shell: pwsh
       run: |
@@ -50,7 +50,7 @@ runs:
 
         Write-Output "::set-output name=fields::$fields"
 
-    - name: Create Jira issue
+    - name: Create Jira Issue
       id: create-issue
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
       with:
@@ -65,7 +65,7 @@ runs:
         description: ${{ steps.issue-details.outputs.link }}°ˇ^${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
         fields: ${{ steps.issue-details.outputs.fields }}
 
-    - name: Update Issue
+    - name: Update GitHub Issue
       if: github.event.issue
       # v3.3.0
       uses: actions-cool/issues-helper@dad28fdb88da5f082c04659b7373d85790f9b135
