@@ -25,8 +25,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - name: check-spelling
-    id: spelling
+  - name: Check Spelling
     uses: check-spelling/check-spelling@729687234a293e0680b12ca055a02fff415da89d
     with:
       dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
