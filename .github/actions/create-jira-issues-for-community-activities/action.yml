@@ -56,9 +56,7 @@ runs:
       with:
         project: ${{ env.JIRA_PROJECT_KEY }}
         issuetype: ${{ steps.issue-details.outputs.type }}
-        summary: |
-          ${{ steps.issue-details.outputs.link }}
-          ${{ steps.issue-details.outputs.summary }}
+        summary: ${{ steps.issue-details.outputs.link }}€€€${{ steps.issue-details.outputs.summary }}
         description: ${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
         fields: ${{ steps.issue-details.outputs.fields }}
 
