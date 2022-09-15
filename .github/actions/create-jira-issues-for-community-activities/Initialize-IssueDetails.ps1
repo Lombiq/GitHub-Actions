@@ -45,7 +45,6 @@ if ($null -eq $type)
 }
 
 Write-Output "::set-output name=summary::$summary"
-$jsonDescription = $description | ConvertTo-Json
-Write-Output "::set-output name=jsonDescription::$jsonDescription"
+Write-Output "::set-output name=jsonDescription::$($description | ConvertTo-Json)"
 Write-Output "::set-output name=type::$type"
 Write-Output "::set-output name=link::$link"
