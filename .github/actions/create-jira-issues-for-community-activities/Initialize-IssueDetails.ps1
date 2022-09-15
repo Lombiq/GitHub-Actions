@@ -15,7 +15,7 @@ switch ($GitHub.event_name)
         $link = $GitHub.event.issue.html_url
 
         $i = 0
-        while($i -lt $GitHub.event.issue.labels.Length -and $type -eq $null)
+        while($i -lt $GitHub.event.issue.labels.Length -and $null -eq $type)
         {
             $labelName = $GitHub.event.issue.labels[$i].name
 
@@ -39,7 +39,7 @@ switch ($GitHub.event_name)
     }
 }
 
-if ($type -eq $null)
+if ($null -eq $type)
 {
     $type = "Task"
 }
