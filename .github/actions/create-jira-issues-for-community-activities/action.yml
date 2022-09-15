@@ -33,7 +33,7 @@ runs:
       id: issue-details
       shell: pwsh
       run: |
-        Check-Current ${{ github.event.pull_request.title }}
+        Check-PullRequestTitle ${{ github.event.pull_request.title }}
         # The funny indentation is necessary for here-strings.
         $github = @"
         ${{ toJSON(github) }}
