@@ -32,7 +32,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
         with:
-          submodules: 'true'
+          submodules: 'recursive'
 
       - name: Check Spelling
         uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
