@@ -46,6 +46,8 @@ runs:
             $fields += ', "components": [{"name": "${{ inputs.issue-component }}"}]'
         }
 
+        $fields += ', "remotelinks": [{"title": "GitHub resource", "url": "https://example.com"}]'
+
         $fields += '}'
 
         Write-Output "::set-output name=fields::$fields"
