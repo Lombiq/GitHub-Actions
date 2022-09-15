@@ -27,6 +27,7 @@ runs:
       run: |
         $isNotIssuePrString = (-not(Check-PullRequestTitle "${{ github.event.pull_request.title }}")).ToString().ToLower()
         Write-Output "::set-output name=is-not-issue-pr::$isNotIssuePrString"
+        Write-Output $isNotIssuePrString
 
     - name: Login to Jira
       if: steps.issue-related-pr.is-not-issue-pr
