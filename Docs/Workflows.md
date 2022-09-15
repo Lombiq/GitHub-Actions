@@ -102,4 +102,10 @@ Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/
 
 # Jira issue-creating for community activities workflow
 
+Creates Jira issues for community activities happening on GitHub, like issues, discussions, pull requests being opened.
+
 Set up secrets for the parameters as explained [here](https://github.com/marketplace/actions/jira-login#enviroment-variables). You may use secret names without the `DEFAULT_` prefix, but that's our recommendation so you can override these on a per-repository basis.
+
+```yaml
+placeholder
+```
