@@ -57,6 +57,11 @@ runs:
         project: ${{ env.JIRA_PROJECT_KEY }}
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
+        # Remote links (issue-level web links) can't be added directly when creating an issue via the API, but need to
+        # be added via a separate API
+        # (https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-remote-links/#api-rest-api-3-issue-issueidorkey-remotelink-post).
+        # To simplify creating issues here, we pass the link as a magic string, which is then handled in Jira by a
+        # JMWE action.
         description: ${{ steps.issue-details.outputs.link }}°ˇ^${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
         fields: ${{ steps.issue-details.outputs.fields }}
 
