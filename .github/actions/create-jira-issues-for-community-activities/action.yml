@@ -1,4 +1,4 @@
-name: Create Jira issues for community activities
+﻿name: Create Jira issues for community activities
 description: >
   Creates Jira issues for community activities happening on GitHub, like issues, discussions, pull requests being
   opened.
@@ -57,9 +57,7 @@ runs:
         project: ${{ env.JIRA_PROJECT_KEY }}
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
-        description: |
-          ${{ steps.issue-details.outputs.link }}
-          ${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
+        description: ${{ steps.issue-details.outputs.link }}°ˇ^${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
         fields: ${{ steps.issue-details.outputs.fields }}
 
     - name: Update Issue
