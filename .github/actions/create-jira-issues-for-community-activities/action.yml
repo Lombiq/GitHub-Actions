@@ -15,6 +15,9 @@ runs:
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        cd ${{ github.action_path }}
+        cd ../
+        ls
 
     - name: Login to Jira
       # v1.0.0.
