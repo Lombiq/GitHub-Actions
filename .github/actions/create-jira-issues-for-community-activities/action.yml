@@ -27,12 +27,6 @@ runs:
       run: |
         $isNotIssuePrString = (-not(Check-PullRequestTitle "${{ github.event.pull_request.title }}")).ToString().ToLower()
         Write-Output "::set-output name=is-not-issue-pr::$isNotIssuePrString"
-        Write-Output $isNotIssuePrString
-
-    - name: Debug
-      shell: pwsh
-      run: |
-        Write-Output ${{ steps.issue-related-pr.outputs.is-not-issue-pr }}
 
     - name: Login to Jira
       if: ${{ steps.issue-related-pr.outputs.is-not-issue-pr  }}
@@ -98,7 +92,7 @@ runs:
         }'
 
     - name: Update GitHub Issue
-      if: ${{ steps.issue-related-pr.outputs.is-not-issue-pr  && github.event.issue }}
+      if: ${{ steps.issue-related-pr.outputs.is-not-issue-pr && github.event.issue }}
       # v3.3.0
       uses: actions-cool/issues-helper@dad28fdb88da5f082c04659b7373d85790f9b135
       with:
