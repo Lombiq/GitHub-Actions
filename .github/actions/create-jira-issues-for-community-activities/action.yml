@@ -64,6 +64,7 @@ runs:
         Write-Output "::set-output name=fields::$fields"
 
     - name: Create Jira Issue
+      if: steps.issue-related-pr.is-not-issue-pr
       id: create-issue
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
       with:
