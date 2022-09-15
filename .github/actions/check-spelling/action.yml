@@ -32,6 +32,4 @@ runs:
       extra_dictionaries: ${{ inputs.extra-dictionaries }}
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
-      # checkout: true
-      spell_check_this: check-spelling/spell-check-this@729687234a293e0680b12ca055a02fff415da89d
       post_comment: 1

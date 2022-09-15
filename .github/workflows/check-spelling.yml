@@ -29,7 +29,7 @@ jobs:
     name: Check Spelling
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v3
         with:
           submodules: 'recursive'
