@@ -104,7 +104,7 @@ Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/
 
 Creates Jira issues for community activities happening on GitHub, like issues, discussions, pull requests being opened.
 
-Set up secrets for the `JIRA_` parameters as explained [here](https://github.com/marketplace/actions/jira-login#enviroment-variables). You may use secret names without the `DEFAULT_` prefix, but that's our recommendation so you can override these on a per-repository basis.
+Set up secrets for the `JIRA_` parameters as explained [here](https://github.com/marketplace/actions/jira-login#enviroment-variables). You may use secret names without the `DEFAULT_` prefix, but that's our recommendation for organization-level secrets, so you have defaults but can override them on a per-repository basis.
 
 The secrets with the `_JIRA_ISSUE_DESCRIPTION` suffix should contain templates for the Jira issues to be created, using the internal markup format of Jira (not Markdown). Example for one for `ISSUE_JIRA_ISSUE_DESCRIPTION`:
 
@@ -114,7 +114,7 @@ See the linked GitHub issue, including all the comments.
 
 h1. Checklist
 * Assign yourself to the referenced GitHub issue.
-* Tests: Determine if necessary.
+* [Issue completion checklist|https://example.com/checklist]
 ```
 
 ```yaml
