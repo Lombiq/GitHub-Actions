@@ -19,7 +19,16 @@ runs:
         cd ../
         "$((Get-Location).Path)/verify-submodule-pull-request" >> $Env:GITHUB_PATH
 
+    # Don't do anything for pull requests that are already related to an issue, i.e. their titles start with an issue
+    # key.
+    - name: Check for Jira Issue-Related Pull Request
+      id: issue-related-pr
+      shell: pwsh
+      run: |
+        Write-Output "::set-output name=is-not-issue-pr::$(-not(Check-PullRequestTitle ${{ github.event.pull_request.title }}))"
+
     - name: Login to Jira
+      if: issue-related-pr.is-not-issue-pr
       # v1.0.0.
       # This will show a "Logged in as: undefined" message if the login works, see:
       # https://github.com/atlassian/gajira-login/issues/30.
@@ -30,10 +39,10 @@ runs:
         JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
 
     - name: Initialize Jira Issue Details
+      if: issue-related-pr.is-not-issue-pr
       id: issue-details
       shell: pwsh
       run: |
-        Check-PullRequestTitle ${{ github.event.pull_request.title }}
         # The funny indentation is necessary for here-strings.
         $github = @"
         ${{ toJSON(github) }}
@@ -65,6 +74,7 @@ runs:
         fields: ${{ steps.issue-details.outputs.fields }}
 
     - name: Add Remote Link to Jira Issue
+      if: issue-related-pr.is-not-issue-pr
       shell: bash
       run: |
         curl --request POST \
@@ -80,7 +90,7 @@ runs:
         }'
 
     - name: Update GitHub Issue
-      if: github.event.issue
+      if: issue-related-pr.is-not-issue-pr && github.event.issue
       # v3.3.0
       uses: actions-cool/issues-helper@dad28fdb88da5f082c04659b7373d85790f9b135
       with:
