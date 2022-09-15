@@ -36,12 +36,12 @@ runs:
   steps:
   - name: check-spelling
     id: spelling
-    uses: check-spelling/check-spelling@v0.0.20
+    uses: check-spelling/check-spelling@729687234a293e0680b12ca055a02fff415da89d
     with:
       dictionary_source_prefixes: ${{ inputs.dictionary_source_prefixes }}
       extra_dictionaries: ${{ inputs.extra_dictionaries }}
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       checkout: true
-      spell_check_this: check-spelling/spell-check-this@v0.0.20
+      spell_check_this: check-spelling/spell-check-this@729687234a293e0680b12ca055a02fff415da89d
       post_comment: 1
