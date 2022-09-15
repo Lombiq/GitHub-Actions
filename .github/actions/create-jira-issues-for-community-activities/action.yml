@@ -17,7 +17,7 @@ runs:
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         cd ${{ github.action_path }}
         cd ../
-        ls
+        "(Get-Location).Path/verify-submodule-pull-request" >> $Env:GITHUB_PATH
 
     - name: Login to Jira
       # v1.0.0.
@@ -33,6 +33,7 @@ runs:
       id: issue-details
       shell: pwsh
       run: |
+        Check-Current ${{ github.event.pull_request.title }}
         # The funny indentation is necessary for here-strings.
         $github = @"
         ${{ toJSON(github) }}
