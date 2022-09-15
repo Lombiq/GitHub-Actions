@@ -31,8 +31,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-        with:
-          submodules: 'true'
+        # with:
+        #   submodules: 'true'
       - name: Check Spelling
         uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
         with:
