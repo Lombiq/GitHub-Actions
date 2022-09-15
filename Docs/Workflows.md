@@ -100,7 +100,7 @@ If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](htt
 
 Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
 
-# Jira issue-creating for community activities workflow
+## Jira issue-creating for community activities workflow
 
 Creates Jira issues for community activities happening on GitHub, like issues, discussions, pull requests being opened.
 
