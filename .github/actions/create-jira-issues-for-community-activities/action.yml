@@ -61,7 +61,7 @@ runs:
         fields: ${{ steps.issue-details.outputs.fields }}
 
     - name: Add Remote Link to Jira Issue
-      shell: pwsh
+      shell: bash
       run: |
         curl --request POST \
           --url '${{ env.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink' \
