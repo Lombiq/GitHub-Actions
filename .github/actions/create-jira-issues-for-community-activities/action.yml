@@ -1,4 +1,4 @@
-﻿name: Create Jira issues for community activities
+name: Create Jira issues for community activities
 description: >
   Creates Jira issues for community activities happening on GitHub, like issues, discussions, pull requests being
   opened.
@@ -48,7 +48,7 @@ runs:
         ${{ toJSON(github) }}
         "@ | ConvertFrom-Json
 
-        Initialize-IssueDetails $github
+        Initialize-IssueDetails $github "${{ inputs.issue-component}}"
 
         $fields = @"
         {"labels": ["created-from-github"]
