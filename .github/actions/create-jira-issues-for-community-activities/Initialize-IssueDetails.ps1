@@ -17,21 +17,20 @@ switch ($GitHub.event_name)
         $description = $Env:ISSUE_JIRA_ISSUE_DESCRIPTION
         $link = $GitHub.event.issue.html_url
 
-        $i = 0
-        while($i -lt $GitHub.event.issue.labels.Length -and $null -eq $type)
+        foreach ($label in $GitHub.event.issue.labels)
         {
-            $labelName = $GitHub.event.issue.labels[$i].name
+            $labelName = $label.name
 
             if ($labelName -eq "bug")
             {
                 $type = "Bug"
+                break
             }
             elseif ($labelName -eq "enhancement")
             {
                 $type = "New Feature"
+                break
             }
-
-            $i++
         }
     }
     "pull_request"
