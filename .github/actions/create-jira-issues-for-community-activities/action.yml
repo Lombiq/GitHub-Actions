@@ -76,7 +76,7 @@ runs:
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       shell: pwsh
       run: |
-        curl.exe --request POST `
+        curl --request POST `
           --url '${{ env.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink' `
           --user '${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}' `
           --header 'Accept: application/json' `
