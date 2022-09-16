@@ -17,7 +17,7 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         Join-Path -Resolve "${{ github.action_path }}" .. verify-submodule-pull-request >> $Env:GITHUB_PATH
-        "THIS_IS_TEST=test" >> $Env:GITHUB_ENV
+        "DISCUSSION_JIRA_ISSUE_DESCRIPTION=test" >> $Env:GITHUB_ENV
 
     # Don't do anything for pull requests that are already related to an issue, i.e. their titles start with an issue
     # key.
@@ -49,7 +49,7 @@ runs:
       id: issue-details
       shell: pwsh
       run: |
-        Write-Output Variable: $Env:THIS_IS_TEST
+        Write-Output Variable: $Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION
         # The funny indentation is necessary for here-strings.
         $github = @"
         ${{ toJSON(github) }}
