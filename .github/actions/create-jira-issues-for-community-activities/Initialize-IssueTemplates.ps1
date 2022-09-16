@@ -1,6 +1,5 @@
 if ([string]::IsNullOrEmpty($Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION))
 {
-    "DISCUSSION_JIRA_ISSUE_DESCRIPTION=testing" >> $Env:GITHUB_ENV
 }
 
 if ([string]::IsNullOrEmpty($Env:ISSUE_JIRA_ISSUE_DESCRIPTION))
