@@ -1,3 +1,6 @@
+Write-Output Variable: $Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION
+
+
 if ([string]::IsNullOrEmpty($Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION))
 {
 }
