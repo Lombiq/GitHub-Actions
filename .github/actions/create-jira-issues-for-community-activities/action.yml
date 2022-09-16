@@ -82,11 +82,11 @@ runs:
           --header 'Accept: application/json' `
           --header 'Content-Type: application/json' `
           --data '{
-            "object": {
-                "url":"${{ steps.issue-details.outputs.link }}",
-                "title":"GitHub resource"
-            }
-        }'
+                \"object\": {
+                    \"url\":\"${{ steps.issue-details.outputs.link }}\",
+                    \"title\":\"GitHub resource\"
+                }
+            }'
 
     - name: Update GitHub Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
