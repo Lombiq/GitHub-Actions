@@ -48,6 +48,7 @@ runs:
       id: issue-details
       shell: pwsh
       run: |
+        Write-Output $Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION
         # The funny indentation is necessary for here-strings.
         $github = @"
         ${{ toJSON(github) }}
