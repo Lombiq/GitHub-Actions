@@ -1,16 +1,6 @@
 if ([string]::IsNullOrEmpty($Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION))
 {
-    $template = @"
-h1. Summary
-See the linked GitHub discussion, including all the comments. Please do all communication there, unless it's confidential or administrative.
-
-h1. Checklist
-* Respond to the linked GitHub discussion.
-* The "After resolve" section is updated if necessary.
-
-h1. After resolve
-Add notes here if anything needs to be done after the issue is resolved, like manual configuration changes. Write in English, suitable to be included in release notes.
-"@
+    $template = "test"
 
     "DISCUSSION_JIRA_ISSUE_DESCRIPTION<<EOF" >> $Env:GITHUB_ENV
     $template >> $Env:GITHUB_ENV
