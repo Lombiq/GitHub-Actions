@@ -49,7 +49,6 @@ runs:
       id: issue-details
       shell: pwsh
       run: |
-        # The funny indentation is necessary for here-strings.
         $github = @"
         ${{ toJSON(github) }}
         "@ | ConvertFrom-Json
