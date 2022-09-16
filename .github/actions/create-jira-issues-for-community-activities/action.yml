@@ -23,7 +23,7 @@ runs:
       id: issue-related-pr
       shell: pwsh
       run: |
-        $output = "${{ github.event.pull_request }}" -eq "" ? "False" : Check-PullRequestTitle "${{ github.event.pull_request.title }}"
+        $output = "${{ github.event.pull_request }}" -eq "" ? "False" : (Check-PullRequestTitle "${{ github.event.pull_request.title }}")
         Write-Output "::set-output name=is-issue-pr::$output"
 
     - name: Login to Jira
