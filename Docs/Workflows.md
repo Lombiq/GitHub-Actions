@@ -117,6 +117,8 @@ h1. Checklist
 * [Issue completion checklist|https://example.com/checklist]
 ```
 
+All three templates are optional and if not provided, defaults will be used.
+
 ```yaml
 placeholder
 ```

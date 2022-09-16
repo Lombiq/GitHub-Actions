@@ -38,6 +38,11 @@ runs:
         JIRA_USER_EMAIL: ${{ env.JIRA_USER_EMAIL }}
         JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
 
+    - name: Initialize Jira Issue Templates
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      shell: pwsh
+      run: Initialize-IssueTemplates
+
     - name: Initialize Jira Issue Details
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       id: issue-details
