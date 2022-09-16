@@ -13,11 +13,8 @@ on:
       JIRA_PROJECT_KEY:
         required: true
       DISCUSSION_JIRA_ISSUE_DESCRIPTION:
-        required: true
       ISSUE_JIRA_ISSUE_DESCRIPTION:
-        required: true
       PULL_REQUEST_JIRA_ISSUE_DESCRIPTION:
-        required: true
     inputs:
       issue-component:
         required: false
