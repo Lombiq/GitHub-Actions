@@ -12,7 +12,9 @@ h1. After resolve
 Add notes here if anything needs to be done after the issue is resolved, like manual configuration changes. Write in English, suitable to be included in release notes.
 "@
 
-    "DISCUSSION_JIRA_ISSUE_DESCRIPTION=$template" >> $Env:GITHUB_ENV
+    "DISCUSSION_JIRA_ISSUE_DESCRIPTION<<EOF" >> $Env:GITHUB_ENV
+    $template >> $Env:GITHUB_ENV
+    "EOF" >> $Env:GITHUB_ENV
 }
 
 if ([string]::IsNullOrEmpty($Env:ISSUE_JIRA_ISSUE_DESCRIPTION))
