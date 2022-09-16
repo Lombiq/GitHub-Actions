@@ -23,10 +23,10 @@ runs:
       id: issue-related-pr
       shell: pwsh
       run: |
-        Write-Output "::set-output name=is-not-issue-pr::$(-not(Check-PullRequestTitle "${{ github.event.pull_request.title }}"))"
+        Write-Output "::set-output name=is-issue-pr::$(Check-PullRequestTitle "${{ github.event.pull_request.title }}")"
 
     - name: Login to Jira
-      if: steps.issue-related-pr.outputs.is-not-issue-pr == 'True'
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       # v1.0.0.
       # This will show a "Logged in as: undefined" message if the login works, see:
       # https://github.com/atlassian/gajira-login/issues/30.
@@ -37,7 +37,7 @@ runs:
         JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
 
     - name: Initialize Jira Issue Details
-      if: steps.issue-related-pr.outputs.is-not-issue-pr == 'True'
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       id: issue-details
       shell: pwsh
       run: |
@@ -62,7 +62,7 @@ runs:
         Write-Output "::set-output name=fields::$fields"
 
     - name: Create Jira Issue
-      if: steps.issue-related-pr.outputs.is-not-issue-pr == 'True'
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       id: create-issue
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
       with:
@@ -73,7 +73,7 @@ runs:
         fields: ${{ steps.issue-details.outputs.fields }}
 
     - name: Add Remote Link to Jira Issue
-      if: steps.issue-related-pr.outputs.is-not-issue-pr == 'True'
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       shell: bash
       run: |
         curl --request POST \
@@ -89,7 +89,7 @@ runs:
         }'
 
     - name: Update GitHub Issue
-      if: steps.issue-related-pr.outputs.is-not-issue-pr == 'True' && github.event.issue
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
       # v3.3.0
       uses: actions-cool/issues-helper@dad28fdb88da5f082c04659b7373d85790f9b135
       with:
