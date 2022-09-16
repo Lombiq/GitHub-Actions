@@ -13,7 +13,7 @@ Add notes here if anything needs to be done after the issue is resolved, like ma
 "@
 
     "DISCUSSION_JIRA_ISSUE_DESCRIPTION<<EOF" >> $Env:GITHUB_ENV
-    $template >> $Env:GITHUB_ENV
+    "$template" >> $Env:GITHUB_ENV
     "EOF" >> $Env:GITHUB_ENV
 }
 
