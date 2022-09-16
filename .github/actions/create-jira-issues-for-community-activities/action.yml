@@ -74,9 +74,9 @@ runs:
 
     - name: Add Remote Link to Jira Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
-      shell: bash
+      shell: pwsh
       run: |
-        curl --request POST \
+        curl.exe --request POST \
           --url '${{ env.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink' \
           --user '${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}' \
           --header 'Accept: application/json' \
