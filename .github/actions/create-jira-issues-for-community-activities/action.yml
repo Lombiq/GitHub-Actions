@@ -17,7 +17,6 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         Join-Path -Resolve "${{ github.action_path }}" .. verify-submodule-pull-request >> $Env:GITHUB_PATH
-        "THIS_IS_TEST=test" >> $Env:GITHUB_ENV
 
     # Don't do anything for pull requests that are already related to an issue, i.e. their titles start with an issue
     # key.
@@ -53,7 +52,13 @@ runs:
         ${{ toJSON(github) }}
         "@ | ConvertFrom-Json
 
-        Initialize-IssueDetails $github "${{ inputs.issue-component}}"
+        $templates = Initialize-IssueTemplates
+
+        Initialize-IssueDetails $github `
+            "${{ inputs.issue-component}}" `
+            $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] `
+            $templates["ISSUE_JIRA_ISSUE_DESCRIPTION"] `
+            $templates["PULL_REQUEST_JIRA_ISSUE_DESCRIPTION"]
 
         $fields = @"
         {"labels": ["created-from-github"]

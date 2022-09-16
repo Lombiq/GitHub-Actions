@@ -1,4 +1,4 @@
-param ($GitHub, $IssueComponent)
+param ($GitHub, $IssueComponent, $DiscussionJiraIssueDescription, $IssueJiraIssueDescription, $PullReqestJiraIssueDescription)
 
 $context = [string]::IsNullOrEmpty($IssueComponent) ? $GitHub.repository : $IssueComponent
 $titleSuffix = " in $context"
@@ -8,13 +8,13 @@ switch ($GitHub.event_name)
     "discussion"
     {
         $summary = "Respond to `"$($GitHub.event.discussion.title)`"$titleSuffix"
-        $description = $Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION
+        $description = $DiscussionJiraIssueDescription
         $link = $GitHub.event.discussion.html_url
     }
     "issues"
     {
         $summary = "$($GitHub.event.issue.title)$titleSuffix"
-        $description = $Env:ISSUE_JIRA_ISSUE_DESCRIPTION
+        $description = $IssueJiraIssueDescription
         $link = $GitHub.event.issue.html_url
 
         foreach ($label in $GitHub.event.issue.labels)
@@ -36,7 +36,7 @@ switch ($GitHub.event_name)
     "pull_request"
     {
         $summary = "Review `"$($GitHub.event.pull_request.title)`"$titleSuffix"
-        $description = $Env:PULL_REQUEST_JIRA_ISSUE_DESCRIPTION
+        $description = $PullReqestJiraIssueDescription
         $link = $GitHub.event.pull_request.html_url
     }
     default
