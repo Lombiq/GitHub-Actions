@@ -1,4 +1,4 @@
-Write-Output Variable: $Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION
+Write-Output Variable: $Env:THIS_IS_TEST
 
 
 if ([string]::IsNullOrEmpty($Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION))

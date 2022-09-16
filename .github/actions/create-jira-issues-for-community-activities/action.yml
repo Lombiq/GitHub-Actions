@@ -17,8 +17,7 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         Join-Path -Resolve "${{ github.action_path }}" .. verify-submodule-pull-request >> $Env:GITHUB_PATH
-        $Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION = "test"
-        "DISCUSSION_JIRA_ISSUE_DESCRIPTION=test" >> $Env:GITHUB_ENV
+        "THIS_IS_TEST=test" >> $Env:GITHUB_ENV
 
     # Don't do anything for pull requests that are already related to an issue, i.e. their titles start with an issue
     # key.
