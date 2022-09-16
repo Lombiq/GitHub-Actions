@@ -39,6 +39,12 @@ switch ($GitHub.event_name)
         $description = $Env:PULL_REQUEST_JIRA_ISSUE_DESCRIPTION
         $link = $GitHub.event.pull_request.html_url
     }
+    default
+    {
+        $message = "Unknown event `"$($GitHub.event_name)`". Please only call this script for one of the following " +
+            "events: discussion, issues, pull_request."
+        Write-Error $message
+    }
 }
 
 if ($null -eq $type)
