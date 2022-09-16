@@ -15,9 +15,7 @@ runs:
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
-        cd ${{ github.action_path }}
-        cd ../
-        "$((Get-Location).Path)/verify-submodule-pull-request" >> $Env:GITHUB_PATH
+        Join-Path -Resolve "${{ github.action_path }}" .. verify-submodule-pull-request >> $Env:GITHUB_PATH
 
     # Don't do anything for pull requests that are already related to an issue, i.e. their titles start with an issue
     # key.
