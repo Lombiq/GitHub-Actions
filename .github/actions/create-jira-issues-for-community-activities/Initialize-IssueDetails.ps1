@@ -10,6 +10,7 @@ param
 
 $context = [string]::IsNullOrEmpty($IssueComponent) ? $GitHub.repository : $IssueComponent
 $titleSuffix = $SuffixIssueTitles ? " in $context" : ""
+Write-Output "Suffix: $titleSuffix"
 
 switch ($GitHub.event_name)
 {
