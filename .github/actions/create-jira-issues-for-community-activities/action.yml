@@ -64,7 +64,7 @@ runs:
 
         Initialize-IssueDetails $github `
             "${{ inputs.issue-component }}" `
-            [System.Convert]::ToBoolean("${{ inputs.suffix-issue-titles }}") `
+            $([System.Convert]::ToBoolean("${{ inputs.suffix-issue-titles }}")) `
             $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] `
             $templates["ISSUE_JIRA_ISSUE_DESCRIPTION"] `
             $templates["PULL_REQUEST_JIRA_ISSUE_DESCRIPTION"]
