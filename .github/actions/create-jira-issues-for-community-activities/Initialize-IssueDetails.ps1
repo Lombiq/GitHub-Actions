@@ -1,7 +1,15 @@
-param ($GitHub, $IssueComponent, $DiscussionJiraIssueDescription, $IssueJiraIssueDescription, $PullReqestJiraIssueDescription)
+param
+(
+    $GitHub,
+    $IssueComponent,
+    $SuffixIssueTitles,
+    $DiscussionJiraIssueDescription,
+    $IssueJiraIssueDescription,
+    $PullReqestJiraIssueDescription
+)
 
 $context = [string]::IsNullOrEmpty($IssueComponent) ? $GitHub.repository : $IssueComponent
-$titleSuffix = " in $context"
+$titleSuffix = $SuffixIssueTitles ? " in $context" : ""
 
 switch ($GitHub.event_name)
 {
