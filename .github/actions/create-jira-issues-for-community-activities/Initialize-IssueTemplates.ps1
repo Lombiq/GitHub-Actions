@@ -60,5 +60,3 @@ else
 {
     $templates["PULL_REQUEST_JIRA_ISSUE_DESCRIPTION"] = $Env:PULL_REQUEST_JIRA_ISSUE_DESCRIPTION;
 }
-
-Write-Output $templates
