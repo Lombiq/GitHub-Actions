@@ -110,16 +110,17 @@ on:
 
 jobs:
   call-deploy-workflow:
-    name: Deploy
+    name: Deploy to Azure App Service
     uses: Lombiq/GitHub-Actions/.github/workflows/deploy.yml@dev
     with:
-      machine-types: "[\"ubuntu-latest\"]"
       timeout-minutes: 60
       app-name: AppName
       resource-group-name: ResourceGroupName
       slot-name: Staging
       url: https://www.myapp.com
-    secrets: inherit
+    secrets:
+      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+      AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
 ```
 
 Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
