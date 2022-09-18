@@ -1,0 +1,11 @@
+name: Create Jira issues for community activities
+# Placeholder for now.
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
