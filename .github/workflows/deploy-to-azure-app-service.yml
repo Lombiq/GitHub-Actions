@@ -64,11 +64,11 @@ on:
       app-name:
         required: true
         type: string
-        description: The name of the existing app service.
+        description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
       slot-name:
         required: true
         type: string
-        description: Name of the web app slot.
+        description: Also what you see at the top of the blade when you open the slot, before the app name in parenthesis.
       resource-group-name:
         required: true
         type: string
@@ -118,12 +118,14 @@ jobs:
         dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published' --no-build
 
     - name: Login
+      # v1
       uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
       with:
         creds: ${{ secrets.DOTNEST_TENANTS_CORE_EUS_STAGING_AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
     - name: Stop Web App Slot
+      # v1
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
       with:
         inlineScript: |
@@ -131,6 +133,7 @@ jobs:
         azPSVersion: "latest" 
 
     - name: Deploy to Azure App Service
+      # v2
       uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
       with:
         app-name: ${{ inputs.app-name }}
@@ -139,6 +142,7 @@ jobs:
         package: '${{ inputs.build-directory }}/Published'
 
     - name: Start Web App Slot
+      # v1
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
       with:
         inlineScript: |
