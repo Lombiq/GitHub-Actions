@@ -24,7 +24,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Scripts Setup
+    - name: Setup Scripts
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
