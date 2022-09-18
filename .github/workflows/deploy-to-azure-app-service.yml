@@ -115,7 +115,7 @@ jobs:
 
     - name: Publish
       run: |
-        dotnet publish -c Release -o '${{ inputs.build-directory }}/Published' 
+        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published' --no-build
 
     - name: Login
       uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
