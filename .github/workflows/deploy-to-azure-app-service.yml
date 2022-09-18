@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Azure App Service
 
 on:
   workflow_call:
@@ -130,7 +130,7 @@ jobs:
           Stop-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
         azPSVersion: "latest" 
 
-    - name: Deploy
+    - name: Deploy to Azure App Service
       uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
       with:
         app-name: ${{ inputs.app-name }}
