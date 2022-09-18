@@ -2,6 +2,11 @@ name: Deploy to Azure App Service
 
 on:
   workflow_call:
+    secrets:
+      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL:
+        required: true
+      AZURE_APP_SERVICE_PUBLISH_PROFILE:
+        required: true
     inputs:
       # This needs to be stringified JSON because inputs don't support arrays, see 
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
@@ -124,7 +129,7 @@ jobs:
       # v1
       uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
       with:
-        creds: ${{ secrets.DOTNEST_TENANTS_CORE_EUS_STAGING_AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+        creds: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
     - name: Stop Web App Slot
@@ -141,7 +146,7 @@ jobs:
       with:
         app-name: ${{ inputs.app-name }}
         slot-name: ${{ inputs.slot-name }}
-        publish-profile: ${{ secrets.DOTNEST_TENANTS_CORE_STAGING_AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
         package: ${{ inputs.build-directory }}/Published
 
     - name: Start Web App Slot
