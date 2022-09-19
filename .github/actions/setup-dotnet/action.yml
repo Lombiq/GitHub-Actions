@@ -16,7 +16,7 @@ runs:
         # This ceremony is needed to make the env vars available in subsequent steps too, see:
         # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable.
         # Note that in PowerShell, somehow an echo is not needed. Be sure not to put spaces around the equal signs when
-        # writin to $Env:GITHUB_ENV.
+        # writing to $Env:GITHUB_ENV.
         "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true" >> $Env:GITHUB_ENV
         $Env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
 
