@@ -23,6 +23,10 @@ on:
           cspell:npm/npm.txt
           cspell:dotnet/dotnet.txt
           cspell:scala/scala.txt
+    config:
+      description: Configuration directory
+      required: false
+      default: .github/actions/spelling
 
 jobs:
   check-spelling:
@@ -39,3 +43,4 @@ jobs:
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
+          config: ${{ inputs.config }}

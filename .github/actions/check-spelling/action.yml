@@ -21,6 +21,10 @@ inputs:
       cspell:dotnet/dotnet.txt
       cspell:scala/scala.txt
       lombiq:expect.txt
+  config:
+    description: Configuration directory
+    required: false
+    default: .github/actions/spelling
 
 runs:
   using: "composite"
@@ -39,4 +43,4 @@ runs:
       suppress_push_for_open_pull_request: 1
       post_comment: 1
       #config: ${{ github.action_path }}/spelling/
-      config: .github/actions/spelling
+      config: ${{ inputs.config }}
