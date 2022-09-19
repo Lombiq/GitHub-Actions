@@ -29,7 +29,7 @@ runs:
     shell: pwsh
     run: |
       echo "${{ github.action_path }}/spelling"
-      Get-ChildItem ${{ github.action_path }}\spelling
+      Get-ChildItem -Path ${{ github.action_path }}\spelling -Name
   - name: Check Spelling
     uses: check-spelling/check-spelling@729687234a293e0680b12ca055a02fff415da89d
     with:
