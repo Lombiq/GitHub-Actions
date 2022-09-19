@@ -123,12 +123,11 @@ jobs:
 
     - name: Restore
       run: >
-        dotnet restore --packages .nuget --runtime win-x64
+        dotnet restore --packages .nuget --runtime win-x64 -p:PublishReadyToRun=true
 
     - name: Publish
-      run: >
-        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published'
-        --no-build --no-restore --runtime win-x64 -p:PublishReadyToRun=true
+      run: |
+        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published' --no-build --no-restore --runtime win-x64 -p:PublishReadyToRun=true
 
     - name: Login to Azure
       # v1
