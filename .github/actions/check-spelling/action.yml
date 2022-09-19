@@ -30,6 +30,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+  - name: Print Information
+    shell: pwsh
+    run: |
+      Get-ChildItem -Path ${{ inputs.config }} -Name
+
   - name: Check Spelling
     uses: check-spelling/check-spelling@729687234a293e0680b12ca055a02fff415da89d
     with:
