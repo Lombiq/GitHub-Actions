@@ -122,8 +122,9 @@ jobs:
         cache-version: ${{ inputs.build-cache-version }}
 
     - name: Publish
-      run: |
-        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published' --no-build -p:PublishReadyToRun=true
+      run: >
+        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published' --no-build
+        --runtime win-x64 -p:PublishReadyToRun=true
 
     - name: Login to Azure
       # v1
