@@ -26,6 +26,7 @@ on:
       config:
         description: Configuration directory
         required: false
+        type: string
         default: .github/actions/spelling
 
 jobs:
