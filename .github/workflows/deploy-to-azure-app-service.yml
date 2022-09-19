@@ -123,7 +123,7 @@ jobs:
 
     - name: Publish
       run: |
-        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published' --no-build
+        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published' --no-build -p:PublishReadyToRun=true
 
     - name: Login to Azure
       # v1
