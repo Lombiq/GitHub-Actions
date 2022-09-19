@@ -121,10 +121,14 @@ jobs:
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
 
+    - name: Restore
+      run: >
+        dotnet restore --packages .nuget --runtime win-x64
+
     - name: Publish
       run: >
-        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published' --no-build
-        --runtime win-x64 -p:PublishReadyToRun=true
+        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published'
+        --no-build --no-restore --runtime win-x64 -p:PublishReadyToRun=true
 
     - name: Login to Azure
       # v1
