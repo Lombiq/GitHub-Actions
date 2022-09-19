@@ -30,11 +30,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - name: Print Information
-    shell: pwsh
-    run: |
-      echo "${{ github.action_path }}/spelling"
-      Get-ChildItem -Path ${{ github.action_path }}\spelling -Name
   - name: Check Spelling
     uses: check-spelling/check-spelling@729687234a293e0680b12ca055a02fff415da89d
     with:
@@ -43,5 +38,4 @@ runs:
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       post_comment: 1
-      #config: ${{ github.action_path }}/spelling/
       config: ${{ inputs.config }}
