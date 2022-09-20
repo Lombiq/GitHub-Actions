@@ -3,11 +3,11 @@
 # Disable 8dot3 filenames.
 fsutil behavior set disable8dot3 1
 
-# Increase ntfs mtz size.
+# Increase NTFS MFT zone size.
 fsutil behavior set mftzone 2
 
 # Disable last access time on all files.
 fsutil behavior set disablelastaccess 1
 
-# The above settings need a reboot.
+# Changing disable8dot3 and mftzone needs a reboot.
 Restart-Computer -Force
