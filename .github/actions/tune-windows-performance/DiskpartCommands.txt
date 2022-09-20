@@ -1,0 +1,1 @@
+create vdisk file="D:\Workspace.vhdx" maximum=10240 type=expandable

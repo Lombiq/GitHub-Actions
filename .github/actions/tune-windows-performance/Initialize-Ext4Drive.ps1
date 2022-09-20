@@ -1,3 +1,2 @@
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
-
-New-VHD -Path (Join-Path $Env:GITHUB_WORKSPACE Workspace.vhdx) -Dynamic -SizeBytes 10GB
+# We need to use /s to feed a script to diskpart, otherwise it's using an interactive mode.
+diskpart /s DiskpartCommands.txt
