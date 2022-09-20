@@ -108,8 +108,8 @@ runs:
           --header 'Content-Type: application/json' `
           --data '{
                 \"object\": {
-                    \"url\":\"${{ steps.issue-details.outputs.link }}\",
-                    \"title\":\"GitHub resource\"
+                    \"url\":\"${{ steps.issue-details.outputs.link-url }}\",
+                    \"title\":\"${{ steps.issue-details.outputs.link-title }}\"
                 }
             }'
 

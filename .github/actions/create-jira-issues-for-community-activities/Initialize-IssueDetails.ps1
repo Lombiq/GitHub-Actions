@@ -18,13 +18,15 @@ switch ($GitHub.event_name)
     {
         $summary = "Respond to `"$($GitHub.event.discussion.title)`"$titleSuffix"
         $description = $DiscussionJiraIssueDescription
-        $link = $GitHub.event.discussion.html_url
+        $linkUrl = $GitHub.event.discussion.html_url
+        $linkTitle = "GitHub discussion"
     }
     "issues"
     {
         $summary = "$($GitHub.event.issue.title)$titleSuffix"
         $description = $IssueJiraIssueDescription
-        $link = $GitHub.event.issue.html_url
+        $linkUrl = $GitHub.event.issue.html_url
+        $linkTitle = "GitHub issue"
 
         foreach ($label in $GitHub.event.issue.labels)
         {
@@ -46,7 +48,8 @@ switch ($GitHub.event_name)
     {
         $summary = "Review `"$($GitHub.event.pull_request.title)`"$titleSuffix"
         $description = $PullReqestJiraIssueDescription
-        $link = $GitHub.event.pull_request.html_url
+        $linkUrl = $GitHub.event.pull_request.html_url
+        $linkTitle = "GitHub pull request"
     }
     default
     {
@@ -65,4 +68,5 @@ if ($null -eq $type)
 Write-Output "::set-output name=summary::$summary"
 Write-Output "::set-output name=json-description::$($description | ConvertTo-Json)"
 Write-Output "::set-output name=type::$type"
-Write-Output "::set-output name=link::$link"
+Write-Output "::set-output name=link-url::$linkUrl"
+Write-Output "::set-output name=link-title::$linkUrlTitle"
