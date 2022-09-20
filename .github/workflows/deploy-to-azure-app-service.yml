@@ -130,7 +130,7 @@ jobs:
 
     - name: Restore
       run: |
-        dotnet restore --packages .nuget --runtime win-x86 -p:PublishReadyToRun=true
+        dotnet restore --packages .nuget --runtime win-x86 -p:PublishReadyToRun=true --verbosity ${{ inputs.build-verbosity }}
 
     - name: Publish
       run: >
