@@ -136,7 +136,7 @@ jobs:
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
         --output '${{ inputs.build-directory }}/Published' --no-build --no-restore --verbosity ${{ inputs.build-verbosity }}
-        --runtime win-x86  -p:PublishReadyToRun=true -p:PublishTrimmed=true
+        --runtime win-x86  -p:PublishReadyToRun=true -p:PublishTrimmed=true --self-contained true
 
     - name: Login to Azure
       # v1
