@@ -63,6 +63,6 @@ if ($null -eq $type)
 }
 
 Write-Output "::set-output name=summary::$summary"
-Write-Output "::set-output name=jsonDescription::$($description | ConvertTo-Json)"
+Write-Output "::set-output name=json-description::$($description | ConvertTo-Json)"
 Write-Output "::set-output name=type::$type"
 Write-Output "::set-output name=link::$link"

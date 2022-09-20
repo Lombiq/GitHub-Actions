@@ -94,7 +94,7 @@ runs:
         project: ${{ env.JIRA_PROJECT_KEY }}
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
-        description: ${{ fromJSON(steps.issue-details.outputs.jsonDescription) }}
+        description: ${{ fromJSON(steps.issue-details.outputs.json-description) }}
         fields: ${{ steps.issue-details.outputs.fields }}
 
     - name: Add Remote Link to Jira Issue
