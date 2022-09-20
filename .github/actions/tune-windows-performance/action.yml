@@ -5,6 +5,11 @@ description: >
 runs:
   using: "composite"
   steps:
-    - name: Disable Windows Defender
+    - name: Setup Scripts
       shell: pwsh
-      run: Set-MpPreference -DisableRealtimeMonitoring $true
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
+    - name: Initialize Windows Settings
+      shell: pwsh
+      run: Initialize-WindowsSettings
