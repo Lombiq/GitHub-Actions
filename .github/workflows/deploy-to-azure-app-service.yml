@@ -128,6 +128,10 @@ jobs:
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
 
+    - name: Restore
+      run: |
+        dotnet restore --packages .nuget --runtime win-x86
+
     - name: Publish
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
