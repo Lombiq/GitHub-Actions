@@ -118,24 +118,10 @@ jobs:
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
-    - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
-      with:
-        directory: ${{ inputs.build-directory }}
-        verbosity: ${{ inputs.build-verbosity }}
-        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
-        enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
-        enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
-        cache-version: ${{ inputs.build-cache-version }}
-
-    - name: Restore
-      run: |
-        dotnet restore --packages .nuget --runtime win-x86 -p:PublishReadyToRun=true --verbosity ${{ inputs.build-verbosity }}
-
-    - name: Publish
+    - name: Build and Publish
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
-        --output '${{ inputs.build-directory }}/Published' --no-build --no-restore --verbosity ${{ inputs.build-verbosity }}
+        --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
         --runtime win-x86  -p:PublishReadyToRun=true --self-contained true
 
     - name: Login to Azure
