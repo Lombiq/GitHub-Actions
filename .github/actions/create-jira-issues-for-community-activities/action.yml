@@ -106,7 +106,10 @@ runs:
           --user '${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}' `
           --header 'Accept: application/json' `
           --header 'Content-Type: application/json' `
-          --fail-with-body `
+          # Note that while --fail will fail the command if the request fails, it won't show the server output. Thus,
+          # remove for debugging. --fail-with-body provides that too, but is only available under curl >=7.76.0 which is
+          # not yet available for GitHub Actions, see https://github.com/Lombiq/GitHub-Actions/issues/53.
+          --fail `
           --data '{
                 \"object\": {
                     \"url\":\"${{ steps.issue-details.outputs.link-url }}\",
