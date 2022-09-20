@@ -2,4 +2,4 @@
 # dynamic data is needed. Doing the below just won't work in PS, piping the stdout to diskpart only works from the CMD.
 $vhdxPath = Join-Path $Env:GITHUB_WORKSPACE Workspace.vhdx
 Write-Output $vhdxPath
-cmd.exe /c "(echo create vdisk file=\"$vhdxPath\" maximum=10240 type=expandable) | diskpart"
+cmd.exe /c "(echo create vdisk file='$vhdxPath' maximum=10240 type=expandable) | diskpart"
