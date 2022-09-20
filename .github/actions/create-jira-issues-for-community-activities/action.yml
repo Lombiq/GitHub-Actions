@@ -106,6 +106,7 @@ runs:
           --user '${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}' `
           --header 'Accept: application/json' `
           --header 'Content-Type: application/json' `
+          --fail-with-body `
           --data '{
                 \"object\": {
                     \"url\":\"${{ steps.issue-details.outputs.link-url }}\",
