@@ -89,6 +89,10 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
+    - name: Tune Windows performance
+      if: runner.os == 'Windows'
+      uses: Lombiq/GitHub-Actions/.github/actions/tune-windows-performance@issue/OSOE-156
+
     - uses: actions/checkout@v3
       with:
         submodules: 'recursive'

@@ -1,0 +1,12 @@
+name: Tune Windows performance
+description: >
+  Employs various tricks to increase build performance under Windows. Add this as the very first step in your workflow.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Disable Windows Defender
+      shell: pwsh
+      run: |
+        Set-MpPreference -DisableRealtimeMonitoring $true
+        New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 1 -PropertyType DWORD -Force
