@@ -82,6 +82,13 @@ on:
         required: true
         type: string
         description: The URL of the web app slot.
+      web-project-path:
+        required: false
+        type: string
+        default: "*.Web.csproj"
+        description: >
+          The path of the web project file to be processed. The value is given to PowerShell's `Get-ChildItem` cmdlet
+          as-is, so grepping is still possible but a name with spaces must be escaped separately.
 
 jobs:
   deploy:
@@ -122,8 +129,9 @@ jobs:
         cache-version: ${{ inputs.build-cache-version }}
 
     - name: Publish
-      run: |
-        dotnet publish --configuration Release --output '${{ inputs.build-directory }}/Published' --no-build
+      run: >
+        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
+        --output '${{ inputs.build-directory }}/Published' --no-build
 
     - name: Login to Azure
       # v1
