@@ -12,4 +12,4 @@ runs:
 
     - name: Initialize ext4 Drive
       shell: pwsh
-      run: Initialize-WindowsSettings
+      run: Initialize-Ext4Drive
