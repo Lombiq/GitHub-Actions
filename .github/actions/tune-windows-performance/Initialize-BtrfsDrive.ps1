@@ -6,8 +6,10 @@
 $vhdxPath = Join-Path $Env:GITHUB_WORKSPACE Workspace.vhdx
 
 # Diskpart uses an interactive mode. We thus use /s to feed a script to it.
+# You get 14 GB of storage space on GitHub-hosted runners, so erring on the safe side with 13 GB max size, see:
+# https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
 @"
-create vdisk file='$vhdxPath' maximum=10240 type=expandable
+create vdisk file='$vhdxPath' maximum=13312 type=expandable
 select vdisk file='$vhdxPath'
 attach vdisk
 list disk
@@ -48,5 +50,18 @@ assign letter=Q
 
 diskpart /s DiskpartCommands.txt
 
-mkbtrfs Q: MyLabel
-$driveLetter = (Get-Volume -FileSystemLabel MasterSword).DriveLetter
+# This will change the drive letter to the next available one.
+Write-Output "Starting Btrfs formatting."
+mkbtrfs Q: BtrfsDrive
+Write-Output "Finished Btrfs formatting."
+
+# For some reason, the drive is not immediately available once the above finishes.
+$i = 0;
+while ($i -lt 10 -and (Get-Volume | Where-Object {$_.FileSystemLabel -eq "BtrfsDrive"}).Length -eq 0)
+{
+    Start-Sleep -Seconds 1
+}
+
+
+$driveLetter = (Get-Volume -FileSystemLabel "BtrfsDrive").DriveLetter
+New-Item -Path Workspace -ItemType SymbolicLink -Value "$($driveLetter):\\"
