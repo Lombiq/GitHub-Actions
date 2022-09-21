@@ -1,6 +1,8 @@
 name: Tune Windows performance
 description: >
   Employs various tricks to increase build performance under Windows. Add this as the very first step in your workflow.
+  Note that this will run for about 1-2 minutes on the 2-core GitHub-hosted runners (the majority of this is installing
+  WinBtrfs with Chocolatey). So, only use it if the overall savings in build time are greater.
 
 runs:
   using: "composite"
