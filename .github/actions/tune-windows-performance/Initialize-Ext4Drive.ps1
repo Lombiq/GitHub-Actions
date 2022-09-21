@@ -3,7 +3,7 @@
 # to diskpart. For the same reason, we can't mount ext4 drives from WSL2. The only option for a non-Windows filesystem
 # is thus Btrfs with WinBtrfs. See: https://github.com/Lombiq/GitHub-Actions/issues/32.
 
-$vhdxPath = "D:\Workspace.vhdx"
+$vhdxPath = Join-Path $Env:GITHUB_WORKSPACE Workspace.vhdx
 
 # Diskpart uses an interactive mode. We thus use /s to feed a script to it.
 @"
