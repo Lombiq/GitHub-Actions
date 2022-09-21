@@ -105,7 +105,7 @@ jobs:
         }
         else
         {
-          Invoke-Expression ($publish-command-base + " --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --self-contained false")
+          Invoke-Expression ("$publish-command-base" + " --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --self-contained false")
         }
 
     - name: Login to Azure
