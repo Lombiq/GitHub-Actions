@@ -100,7 +100,7 @@ jobs:
     - name: Build and Publish
       if: ${{ github.event.inputs.runtime == '' }}
       run: |
-        Invoke-Expression $publish-command-base
+        Invoke-Expression "$publish-command-base"
 
     - name: Build and Publish in Ready to Run mode
       if: ${{ github.event.inputs.runtime != '' }}
