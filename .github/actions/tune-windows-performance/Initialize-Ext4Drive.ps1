@@ -31,4 +31,6 @@ foreach ($line in $listDiskOutput)
 
 # The first 4 lines are empty and the command's output header.
 $numberOfDisks = $listDiskOutput.Length - $lineIndex - 4
-Write-Output "Number of disks:$numberOfDisks"
+$diskIndex = $numberOfDisks - 1
+
+wsl --mount "\\.\PhysicalDrive$diskIndex" --bare
