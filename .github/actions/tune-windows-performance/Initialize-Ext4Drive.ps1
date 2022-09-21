@@ -16,7 +16,6 @@ $output = & diskpart /s DiskpartCommands.txt
 # For some reason, Split() won't work with the "DiskPart successfully attached the virtual disk file." string, just new
 # lines.
 $listDiskOutput = $output.Split([Environment]::NewLine)
-Write-Output "$($listDiskOutput[3]) KKK"
 
 $lineIndex = 0
 foreach ($line in $listDiskOutput)
