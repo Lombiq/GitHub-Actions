@@ -100,12 +100,12 @@ jobs:
     - name: Build and Publish
       if: ${{ github.event.inputs.runtime == '' }}
       run: |
-        Invoke-Expression "$publish-command-base"
+        Invoke-Expression ${{ env.publish-command-base }}
 
     - name: Build and Publish in Ready to Run mode
       if: ${{ github.event.inputs.runtime != '' }}
       run: |
-        Invoke-Expression ("$publish-command-base" + " --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --self-contained false")
+        Invoke-Expression (${{ env.publish-command-base }} + " --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --self-contained false")
 
     - name: Login to Azure
       # v1
