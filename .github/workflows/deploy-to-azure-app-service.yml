@@ -81,7 +81,7 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     env:
-      publish-command-base: >
+      publish-command-base: >-
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
         --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
     steps:
