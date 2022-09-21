@@ -110,7 +110,7 @@ jobs:
       if: ${{ inputs.verify-dotnet-consolidation }}
       uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
       with:
-        directory: ${{ inputs.build-directory }}
+        directory: wd/${{ inputs.build-directory }}
 
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
@@ -118,7 +118,7 @@ jobs:
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
-        directory: ${{ inputs.build-directory }}
+        directory: wd/${{ inputs.build-directory }}
         verbosity: ${{ inputs.build-verbosity }}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
@@ -131,11 +131,11 @@ jobs:
     - name: Set up Azurite
       uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
       with:
-        location: ${{ inputs.build-directory}}
+        location: wd/${{ inputs.build-directory}}
 
     - name: Tests
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
-        build-directory: ${{ inputs.build-directory}}
+        build-directory: wd/${{ inputs.build-directory}}
         test-verbosity: ${{ inputs.build-verbosity}}
         ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
