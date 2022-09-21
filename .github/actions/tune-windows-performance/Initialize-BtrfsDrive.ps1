@@ -40,5 +40,3 @@ while ($i -lt 10 -and (Get-Volume | Where-Object {$_.FileSystemLabel -eq "BtrfsD
 
 $driveLetter = (Get-Volume -FileSystemLabel "BtrfsDrive").DriveLetter
 New-Item -Path "Workspace" -ItemType SymbolicLink -Value "$($driveLetter):\\"
-
-Get-Item "D:\a\Open-Source-Orchard-Core-Extensions\Open-Source-Orchard-Core-Extensions\Workspace"
