@@ -119,7 +119,7 @@ jobs:
     - name: Build and Publish in Ready to Run mode
       if: ${{ inputs.runtime != '' }}
       run: |
-        Invoke-Expression "${{ env.publish-command-base }} --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true"
+        Invoke-Expression "${{ env.publish-command-base }} --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --self-contained true"
 
     - name: Login to Azure
       # v1
