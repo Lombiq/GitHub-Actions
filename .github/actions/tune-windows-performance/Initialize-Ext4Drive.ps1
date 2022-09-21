@@ -1,9 +1,11 @@
 # Since Hyper-V is not enabled deliberately (https://github.com/actions/runner-images/pull/2525) and can't be enabled
 # without a reboot, which is not possible on GitHub Actions runners, we can't use New-VHD and Mount-VHD. Thus, resorting
-# to diskpart.
-# Diskpart uses an interactive mode. We thus use /s to feed a script to it.
+# to diskpart. For the same reason, we can't mount ext4 drives from WSL2. The only option for a non-Windows filesystem
+# is thus Btrfs with WinBtrfs. See: https://github.com/Lombiq/GitHub-Actions/issues/32.
+
 $vhdxPath = "D:\Workspace.vhdx"
 
+# Diskpart uses an interactive mode. We thus use /s to feed a script to it.
 @"
 create vdisk file='$vhdxPath' maximum=10240 type=expandable
 select vdisk file='$vhdxPath'
@@ -12,6 +14,8 @@ list disk
 "@ > DiskpartCommands.txt
 
 $output = & diskpart /s DiskpartCommands.txt
+
+Write-Output $output
 
 # For some reason, Split() won't work with the "DiskPart successfully attached the virtual disk file." string, just new
 # lines.
