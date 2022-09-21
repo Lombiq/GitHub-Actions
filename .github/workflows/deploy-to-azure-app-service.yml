@@ -60,6 +60,10 @@ on:
         description: >
           The path of the web project file to be processed. The value is given to PowerShell's `Get-ChildItem` cmdlet
           as-is, so grepping is still possible but a name with spaces must be escaped separately.
+      runtime:
+        required: false
+        type: string
+        description: If specified, the web app gets published using this runtime and in "ready to run" mode.
 
 jobs:
   deploy:
@@ -90,10 +94,19 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Publish
-      run: >
-        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
-        --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
-        --runtime win-x86 -p:PublishReadyToRun=true --self-contained false
+      env:
+        publish-command-base: >
+          dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
+          --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
+      run: |
+        if ([string]::IsNullOrEmpty(${{ inputs.runtime }}))
+        {
+          Invoke-Expression $publish-command-base
+        }
+        else
+        {
+          Invoke-Expression ($publish-command-base + " --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --self-contained false")
+        }
 
     - name: Login to Azure
       # v1
