@@ -117,12 +117,14 @@ jobs:
 
 If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/), the `repo` input can be omitted, because the above is its default value. Otherwise, use your parent repository's address in the `{owner}/{repo_name}` format.
 
+Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
+
 ## Deploy to Azure App Service
 
-This workflow builds a .NET solution with static code analysis, and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). Example _deploy.yml_:
+This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). Example _deploy-to-azure-app-service.yml_:
 
 ```yaml
-name: Deploy
+name: Deploy to Azure App Service
 
 on:
   workflow_dispatch:
@@ -130,7 +132,7 @@ on:
 jobs:
   call-deploy-workflow:
     name: Deploy to Azure App Service
-    uses: Lombiq/GitHub-Actions/.github/workflows/deploy.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/deploy-to-azure-app-service.yml@dev
     with:
       timeout-minutes: 60
       app-name: AppName
@@ -141,8 +143,6 @@ jobs:
       AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
 ```
-
-Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
 
 ## Jira issue creation for community activities workflow
 
