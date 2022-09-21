@@ -32,35 +32,6 @@ on:
         type: string
         default: quiet
         description: Verbosity parameter for dotnet build.
-      build-enable-code-analysis:
-        required: false
-        type: string
-        default: "true"
-        description: Indicates whether to enable static code analysis during dotnet build.
-      build-enable-nuget-caching:
-        required: false
-        type: string
-        default: "false"
-        description: >
-          If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
-          packages, but negligible or even slower if you only have a handful.
-      build-enable-npm-caching:
-        required: false
-        type: string
-        default: "false"
-        description: >
-          If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
-          but negligible or even slower if you only have a handful.
-      build-cache-version:
-        required: false
-        type: string
-        default: "0"
-        description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
-          easiest current way to force "clear" the cache
-          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
-          (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
-          API.
       timeout-minutes:
         required: false
         type: number
@@ -122,7 +93,7 @@ jobs:
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
         --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
-        --runtime win-x86  -p:PublishReadyToRun=true --self-contained true
+        --runtime win-x86 -p:PublishReadyToRun=true --self-contained false
 
     - name: Login to Azure
       # v1
