@@ -97,6 +97,20 @@ jobs:
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
+    - name: Restore NodeJS Packages (.NET)
+      run: |
+        if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
+        {
+          Write-Output "::group::Gulp Extensions found. It needs to be explicitly built before the solution."
+
+          $startTime = [DateTime]::Now
+          dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj --verbosity ${{ inputs.build-verbosity }}
+          $endTime = [DateTime]::Now
+
+          Write-Output ("Gulp Extensions build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+          Write-Output "::endgroup::"
+        }
+
     - name: Build and Publish
       if: ${{ inputs.runtime == '' }}
       run: |
