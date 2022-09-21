@@ -33,6 +33,5 @@ foreach ($line in $listDiskOutput)
 $numberOfDisks = $listDiskOutput.Length - $lineIndex - 4
 $diskIndex = $numberOfDisks - 1
 
-wsl --install
-wsl --list --online
+wsl --set-default-version 2
 wsl --mount "\\.\PhysicalDrive$diskIndex" --bare
