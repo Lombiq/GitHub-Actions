@@ -39,4 +39,4 @@ while ($i -lt 10 -and (Get-Volume | Where-Object {$_.FileSystemLabel -eq "BtrfsD
 }
 
 $driveLetter = (Get-Volume -FileSystemLabel "BtrfsDrive").DriveLetter
-New-Item -Path Workspace -ItemType SymbolicLink -Value "$($driveLetter):\\"
+New-Item -Path "Workspace" -ItemType SymbolicLink -Value "$($driveLetter):\\"
