@@ -10,6 +10,6 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
-    - name: Initialize ext4 Drive
+    - name: Initialize Btrfs Drive
       shell: pwsh
-      run: Initialize-Ext4Drive
+      run: Initialize-BtrfsDrive

@@ -36,6 +36,17 @@ foreach ($line in $listDiskOutput)
 $numberOfDisks = $listDiskOutput.Length - $lineIndex - 4
 $diskIndex = $numberOfDisks - 1
 
-wsl --status
-wsl --set-default-version 2
-wsl --mount "\\.\PhysicalDrive$diskIndex" --bare
+# mkbtrfs needs a drive letter to format, but we can't mount the drive until it's formatted, and diskpart can't format
+# with btrfs... So, formatting with NTFS first.
+@"
+select vdisk file='$vhdxPath'
+clean
+create partition primary
+format fs=ntfs
+assign letter=Q
+"@ > DiskpartCommands.txt
+
+diskpart /s DiskpartCommands.txt
+
+mkbtrfs Q: MyLabel
+$driveLetter = (Get-Volume -FileSystemLabel MasterSword).DriveLetter
