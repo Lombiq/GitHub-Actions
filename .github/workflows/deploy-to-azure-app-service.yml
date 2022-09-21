@@ -98,12 +98,12 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Publish
-      if: ${{ github.event.inputs.runtime == '' }}
+      if: ${{ inputs.runtime == '' }}
       run: |
         Invoke-Expression "${{ env.publish-command-base }}"
 
     - name: Build and Publish in Ready to Run mode
-      if: ${{ github.event.inputs.runtime != '' }}
+      if: ${{ inputs.runtime != '' }}
       run: |
         Invoke-Expression ("${{ env.publish-command-base }}" + " --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --no-self-contained")
 
