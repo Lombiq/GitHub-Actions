@@ -5,6 +5,8 @@
 
 $vhdxPath = Join-Path $Env:GITHUB_WORKSPACE Workspace.vhdx
 
+choco install winbtrfs
+
 # Diskpart uses an interactive mode. We thus use /s to feed a script to it.
 # You get 14 GB of storage space on GitHub-hosted runners, so erring on the safe side with 13 GB max size, see:
 # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
