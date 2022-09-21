@@ -90,7 +90,7 @@ jobs:
     timeout-minutes: ${{ matrix.timeout-minutes }}
     defaults:
       run:
-        working-directory: ./Workspace
+        working-directory: ./wd
     steps:
     - name: Tune Windows performance
       if: runner.os == 'Windows'
@@ -99,7 +99,7 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: 'recursive'
-        path: 'Workspace'
+        path: 'wd'
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev

@@ -3,6 +3,9 @@
 # to diskpart. For the same reason, we can't mount ext4 drives from WSL2. The only option for a non-Windows filesystem
 # is thus Btrfs with WinBtrfs. See: https://github.com/Lombiq/GitHub-Actions/issues/32.
 
+# Since the working-directory is configured as wd, we need to go up one directory to create it.
+cd ..
+
 $vhdxPath = Join-Path $Env:GITHUB_WORKSPACE Workspace.vhdx
 
 choco install winbtrfs
@@ -39,4 +42,5 @@ while ($i -lt 10 -and (Get-Volume | Where-Object {$_.FileSystemLabel -eq "BtrfsD
 }
 
 $driveLetter = (Get-Volume -FileSystemLabel "BtrfsDrive").DriveLetter
-New-Item -Path "Workspace" -ItemType Junction -Value "$($driveLetter):\\"
+# Short folder name not to have Windows long path issues. "wd" as in working directory.
+New-Item -Path "wd" -ItemType SymbolicLink -Value "$($driveLetter):\\"
