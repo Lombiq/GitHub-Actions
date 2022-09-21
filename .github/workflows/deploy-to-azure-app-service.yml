@@ -80,6 +80,10 @@ jobs:
         timeout-minutes:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
+    env:
+      publish-command-base: >
+        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
+        --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -94,19 +98,14 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Publish
-      env:
-        publish-command-base: >
-          dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
-          --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
+      if: ${{ github.event.inputs.runtime == '' }}
       run: |
-        if ([string]::IsNullOrEmpty(${{ inputs.runtime }}))
-        {
-          Invoke-Expression $publish-command-base
-        }
-        else
-        {
-          Invoke-Expression ("$publish-command-base" + " --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --self-contained false")
-        }
+        Invoke-Expression $publish-command-base
+
+    - name: Build and Publish in Ready to Run mode
+      if: ${{ github.event.inputs.runtime != '' }}
+      run: |
+        Invoke-Expression ("$publish-command-base" + " --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --self-contained false")
 
     - name: Login to Azure
       # v1
