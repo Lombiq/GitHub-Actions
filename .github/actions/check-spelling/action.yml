@@ -38,6 +38,6 @@ runs:
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       post_comment: 1
-      spell_check_this: Lombiq/GitHub-Actions@e07c35a1ddc7ab3c7c50e82baf05f4fb46bea3fc
+      spell_check_this: lombiq/github-actions@e07c35a1ddc7ab3c7c50e82baf05f4fb46bea3fc
       debug: 1
       # config: ${{ inputs.config }}
