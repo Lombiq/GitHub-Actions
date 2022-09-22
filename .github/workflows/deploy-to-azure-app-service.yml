@@ -136,7 +136,7 @@ jobs:
 
     # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
     # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
-    # take advantage of the dotnet CLI tolerating the usage the of equal sign.
+    # take advantage of the dotnet CLI tolerating the usage of the equal sign.
     - name: Set up runtime option
       run: |
         $runtime_option = "runtime-option="
