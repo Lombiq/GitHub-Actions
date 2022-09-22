@@ -1,5 +1,6 @@
-﻿param (
+param (
     [string] $Solution,
+    [string] $WebProject,
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
     [string] $Version,
@@ -33,6 +34,8 @@ $buildSwitches = ConvertTo-Array @"
     $Switches
 "@
 
+$applicationToBeBuilt =  if ([string]::IsNullOrEmpty($WebProject)) {$Solution} else {$WebProject}
+
 [array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | % { $_.Split(':')[0] } | Sort-Object
 $noErrors = $expectedErrorCodes.Count -eq 0
 
@@ -53,7 +56,7 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 # will still run on the projects that have it.
 dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $Solution | Out-Null || bash -c 'true'
 
-Write-Output "Building solution with ``dotnet build $Solution $($buildSwitches -join " ")``."
+Write-Output "Building solution/web project with ``dotnet build $applicationToBeBuilt $($buildSwitches -join " ")``."
 
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
@@ -107,7 +110,7 @@ if ($expectedErrorCodes)
         exit 1
     }
 
-    Write-Output "Verification complete, the solution only has the expected errors!"
+    Write-Output "Verification complete, the solution/web project only has the expected errors!"
     exit 0
 }
 

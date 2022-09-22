@@ -85,7 +85,7 @@ on:
       web-project-path:
         required: false
         type: string
-        default: "*.Web.csproj"
+        default: "./*/*Web/*.Web.csproj"
         description: >
           The path of the web project file to be processed. The value is given to PowerShell's `Get-ChildItem` cmdlet
           as-is, so grepping is still possible but a name with spaces must be escaped separately.
@@ -154,7 +154,7 @@ jobs:
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
-        solution-path: ${{ inputs.web-project-path }}
+        web-project-path: ${{ inputs.web-project-path }}
         dotnet-build-switches: |
           --self-contained
           ${{ inputs.self-contained }}
@@ -163,7 +163,9 @@ jobs:
 
     - name: Publish
       run: >
-        Get-Location
+        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release --no-build
+        --output '${{ inputs.build-directory }}/Published' --verbosity minimal --self-contained ${{ inputs.self-contained }}
+        -p:PublishReadyToRun=${{ inputs.ready-to-run }} ${{ env.build-switch }}
         
     - name: Login to Azure
       # v1.4.5
