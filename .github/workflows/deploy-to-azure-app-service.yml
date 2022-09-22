@@ -146,7 +146,7 @@ jobs:
         echo $runtime_switch >> $GITHUB_ENV
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@NEST-316
       with:
         directory: ${{ inputs.build-directory }}
         verbosity: minimal
