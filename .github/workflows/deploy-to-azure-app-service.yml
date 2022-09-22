@@ -146,7 +146,7 @@ jobs:
           $runtime_option = $runtime_option + "--runtime=" + "${{ inputs.runtime }}"
         }
 
-        echo $runtime_option >> $GITHUB_ENV
+        $runtime_option >> $Env:GITHUB_ENV
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-316
