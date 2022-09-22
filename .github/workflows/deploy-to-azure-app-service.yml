@@ -162,15 +162,14 @@ jobs:
           --self-contained
           ${{ inputs.self-contained }}
           -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-          --runtime
-          win-x86
+          ${{ env.runtime-option }}
 
     - name: Publish
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release --no-build
         --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
         --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-        --runtime win-x86
+        ${{ env.runtime-option }}
         
     - name: Login to Azure
       # v1.4.5
