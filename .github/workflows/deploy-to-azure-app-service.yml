@@ -156,9 +156,10 @@ jobs:
         cache-version: ${{ inputs.build-cache-version }}
         solution-path: ${{ inputs.web-project-path }}
         dotnet-build-switches: |
-          -p:PublishReadyToRun=${{ inputs.ready-to-run }}
+          --runtime win-x86
           --self-contained ${{ inputs.self-contained }}
-          ${{ env.runtime-switch }}
+          -p:PublishReadyToRun=${{ inputs.ready-to-run }}
+
 
     - name: Publish
       run: >
