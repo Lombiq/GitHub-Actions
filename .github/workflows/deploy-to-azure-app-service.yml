@@ -157,7 +157,7 @@ jobs:
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
-        solution-or-web-project-path: ${{ inputs.web-project-path }}
+        solution-or-project-path: ${{ inputs.web-project-path }}
         dotnet-build-switches: |
           --self-contained
           ${{ inputs.self-contained }}
@@ -166,7 +166,7 @@ jobs:
 
     - name: Publish
       run: >
-        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release --no-build
+        dotnet publish (Get-ChildItem ${{ inputs.project-path }}).FullName --configuration Release --no-build
         --output '${{ inputs.build-directory }}/Published' --verbosity minimal --self-contained ${{ inputs.self-contained }}
         -p:PublishReadyToRun=${{ inputs.ready-to-run }} ${{ env.runtime-option }}
         
