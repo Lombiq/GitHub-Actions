@@ -164,8 +164,10 @@ jobs:
     - name: Publish
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release --no-build
-        --output '${{ inputs.build-directory }}/Published' --verbosity minimal
-        --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=${{ inputs.ready-to-run }} ${{ env.build-switch }}
+        --output '${{ inputs.build-directory }}/Published' --verbosity minimal --self-contained ${{ inputs.self-contained }}
+        -p:PublishReadyToRun=${{ inputs.ready-to-run }} ${{ env.build-switch }}
+           |
+        Get-Location
         
     - name: Login to Azure
       # v1.4.5
