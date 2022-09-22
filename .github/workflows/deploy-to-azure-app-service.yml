@@ -161,7 +161,6 @@ jobs:
           --self-contained
           ${{ inputs.self-contained }}
           -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-          ${{ env.runtime-option }}
 
     - name: Publish
       run: >
