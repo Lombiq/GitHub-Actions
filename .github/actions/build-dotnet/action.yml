@@ -42,21 +42,14 @@ inputs:
     required: false
     default: ""
     description: Additional command line switches given to `dotnet build`. You can split these into multiple lines.
-  solution-path:
+  solution-or-web-project-path:
     required: false
     default: "*.sln"
     description: >
-      The path of the solution file to be built. If you have exactly one .sln file in the current directory then this
+      The path of the solution file or web app to be built. If you have exactly one .sln file in the current directory then this
       can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be specified." error
       that is thrown when the `*.sln` wildcard results in multiple files. The value is given to PowerShell's
       `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with spaces must be escaped separately.
-  web-project-path:
-    required: false
-    default: ""
-    description: >
-      The path of the web project file to be built. The value is given to PowerShell's `Get-ChildItem` cmdlet
-      as-is, so grepping is still possible but a name with spaces must be escaped separately. If specified this will be
-      built instead of the solution.
   expected-code-analysis-errors:
     required: false
     default: ""
@@ -129,8 +122,7 @@ runs:
         '@
 
         $switches = @{
-            Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
-            WebProject = (Get-ChildItem ${{ inputs.web-project-path }}).FullName
+            Solution = (Get-ChildItem ${{ inputs.solution-or-web-project-path }}).FullName
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"
@@ -142,4 +134,4 @@ runs:
         Build-DotNetSolution @switches
         $endTime = [DateTime]::Now
 
-        Write-Output ("Solution/web project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+        Write-Output ("Solution or web app build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
