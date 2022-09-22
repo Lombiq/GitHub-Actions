@@ -159,7 +159,7 @@ jobs:
         cache-version: ${{ inputs.build-cache-version }}
         dotnet-build-switches: |
           --self-contained
-          ${{ inputs.self-contained }}
+          false
           -p:PublishReadyToRun=${{ inputs.ready-to-run }}
 
     - name: Publish
