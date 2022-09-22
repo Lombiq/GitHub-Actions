@@ -1,4 +1,4 @@
-﻿name: Set up SQL Server
+name: Set up SQL Server
 description: Sets up SQL Server with Lombiq-recommended defaults.
 
 runs:
@@ -8,6 +8,7 @@ runs:
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
     - name: Set up SQL Server
       shell: pwsh
       run: Initialize-SqlServer
