@@ -149,12 +149,12 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory }}
-        verbosity: ${{ inputs.build-verbosity }}
+        verbosity: minimum
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
-        solution-path: ${{ inputs.web-project-path }}
+        solution-path: "*.Web.csproj"
         dotnet-build-switches: |
           --self-contained
           ${{ inputs.self-contained }}
