@@ -167,7 +167,7 @@ jobs:
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release --no-build
         --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
-        --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=false
+        --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=false --framework net6.0
         ${{ env.runtime-option }}
         
     - name: Login to Azure
