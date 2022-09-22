@@ -32,6 +32,35 @@ on:
         type: string
         default: quiet
         description: Verbosity parameter for dotnet build.
+      build-enable-code-analysis:
+        required: false
+        type: string
+        default: "true"
+        description: Indicates whether to enable static code analysis during dotnet build.
+      build-enable-nuget-caching:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
+          packages, but negligible or even slower if you only have a handful.
+      build-enable-npm-caching:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
+          but negligible or even slower if you only have a handful.
+      build-cache-version:
+        required: false
+        type: string
+        default: "0"
+        description: >
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
+          easiest current way to force "clear" the cache
+          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
+          (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
+          API.
       timeout-minutes:
         required: false
         type: number
@@ -44,7 +73,7 @@ on:
       slot-name:
         required: true
         type: string
-        description: Also what you see at the top of the blade when you open the slot, before the app name in parenthesis.
+        description: What you see at the top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
       resource-group-name:
         required: true
         type: string
@@ -63,7 +92,19 @@ on:
       runtime:
         required: false
         type: string
-        description: If specified, the web app gets published using this runtime and in "ready to run" mode.
+        description: Publishes the application for a given runtime. If you use this option, use --self-contained or --no-self-contained also.
+      self-contained:
+        required: false
+        type: boolean
+        default: false
+        description: Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the target machine.
+      ready-to-run:
+        required: false
+        type: boolean
+        default: false
+        description: >
+          Compiles application assemblies as ReadyToRun (R2R) format. R2R is a form of ahead-of-time (AOT) compilation.
+          If ready to run is set to `true` the `runtime` input is needed.
 
 jobs:
   deploy:
@@ -80,10 +121,6 @@ jobs:
         timeout-minutes:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
-    env:
-      publish-command-base: >-
-        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release
-        --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -97,39 +134,47 @@ jobs:
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
-    - name: Restore NodeJS Packages (.NET)
+    - name: Set up runtime switch
       run: |
-        if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
+        $runtime-switch = "runtime-switch="
+
+        if(![string]::IsNullOrEmpty("${{ inputs.runtime }}"))
         {
-          Write-Output "::group::Gulp Extensions found. It needs to be explicitly built before the solution."
-
-          $startTime = [DateTime]::Now
-          dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj --verbosity ${{ inputs.build-verbosity }}
-          $endTime = [DateTime]::Now
-
-          Write-Output ("Gulp Extensions build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
-          Write-Output "::endgroup::"
+          $runtime-switch = $runtime-switch + "--runtime " + "${{ inputs.runtime }}"
         }
 
-    - name: Build and Publish
-      if: ${{ inputs.runtime == '' }}
-      run: |
-        Invoke-Expression "${{ env.publish-command-base }}"
+        echo runtime-switch >> $GITHUB_ENV
 
-    - name: Build and Publish in Ready to Run mode
-      if: ${{ inputs.runtime != '' }}
-      run: |
-        Invoke-Expression "${{ env.publish-command-base }} --runtime ${{ inputs.runtime }} -p:PublishReadyToRun=true --self-contained true"
+    - name: Build and Static Code Analysis
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      with:
+        directory: ${{ inputs.build-directory }}
+        verbosity: ${{ inputs.build-verbosity }}
+        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+        enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+        enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+        cache-version: ${{ inputs.build-cache-version }}
+        solution-path: ${{ inputs.web-project-path}}
+        dotnet-build-switches: |
+          --self-contained ${{ inputs.self-contained }}
+          -p:PublishReadyToRun=${{ inputs.ready-to-run }}
+          ${{ env.runtime-switch }}
 
+    - name: Publish
+      run: >
+        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release --no-build
+        --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
+        --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=${{ inputs.ready-to-run }} ${{ env.build-switch }}
+        
     - name: Login to Azure
-      # v1
+      # v1.4.5
       uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
       with:
         creds: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
     - name: Stop Web App Slot
-      # v1
+      # v1.1.0
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
       with:
         inlineScript: |
@@ -137,7 +182,7 @@ jobs:
         azPSVersion: latest
 
     - name: Deploy to Azure App Service
-      # v2
+      # v2.2.3
       uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
       with:
         app-name: ${{ inputs.app-name }}
@@ -146,7 +191,7 @@ jobs:
         package: ${{ inputs.build-directory }}/Published
 
     - name: Start Web App Slot
-      # v1
+      # v1.1.0
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
       with:
         inlineScript: |
