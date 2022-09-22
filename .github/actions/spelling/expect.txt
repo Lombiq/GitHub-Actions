@@ -87,3 +87,7 @@ localhost
 Lombiq
 mvc
 Uncomment
+appsettings
+htmlvalidate
+ndproj
+stylelintrc
