@@ -25,8 +25,7 @@ inputs:
     description: Configuration directory
     required: false
     type: string
-    # default: .github/actions/spelling
-    default: ''
+    default: .github/actions/spelling
 
 runs:
   using: "composite"
@@ -41,4 +40,4 @@ runs:
       post_comment: 1
       spell_check_this: https://github.com/Lombiq/GitHub-Actions/tree/issue/OSOE-158/spelling
       debug: 1
-      config: ${{ inputs.config }}
+      # config: ${{ inputs.config }}
