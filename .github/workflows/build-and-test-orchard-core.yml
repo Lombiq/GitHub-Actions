@@ -90,7 +90,7 @@ jobs:
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
     - name: Set up SQL Server
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/OSOE-156-buildjet
 
     - uses: actions/checkout@v3
       with:
