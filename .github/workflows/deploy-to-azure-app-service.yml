@@ -136,14 +136,14 @@ jobs:
 
     - name: Set up runtime switch
       run: |
-        $runtime-switch = "runtime-switch="
+        $runtime_switch = "runtime-switch="
 
         if(![string]::IsNullOrEmpty("${{ inputs.runtime }}"))
         {
-          $runtime-switch = $runtime-switch + "--runtime " + "${{ inputs.runtime }}"
+          $runtime_switch = $runtime_switch + "--runtime " + "${{ inputs.runtime }}"
         }
 
-        echo runtime-switch >> $GITHUB_ENV
+        echo $runtime_switch >> $GITHUB_ENV
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
