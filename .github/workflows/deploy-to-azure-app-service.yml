@@ -146,13 +146,13 @@ jobs:
           $runtime_option = $runtime_option + "--runtime=" + "${{ inputs.runtime }}"
         }
 
-        $runtime_option >> $Env:GITHUB_ENV
+        $runtime_option >> $env:GITHUB_ENV
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-316
       with:
         directory: ${{ inputs.build-directory }}
-        verbosity: minimal
+        verbosity: ${{ inputs.build-verbosity }}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
@@ -167,8 +167,9 @@ jobs:
     - name: Publish
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.project-path }}).FullName --configuration Release --no-build
-        --output '${{ inputs.build-directory }}/Published' --verbosity minimal --self-contained ${{ inputs.self-contained }}
-        -p:PublishReadyToRun=${{ inputs.ready-to-run }} ${{ env.runtime-option }}
+        --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
+        --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=${{ inputs.ready-to-run }}
+        ${{ env.runtime-option }}
         
     - name: Login to Azure
       # v1.4.5
