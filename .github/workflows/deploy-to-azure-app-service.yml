@@ -140,7 +140,7 @@ jobs:
 
         if(![string]::IsNullOrEmpty("${{ inputs.runtime }}"))
         {
-          $runtime_switch = $runtime_switch + "--runtime " + "${{ inputs.runtime }}"
+          $runtime_switch = $runtime_switch + "--runtime=" + "${{ inputs.runtime }}"
         }
 
         echo $runtime_switch >> $GITHUB_ENV
@@ -149,7 +149,7 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory }}
-        verbosity: minimum
+        verbosity: minimal
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
