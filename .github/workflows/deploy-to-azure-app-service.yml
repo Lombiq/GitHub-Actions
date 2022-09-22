@@ -161,14 +161,13 @@ jobs:
         dotnet-build-switches: |
           --self-contained
           ${{ inputs.self-contained }}
-          -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-          ${{ env.runtime-option }}
+          -p:PublishReadyToRun=false
 
     - name: Publish
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release --no-build
         --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
-        --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=${{ inputs.ready-to-run }}
+        --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=false
         ${{ env.runtime-option }}
         
     - name: Login to Azure
