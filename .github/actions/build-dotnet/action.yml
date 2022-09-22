@@ -41,7 +41,7 @@ inputs:
   dotnet-build-switches:
     required: false
     default: ""
-    description: Additional command line switches given to `dotnet build`. You can split these into multiple lines.
+    description: Additional command line switches given to `dotnet build`. You must split these into multiple lines, even the parameter value.
   solution-or-web-project-path:
     required: false
     default: "*.sln"

@@ -134,16 +134,19 @@ jobs:
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
-    - name: Set up runtime switch
+    # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
+    # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
+    # take advantage of the dotnet CLI tolerating the usage the of equal sign.
+    - name: Set up runtime option
       run: |
-        $runtime_switch = "runtime-switch="
+        $runtime_option = "runtime-option="
 
         if(![string]::IsNullOrEmpty("${{ inputs.runtime }}"))
         {
-          $runtime_switch = $runtime_switch + "--runtime=" + "${{ inputs.runtime }}"
+          $runtime_option = $runtime_option + "--runtime=" + "${{ inputs.runtime }}"
         }
 
-        echo $runtime_switch >> $GITHUB_ENV
+        echo $runtime_option >> $GITHUB_ENV
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-316
@@ -159,13 +162,13 @@ jobs:
           --self-contained
           ${{ inputs.self-contained }}
           -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-          ${{ env.runtime-switch }}
+          ${{ env.runtime-option }}
 
     - name: Publish
       run: >
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release --no-build
         --output '${{ inputs.build-directory }}/Published' --verbosity minimal --self-contained ${{ inputs.self-contained }}
-        -p:PublishReadyToRun=${{ inputs.ready-to-run }} ${{ env.build-switch }}
+        -p:PublishReadyToRun=${{ inputs.ready-to-run }} ${{ env.runtime-option }}
         
     - name: Login to Azure
       # v1.4.5
