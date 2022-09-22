@@ -37,10 +37,10 @@ jobs:
 
 ## Build .NET solution workflow
 
-Builds a .NET solution with static code analysis. You can use it along the lines of the following:
+Builds a .NET solution (or project) with static code analysis. You can use it along the lines of the following:
 
 ```yaml
-name: Build and Test
+name: Build
 
 # Runs for PRs opened for any branch, and pushes to the dev branch.
 on:
@@ -50,8 +50,8 @@ on:
       - dev
 
 jobs:
-  call-build-and-test-workflow:
-    name: Build and Test
+  call-build-workflow:
+    name: Build
     uses: Lombiq/GitHub-Actions/.github/workflows/build-dotnet.yml@dev
     with:
       machine-types: "[\"ubuntu-latest\", \"windows-latest\"]"
@@ -139,6 +139,9 @@ jobs:
       resource-group-name: ResourceGroupName
       slot-name: Staging
       url: https://www.myapp.com
+      runtime: win-x86
+      self-contained: true
+      ready-to-run: true
     secrets:
       AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
