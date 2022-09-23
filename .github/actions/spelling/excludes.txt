@@ -17,3 +17,6 @@ dotnet-tools.json$
 appsettings.json$
 package.json$
 package-lock.json$
+.psm1$
+.bat$
+.ps1$
