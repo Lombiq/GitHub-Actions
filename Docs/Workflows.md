@@ -60,12 +60,16 @@ jobs:
 
 ## Check Spelling workflow
 
-Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. There are 3 example files for filtering false positives:
+Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. There are 3 configuration files for filtering false positives:
 - _`excludes.txt`_: This file includes file names and extensions to be ignored.
 - _`expect.txt`_: This file contains plain text words that would be considered a spelling mistake.
 - _`patterns.txt`_: This file contains patterns that would be considered a spelling mistake.
 
-You should copy or create these files in the `.github/actions/spelling/` folder, For more information visit the action's [wiki](https://github.com/check-spelling/check-spelling/wiki/Configuration#files).
+There are more configuration files available, for more information visit the action's [wiki](https://github.com/check-spelling/check-spelling/wiki/Configuration#files).
+
+You can provide these files in your own repository, the default path is `.github/actions/spelling`, but can be changed with the `config` parameter.
+
+You can also use already existing by setting the `spell-check-this` parameter to a repository.
 
 Example _check-spelling.yml_:
 
@@ -81,14 +85,9 @@ on:
 jobs:
   check-spelling:
     name: Check Spelling
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: 'true'
-      - name: Check Spelling
-        uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/check-spelling.yml@dev
+    with:
+      spell-check-this: Lombiq/GitHub-Actions@dev
 ```
 
 ## NuGet publish workflow

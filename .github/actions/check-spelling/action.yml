@@ -22,12 +22,12 @@ inputs:
       cspell:scala/scala.txt
       lombiq:expect.txt
   config:
-    description: Configuration directory
+    description: Spelling configuration directory
     required: false
     type: string
     default: .github/actions/spelling
   spell-check-this:
-    description: Spell Check This
+    description: Repository with default configuration to use
     required: false
     type: string
     default: ''
