@@ -140,9 +140,10 @@ jobs:
     # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
     # take advantage of the dotnet CLI tolerating the usage of the equal sign.
     - name: Set up runtime option
+      id: set-up-runtime-option
       if: ${{ inputs.runtime != '' }}
       run: |
-        "runtime-option=--runtime=" + "${{ inputs.runtime }}" >> $env:GITHUB_ENV
+        Write-Output "::set-output name=runtime-option::--runtime=${{ inputs.runtime }}"
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-316
@@ -158,7 +159,7 @@ jobs:
           --self-contained
           ${{ inputs.self-contained }}
           -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-          ${{ env.runtime-option }}
+          ${{ steps.set-up-runtime-option.outputs.runtime-option }}
 
     - name: Publish
       run: >
@@ -169,7 +170,7 @@ jobs:
           --verbosity ${{ inputs.build-verbosity }}
           --self-contained ${{ inputs.self-contained }}
           -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-          ${{ env.runtime-option }}
+          ${{ steps.set-up-runtime-option.outputs.runtime-option }}
         
     - name: Login to Azure
       # v1.4.5
