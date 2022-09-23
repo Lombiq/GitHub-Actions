@@ -96,14 +96,14 @@ on:
         description: Publishes the application for a given runtime.
       self-contained:
         required: false
-        type: boolean
-        default: false
+        type: string
+        default: "false"
         description: Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the
           target machine.
       ready-to-run:
         required: false
-        type: boolean
-        default: false
+        type: string
+        default: "false"
         description: >
           Compiles application assemblies as ReadyToRun (R2R) format. R2R is a form of ahead-of-time (AOT) compilation.
           If ready to run is set to `true` the `runtime` input is needed.
