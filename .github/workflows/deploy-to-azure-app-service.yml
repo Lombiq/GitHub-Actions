@@ -163,14 +163,14 @@ jobs:
 
     - name: Publish
       run: >
-        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName
-        --no-build
-        --configuration Release 
-        --output '${{ inputs.build-directory }}/Published'
-        --verbosity ${{ inputs.build-verbosity }}
-        --self-contained ${{ inputs.self-contained }}
-        -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-        ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName`
+          --no-build`
+          --configuration Release`
+          --output '${{ inputs.build-directory }}/Published'`
+          --verbosity ${{ inputs.build-verbosity }}`
+          --self-contained ${{ inputs.self-contained }}`
+          -p:PublishReadyToRun=${{ inputs.ready-to-run }}`
+          ${{ steps.set-up-runtime-option.outputs.runtime-option }}
         
     - name: Login to Azure
       # v1.4.5
