@@ -155,6 +155,7 @@ jobs:
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
         solution-or-project-path: ${{ inputs.web-project-path }}
+        # Arguments need to be separated into newlines. https://stackoverflow.com/a/59077879/16192320
         dotnet-build-switches: |
           --self-contained
           ${{ inputs.self-contained }}
@@ -162,7 +163,7 @@ jobs:
           ${{ steps.set-up-runtime-option.outputs.runtime-option }}
 
     - name: Publish
-      run: >
+      run: |
         dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName`
           --no-build`
           --configuration Release`
