@@ -41,4 +41,4 @@ runs:
       spell_check_this: Lombiq/GitHub-Actions@issue/OSOE-158
       debug: 1
       # config: ${{ inputs.config }}
-      config: .github/actions/check-spelling/spelling
+      config: .github/actions/spelling
