@@ -44,5 +44,4 @@ runs:
       suppress_push_for_open_pull_request: 1
       post_comment: 1
       spell_check_this: ${{ inputs.spell-check-this }}
-      debug: 1
       config: ${{ inputs.config }}
