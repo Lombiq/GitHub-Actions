@@ -90,3 +90,12 @@ appsettings
 htmlvalidate
 ndproj
 stylelintrc
+bacpac
+cmdlet
+enableextensions
+IIS
+Reks
+Rekt
+setlocal
+subfolders
+uninstall
