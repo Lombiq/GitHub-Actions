@@ -24,3 +24,7 @@ workflow
 yaml
 yml
 versioning
+appsettings
+htmlvalidate
+ndproj
+stylelintrc
