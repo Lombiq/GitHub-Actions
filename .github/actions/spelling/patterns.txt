@@ -7,3 +7,5 @@
 [Mm][Vv][Cc]
 [Uu]ncomment
 [Jj]ira
+[Ii][Ii][Ss]
+[Cc]mdlet

@@ -35,7 +35,6 @@ allowlist
 apikey
 apps
 cloudsmith
-Cmdlet
 corepack
 github
 https
@@ -57,7 +56,6 @@ eur
 GDPR
 ICaching
 IClock
-iis
 IService
 ISession
 ITest
@@ -91,9 +89,7 @@ htmlvalidate
 ndproj
 stylelintrc
 bacpac
-cmdlet
 enableextensions
-IIS
 Reks
 Rekt
 setlocal
