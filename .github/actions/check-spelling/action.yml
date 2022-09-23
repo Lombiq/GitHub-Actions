@@ -26,6 +26,11 @@ inputs:
     required: false
     type: string
     default: .github/actions/spelling
+  spell-check-this:
+    description: Spell Check This
+    required: false
+    type: string
+    default: ''
 
 runs:
   using: "composite"
@@ -39,6 +44,7 @@ runs:
       suppress_push_for_open_pull_request: 1
       post_comment: 1
       spell_check_this: Lombiq/GitHub-Actions@issue/OSOE-158
+      # spell_check_this: ${{ inputs.spell-check-this }}
       debug: 1
       # config: ${{ inputs.config }}
       config: .github/actions/spelling

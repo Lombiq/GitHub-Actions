@@ -28,6 +28,11 @@ on:
         required: false
         type: string
         default: .github/actions/spelling
+      spell-check-this:
+        description: Spell Check This
+        required: false
+        type: string
+        default: ''
 
 jobs:
   check-spelling:
@@ -45,3 +50,4 @@ jobs:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
           config: ${{ inputs.config }}
+          spell-check-this: ${{ inputs.spell-check-this }}
