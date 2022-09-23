@@ -41,15 +41,18 @@ inputs:
   dotnet-build-switches:
     required: false
     default: ""
-    description: Additional command line switches given to `dotnet build`. You must split these into multiple lines, even the parameter value.
+    description: Additional command line switches given to `dotnet build`. You must split these into multiple lines,
+      even the parameter value.
   solution-or-project-path:
     required: false
     default: "*.sln"
     description: >
-      The path of the solution or project file to be built. If you have exactly one .sln file in the current directory then this
-      can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be specified." error
-      that is thrown when the `*.sln` wildcard results in multiple files. The value is given to PowerShell's
-      `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with spaces must be escaped separately.
+      The path of the solution or project file to be built. If you have exactly one .sln file in the current directory
+      then this can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be
+      specified." error that is thrown when the `*.sln` wildcard results in multiple files. To build a project file you
+      must specify a path that ends with `.csproj`. An example: "./src/*Web/*.Web.csproj". The value is given to
+      PowerShell's `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with spaces must be escaped
+      separately.
   expected-code-analysis-errors:
     required: false
     default: ""
@@ -131,7 +134,7 @@ runs:
         }
 
         $startTime = [DateTime]::Now
-        Build-DotNetSolution @switches
+        Build-DotNetSolutionOrProject @switches
         $endTime = [DateTime]::Now
 
         Write-Output ("Solution or project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)

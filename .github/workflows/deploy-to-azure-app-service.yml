@@ -35,7 +35,7 @@ on:
       build-enable-code-analysis:
         required: false
         type: string
-        default: "true"
+        default: "false"
         description: Indicates whether to enable static code analysis during dotnet build.
       build-enable-nuget-caching:
         required: false
@@ -73,7 +73,8 @@ on:
       slot-name:
         required: true
         type: string
-        description: What you see at the top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
+        description: What you see at the top of the blade on the Azure Portal, when you open the slot, before the app
+          name in parenthesis.
       resource-group-name:
         required: true
         type: string
@@ -92,12 +93,13 @@ on:
       runtime:
         required: false
         type: string
-        description: Publishes the application for a given runtime. If you use this option, use --self-contained or --no-self-contained also.
+        description: Publishes the application for a given runtime.
       self-contained:
         required: false
         type: boolean
         default: false
-        description: Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the target machine.
+        description: Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the
+          target machine.
       ready-to-run:
         required: false
         type: boolean
@@ -160,10 +162,14 @@ jobs:
 
     - name: Publish
       run: >
-        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName --configuration Release --no-build
-        --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }}
-        --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-        ${{ env.runtime-option }}
+        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName
+          --no-build
+          --configuration Release 
+          --output '${{ inputs.build-directory }}/Published'
+          --verbosity ${{ inputs.build-verbosity }}
+          --self-contained ${{ inputs.self-contained }}
+          -p:PublishReadyToRun=${{ inputs.ready-to-run }}
+          ${{ env.runtime-option }}
         
     - name: Login to Azure
       # v1.4.5
