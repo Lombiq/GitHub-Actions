@@ -93,7 +93,9 @@ on:
       runtime:
         required: false
         type: string
-        description: Publishes the application for a given runtime.
+        description: >
+          Publishes the application for a given runtime. If you use this option, set "self-contained" to the
+          desired value also. "self-contained" is "false" by default.
       self-contained:
         required: false
         type: string
