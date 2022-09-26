@@ -27,15 +27,16 @@ inputs:
     type: string
     default: .github/actions/spelling
   spell-check-this:
-    description: Repository with default configuration to use
+    description: Repository with default configuration to use, the default from Check Spelling is ''
     required: false
     type: string
-    default: ''
+    default: Lombiq/GitHub-Actions@issue/OSOE-158
 
 runs:
   using: "composite"
   steps:
   - name: Check Spelling
+    # prerelease, this commit includes a specific fix we utilize.
     uses: check-spelling/check-spelling@5ca3511e047d3e39719b1a41b56397ecec0e27d5
     with:
       dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}

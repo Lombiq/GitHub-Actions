@@ -69,7 +69,7 @@ There are more configuration files available, for more information visit the act
 
 You can provide these files in your own repository, the default path is `.github/actions/spelling`, but can be changed with the `config` parameter.
 
-You can also use already existing by setting the `spell-check-this` parameter to a repository.
+You can also use already existing configuration files by setting the `spell-check-this` parameter to a repository.
 
 Example _check-spelling.yml_:
 
@@ -86,8 +86,6 @@ jobs:
   check-spelling:
     name: Check Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/check-spelling.yml@dev
-    with:
-      spell-check-this: Lombiq/GitHub-Actions@dev
 ```
 
 ## NuGet publish workflow
