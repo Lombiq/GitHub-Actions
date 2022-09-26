@@ -27,7 +27,7 @@ on:
         description: Spelling configuration directory
         required: false
         type: string
-        default: .github/actions/check-spelling
+        default: .github/actions/spelling
       spell-check-this:
         description: Repository with default configuration to use, the default from Check Spelling is ''
         required: false
@@ -45,7 +45,7 @@ jobs:
           submodules: 'recursive'
 
       - name: Check Spelling
-        uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-158
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}

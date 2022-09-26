@@ -25,7 +25,7 @@ inputs:
     description: Spelling configuration directory
     required: false
     type: string
-    default: .github/actions/check-spelling
+    default: .github/actions/spelling
   spell-check-this:
     description: Repository with default configuration to use, the default from Check Spelling is ''
     required: false
@@ -36,7 +36,7 @@ runs:
   using: "composite"
   steps:
   - name: Check Spelling
-    # prerelease, this commit includes a specific fix we utilize.
+    # prerelease, this commit includes a specific fix we utilize. Use v0.0.21 once available.
     uses: check-spelling/check-spelling@5ca3511e047d3e39719b1a41b56397ecec0e27d5
     with:
       dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
