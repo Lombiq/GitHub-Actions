@@ -34,7 +34,7 @@ Uncomment
 allowlist
 apikey
 apps
-cloudsmith
+Cloudsmith
 corepack
 github
 https
