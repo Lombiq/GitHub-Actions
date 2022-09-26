@@ -1,5 +1,5 @@
-﻿param (
-    [string] $Solution,
+param (
+    [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
     [string] $Version,
@@ -48,18 +48,18 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output "::endgroup::"
 }
 
-# This prepares the solution with the Lombiq.Analyzers files. The output and exit code are discarded because they will
-# be in error if there is a project without the LombiqNetAnalyzers target. Then there is nothing to do, and the target 
-# will still run on the projects that have it.
-dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $Solution | Out-Null || bash -c 'true'
+# This prepares the solution or project with the Lombiq.Analyzers files. The output and exit code are discarded because
+# they will be in error if there is a project without the LombiqNetAnalyzers target. Then there is nothing to do, and
+# the target will still run on the projects that have it.
+dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $SolutionOrProject | Out-Null || bash -c 'true'
 
-Write-Output "Building solution with ``dotnet build $Solution $($buildSwitches -join " ")``."
+Write-Output "Building solution or project with ``dotnet build $SolutionOrProject $($buildSwitches -join " ")``."
 
 $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
-dotnet build $Solution @buildSwitches 2>&1 | % {
+dotnet build $SolutionOrProject @buildSwitches 2>&1 | % {
     if ($_ -notmatch $errorFormat) { return $_ }
 
     ($null, $file, $line, $column, $message) = [regex]::Match($_, $errorFormat, 'Compiled').Groups.Value
@@ -107,7 +107,7 @@ if ($expectedErrorCodes)
         exit 1
     }
 
-    Write-Output "Verification complete, the solution only has the expected errors!"
+    Write-Output "Verification complete, the solution or project only has the expected errors!"
     exit 0
 }
 
