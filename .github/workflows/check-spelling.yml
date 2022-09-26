@@ -27,7 +27,7 @@ on:
         description: Spelling configuration directory
         required: false
         type: string
-        default: .github/actions/spelling
+        default: .github/actions/check-spelling
       spell-check-this:
         description: Repository with default configuration to use, the default from Check Spelling is ''
         required: false
