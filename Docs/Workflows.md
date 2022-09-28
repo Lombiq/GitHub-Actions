@@ -34,7 +34,6 @@ jobs:
       timeout-minutes: 60
 ```
 
-
 ## Build .NET solution workflow
 
 Builds a .NET solution (or project) with static code analysis. You can use it along the lines of the following:
