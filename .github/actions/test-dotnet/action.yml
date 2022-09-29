@@ -24,10 +24,20 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: actions/github-script@v6
+      id: set-tokens
+      with:
+        script: |
+          const url = process.env.ACTIONS_RUNTIME_URL;
+          const token = process.env.ACTIONS_RUNTIME_TOKEN;
+          const cache = process.env.ACTIONS_CACHE_URL;
+          return JSON.stringify({ url, token, cache });
+        result-encoding: string
     - name: Investigate State
       working-directory: ${{ matrix.directory }}
       shell: bash
       run: |
+        echo "SET-TOKENS: ${{steps.set-tokens.outputs.result}}"
         echo "GITHUB_STEP_SUMMARY '$GITHUB_STEP_SUMMARY'"
         echo "ACTIONS_RUNTIME_URL '$ACTIONS_RUNTIME_URL'"
         echo "ACTIONS_RUNTIME_TOKEN '$ACTIONS_RUNTIME_TOKEN'"
