@@ -26,6 +26,8 @@ runs:
   steps:
     - uses: actions/github-script@v6
       id: set-tokens
+      env:
+        PARENT_ENV: ${{ github.env }}
       with:
         script: |
           const fs = require('fs');
@@ -36,9 +38,11 @@ runs:
 
           console.log(`PWD: "${process.env.PWD}"`);
           console.log(`GITHUB_ENV: "${process.env.GITHUB_ENV}"`);
-          fs.appendFileSync(process.env.GITHUB_ENV, `ACTIONS_RUNTIME_URL=${process.env.ACTIONS_RUNTIME_URL}`);
-          fs.appendFileSync(process.env.ACTIONS_RUNTIME_TOKEN, `ACTIONS_RUNTIME_URL=${process.env.ACTIONS_RUNTIME_TOKEN}`);
-          fs.appendFileSync(process.env.ACTIONS_CACHE_URL, `ACTIONS_RUNTIME_URL=${process.env.ACTIONS_CACHE_URL}`);
+          console.log(`PARENT_ENV: "${process.env.PARENT_ENV}"`);
+
+          fs.appendFileSync(process.env.PARENT_ENV, `ACTIONS_RUNTIME_URL=${process.env.ACTIONS_RUNTIME_URL}`);
+          fs.appendFileSync(process.env.PARENT_ENV, `ACTIONS_RUNTIME_TOKEN=${process.env.ACTIONS_RUNTIME_TOKEN}`);
+          fs.appendFileSync(process.env.PARENT_ENV, `ACTIONS_CACHE_URL=${process.env.ACTIONS_CACHE_URL}`);
 
           return JSON.stringify({ url, token, cache });
         result-encoding: string
