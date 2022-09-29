@@ -73,7 +73,7 @@ jobs:
   # being shown under the build details with all below steps mushed together.
   build:
     runs-on: ${{ matrix.machine-type }}
-    name: Build and Test
+    name: Build
     # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
     # https://github.com/actions/runner/issues/1555.
     strategy:

@@ -43,8 +43,7 @@ on:
           The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment
           variable is used which is suitable if the version is derived from a git tag.
     secrets:
-      # We can't access org secrets here so they need to be passed in, see:
-      # https://github.community/t/resuable-called-workflow-environment-variables-secrets-and-trigger-event-access/207723/2
+      # We can't access org secrets here so they need to be passed in.
       API_KEY:
         required: true
 

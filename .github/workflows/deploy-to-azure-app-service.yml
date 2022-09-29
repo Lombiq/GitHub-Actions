@@ -1,0 +1,211 @@
+name: Deploy to Azure App Service
+
+on:
+  workflow_call:
+    secrets:
+      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL:
+        required: true
+      AZURE_APP_SERVICE_PUBLISH_PROFILE:
+        required: true
+    inputs:
+      # This needs to be stringified JSON because inputs don't support arrays, see 
+      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
+      machine-types:
+        required: false
+        type: string
+        default: "[\"ubuntu-latest\"]"
+        description: >
+            Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
+            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]".
+      dotnet-version:
+        required: false
+        type: string
+        default: 6.0.*
+        description: Version of the .NET SDK to set up.
+      build-directory:
+        required: false
+        type: string
+        default: .
+        description: Path to the directory where a solution file can be found.
+      build-verbosity:
+        required: false
+        type: string
+        default: quiet
+        description: Verbosity parameter for dotnet build.
+      build-enable-code-analysis:
+        required: false
+        type: string
+        default: "false"
+        description: Indicates whether to enable static code analysis during dotnet build.
+      build-enable-nuget-caching:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
+          packages, but negligible or even slower if you only have a handful.
+      build-enable-npm-caching:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
+          but negligible or even slower if you only have a handful.
+      build-cache-version:
+        required: false
+        type: string
+        default: "0"
+        description: >
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
+          easiest current way to force "clear" the cache
+          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
+          (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
+          API.
+      timeout-minutes:
+        required: false
+        type: number
+        default: 360
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      app-name:
+        required: true
+        type: string
+        description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
+      slot-name:
+        required: true
+        type: string
+        description: What you see at the top of the blade on the Azure Portal, when you open the slot, before the app
+          name in parenthesis.
+      resource-group-name:
+        required: true
+        type: string
+        description: Name of the resource group.
+      url:
+        required: true
+        type: string
+        description: The URL of the web app slot.
+      web-project-path:
+        required: false
+        type: string
+        default: "./src/*Web/*.Web.csproj"
+        description: >
+          The path of the web project file to be processed. The value is given to PowerShell's `Get-ChildItem` cmdlet
+          as-is, so grepping is still possible but a name with spaces must be escaped separately.
+      runtime:
+        required: false
+        type: string
+        description: >
+          Publishes the application for a given runtime. If you use this option, set "self-contained" to the
+          desired value also. "self-contained" is "false" by default.
+      self-contained:
+        required: false
+        type: string
+        default: "false"
+        description: Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the
+          target machine.
+      ready-to-run:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          Compiles application assemblies as ReadyToRun (R2R) format. R2R is a form of ahead-of-time (AOT) compilation.
+          If ready to run is set to `true` the `runtime` input is needed.
+
+jobs:
+  deploy:
+    runs-on: ${{ matrix.machine-type }}
+    name: Deploy to Azure App Service
+    defaults:
+      run:
+        shell: pwsh
+    # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
+    # https://github.com/actions/runner/issues/1555.
+    strategy:
+      matrix:
+        machine-type: ${{ fromJson(inputs.machine-types) }}
+        timeout-minutes:
+        - ${{ inputs.timeout-minutes }}
+    timeout-minutes: ${{ matrix.timeout-minutes }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+
+    - name: Set up .NET
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+    # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
+    # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
+    # take advantage of the dotnet CLI tolerating the usage of the equal sign.
+    - name: Set up runtime option
+      id: set-up-runtime-option
+      if: ${{ inputs.runtime != '' }}
+      run: |
+        Write-Output "::set-output name=runtime-option::--runtime=${{ inputs.runtime }}"
+
+    - name: Build and Static Code Analysis
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      with:
+        directory: ${{ inputs.build-directory }}
+        verbosity: ${{ inputs.build-verbosity }}
+        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+        enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+        enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+        cache-version: ${{ inputs.build-cache-version }}
+        solution-or-project-path: ${{ inputs.web-project-path }}
+        # Arguments need to be separated into newlines: https://stackoverflow.com/a/59077879/16192320
+        dotnet-build-switches: |
+          --self-contained
+          ${{ inputs.self-contained }}
+          -p:PublishReadyToRun=${{ inputs.ready-to-run }}
+          ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+
+    - name: Publish
+      run: |
+        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
+          --no-build `
+          --configuration Release `
+          --output '${{ inputs.build-directory }}/Published' `
+          --verbosity ${{ inputs.build-verbosity }} `
+          --self-contained ${{ inputs.self-contained }} `
+          -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
+          ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+        
+    - name: Login to Azure
+      # v1.4.5
+      uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
+      with:
+        creds: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+        enable-AzPSSession: true
+
+    - name: Stop Web App Slot
+      # v1.1.0
+      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
+      with:
+        inlineScript: |
+          Stop-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
+        azPSVersion: latest
+
+    - name: Deploy to Azure App Service
+      # v2.2.3
+      uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
+      with:
+        app-name: ${{ inputs.app-name }}
+        slot-name: ${{ inputs.slot-name }}
+        publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+        package: ${{ inputs.build-directory }}/Published
+
+    - name: Start Web App Slot
+      # v1.1.0
+      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
+      with:
+        inlineScript: |
+          Start-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
+        azPSVersion: latest
+
+    - name: Ping Web App Slot
+      run: curl --connect-timeout 100 --retry 3 --retry-delay 15 ${{ inputs.url }}
