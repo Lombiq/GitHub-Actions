@@ -31,13 +31,24 @@ runs:
           const url = process.env.ACTIONS_RUNTIME_URL;
           const token = process.env.ACTIONS_RUNTIME_TOKEN;
           const cache = process.env.ACTIONS_CACHE_URL;
+
           return JSON.stringify({ url, token, cache });
         result-encoding: string
+
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+
+        $tokens = '${{steps.set-tokens.outputs.result}}' | ConvertFrom-Json
+        "ACTIONS_RUNTIME_URL=$($tokens.url)" >> $Env:GITHUB_ENV
+        "ACTIONS_RUNTIME_URL=$($tokens.token)" >> $Env:ACTIONS_RUNTIME_TOKEN
+        "ACTIONS_RUNTIME_URL=$($tokens.cache)" >> $Env:ACTIONS_CACHE_URL
+
     - name: Investigate State
       working-directory: ${{ matrix.directory }}
       shell: bash
       run: |
-        echo "SET-TOKENS: ${{steps.set-tokens.outputs.result}}"
         echo "GITHUB_STEP_SUMMARY '$GITHUB_STEP_SUMMARY'"
         echo "ACTIONS_RUNTIME_URL '$ACTIONS_RUNTIME_URL'"
         echo "ACTIONS_RUNTIME_TOKEN '$ACTIONS_RUNTIME_TOKEN'"
@@ -48,11 +59,6 @@ runs:
         echo '' >> $GITHUB_STEP_SUMMARY
 
         env >> $GITHUB_STEP_SUMMARY
-
-    - name: Setup Scripts
-      shell: pwsh
-      run: |
-        "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
     - name: Setup & Set UI Test Parallelization
       shell: pwsh
