@@ -28,9 +28,17 @@ runs:
       id: set-tokens
       with:
         script: |
+          const fs = require('fs');
+
           const url = process.env.ACTIONS_RUNTIME_URL;
           const token = process.env.ACTIONS_RUNTIME_TOKEN;
           const cache = process.env.ACTIONS_CACHE_URL;
+
+          console.log(`PWD: "${process.env.PWD}"`);
+          console.log(`GITHUB_ENV: "${process.env.GITHUB_ENV}"`);
+          fs.appendFileSync(process.env.GITHUB_ENV, `ACTIONS_RUNTIME_URL=${process.env.ACTIONS_RUNTIME_URL}`);
+          fs.appendFileSync(process.env.ACTIONS_RUNTIME_TOKEN, `ACTIONS_RUNTIME_URL=${process.env.ACTIONS_RUNTIME_TOKEN}`);
+          fs.appendFileSync(process.env.ACTIONS_CACHE_URL, `ACTIONS_RUNTIME_URL=${process.env.ACTIONS_CACHE_URL}`);
 
           return JSON.stringify({ url, token, cache });
         result-encoding: string
@@ -39,11 +47,6 @@ runs:
       shell: pwsh
       run: |
         '${{ github.action_path }}' >> $Env:GITHUB_PATH
-
-        $tokens = '${{steps.set-tokens.outputs.result}}' | ConvertFrom-Json
-        "ACTIONS_RUNTIME_URL=$($tokens.url)" >> $Env:GITHUB_ENV
-        "ACTIONS_RUNTIME_URL=$($tokens.token)" >> $Env:ACTIONS_RUNTIME_TOKEN
-        "ACTIONS_RUNTIME_URL=$($tokens.cache)" >> $Env:ACTIONS_CACHE_URL
 
     - name: Investigate State
       working-directory: ${{ matrix.directory }}
