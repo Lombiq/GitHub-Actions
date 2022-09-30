@@ -96,6 +96,36 @@ runs:
       if: (success() || failure()) && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
+      
+    - uses: actions/github-script@v6
+      if: failure()
+      with:
+        script: |
+          const artifact = require('@actions/artifact');
+          
+          const artifactClient = artifact.create();
+          const options = { continueOnError: false };
+
+          const globber = await glob.create('${{ inputs.build-directory }}/Screenshots/**/*.png');
+          const files = await globber.glob();
+
+          const uploadResponse = await artifactClient.uploadArtifact(
+            'test',
+            files,
+            '${{ inputs.build-directory }}',
+            options
+          );
+
+          if (uploadResponse.failedItems.length > 0) {
+            core.setFailed(
+              `An error was encountered when uploading ${uploadResponse.artifactName}. There were ${uploadResponse.failedItems.length} items that failed to upload.`
+            )
+          } else {
+            core.info(
+              `Artifact ${uploadResponse.artifactName} has been successfully uploaded!`
+            )
+          }
+
     - name: Upload UI testing artifacts
       uses: actions/upload-artifact@v3
       # We don't need additional conditions, because of the "if-no-files-found" setting.
