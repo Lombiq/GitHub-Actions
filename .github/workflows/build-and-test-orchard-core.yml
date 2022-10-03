@@ -89,6 +89,7 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
+    # This needs to be done by us, see https://github.com/actions/runner-images/issues/4913.
     - name: Enable Git longpaths
       shell: pwsh
       run: git config --system core.longpaths true
