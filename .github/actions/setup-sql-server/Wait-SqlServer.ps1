@@ -1,4 +1,4 @@
-﻿$maxTryCount = 10
+$maxTryCount = 30
 
 for ($i = 1; $i -le $maxTryCount; $i++)
 {
