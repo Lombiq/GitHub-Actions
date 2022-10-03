@@ -89,6 +89,10 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
+    - name: Enable Git longpaths
+      shell: pwsh
+      run: git config --system core.longpaths true
+
     - uses: actions/checkout@v3
       with:
         submodules: 'recursive'
