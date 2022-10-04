@@ -8,6 +8,5 @@ runs:
       uses: eps1lon/actions-label-merge-conflict@releases/2.x
       with:
         repoToken: ${{ env.GITHUB_TOKEN }}
-        commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
-        commentOnClean: "There are no merge conflicts."
-        dirtyLabel: "Merge Conflict"
+        commentOnDirty: "This pull request has merge conflicts. Please resolve those before requesting a review."
+        dirtyLabel: ''
