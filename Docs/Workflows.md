@@ -34,13 +34,12 @@ jobs:
       timeout-minutes: 60
 ```
 
-
 ## Build .NET solution workflow
 
-Builds a .NET solution with static code analysis. You can use it along the lines of the following:
+Builds a .NET solution (or project) with static code analysis. You can use it along the lines of the following:
 
 ```yaml
-name: Build and Test
+name: Build
 
 # Runs for PRs opened for any branch, and pushes to the dev branch.
 on:
@@ -50,8 +49,8 @@ on:
       - dev
 
 jobs:
-  call-build-and-test-workflow:
-    name: Build and Test
+  call-build-workflow:
+    name: Build
     uses: Lombiq/GitHub-Actions/.github/workflows/build-dotnet.yml@dev
     with:
       machine-types: "[\"ubuntu-latest\", \"windows-latest\"]"
@@ -148,6 +147,34 @@ jobs:
 If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/), the `repo` input can be omitted, because the above is its default value. Otherwise, use your parent repository's address in the `{owner}/{repo_name}` format.
 
 Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
+
+## Deploy to Azure App Service
+
+This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). Example _deploy-to-azure-app-service.yml_:
+
+```yaml
+name: Deploy to Azure App Service
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-deploy-workflow:
+    name: Deploy to Azure App Service
+    uses: Lombiq/GitHub-Actions/.github/workflows/deploy-to-azure-app-service.yml@dev
+    with:
+      timeout-minutes: 60
+      app-name: AppName
+      resource-group-name: ResourceGroupName
+      slot-name: Staging
+      url: https://www.myapp.com
+      runtime: win-x86
+      self-contained: true
+      ready-to-run: true
+    secrets:
+      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+      AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+```
 
 ## Jira issue creation for community activities workflow
 
