@@ -4,6 +4,7 @@ name: Verify Pull Request
 
 on:
   pull_request:
+  pull_request_target:
 
 jobs:
   call-verify-workflow:
@@ -11,3 +12,5 @@ jobs:
   
   call-check-merge-conflict:
     uses: Lombiq/GitHub-Actions/.github/workflows/check-merge-conflict.yml@issue/OSOE-144
+    with:
+      token: "${{ secrets.GITHUB_TOKEN }}"

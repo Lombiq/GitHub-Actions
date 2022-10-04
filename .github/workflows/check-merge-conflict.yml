@@ -2,6 +2,10 @@ name: Check For Merge Conflict
 
 on:
   workflow_call:
+    inputs:
+      token:
+        required: true
+        description: Github Token
 
 jobs:
   main:
