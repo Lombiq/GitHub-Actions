@@ -1,0 +1,10 @@
+name: Check For Merge Conflict
+
+on:
+  workflow_call:
+
+jobs:
+  main:
+    steps:
+    - name: Check for Merge Conflict in PR
+      uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@issue/OSOE-144

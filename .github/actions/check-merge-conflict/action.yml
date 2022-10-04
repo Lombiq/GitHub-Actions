@@ -1,0 +1,11 @@
+name: Check For Merge Conflict
+description: Checks for merge conflict in Pull Request
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check for dirty PR
+      uses: eps1lon/actions-label-merge-conflict@releases/2.x
+      with:
+        commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
+        commentOnClean: "Conflicts have been resolved."
