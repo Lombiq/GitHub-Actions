@@ -95,3 +95,4 @@ Rekt
 setlocal
 subfolders
 uninstall
+myapp
