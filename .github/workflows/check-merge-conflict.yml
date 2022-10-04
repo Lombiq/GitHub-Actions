@@ -5,6 +5,7 @@ on:
 
 jobs:
   main:
+    runs-on: ubuntu-latest
     steps:
     - name: Check for Merge Conflict in PR
       uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@issue/OSOE-144
