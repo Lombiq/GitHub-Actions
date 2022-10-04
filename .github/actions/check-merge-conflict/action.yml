@@ -10,3 +10,4 @@ runs:
         repoToken: ${{ env.GITHUB_TOKEN }}
         commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
         commentOnClean: "Conflicts have been resolved."
+        dirtyLabel: "Merge Conflict"
