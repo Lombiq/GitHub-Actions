@@ -3,10 +3,10 @@ name: Verify Pull Request
 # is meant to actually run here, so don't call it from other repos. 
 
 on:
-  push:
-  # pull_request:
-  pull_request_target:
-    types: [synchronize]
+  #push:
+  pull_request:
+  #pull_request_target:
+  #  types: [synchronize]
 
 jobs:
   call-verify-workflow:
