@@ -57,6 +57,21 @@ jobs:
       timeout-minutes: 10
 ```
 
+## Check For Merge Conflict
+
+Labels and comments on Pull Requests with merge conflicts.
+
+```yaml
+name: Check For Merge Conflict
+
+on:
+  pull_request:
+
+jobs:
+  call-check-merge-conflict:
+    uses: Lombiq/GitHub-Actions/.github/workflows/check-merge-conflict.yml@dev
+```
+
 ## NuGet publish workflow
 
 Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed. Example _publish.yml_:
