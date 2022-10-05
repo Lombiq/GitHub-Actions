@@ -11,5 +11,5 @@ else
         --env 'SA_PASSWORD=Password1!' `
         --publish 1433:1433 `
         --detach 'mcr.microsoft.com/mssql/server:2019-latest' &&
-    docker exec --user 0 sql2019 bash -c 'mkdir /data; chmod 777 /data -R; chown mssql:root /data'
+    docker exec --user 0 sql2019 bash -c 'mkdir /data; chmod 777 /data --recursive; chown mssql:root /data'
 }
