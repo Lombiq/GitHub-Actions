@@ -4,8 +4,6 @@ if ($Env:RUNNER_OS -eq "Windows")
 }
 else
 {
-    # For whatever reason, except name, the switches need to only include a single dash despite them needing a double
-    # dash when executing directly from the command line.
     $dockerRunSwitches = @(
         '--name', 'sql2019'
         '--env', 'ACCEPT_EULA=Y'
