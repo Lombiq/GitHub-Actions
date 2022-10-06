@@ -5,9 +5,9 @@ if ($Env:RUNNER_OS -eq "Windows")
 else
 {
     $dockerRunSwitches = @{
-        name = sql2019
+        name = 'sql2019'
         env = 'ACCEPT_EULA=Y SA_PASSWORD=Password1!'
-        publish = 1433:1433
+        publish = '1433:1433'
         detach = 'mcr.microsoft.com/mssql/server:2019-latest'
     }
 
