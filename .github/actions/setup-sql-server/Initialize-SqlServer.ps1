@@ -4,12 +4,12 @@ if ($Env:RUNNER_OS -eq "Windows")
 }
 else
 {
-    # For whatever reason, the publish switch needs to only include a single dash.
+    # For whatever reason, the publish and detach switches need to only include a single dash.
     $dockerRunSwitches = @{
         '--name' = 'sql2019'
         '--env' = 'ACCEPT_EULA=Y SA_PASSWORD=Password1!'
         '-publish' = '1433:1433'
-        '--detach' = 'mcr.microsoft.com/mssql/server:2019-latest'
+        '-detach' = 'mcr.microsoft.com/mssql/server:2019-latest'
     }
 
     docker pull mcr.microsoft.com/mssql/server &&
