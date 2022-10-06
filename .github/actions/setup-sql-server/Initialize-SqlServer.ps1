@@ -2,7 +2,7 @@ if ($Env:RUNNER_OS -eq "Windows")
 {
     choco install sql-server-express --no-progress
 }
-els
+else
 {
     # For whatever reason, except name, the switches need to only include a single dash despite them needing a double
     # dash when executing directly from the command line.
