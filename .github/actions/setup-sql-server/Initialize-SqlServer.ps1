@@ -6,8 +6,7 @@ else
 {
     $dockerRunSwitches = @{
         name = sql2019
-        env = 'ACCEPT_EULA=Y'
-        env = 'SA_PASSWORD=Password1!'
+        env = 'ACCEPT_EULA=Y SA_PASSWORD=Password1!'
         publish = 1433:1433
         detach = 'mcr.microsoft.com/mssql/server:2019-latest'
     }
