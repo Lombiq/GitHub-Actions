@@ -65,7 +65,13 @@ Labels and comments on Pull Requests with merge conflicts.
 name: Check For Merge Conflict
 
 on:
-  pull_request:
+  # So that PRs touching the same files as the push are updated
+  push:
+  # So that the `dirtyLabel` is removed if conflicts are resolve
+  # We recommend `pull_request_target` so that github secrets are available.
+  # In `pull_request` we wouldn't be able to change labels of fork PRs
+  pull_request_target:
+    types: [synchronize]
 
 jobs:
   call-check-merge-conflict:
