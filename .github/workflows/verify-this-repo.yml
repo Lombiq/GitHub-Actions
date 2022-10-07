@@ -6,6 +6,8 @@ on:
   pull_request:
 
 jobs:
-  call-verify-workflow-and-check-merge-conflict:
+  call-verify-workflow:
     uses: Lombiq/GitHub-Actions/.github/workflows/verify-submodule-pull-request.yml@dev
+  
+  call-check-merge-conflict:
     uses: Lombiq/GitHub-Actions/.github/workflows/check-merge-conflict.yml@issue/OSOE-144
