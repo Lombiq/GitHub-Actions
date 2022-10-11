@@ -30,6 +30,11 @@ $buildSwitches = ConvertTo-Array @"
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
+    -p:CreateHardLinksForAdditionalFilesIfPossible=true
+    -p:CreateHardLinksForCopyAdditionalFilesIfPossible=true
+    -p:CreateHardLinksForCopyFilesToOutputDirectoryIfPossible=true
+    -p:CreateHardLinksForCopyLocalIfPossible=true
+    -p:CreateHardLinksForPublishFilesIfPossible=true
     $Switches
 "@
 
