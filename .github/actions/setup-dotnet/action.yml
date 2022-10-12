@@ -22,6 +22,7 @@ runs:
 
         "DOTNET_CLI_TELEMETRY_OPTOUT=true" >> $Env:GITHUB_ENV
         $Env:DOTNET_CLI_TELEMETRY_OPTOUT = "true"
+
     - name: Set up .NET
       uses: actions/setup-dotnet@v3.0.1
       with:
