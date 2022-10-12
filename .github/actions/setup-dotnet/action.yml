@@ -26,8 +26,8 @@ runs:
     - name: Check if .NET Version Already Installed
       shell: pwsh
       run: |
-        $isDotNetSdkVersionAlreadyInstalled = ${{ github.action_path }}/Get-DotNetSdkVersionIsAlreadyInstalled.ps1
-        "IS_DOTNET_SDK_VERSION_ALREADY_INSTALLED=$isDotNetSdkVersionAlreadyInstalled" >> $Env:GITHUB_ENV
+        $isInstalled = ${{ github.action_path }}/Get-DotNetSdkVersionIsAlreadyInstalled.ps1 ${{ inputs.dotnet-version }}
+        "IS_DOTNET_SDK_VERSION_ALREADY_INSTALLED=$isInstalled" >> $Env:GITHUB_ENV
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v3.0.1
