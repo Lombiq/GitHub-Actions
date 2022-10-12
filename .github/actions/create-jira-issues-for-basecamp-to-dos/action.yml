@@ -1,0 +1,127 @@
+name: Create Jira issues for Basecamp to-dos
+description: Creates Jira issues for to-dos in a Basecamp project.
+
+inputs:
+  issue-component:
+    required: false
+    description: Optional component of the issues being created.
+  suffix-issue-titles:
+    required: false
+    default: "true"
+    description: >
+        If set to "true", Jira issue titles will be suffixed with "in <issue-component>" if the issue-component
+        parameter is specified, or the repository name. If set to "false", no suffix will be added to Jira issue titles.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        Join-Path -Resolve "${{ github.action_path }}" .. verify-submodule-pull-request >> $Env:GITHUB_PATH
+
+    # Don't do anything for pull requests that are already related to an issue, i.e. their titles start with an issue
+    # key.
+    - name: Check for Jira Issue-Related Pull Request
+      id: issue-related-pr
+      env:
+        PR_TITLE: ${{ github.event.pull_request.title }}
+      shell: pwsh
+      run: |
+        $output = "${{ github.event.pull_request }}" -eq "" ? "False" : (Check-PullRequestTitle "$($Env:PR_TITLE)")
+        Write-Output "::set-output name=is-issue-pr::$output"
+
+    - name: Login to Jira
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      # v1.0.0.
+      # This will show a "Logged in as: undefined" message if the login works, see:
+      # https://github.com/atlassian/gajira-login/issues/30.
+      uses: atlassian/gajira-login@90a599561baaf8c05b080645ed73db7391c246ed
+      env:
+        JIRA_BASE_URL: ${{ env.JIRA_BASE_URL }}
+        JIRA_USER_EMAIL: ${{ env.JIRA_USER_EMAIL }}
+        JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
+
+    - name: Initialize Jira Issue Templates
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      shell: pwsh
+      run: Initialize-IssueTemplates
+
+    - name: Initialize Jira Issue Details
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      id: issue-details
+      env:
+        # Necessary to pass this via an environment variable, because when assigned directly to a variable in the
+        # script, it can cause escaping issues with backtick characters (like a "`ulong..." causing "The Unicode escape
+        # sequence is not valid."). Also, the github context contains user input and thus shouldn't be used inline in
+        # scripts to prevent script injection.
+        GITHUB_JSON: ${{ toJSON(github) }}
+      shell: pwsh
+      run: |
+        $github = $Env:GITHUB_JSON | ConvertFrom-Json
+
+        $templates = Initialize-IssueTemplates
+
+        Initialize-IssueDetails $github `
+            "${{ inputs.issue-component }}" `
+            $([System.Convert]::ToBoolean("${{ inputs.suffix-issue-titles }}")) `
+            $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] `
+            $templates["ISSUE_JIRA_ISSUE_DESCRIPTION"] `
+            $templates["PULL_REQUEST_JIRA_ISSUE_DESCRIPTION"]
+
+        $fields = @"
+        {"labels": ["created-from-github"]
+        "@
+
+        if ("${{ inputs.issue-component }}" -ne "")
+        {
+            $fields += ', "components": [{"name": "${{ inputs.issue-component }}"}]'
+        }
+
+        $fields += '}'
+
+        Write-Output "::set-output name=fields::$fields"
+
+    - name: Create Jira Issue
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      id: create-issue
+      uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
+      with:
+        project: ${{ env.JIRA_PROJECT_KEY }}
+        issuetype: ${{ steps.issue-details.outputs.type }}
+        summary: ${{ steps.issue-details.outputs.summary }}
+        description: ${{ fromJSON(steps.issue-details.outputs.json-description) }}
+        fields: ${{ steps.issue-details.outputs.fields }}
+
+    - name: Add Remote Link to Jira Issue
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      shell: pwsh
+      run: |
+        # Note that while --fail will fail the command if the request fails, it won't show the server output. Thus,
+        # remove for debugging. --fail-with-body provides that too, but is only available under curl >=7.76.0 which is
+        # not yet available for GitHub Actions, see https://github.com/Lombiq/GitHub-Actions/issues/53.
+        curl --request POST `
+          --url '${{ env.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink' `
+          --user '${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}' `
+          --header 'Accept: application/json' `
+          --header 'Content-Type: application/json' `
+          --fail `
+          --data '{
+                \"object\": {
+                    \"url\":\"${{ steps.issue-details.outputs.link-url }}\",
+                    \"title\":\"${{ steps.issue-details.outputs.link-title }}\"
+                }
+            }'
+
+    - name: Update GitHub Issue
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
+      # v3.3.0
+      uses: actions-cool/issues-helper@dad28fdb88da5f082c04659b7373d85790f9b135
+      with:
+        actions: "update-issue"
+        token: ${{ env.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.issue.number }}
+        title: ${{ github.event.issue.title }} (${{ steps.create-issue.outputs.issue }})
+        body: "${{ github.event.issue.body }}\n\n[Jira issue](${{ env.JIRA_BASE_URL }}/browse/${{ steps.create-issue.outputs.issue }})"
+        update-mode: 'replace'

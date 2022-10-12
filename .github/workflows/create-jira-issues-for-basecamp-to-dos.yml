@@ -1,0 +1,67 @@
+name: Create Jira issues for Basecamp to-dos
+
+on:
+  workflow_call:
+    secrets:
+      # We can't access org secrets here so they need to be passed in.
+      JIRA_BASE_URL:
+        required: true
+        description: >
+          Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
+          it must NOT end with a slash.
+      JIRA_USER_EMAIL:
+        required: true
+        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+      JIRA_API_TOKEN:
+        required: true
+        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+      JIRA_PROJECT_KEY:
+        required: true
+        description: The project key in JIRA, i.e. the prefix of issue keys (the "KEY" part of KEY-123).
+      DISCUSSION_JIRA_ISSUE_DESCRIPTION:
+        required: false
+        description: >
+          Template for the Jira issues to be created for GitHub discussions, using the internal markup format of Jira
+          (not Markdown). See the documentation for details.
+      ISSUE_JIRA_ISSUE_DESCRIPTION:
+        required: false
+        description: >
+          Template for the Jira issues to be created for GitHub issues, using the internal markup format of Jira (not
+          Markdown). See the documentation for details.
+      PULL_REQUEST_JIRA_ISSUE_DESCRIPTION:
+        required: false
+        description: >
+          Template for the Jira issues to be created for GitHub pull requests, using the internal markup format of Jira
+          (not Markdown). See the documentation for details.
+    inputs:
+      issue-component:
+        required: false
+        type: string
+        description: Optional component of the Jira issues being created.
+      suffix-issue-titles:
+        required: false
+        type: string
+        default: "true"
+        description: >
+          If set to "true", Jira issue titles will be suffixed with "in <issue-component>" if the issue-component
+          parameter is specified, or the repository name. If set to "false", no suffix will be added to Jira issue
+          titles.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Jira issues for Basecamp to-dos
+      uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-basecamp-to-dos@issue/OSOE-174
+      env:
+        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+        JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+        DISCUSSION_JIRA_ISSUE_DESCRIPTION: ${{ secrets.DISCUSSION_JIRA_ISSUE_DESCRIPTION }}
+        ISSUE_JIRA_ISSUE_DESCRIPTION: ${{ secrets.ISSUE_JIRA_ISSUE_DESCRIPTION }}
+        PULL_REQUEST_JIRA_ISSUE_DESCRIPTION: ${{ secrets.PULL_REQUEST_JIRA_ISSUE_DESCRIPTION }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        issue-component: ${{ inputs.issue-component }}
+        suffix-issue-titles: ${{ inputs.suffix-issue-titles }}
