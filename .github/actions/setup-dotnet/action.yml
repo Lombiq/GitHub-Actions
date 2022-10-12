@@ -23,6 +23,9 @@ runs:
         "DOTNET_CLI_TELEMETRY_OPTOUT=true" >> $Env:GITHUB_ENV
         $Env:DOTNET_CLI_TELEMETRY_OPTOUT = "true"
 
+    # setup-dotnet won't install a version if it is already preinstalled on the VM. Note that it checks the latest
+    # released .NET version for wildcard versions. So, e.g. with 6.0.x specified it'll still install 6.0.402 if the VM
+    # only has 6.0.401. See: https://github.com/actions/setup-dotnet/issues/284#issuecomment-1276250960.
     - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
