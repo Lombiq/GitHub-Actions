@@ -20,7 +20,6 @@ $sdks = dotnet --list-sdks
 foreach ($sdk in $sdks)
 {
     $versionPart = $sdk.Split(' ')[0]
-    Write-Output $versionPart
     $version = New-Object "System.Version" $versionPart
 
     if ($isExactMatch -and $requestedVersion -eq $version)
