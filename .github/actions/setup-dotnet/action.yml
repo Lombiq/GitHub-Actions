@@ -26,4 +26,4 @@ runs:
     - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: ${{ inputs.dotnet-version }}
