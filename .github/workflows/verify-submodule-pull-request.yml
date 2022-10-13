@@ -18,4 +18,4 @@ jobs:
         title: ${{ github.event.pull_request.title }}
 
     - name: Check for Merge Conflict
-      uses: Lombiq/GitHub-Actions/.github/workflows/check-merge-conflict.yml@issue/OSOE-144
+      uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@issue/OSOE-144
