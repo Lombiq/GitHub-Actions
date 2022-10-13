@@ -10,7 +10,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set Environment Variables 
+    - name: Set Environment Variables
       shell: pwsh
       run: |
         # This ceremony is needed to make the env vars available in subsequent steps too, see:
