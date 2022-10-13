@@ -17,7 +17,5 @@ jobs:
       with:
         title: ${{ github.event.pull_request.title }}
 
-    - name: Check for Merge Conflict in PR
-      uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@issue/OSOE-144
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Check for Merge Conflict
+      uses: Lombiq/GitHub-Actions/.github/workflows/check-merge-conflict.yml@issue/OSOE-144
