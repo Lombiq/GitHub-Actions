@@ -8,3 +8,6 @@ on:
 jobs:
   call-verify-workflow:
     uses: Lombiq/GitHub-Actions/.github/workflows/verify-submodule-pull-request.yml@dev  
+
+  call-validate-pull-request:
+    uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@dev  
