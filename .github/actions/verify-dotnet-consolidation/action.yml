@@ -20,7 +20,9 @@ runs:
   steps:
     - name: Setup
       shell: pwsh
-      run: dotnet tool install dotnet-consolidate --global --version 2.0.0
+      run: |
+        Import-Module "${{ github.action_path }}\..\..\..\Scripts\Install-DotNetTool.ps1"
+        Install-DotNetTool -Name "dotnet-consolidate" -Version "2.0.0" -Global
     - name: Verify consolidation status
       shell: pwsh
       working-directory: ${{ inputs.directory }}
