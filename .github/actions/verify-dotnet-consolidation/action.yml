@@ -21,7 +21,7 @@ runs:
     - name: Setup
       shell: pwsh
       run: |
-        Import-Module "${{ github.workspace }}/Scripts/Install-DotNetTool.ps1"
+        Import-Module "${{ github.action_path }}/../../../Scripts/Install-DotNetTool.ps1"
         Install-DotNetTool -Name "dotnet-consolidate" -Version "2.0.0" -Global
     - name: Verify consolidation status
       shell: pwsh
