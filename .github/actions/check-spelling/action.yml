@@ -44,6 +44,6 @@ runs:
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       post_comment: 1
-      checkout: 1
+      # checkout: 1
       spell_check_this: ${{ inputs.spell-check-this }}
       config: ${{ inputs.config }}
