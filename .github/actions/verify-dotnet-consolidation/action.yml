@@ -20,7 +20,8 @@ runs:
   steps:
     - name: Setup
       shell: pwsh
-      run: "${{ github.action_path }}/../../../Scripts/Install-DotNetTool.ps1" -Name "dotnet-consolidate" -Version "2.0.0" -Global
+      run: |
+        "${{ github.action_path }}/../../../Scripts/Install-DotNetTool.ps1" -Name "dotnet-consolidate" -Version "2.0.0" -Global
     - name: Verify consolidation status
       shell: pwsh
       working-directory: ${{ inputs.directory }}
