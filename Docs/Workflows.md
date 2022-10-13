@@ -57,27 +57,6 @@ jobs:
       timeout-minutes: 10
 ```
 
-## Check For Merge Conflict
-
-Labels and comments on Pull Requests with merge conflicts.
-
-```yaml
-name: Check For Merge Conflict
-
-on:
-  # So that PRs touching the same files as the push are updated
-  push:
-  # So that the `dirtyLabel` is removed if conflicts are resolve
-  # We recommend `pull_request_target` so that github secrets are available.
-  # In `pull_request` we wouldn't be able to change labels of fork PRs
-  pull_request_target:
-    types: [synchronize]
-
-jobs:
-  call-check-merge-conflict:
-    uses: Lombiq/GitHub-Actions/.github/workflows/check-merge-conflict.yml@dev
-```
-
 ## NuGet publish workflow
 
 Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed. Example _publish.yml_:
@@ -165,6 +144,23 @@ jobs:
     secrets:
       AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+```
+
+## Validate Pull Request
+
+Labels and comments on Pull Requests with merge conflicts.
+
+```yaml
+name: Validate Pull Request
+on:
+  push:
+  pull_request_target:
+    types: [synchronize]
+
+jobs:
+  call-check-merge-conflict:
+    uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@issue/OSOE-144
+
 ```
 
 ## Jira issue creation for community activities workflow
