@@ -89,11 +89,6 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - name: Check for Merge Conflict in PR
-      uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@issue/OSOE-144
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
     - uses: actions/checkout@v3
       with:
         submodules: 'recursive'
