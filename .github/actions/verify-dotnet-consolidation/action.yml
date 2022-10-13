@@ -18,14 +18,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Test
-      shell: pwsh
-      run: Get-ChildItem -Path "${{ github.action_path }}/../../../" -Recurse
     - name: Setup
       shell: pwsh
-      run: |
-        Import-Module "${{ github.action_path }}/../../../Scripts/Install-DotNetTool.psm1"
-        Install-DotNetTool -Name "dotnet-consolidate" -Version "2.0.0" -Global
+      run: "${{ github.action_path }}/../../../Scripts/Install-DotNetTool.ps1" -Name "dotnet-consolidate" -Version "2.0.0" -Global
     - name: Verify consolidation status
       shell: pwsh
       working-directory: ${{ inputs.directory }}
