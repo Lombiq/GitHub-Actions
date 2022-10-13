@@ -18,6 +18,9 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Test
+      shell: pwsh
+      run: Get-ChildItem -Path "${{ github.action_path }}/../../../" -Recurse
     - name: Setup
       shell: pwsh
       run: |
