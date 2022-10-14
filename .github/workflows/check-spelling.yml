@@ -47,10 +47,12 @@ jobs:
       - name: Stub repo layout
         shell: bash
         run: |
-          rm -rf git
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          rm -rf .git
           git init .
           git add .
-          git commit -m 'stub commit --includes submodules'
+          git commit -m 'stub commit -- includes submodules'
 
       - name: Check Spelling
         uses: Lombiq/GitHub-Actions/.github/actions/check-spelling@issue/OSOE-158
