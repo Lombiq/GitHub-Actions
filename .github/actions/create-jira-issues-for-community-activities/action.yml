@@ -22,7 +22,7 @@ runs:
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
-        $Env:PSModulePath += ";$((Resolve-Path "${{ github.action_path }}/../../../Scripts").Path)"
+        $Env:PSModulePath += [System.IO.Path]::PathSeparator + "$((Resolve-Path "${{ github.action_path }}/../../../Scripts").Path)"
 
     # Don't do anything for pull requests that are already related to an issue, i.e. their titles start with an issue
     # key.
