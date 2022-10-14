@@ -1,6 +1,5 @@
 name: Install .NET tool
-description: >
-  Installs a .NET tool globally.
+description: Installs a .NET tool globally.
 
 inputs:
   name:
