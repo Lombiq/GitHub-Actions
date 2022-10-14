@@ -20,7 +20,7 @@ runs:
       run: |
         Write-Output "Pull Request Title: ${{ inputs.title }}"
 
-        $Env:PSModulePath = $Env:PSModulePath + ";$((Resolve-Path "${{ github.action_path }}/../../../Scripts").Path)"
+        $Env:PSModulePath += ";$((Resolve-Path "${{ github.action_path }}/../../../Scripts").Path)"
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
         New-Item -ItemType File -Force $Profile | Out-Null
@@ -32,11 +32,7 @@ runs:
       shell: pwsh
       env:
         PR_TITLE: ${{ inputs.title }}
-      run: |
-        $env:PSModulePath -split ";"
-        Get-Module -ListAvailable
-        
-        Check-Current $Env:PR_TITLE
+      run: Check-Current $Env:PR_TITLE
 
     - name: Ensure Parent Repository Contains Matching PR
       shell: pwsh

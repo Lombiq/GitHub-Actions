@@ -21,10 +21,12 @@ runs:
     - name: Setup Scripts
       shell: pwsh
       run: |
-        $Env:PSModulePath = $Env:PSModulePath + ";$((Resolve-Path "${{ github.action_path }}/../../../Scripts").Path)"
+        $Env:PSModulePath += ";$((Resolve-Path "${{ github.action_path }}/../../../Scripts").Path)"
     - name: Setup tool
       shell: pwsh
       run: |
+        $env:PSModulePath -split ";"
+        Get-Module -ListAvailable
         Install-DotNetTool -Name "dotnet-consolidate" -Version "2.0.0" -Global
     - name: Verify consolidation status
       shell: pwsh
