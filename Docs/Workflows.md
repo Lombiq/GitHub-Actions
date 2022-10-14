@@ -159,8 +159,7 @@ on:
 
 jobs:
   call-check-merge-conflict:
-    uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@issue/OSOE-144
-
+    uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@dev
 ```
 
 ## Jira issue creation for community activities workflow
