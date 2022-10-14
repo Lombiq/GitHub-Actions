@@ -1,10 +1,14 @@
-name: Verify Pull Request
+name: Validate Pull Request
 # This is the same workflow you'd find in our other submodules. Unlike the rest of the workflows in this repo, this one
-# is meant to actually run here, so don't call it from other repos. 
+# is meant to actually run here, so don't call it from other repos.
 
 on:
   pull_request:
+  push:
 
 jobs:
   call-verify-workflow:
     uses: Lombiq/GitHub-Actions/.github/workflows/verify-submodule-pull-request.yml@dev
+
+  call-check-merge-conflict:
+    uses: Lombiq/GitHub-Actions/.github/workflows/check-merge-conflict.yml@issue/OSOE-144
