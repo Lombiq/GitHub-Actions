@@ -18,9 +18,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup
-      shell: pwsh
-      run: dotnet tool install dotnet-consolidate --global --version 2.0.0
+    - name: Install dotnet-consolidate
+      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
+      with:
+        name: dotnet-consolidate
+        version: 2.0.0
     - name: Verify consolidation status
       shell: pwsh
       working-directory: ${{ inputs.directory }}
