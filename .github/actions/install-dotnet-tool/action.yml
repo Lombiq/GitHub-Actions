@@ -1,0 +1,22 @@
+name: Install .NET tool
+description: Installs a .NET tool globally.
+
+inputs:
+  name:
+    required: true
+    description: The name of the tool to install.
+  version:
+    required: true
+    description: The version of the tool to install.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+    - name: Install tool
+      shell: pwsh
+      run: |
+        Install-DotNetTool -Name "${{ inputs.name }}" -Version "${{ inputs.version }}" -Global
