@@ -26,9 +26,9 @@ $installedTool = dotnet tool list $scopeString | Select-Object -Skip 2 | ForEach
         Commands  = $segments[2]
     }
 } | Where-Object { $_.PackageId -eq $Name }
-        
+
 $doInstall = $true
-        
+
 if ($null -ne $installedTool -and $installedTool -ne "")
 {
     if ($installedTool.Version -ne $Version)
@@ -41,7 +41,7 @@ if ($null -ne $installedTool -and $installedTool -ne "")
         $doInstall = $false
     }
 }
-        
+
 if ($doInstall)
 {
     dotnet tool install $Name --version $Version $scopeString
