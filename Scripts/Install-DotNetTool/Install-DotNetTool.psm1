@@ -2,11 +2,11 @@ function Install-DotNetTool
 {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true, HelpMessage = "The name of the tool to install.")]
+        [Parameter(Mandatory = $true, Position = 1, HelpMessage = "The name of the tool to install.")]
         [string]
         $Name,
 
-        [Parameter(Mandatory = $true, HelpMessage = "The version of the tool to install.")]
+        [Parameter(Mandatory = $true, Position = 2, HelpMessage = "The version of the tool to install.")]
         [string]
         $Version,
 

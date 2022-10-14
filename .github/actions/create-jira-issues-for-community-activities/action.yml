@@ -21,8 +21,7 @@ runs:
     - name: Setup Scripts
       shell: pwsh
       run: |
-        "${{ github.action_path }}" >> $Env:GITHUB_PATH
-        Join-Path -Resolve "${{ github.action_path }}" .. verify-submodule-pull-request >> $Env:GITHUB_PATH
+        $Env:PSModulePath = $Env:PSModulePath + ";$((Resolve-Path "${{ github.action_path }}/../../../Scripts").Path)"
 
     # Don't do anything for pull requests that are already related to an issue, i.e. their titles start with an issue
     # key.
@@ -32,7 +31,7 @@ runs:
         PR_TITLE: ${{ github.event.pull_request.title }}
       shell: pwsh
       run: |
-        $output = "${{ github.event.pull_request }}" -eq "" ? "False" : (Check-PullRequestTitle "$($Env:PR_TITLE)")
+        $output = "${{ github.event.pull_request }}" -eq "" ? "False" : (Confirm-PullRequestTitle "$($Env:PR_TITLE)")
         Write-Output "::set-output name=is-issue-pr::$output"
 
     - name: Login to Jira

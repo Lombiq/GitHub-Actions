@@ -18,10 +18,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup
+    - name: Setup Scripts
       shell: pwsh
       run: |
-        Import-Module "${{ github.action_path }}/../../../Scripts/Install-DotNetTool"
+        $Env:PSModulePath = $Env:PSModulePath + ";$((Resolve-Path "${{ github.action_path }}/../../../Scripts").Path)"
+    - name: Setup tool
+      shell: pwsh
+      run: |
         Install-DotNetTool -Name "dotnet-consolidate" -Version "2.0.0" -Global
     - name: Verify consolidation status
       shell: pwsh
