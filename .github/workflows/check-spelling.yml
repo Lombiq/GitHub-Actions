@@ -47,7 +47,7 @@ jobs:
       - name: Stub repo layout
         shell: bash
         run: |
-          rm -rf -git
+          rm -rf git
           git init .
           git add .
           git commit -m 'stub commit --includes submodules'
