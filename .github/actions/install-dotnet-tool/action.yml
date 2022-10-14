@@ -20,4 +20,4 @@ runs:
     - name: Install tool
       shell: pwsh
       run: |
-        Install-DotNetTool -Name "${{ inputs.directory }}" -Version "${{ inputs.version }}" -Global
+        Install-DotNetTool -Name "${{ inputs.name }}" -Version "${{ inputs.version }}" -Global
