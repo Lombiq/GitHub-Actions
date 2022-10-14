@@ -32,7 +32,11 @@ runs:
       shell: pwsh
       env:
         PR_TITLE: ${{ inputs.title }}
-      run: Check-Current $Env:PR_TITLE
+      run: |
+        $env:PSModulePath -split ";"
+        Get-Module -ListAvailable
+        
+        Check-Current $Env:PR_TITLE
 
     - name: Ensure Parent Repository Contains Matching PR
       shell: pwsh
