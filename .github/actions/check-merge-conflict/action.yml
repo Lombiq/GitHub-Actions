@@ -1,0 +1,13 @@
+name: Check For Merge Conflict
+description: Checks for merge conflicts in in the current pull request.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check for merge conflict
+      # releases/2.x
+      uses: eps1lon/actions-label-merge-conflict@b8bf8341285ec9a4567d4318ba474fee998a6919
+      with:
+        repoToken: ${{ env.GITHUB_TOKEN }}
+        commentOnDirty: "This pull request has merge conflicts. Please resolve those before requesting a review."
+        dirtyLabel: "Merge Conflict"
