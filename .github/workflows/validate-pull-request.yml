@@ -1,0 +1,13 @@
+name: Validate Pull Request
+
+on:
+  workflow_call:
+
+jobs:
+  validate-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check for Merge Conflict in PR
+      uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -144,6 +144,7 @@ runs:
             "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
+            "-p:LangVersion=Latest",
             "-p:Version=${{ steps.setup.outputs.publish-version }}",
             "-p:NuspecProperties=version=${{ steps.setup.outputs.publish-version }}",
             "-p:GenerateDocumentationFile=True",
