@@ -21,3 +21,6 @@ package-lock.json$
 .bat$
 .ps1$
 .nuspec.template$
+
+.cs$
+.md$
