@@ -20,3 +20,4 @@ package-lock.json$
 .psm1$
 .bat$
 .ps1$
+.nuspec.template$
