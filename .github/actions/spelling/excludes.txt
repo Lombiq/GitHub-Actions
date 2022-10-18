@@ -27,5 +27,4 @@ pnpm-lock.yaml
 UploadingTestFileXLSX.xlsx
 UploadingTestFileDOCX.docx
 .ruleset
-
-.cs$
+[Rr]eadme

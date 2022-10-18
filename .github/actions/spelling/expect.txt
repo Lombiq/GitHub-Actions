@@ -14,10 +14,8 @@ lockfile
 NLog
 Cms
 ASPNETCORE
-Xunit
 Shouldly
 sln
-Readme
 jsoneditoronline
 wwwroot
 superproject
@@ -28,13 +26,13 @@ dotnet
 homepage
 linq
 localhost
-Lombiq
 mvc
 Uncomment
 allowlist
 apikey
 apps
 cloudsmith
+CLOUDSMITH
 corepack
 github
 https
@@ -43,6 +41,7 @@ json
 metadata
 NPM
 nuget
+sdk
 SDK
 sql
 subfolder
@@ -67,10 +66,10 @@ lockfile
 NLog
 Cms
 ASPNETCORE
+xunit
 Xunit
 Shouldly
 sln
-Readme
 jsoneditoronline
 wwwroot
 superproject
@@ -82,6 +81,7 @@ homepage
 linq
 localhost
 Lombiq
+LOMBIQ
 mvc
 Uncomment
 appsettings
@@ -177,7 +177,6 @@ Activatable
 airbnb
 Antiforgery
 apiclienttenant
-atata
 autorun
 basethemesample
 beforeunload
@@ -306,7 +305,6 @@ Intelli
 fff
 tundora
 xxl
-Atata
 Cloudflare
 Configurator
 createstate
@@ -330,7 +328,6 @@ IRole
 ITaxonomy
 IUser
 linux
-LOMBIQ
 Lucene
 markdownlint
 mcr
@@ -349,13 +346,11 @@ parallelizable
 popstate
 Portainer
 pragma
-readme
 refactoring
 RHEL
 rolename
 Schoorstra
 screenshots
-sdk
 Sipke
 sourced
 sqlcmd
@@ -379,13 +374,5 @@ warnaserror
 XDG
 xpath
 xsessionrc
-xunit
-
-Atata
 Chro
-CLOUDSMITH
-LOMBIQ
-readme
-sdk
 userspace
-xunit
