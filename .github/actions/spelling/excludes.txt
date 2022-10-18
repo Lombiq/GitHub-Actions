@@ -26,6 +26,6 @@ pnpm-lock.yaml
 .DotSettings
 UploadingTestFileXLSX.xlsx
 UploadingTestFileDOCX.docx
+.ruleset
 
 .cs$
-.md$
