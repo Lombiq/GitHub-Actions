@@ -380,3 +380,12 @@ XDG
 xpath
 xsessionrc
 xunit
+
+Atata
+Chro
+CLOUDSMITH
+LOMBIQ
+readme
+sdk
+userspace
+xunit
