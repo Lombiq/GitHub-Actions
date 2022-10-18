@@ -16,12 +16,13 @@ dotnet-tools.json$
 .htmlvalidate.json$
 appsettings.json$
 package.json$
-package-lock.json$
+package-lock.json
 .psm1$
 .bat$
 .ps1$
 .nuspec.template$
-pnpm-lock.yaml$
+pnpm-lock.yaml
+.editorconfig
 
 .cs$
 .md$
