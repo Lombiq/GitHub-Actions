@@ -298,3 +298,11 @@ vuelidate
 webapp
 workaround
 wpf
+mso
+sfc
+SFC
+SFCs
+Intelli
+fff
+tundora
+xxl

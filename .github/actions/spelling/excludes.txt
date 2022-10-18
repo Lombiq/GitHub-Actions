@@ -23,6 +23,9 @@ package-lock.json
 .nuspec.template$
 pnpm-lock.yaml
 .editorconfig
+.DotSettings
+UploadingTestFileXLSX.xlsx
+UploadingTestFileDOCX.docx
 
 .cs$
 .md$
