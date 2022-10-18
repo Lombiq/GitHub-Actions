@@ -21,6 +21,7 @@ package-lock.json$
 .bat$
 .ps1$
 .nuspec.template$
+pnpm-lock.yaml$
 
 .cs$
 .md$
