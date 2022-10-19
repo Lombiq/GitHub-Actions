@@ -1,0 +1,154 @@
+name: Reset Environment
+
+on:
+  workflow_call:
+    secrets:
+      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
+        required: true
+    inputs:
+      # This needs to be stringified JSON because inputs don't support arrays, see 
+      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
+      machine-types:
+        required: false
+        type: string
+        default: "[\"ubuntu-latest\"]"
+        description: >
+            Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
+            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]".
+      timeout-minutes:
+        required: false
+        type: number
+        default: 360
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      app-name:
+        required: true
+        type: string
+        description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
+      destination-slot-name:
+        required: true
+        type: string
+        default: "Staging"
+        description: The slot name of the web app you want to reset. What you see at the top of the blade on the Azure
+          Portal, when you open the slot, before the app name in parenthesis.
+      source-slot-name:
+        required: true
+        type: string
+        default: "Production"
+        description: The slot name of the web app you want to reset the destination web app with. What you see at the
+          top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
+      resource-group-name:
+        required: true
+        type: string
+        description: Name of the resource group.
+      url:
+        required: true
+        type: string
+        description: The URL of the web app slot.
+      database-connection-string-name:
+        required: true
+        type: string
+        description: The name of the database connection string.
+      user-connection-string-name:
+        required: true
+        type: string
+        description: The name of the user connection string.
+      storage-connection-string-name:
+        required: true
+        type: string
+        description: The name of the storage connection string.
+      service-objective-name:
+        required: true
+        type: string
+        default: "S0"
+        description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
+
+jobs:
+  reset-environment:
+    runs-on: ${{ matrix.machine-type }}
+    name: Reset Environment
+    defaults:
+      run:
+        shell: pwsh
+    # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
+    # https://github.com/actions/runner/issues/1555.
+    strategy:
+      matrix:
+        machine-type: ${{ fromJson(inputs.machine-types) }}
+        timeout-minutes:
+        - ${{ inputs.timeout-minutes }}
+    timeout-minutes: ${{ matrix.timeout-minutes }}
+    steps:      
+    - name: Login to Azure
+      # v1.4.5
+      uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
+      with:
+        creds: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+        enable-AzPSSession: true
+
+    - name: Stop Web App Slot
+      # v1.1.0
+      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
+      with:
+        inlineScript: |
+          Stop-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.destination-slot-name }}
+        azPSVersion: latest
+
+    - name: Replace Media
+      run: |
+        Set-AzureWebAppStorageContentFromStorage `
+          -ResourceGroupName ${{ inputs.resource-group-name }}`
+          -WebAppName  ${{ inputs.app-name }} `
+          -SourceSlotName ${{ inputs.source-slot-name }} `
+          -DestinationSlotName ${{ inputs.slot-name }} `
+          -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
+          -ContainerWhiteList @("media") `
+          -FolderBlackList @("RecipeJournal", "`$`$`$ORCHARD`$`$`$.`$`$`$")
+
+    - name: Replace Database
+      run: |
+        Copy-AzureWebAppSqlDatabase `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }}  `
+          -SourceSlotName ${{ inputs.source-slot-name }} `
+          -DestinationSlotName ${{ inputs.slot-name }} `
+          -ConnectionStringName ${{ inputs.database-connection-string-name }} `
+          -Force
+
+    - name: Scale Database
+      run: |
+        Set-AzureWebAppSqlDatabaseServiceObjective `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.destination-slot-name }} `
+          -ConnectionStringName ${{ inputs.database-connection-string-name }} `
+          -ServiceObjectiveName ${{ inputs.service-objective-name }} `
+
+    - name: Add destination contained User to destination database
+      run: |
+        Add-AzureWebAppSqlDatabaseContainedUser `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
+          -DatabaseConnectionStringName ${{ inputs.database-connection-string-name }} `
+          -UserConnectionStringName ${{ inputs.user-connection-string-name }} `
+
+    - name:  Remove source contained User from destination database
+      run: |
+        Remove-AzureWebAppSqlDatabaseContainedUser `
+          -ResourceGroupName ${{ inputs.resource-group-name }} ``
+          -WebAppName ${{ inputs.app-name }} `
+          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
+          -UserSlotName ${{ inputs.source-slot-name }} `
+          -DatabaseConnectionStringName ${{ inputs.database-connection-string-name }} `
+          -UserConnectionStringName ${{ inputs.user-connection-string-name }} `
+
+    - name: Start Web App Slot
+      # v1.1.0
+      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
+      with:
+        inlineScript: |
+          Start-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.destination-slot-name }}
+        azPSVersion: latest
+
+    - name: Ping Web App Slot
+      run: curl --connect-timeout 100 --retry 3 --retry-delay 15 ${{ inputs.url }}
