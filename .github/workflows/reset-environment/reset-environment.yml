@@ -3,7 +3,7 @@ name: Reset Environment
 on:
   workflow_call:
     secrets:
-      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
+      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL:
         required: true
     inputs:
       # This needs to be stringified JSON because inputs don't support arrays, see 
@@ -162,7 +162,7 @@ jobs:
           -DatabaseConnectionStringName ${{ inputs.database-connection-string-name }} `
           -UserConnectionStringName ${{ inputs.user-connection-string-name }} `
 
-    - name:  Remove source contained User from destination database
+    - name: Remove source contained User from destination database
       run: |
         Remove-AzureWebAppSqlDatabaseContainedUser `
           -ResourceGroupName ${{ inputs.resource-group-name }} ``
