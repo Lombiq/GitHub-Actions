@@ -3,7 +3,7 @@ name: Reset Environment
 on:
   workflow_call:
     secrets:
-      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL:
+      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
         required: true
     inputs:
       # This needs to be stringified JSON because inputs don't support arrays, see 
@@ -25,13 +25,13 @@ on:
         type: string
         description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
       destination-slot-name:
-        required: true
+        required: false
         type: string
         default: Staging
         description: The slot name of the web app you want to reset. What you see at the top of the blade on the Azure
           Portal, when you open the slot, before the app name in parenthesis.
       source-slot-name:
-        required: true
+        required: false
         type: string
         default: Production
         description: The slot name of the web app you want to reset the destination web app with. What you see at the
@@ -57,7 +57,7 @@ on:
         type: string
         description: The name of the storage connection string.
       service-objective-name:
-        required: true
+        required: false
         type: string
         default: S0
         description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
@@ -110,7 +110,7 @@ jobs:
       # v1.4.5
       uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
       with:
-        creds: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+        creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
     - name: Stop Web App Slot
