@@ -27,13 +27,13 @@ on:
       destination-slot-name:
         required: true
         type: string
-        default: "Staging"
+        default: Staging
         description: The slot name of the web app you want to reset. What you see at the top of the blade on the Azure
           Portal, when you open the slot, before the app name in parenthesis.
       source-slot-name:
         required: true
         type: string
-        default: "Production"
+        default: Production
         description: The slot name of the web app you want to reset the destination web app with. What you see at the
           top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
       resource-group-name:
@@ -59,8 +59,36 @@ on:
       service-objective-name:
         required: true
         type: string
-        default: "S0"
+        default: S0
         description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
+      # These need to be stringified JSON because inputs don't support arrays, see 
+      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
+      container-black-list:
+        required: false
+        type: string
+        description: >
+            Stringified JSON array with the name of the container(s), e.g.
+            "[\"not.media\"]" or "[\"not-media\", \"bad-container\"]".
+      container-white-list:
+        required: false
+        type: string
+        default: "[\"media\"]"
+        description: >
+            Stringified JSON array with the name of the container(s), e.g.
+            "[\"media\"]" or "[\"media\", \"cool-container\"]".
+      folder-black-list:
+        required: false
+        type: string
+        default: "[\"RecipeJournal\", \"`$`$`$ORCHARD`$`$`$.`$`$`$\"]"
+        description: >
+            Stringified JSON array with the name of the folder(s), e.g.
+            "[\"RecipeJournal\"]" or "[\"RecipeJournal\", \"BadFolder\"]".
+      folder-white-list:
+        required: false
+        type: string
+        description: >
+            Stringified JSON array with the name of the folder(s), e.g.
+            "[\"NotRecipeJournal\"]" or "[\"NotRecipeJournal\", \"CoolFolder\"]".
 
 jobs:
   reset-environment:
@@ -101,8 +129,10 @@ jobs:
           -SourceSlotName ${{ inputs.source-slot-name }} `
           -DestinationSlotName ${{ inputs.slot-name }} `
           -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-          -ContainerWhiteList @("media") `
-          -FolderBlackList @("RecipeJournal", "`$`$`$ORCHARD`$`$`$.`$`$`$")
+          -ContainerBlackList @(${{ fromJson(inputs.container-black-list) }}) `
+          -ContainerWhiteList @(${{ fromJson(inputs.container-white-list) }}) `
+          -FolderBlackList @(${{ fromJson(inputs.folder-black-list) }}) `
+          -FolderWhiteList @(${{ fromJson(inputs.folder-white-list) }})
 
     - name: Replace Database
       run: |
