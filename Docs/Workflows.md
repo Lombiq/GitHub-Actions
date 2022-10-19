@@ -57,23 +57,24 @@ jobs:
       timeout-minutes: 10
 ```
 
-## Check Spelling workflow
+## Spelling workflow
 
 Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. There are 3 configuration files for filtering false positives:
 - _`excludes.txt`_: This file includes file names and extensions to be ignored.
 - _`expect.txt`_: This file contains plain text words that would be considered a spelling mistake.
+- _`allow.txt`_: Same function as `expect.txt`.
 - _`patterns.txt`_: This file contains patterns that would be considered a spelling mistake.
 
 There are more configuration files available, for more information visit the action's [wiki](https://github.com/check-spelling/check-spelling/wiki/Configuration#files).
 
-You can provide these files in your own repository, the default path is `.github/actions/spelling`, but can be changed with the `config` parameter.
+You can provide these files in your own repository, to the path `.github/actions/spelling`, this is restricted, and can not be configured for another path.
 
-You can also use already existing configuration files by setting the `spell-check-this` parameter to a repository.
+You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above mentioned path.
 
 Example _check-spelling.yml_:
 
 ```yaml
-name: Check Spelling
+name: Spelling
 
 on:
   pull_request:
@@ -82,9 +83,9 @@ on:
       - dev
 
 jobs:
-  check-spelling:
-    name: Check Spelling
-    uses: Lombiq/GitHub-Actions/.github/workflows/check-spelling.yml@dev
+  spelling:
+    name: Spelling
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
 ```
 
 ## NuGet publish workflow

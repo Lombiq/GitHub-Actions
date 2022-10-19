@@ -1,4 +1,4 @@
-name: Check Spelling
+name: Spelling
 # This is the same workflow you'd find in our other submodules. Unlike the rest of the workflows in this repo, this one
 # is meant to actually run here, so don't call it from other repos. 
 
@@ -9,6 +9,6 @@ on:
       - dev
 
 jobs:
-  check-spelling:
-    name: Check Spelling
+  spelling:
+    name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@issue/OSOE-158

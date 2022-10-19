@@ -6,7 +6,7 @@ In addition to the below short explanations, check out the inline documentation 
 
 - `build-dotnet`: Builds all .NET solutions or projects in the given directory with optional static code analysis.
 - `check-merge-conflict`: Labels and comments on pull requests with merge conflicts.
-- `check-spelling`: Checks for spelling mistakes in a repository.
+- `spelling`: Checks for spelling mistakes in a repository.
 - `create-jira-issues-for-community-activities`: Creates Jira issues for community activities happening on GitHub, like issues, discussions, and pull requests being opened. Pull requests are only taken into account if they're not already related to a Jira issue (by starting their title with a Jira issue key).
 - `enable-corepack`: Enables [Node corepack](https://nodejs.org/docs/latest-v16.x/api/corepack.html) so any package manager can be used seamlessly.
 - `publish-nuget`: Publishes the content of the current directory as a NuGet package.
