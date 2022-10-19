@@ -31,8 +31,6 @@ Uncomment
 allowlist
 apikey
 apps
-cloudsmith
-CLOUDSMITH
 corepack
 github
 https
@@ -41,8 +39,6 @@ json
 metadata
 NPM
 nuget
-sdk
-SDK
 sql
 subfolder
 ubuntu
