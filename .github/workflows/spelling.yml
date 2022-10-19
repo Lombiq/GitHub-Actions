@@ -1,4 +1,4 @@
-name: Check Spelling
+name: Spelling
 
 on:
   workflow_call:
