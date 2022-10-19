@@ -399,3 +399,4 @@ ISignals
 ITested
 Egyw
 ConfigureMockAutherizationService
+Autherization
