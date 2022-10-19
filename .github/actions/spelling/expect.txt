@@ -394,3 +394,7 @@ ISearch
 ISecurity
 ISerializable
 ISet
+ble
+ISignals
+ITested
+Egyw
