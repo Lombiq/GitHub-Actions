@@ -350,6 +350,7 @@ middlewares
 multiline
 multisubmit
 plugin
+plugins
 refactoring
 registrationhttpevent
 registrationworkflow

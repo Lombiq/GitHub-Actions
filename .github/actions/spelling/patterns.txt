@@ -14,3 +14,4 @@
 [Cc][Ll][Oo][Uu][Dd][Ss][Mm][Ii][Tt][Hh]
 [Ss][Dd][Kk]
 [Rr][Ee][Aa][Dd][Mm][Ee]
+[Oo][Ss][Oo][Cc][Ee]
