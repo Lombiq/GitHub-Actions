@@ -18,11 +18,9 @@ RHEL
 RSPEC
 Reks
 Rekt
-SFC
 SFCs
 SUSE
 XDG
-Xunit
 abcdefghijklmnopqrstuvwxyz
 ble
 blog
@@ -103,7 +101,6 @@ pwsh
 readdir
 search'f
 setlocal
-sfc
 sln
 sourced
 sourcemaps
@@ -127,7 +124,6 @@ wpf
 wwwroot
 xpath
 xsessionrc
-xunit
 xxl
 yaml
 yml

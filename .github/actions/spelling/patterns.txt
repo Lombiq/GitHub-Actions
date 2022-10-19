@@ -15,3 +15,5 @@
 [Ss][Dd][Kk]
 [Rr][Ee][Aa][Dd][Mm][Ee]
 [Oo][Ss][Oo][Cc][Ee]
+[Ss][Ff][Cc]
+[Xx]unit
