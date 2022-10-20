@@ -26,6 +26,7 @@ ble
 blog
 btn
 bubl
+buble
 certs
 chainable
 chartjs
