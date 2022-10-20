@@ -121,6 +121,7 @@ jobs:
 
     - name: Replace Database
       run: |
+        Get-Module
         Copy-AzureWebAppSqlDatabase
 
     - name: Scale Database
