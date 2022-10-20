@@ -113,6 +113,10 @@ jobs:
         creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
+    - name: Import PowerShell modules
+      run: |
+        './reset-environment/*.psm1' | gci | Import-Module
+
     - name: Replace Media
       run: |
         Set-AzureWebAppStorageContentFromStorage 
