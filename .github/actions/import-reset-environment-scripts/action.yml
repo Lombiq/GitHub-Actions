@@ -8,3 +8,4 @@ runs:
       shell: pwsh
       run: |
         './*.psm1' | gci | Import-Module
+        Get-Module | Write-Output
