@@ -115,13 +115,14 @@ jobs:
 
     - name: Import PowerShell modules
       uses: Lombiq/GitHub-Actions/.github/actions/import-reset-environment-scripts@issue/NEST-338
+
     - name: Replace Media
       run: |
+        Get-Module
         Set-AzureWebAppStorageContentFromStorage 
 
     - name: Replace Database
       run: |
-        Get-Module
         Copy-AzureWebAppSqlDatabase
 
     - name: Scale Database
