@@ -4,7 +4,12 @@ description: Import Reset Environment Scripts
 runs:
   using: "composite"
   steps:
-    - name: Setup Scripts
+    - name: Setup
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
+    - name: Import Scripts
       shell: pwsh
       run: |
         './*.psm1' | gci | Import-Module
