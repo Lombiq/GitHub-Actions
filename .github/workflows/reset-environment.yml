@@ -118,7 +118,7 @@ jobs:
 
     - name: Replace Media
       run: |
-        Get-Module
+        Get-Module | Write-Output
 
     - name: Replace Database
       run: |
