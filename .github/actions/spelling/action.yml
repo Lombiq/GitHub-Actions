@@ -37,13 +37,12 @@ runs:
   steps:
   - name: Check Spelling
     # Prerelease, this commit includes a specific fix we utilize. Use v0.0.21 once available.
-    uses: check-spelling/check-spelling@prerelease
+    uses: check-spelling/check-spelling@86a22cfaff3846dbd788acea5d18cf5db6d40dd1
     with:
       dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
       extra_dictionaries: ${{ inputs.extra-dictionaries }}
       experimental_apply_changes_via_bot: 0
       suppress_push_for_open_pull_request: 1
       post_comment: 1
-      # checkout: 1
       spell_check_this: ${{ inputs.spell-check-this }}
       config: ${{ inputs.config }}
