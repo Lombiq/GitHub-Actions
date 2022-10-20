@@ -114,9 +114,7 @@ jobs:
         enable-AzPSSession: true
 
     - name: Import PowerShell modules
-      run: |
-        './reset-environment/*.psm1' | gci | Import-Module
-
+      uses: Lombiq/GitHub-Actions/.github/actions/import-reset-environment-scripts@issue/NEST-338
     - name: Replace Media
       run: |
         Set-AzureWebAppStorageContentFromStorage 

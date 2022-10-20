@@ -1,0 +1,10 @@
+name: Import Reset Environment Scripts
+description: Import Reset Environment Scripts
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        './*.psm1' | gci | Import-Module
