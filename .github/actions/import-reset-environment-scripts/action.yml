@@ -9,3 +9,4 @@ runs:
       run: |
         './*.psm1' | gci | Import-Module
         Get-Module | Write-Output
+        Get-Location | Write-Output
