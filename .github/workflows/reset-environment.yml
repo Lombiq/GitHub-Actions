@@ -119,7 +119,6 @@ jobs:
     - name: Replace Media
       run: |
         Get-Module
-        Set-AzureWebAppStorageContentFromStorage 
 
     - name: Replace Database
       run: |
