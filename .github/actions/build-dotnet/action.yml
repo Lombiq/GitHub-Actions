@@ -30,10 +30,9 @@ inputs:
     required: false
     default: "0"
     description: >
-      Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
-      easiest current way to force "clear" the cache
-      (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
-      (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful API.
+      Change this to any other value to alter the cache key, effectively invalidating the latest cache. You can also
+      manage cache entries from the UI, see:
+      https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/caching-dependencies-to-speed-up-workflows#deleting-cache-entries.
   publish-version:
     required: false
     default: "1.${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}"
