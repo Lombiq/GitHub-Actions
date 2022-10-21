@@ -145,7 +145,7 @@ jobs:
       id: set-up-runtime-option
       if: ${{ inputs.runtime != '' }}
       run: |
-        Write-Output "::set-output name=runtime-option::--runtime=${{ inputs.runtime }}"
+        Write-Output "runtime-option=--runtime=${{ inputs.runtime }}" >> $GITHUB_OUTPUT
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
