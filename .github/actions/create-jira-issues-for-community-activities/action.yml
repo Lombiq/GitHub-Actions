@@ -33,7 +33,7 @@ runs:
       shell: pwsh
       run: |
         $output = "${{ github.event.pull_request }}" -eq "" ? "False" : (Confirm-PullRequestTitle "$($Env:PR_TITLE)")
-        Write-Output "is-issue-pr=$output" >> $GITHUB_OUTPUT
+        Write-Output "is-issue-pr=$output" >> $Env:GITHUB_OUTPUT
 
     - name: Login to Jira
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
@@ -84,7 +84,7 @@ runs:
 
         $fields += '}'
 
-        Write-Output "fields=$fields" >> $GITHUB_OUTPUT
+        Write-Output "fields=$fields" >> $Env:GITHUB_OUTPUT
 
     - name: Create Jira Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
