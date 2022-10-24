@@ -91,7 +91,7 @@ runs:
       id: create-issue
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
       with:
-        project: ${{ env.JIRA_PROJECT_KEY }}
+        project: $"ADHOC"
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
         description: ${{ fromJSON(steps.issue-details.outputs.json-description) }}
