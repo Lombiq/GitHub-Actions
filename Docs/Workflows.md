@@ -149,7 +149,7 @@ If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](htt
 
 Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
 
-## Deploy to Azure App Service
+## Deploy to Azure App Service workflow
 
 This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). Example _deploy-to-azure-app-service.yml_:
 
@@ -177,7 +177,7 @@ jobs:
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
 ```
 
-## Validate Pull Request
+## Validate Pull Request workflow
 
 Labels and comments on Pull Requests with merge conflicts.
 
