@@ -1,0 +1,64 @@
+name: Spelling
+
+on:
+  workflow_call:
+    inputs:
+      dictionary-source-prefixes:
+        description: JSON map of prefixes for dictionary URLs, "cspell" is necessary. See https://github.com/check-spelling/check-spelling/blob/86a22cfaff3846dbd788acea5d18cf5db6d40dd1/action.yml#L64 for current version.
+        required: false
+        type: string
+        default: '{"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"}'
+      extra-dictionaries:
+        description: Space delimited list of URLs (or `prefix:`+path) to additional word lists.
+        required: false
+        type: string
+        default:
+          cspell:filetypes/filetypes.txt
+          cspell:django/django.txt
+          cspell:aws/aws.txt
+          cspell:html/html.txt
+          cspell:css/css.txt
+          cspell:csharp/csharp.txt
+          cspell:rust/rust.txt
+          cspell:npm/npm.txt
+          cspell:dotnet/dotnet.txt
+          cspell:scala/scala.txt
+      config:
+        description: Spelling configuration directory
+        required: false
+        type: string
+        default: .github/actions/spelling
+      spell-check-this:
+        description: Repository with default configuration to use, the default from Check Spelling is ''
+        required: false
+        type: string
+        default: Lombiq/GitHub-Actions@issue/OSOE-158
+
+jobs:
+  check-spelling:
+    name: Check Spelling
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+
+      # This is a workaround for the spelling workflow to check submodules too in the repository.
+      - name: Stub repo layout
+        shell: pwsh
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          Remove-Item .\.git\ -recurse -force
+          git init .
+          git add .
+          git commit -m 'stub commit -- includes submodules'
+
+      - name: Check Spelling
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-158
+        with:
+          dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
+          extra-dictionaries: ${{ inputs.extra-dictionaries }}
+          config: ${{ inputs.config }}
+          spell-check-this: ${{ inputs.spell-check-this }}

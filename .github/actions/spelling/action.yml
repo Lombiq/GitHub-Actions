@@ -1,0 +1,50 @@
+# This file needs to be present in this exact folder for the workflow using this action to be able to work with submodules.
+name: Spelling
+description: Checks for spelling errors in files.
+
+inputs:
+  dictionary-source-prefixes:
+    # When v0.0.21 is out update this and the one in spelling.yml with the version below.
+    description: JSON map of prefixes for dictionary urls, "cspell" is necessary. See https://github.com/check-spelling/check-spelling/blob/86a22cfaff3846dbd788acea5d18cf5db6d40dd1/action.yml#L64 for current version.
+    required: false
+    default: '{"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"}'
+  extra-dictionaries:
+    description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
+    required: false
+    default:
+      cspell:filetypes/filetypes.txt
+      cspell:django/django.txt
+      cspell:aws/aws.txt
+      cspell:html/html.txt
+      cspell:css/css.txt
+      cspell:csharp/csharp.txt
+      cspell:rust/rust.txt
+      cspell:npm/npm.txt
+      cspell:dotnet/dotnet.txt
+      cspell:scala/scala.txt
+      lombiq:expect.txt
+  config:
+    description: Spelling configuration directory
+    required: false
+    type: string
+    default: .github/actions/check-spelling
+  spell-check-this:
+    description: Repository with default configuration to use, the default from Check Spelling is ''.
+    required: false
+    type: string
+    default: Lombiq/GitHub-Actions@issue/OSOE-158
+
+runs:
+  using: "composite"
+  steps:
+  - name: Check Spelling
+    # Prerelease, this commit includes a specific fix we utilize. Use v0.0.21 once available.
+    uses: check-spelling/check-spelling@86a22cfaff3846dbd788acea5d18cf5db6d40dd1
+    with:
+      dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
+      extra_dictionaries: ${{ inputs.extra-dictionaries }}
+      experimental_apply_changes_via_bot: 0
+      suppress_push_for_open_pull_request: 1
+      post_comment: 1
+      spell_check_this: ${{ inputs.spell-check-this }}
+      config: ${{ inputs.config }}
