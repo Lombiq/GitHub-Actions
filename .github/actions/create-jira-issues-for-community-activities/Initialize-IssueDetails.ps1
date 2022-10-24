@@ -54,7 +54,7 @@ switch ($GitHub.event_name)
     "push"
     {
         $summary = "Testing"
-        $description = "Testing this workflow"
+        $description = $PullReqestJiraIssueDescription
         $linkUrl = $GitHub.event.push.html_url
         $linkTitle = "GitHub push Test"
     }
