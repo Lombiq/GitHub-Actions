@@ -19,9 +19,8 @@ $parameters = @{
 $configFiles = Get-ChildItem @parameters
 
 $configFiles | ForEach-Object {
-    $json = Get-Content $_ | ConvertFrom-Json
-    $json.maxParallelThreads = $MaxParallelThreads
-    ConvertTo-Json -InputObject $json > $_
+    $content = [System.IO.File]::ReadAllText($_) -Replace '"maxParallelThreads":\s*([-\d]*)', "`"maxParallelThreads`": $MaxParallelThreads"
+    $content > $_
 }
 
 Write-Output "Replaced $($configFiles.Count) occurrences."
