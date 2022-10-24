@@ -19,8 +19,11 @@ $parameters = @{
 $configFiles = Get-ChildItem @parameters
 
 $configFiles | ForEach-Object {
-    $content = [System.IO.File]::ReadAllText($_) -Replace '"maxParallelThreads":\s*([-\d]*)', "`"maxParallelThreads`": $MaxParallelThreads"
-    $content > $_
+    # Need the parentheses to close the file after reading. Without them, you'll receive an error with Set-Content:
+    # "The process cannot access the file '[...]\xunit.runner.json' because it is being used by another process."
+    (Get-Content $_) |
+    ForEach-Object { $_ -Replace '"maxParallelThreads":\s*([-\d]*)', "`"maxParallelThreads`": $MaxParallelThreads" } |
+    Set-Content $_
 }
 
 Write-Output "Replaced $($configFiles.Count) occurrences."
