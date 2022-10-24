@@ -17,4 +17,5 @@
 [Oo][Ss][Oo][Cc][Ee]
 [Ss][Ff][Cc]
 [Xx][Uu]nit
+[Xx][Pp][Aa][Tt][Hh]
 [Rr]eadme
