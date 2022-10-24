@@ -92,7 +92,7 @@ runs:
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
       with:
         project: ADHOC
-        issuetype: ${{ steps.issue-details.outputs.type }}
+        issuetype: Task
         summary: ${{ steps.issue-details.outputs.summary }}
         description: Testing
         fields: ${{ steps.issue-details.outputs.fields }}
