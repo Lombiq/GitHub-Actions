@@ -94,7 +94,7 @@ runs:
         project: $"ADHOC"
         issuetype: ${{ steps.issue-details.outputs.type }}
         summary: ${{ steps.issue-details.outputs.summary }}
-        description: ${{ fromJSON(steps.issue-details.outputs.json-description) }}
+        description: $"Testing"
         fields: ${{ steps.issue-details.outputs.fields }}
 
     - name: Add Remote Link to Jira Issue
