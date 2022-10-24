@@ -1,4 +1,7 @@
-param ($MaxParallelThreads)
+param (
+    [Parameter(Mandatory=$true)]    
+    $MaxParallelThreads
+)
 
 Write-Output "Setting maxParallelThreads in xunit.runner.json files to $MaxParallelThreads."
 
@@ -13,12 +16,12 @@ $parameters = @{
         WarningAction = "Ignore"
 }
 
-($configFiles = Get-ChildItem @parameters) | ForEach-Object {
-    # Need the parentheses to close the file after reading. Without them, you'll receive an error with Set-Content:
-    # "The process cannot access the file '[...]\xunit.runner.json' because it is being used by another process."
-    (Get-Content $_) |
-        ForEach-Object { $_ -Replace '"maxParallelThreads":\s*([-\d]*)', "`"maxParallelThreads`": $MaxParallelThreads" } |
-            Set-Content $_
+$configFiles = Get-ChildItem @parameters
+
+$configFiles | ForEach-Object {
+    $json = Get-Content $_ | ConvertFrom-Json
+    $json.maxParallelThreads = $MaxParallelThreads
+    ConvertTo-Json -InputObject $json > $_
 }
 
 Write-Output "Replaced $($configFiles.Count) occurrences."
