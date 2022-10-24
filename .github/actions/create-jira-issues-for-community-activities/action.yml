@@ -93,7 +93,7 @@ runs:
       with:
         project: ADHOC
         issuetype: Task
-        summary: ${{ steps.issue-details.outputs.summary }}
+        summary: Testing
         description: Testing
         fields: ${{ steps.issue-details.outputs.fields }}
 
