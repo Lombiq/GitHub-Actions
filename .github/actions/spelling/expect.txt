@@ -1,4 +1,4 @@
-Accessbility
+AccessbilityCheckingAndAssertionOnPageChangeRule
 Chro
 Cloudflare
 Cms

@@ -27,3 +27,5 @@ pnpm-lock.yaml
 UploadingTestFileXLSX.xlsx
 UploadingTestFileDOCX.docx
 .ruleset
+.ico$
+.nupkg$
