@@ -50,7 +50,7 @@ jobs:
         run: |
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
-          rm -rf .git
+          Remove-Item .\.git\ -recurse -force
           git init .
           git add .
           git commit -m 'stub commit -- includes submodules'
