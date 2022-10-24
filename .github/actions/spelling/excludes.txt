@@ -29,3 +29,4 @@ UploadingTestFileDOCX.docx
 .ruleset
 .ico$
 .nupkg$
+test/Lombiq.UITestingToolbox/Lombiq.Tests.UI/SampleUploadFiles/Document.pdf
