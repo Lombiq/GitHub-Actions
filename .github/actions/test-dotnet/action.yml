@@ -50,6 +50,8 @@ runs:
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
     # FailureDumps into the solution root.
+    # FailureDump handling should also happen when the build is canceled, which is especially important if this happens
+    # due to timeout.
     - name: Merge FailureDumps
       shell: pwsh
       if: hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
