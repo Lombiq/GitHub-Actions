@@ -40,7 +40,7 @@ runs:
         '@.Trim()
 
         Write-Output "NuGet Source: $source"
-        Write-Output "source-url=$source" >> $Env:GITHUB_OUTPUT
+        Set-Output "source-url" $source
 
         $version = @'
         ${{ inputs.publish-version }}
@@ -60,7 +60,7 @@ runs:
         }
         
         Write-Output "Target Version: $version"
-        Write-Output "publish-version=$version" >> $Env:GITHUB_OUTPUT
+        Set-Output "publish-version" $version
         
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
