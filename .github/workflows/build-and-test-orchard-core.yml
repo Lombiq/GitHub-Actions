@@ -94,7 +94,6 @@ jobs:
         submodules: 'recursive'
 
     - name: Set up .NET
-      if: always()
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
