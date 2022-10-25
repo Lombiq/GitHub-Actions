@@ -5,7 +5,7 @@ param (
 
     [Parameter(Mandatory = $true, Position = 1)]
     [string]
-    $Value,
+    $Value
 )
 
 return Write-Output "$Key=$Value" >> $GITHUB_OUTPUT
