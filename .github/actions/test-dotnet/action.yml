@@ -54,7 +54,7 @@ runs:
     # due to timeout.
     - name: Merge FailureDumps
       shell: pwsh
-      if: hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
+      if: always() && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
     - name: Upload UI testing artifacts
