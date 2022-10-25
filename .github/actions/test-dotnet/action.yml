@@ -77,3 +77,8 @@ runs:
         path: '${{inputs.build-directory}}/**/*.trx'
         reporter: dotnet-trx
         fail-on-error: 'false'
+    - name: Always test
+      if: always()
+      shell: pwsh
+      run: |
+        Write-Output "This worked!"
