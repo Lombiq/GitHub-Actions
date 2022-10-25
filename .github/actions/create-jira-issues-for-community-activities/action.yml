@@ -91,10 +91,10 @@ runs:
       id: create-issue
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
       with:
-        project: ADHOC
-        issuetype: Task
-        summary: Testing
-        description: Testing
+        project: ${{ env.JIRA_PROJECT_KEY }}
+        issuetype: ${{ steps.issue-details.outputs.type }}
+        summary: ${{ steps.issue-details.outputs.summary }}
+        description: ${{ fromJSON(steps.issue-details.outputs.json-description) }}
         fields: ${{ steps.issue-details.outputs.fields }}
 
     - name: Add Remote Link to Jira Issue
