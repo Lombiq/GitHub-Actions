@@ -123,3 +123,9 @@ jobs:
         build-directory: ${{ inputs.build-directory }}
         test-verbosity: ${{ inputs.build-verbosity }}
         ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+
+    - name: Always test
+      if: always()
+      shell: pwsh
+      run: |
+        Write-Output "Did this work? $(Get-Date)"

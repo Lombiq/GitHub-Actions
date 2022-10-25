@@ -81,4 +81,4 @@ runs:
       if: always()
       shell: pwsh
       run: |
-        Write-Output "This worked!"
+        Write-Output "Did this work? $(Get-Date)"
