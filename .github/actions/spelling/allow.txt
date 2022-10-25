@@ -4,6 +4,7 @@ Driectory
 Drvier
 Handlingtests
 Hidiging
+IConnection
 ICounter
 ISetup
 IShell
