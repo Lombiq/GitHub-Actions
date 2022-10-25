@@ -105,7 +105,6 @@ jobs:
         directory: ${{ inputs.build-directory }}
 
     - name: Enable Node corepack
-      if: always()
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Static Code Analysis
