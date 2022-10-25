@@ -4,6 +4,7 @@ Driectory
 Drvier
 Handlingtests
 Hidiging
+ICounter
 ISetup
 IShell
 IShortcuts
@@ -41,6 +42,7 @@ TClient
 TContent
 TContext
 TController
+TCounter
 TData
 TDelegate
 TDriver
