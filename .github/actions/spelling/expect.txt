@@ -75,8 +75,8 @@ linebreak
 linkedin
 linq
 linting
-lintrc
 Lintrc
+lintrc
 linux
 localhost
 lockfile
