@@ -12,7 +12,6 @@ Egyw
 GDPR
 Hsl
 JIRA
-Lintrc
 MVVM
 NLog
 NONINFRINGEMENT
@@ -77,6 +76,7 @@ linkedin
 linq
 linting
 lintrc
+Lintrc
 linux
 localhost
 lockfile
