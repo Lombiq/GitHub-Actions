@@ -27,12 +27,12 @@ inputs:
     description: Spelling configuration directory
     required: false
     type: string
-    default: .github/actions/check-spelling
+    default: .github/actions/spelling
   spell-check-this:
     description: Repository with default configuration to use, the default from Check Spelling is ''.
     required: false
     type: string
-    default: Lombiq/GitHub-Actions@dev
+    default: Lombiq/GitHub-Actions@issue/OSOE-84
 
 runs:
   using: "composite"
