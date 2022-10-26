@@ -6,3 +6,10 @@ runs:
   steps:
     # v2.2
     - uses: actions-cool/check-user-permission@cd622002ff25c2311d2e7fb82107c0d24be83f9b
+    - name: Check for merge conflict
+      # releases/2.x
+      uses: eps1lon/actions-label-merge-conflict@b8bf8341285ec9a4567d4318ba474fee998a6919
+      with:
+        repoToken: ${{ env.GITHUB_TOKEN }}
+        commentOnDirty: "This pull request has merge conflicts. Please resolve those before requesting a review."
+        dirtyLabel: "Merge Conflict"
