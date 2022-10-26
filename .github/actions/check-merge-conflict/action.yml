@@ -23,15 +23,8 @@ runs:
       shell: bash
       run: echo '${{ toJSON(matrix) }}'
 
-    # v2.2
-    - name: Check User Permissions
-      id: check-user-permissions
-      uses: actions-cool/check-user-permission@cd622002ff25c2311d2e7fb82107c0d24be83f9b
-      with:
-        username: ${{ github.triggering_actor }}
-
     - name: Check for merge conflict
-      if: steps.check-user-permissions.user-permission != 'read'
+      if: event.pull_request == '' || event.pull_request.head.fork == 'false'
       # releases/2.x
       uses: eps1lon/actions-label-merge-conflict@b8bf8341285ec9a4567d4318ba474fee998a6919
       with:
