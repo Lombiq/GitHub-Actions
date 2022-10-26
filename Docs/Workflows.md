@@ -60,6 +60,7 @@ jobs:
 ## Spelling workflow
 
 Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. There are 3 configuration files for filtering false positives:
+
 - _`excludes.txt`_: This file includes file names and extensions to be ignored.
 - _`expect.txt`_: This file contains plain text words that would be considered a spelling mistake.
 - _`allow.txt`_: Same function as `expect.txt`. Out of convention this file contains meaningful words, while `expect.txt` everything else.
