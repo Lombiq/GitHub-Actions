@@ -24,6 +24,8 @@ SUSE
 XDG
 abcdefghijklmnopqrstuvwxyz
 argv
+Autoprefix
+binstubs
 ble
 blog
 btn
@@ -43,6 +45,7 @@ crlf
 csharp
 ctx
 cwd
+EBUSY
 ecma
 editorconfig
 emails
@@ -70,6 +73,7 @@ linebreak
 linkedin
 linq
 linting
+[Ll]intrc
 linux
 localhost
 lockfile
@@ -87,6 +91,7 @@ myapp
 navbar
 ndproj
 nologo
+npmrc
 npx
 nuget
 omnisharp
@@ -102,9 +107,11 @@ postclean
 pragma
 prebuild
 preheader
-promisify
+[Pp]romisify
+[Pp]romisified
 pwsh
 readdir
+Resx
 search'f
 setlocal
 sln
