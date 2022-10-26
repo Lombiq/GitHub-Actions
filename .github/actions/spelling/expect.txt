@@ -23,6 +23,7 @@ SFCs
 SUSE
 XDG
 abcdefghijklmnopqrstuvwxyz
+argv
 ble
 blog
 btn
@@ -31,10 +32,12 @@ buble
 certs
 chainable
 chartjs
+chdir
 chmod
 chown
 chromedriver
 cjs
+copyfiles
 cref
 crlf
 csharp
@@ -99,6 +102,7 @@ postclean
 pragma
 prebuild
 preheader
+promisify
 pwsh
 readdir
 search'f
@@ -110,6 +114,7 @@ sql
 sqlcmd
 sudoing
 testid
+textlint
 thetheme
 todo
 tundora
