@@ -186,7 +186,7 @@ Labels and comments on Pull Requests with merge conflicts.
 name: Validate Pull Request
 on:
   push:
-  pull_request_target:
+  pull_request:
     types: [synchronize]
 
 jobs:
