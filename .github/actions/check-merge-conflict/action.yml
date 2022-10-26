@@ -1,5 +1,5 @@
 name: Check For Merge Conflict
-description: Checks for merge conflicts in in the current pull request.
+description: Checks for merge conflicts in the current pull request.
 
 runs:
   using: "composite"
