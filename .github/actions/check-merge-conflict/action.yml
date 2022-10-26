@@ -8,6 +8,7 @@ runs:
     - name: Check User Permissions
       id: check-user-permissions
       uses: actions-cool/check-user-permission@cd622002ff25c2311d2e7fb82107c0d24be83f9b
+
     - name: Check for merge conflict
       if: steps.check-user-permissions.user-permission != 'read'
       # releases/2.x
