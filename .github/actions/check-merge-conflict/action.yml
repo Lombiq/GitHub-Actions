@@ -4,7 +4,8 @@ description: Checks for merge conflicts in the current pull request.
 runs:
   using: "composite"
   steps:
-    - uses: actions-cool/check-user-permission@a0668c9aec87f3875fc56170b6452a453e9dd819
+    # v2.2
+    - uses: actions-cool/check-user-permission@cd622002ff25c2311d2e7fb82107c0d24be83f9b
     - name: Check for merge conflict
       # releases/2.x
       uses: eps1lon/actions-label-merge-conflict@b8bf8341285ec9a4567d4318ba474fee998a6919
