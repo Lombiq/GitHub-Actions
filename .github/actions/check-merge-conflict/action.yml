@@ -4,6 +4,25 @@ description: Checks for merge conflicts in the current pull request.
 runs:
   using: "composite"
   steps:
+    - name: Dump GitHub context
+      shell: bash
+      run: echo '${{ toJSON(github) }}'
+    - name: Dump job context
+      shell: bash
+      run: echo '${{ toJSON(job) }}'
+    - name: Dump steps context
+      shell: bash
+      run: echo '${{ toJSON(steps) }}'
+    - name: Dump runner context
+      shell: bash
+      run: echo '${{ toJSON(runner) }}'
+    - name: Dump strategy context
+      shell: bash
+      run: echo '${{ toJSON(strategy) }}'
+    - name: Dump matrix context
+      shell: bash
+      run: echo '${{ toJSON(matrix) }}'
+
     # v2.2
     - name: Check User Permissions
       id: check-user-permissions
