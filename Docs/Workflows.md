@@ -66,10 +66,6 @@ Checks for spelling mistakes in a repository using the [Check Spelling](https://
 - _`allow.txt`_: Same function as `expect.txt`. Out of convention this file contains meaningful words, while `expect.txt` everything else.
 - _`patterns.txt`_: This file contains patterns that would be considered a spelling mistake.
 
-> Words in `allow.txt` and `expect.txt` that contain only lower-case letters, will be matched in a <u>case-insensitive</u> way.
-> 
-> Words that contain UPPER-case letters will be matched in a <u>case-sensitive</u> way. Details on the why can be found [here](https://github.com/check-spelling/check-spelling/issues/33#issuecomment-1292890521).
-
 There are more configuration files available, for more information visit the [Check Spelling wiki](https://github.com/check-spelling/check-spelling/wiki/Configuration#files).
 
 You can override these files in your own repository, under `.github/actions/spelling/`. This path can be configured by the `config` property.
