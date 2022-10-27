@@ -6,6 +6,7 @@ Cms
 CDNs
 EACCES
 EBUSY
+EOL
 EULA
 Egyw
 GDPR
@@ -52,6 +53,7 @@ ecma
 editorconfig
 emails
 enableextensions
+errored
 esm
 eur
 falsey
@@ -122,6 +124,7 @@ sourcemaps
 sql
 sqlcmd
 sudoing
+symlink
 testid
 textlint
 thetheme
