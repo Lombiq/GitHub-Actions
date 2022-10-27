@@ -76,7 +76,6 @@ linkedin
 linq
 linting
 lintrc
-Lintrc
 linux
 localhost
 lockfile
