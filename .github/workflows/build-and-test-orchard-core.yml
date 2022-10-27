@@ -62,7 +62,7 @@ on:
         default: "false"
         description: >
           If set to "true", SQL Server Express will be installed and started. This is necessary if the app's UI tests
-          connect to an SQL Server database.
+          connect to a SQL Server database.
       set-up-azurite:
         required: false
         type: string
