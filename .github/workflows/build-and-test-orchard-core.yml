@@ -59,14 +59,14 @@ on:
       set-up-sql-server:
         required: false
         type: string
-        default: "true"
+        default: "false"
         description: >
           If set to "true", SQL Server Express will be installed and started. This is necessary if the app's UI tests
           connect to an SQL Server database.
       set-up-azurite:
         required: false
         type: string
-        default: "true"
+        default: "false"
         description: >
           If set to "true", the Azurite Azure Blob Storage emulator will be installed and started. This is necessary if
           the app's UI tests connect to Azure Blob Storage for file storage.
