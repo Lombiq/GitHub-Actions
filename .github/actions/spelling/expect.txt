@@ -1,5 +1,6 @@
 # Words that start with an UPPER-case letter will be matched as is.
 Accessbility
+Autoprefix
 Chro
 Cloudflare
 Cms
@@ -17,6 +18,8 @@ NLog
 NONINFRINGEMENT
 NPM
 NVARCHAR
+Promisified
+Resx
 RHEL
 RSPEC
 Reks
@@ -28,7 +31,6 @@ XDG
 # Words with all lower-case letters will be matched in a case-insensitive way.
 abcdefghijklmnopqrstuvwxyz
 argv
-autoprefix
 binstubs
 ble
 blog
@@ -112,10 +114,8 @@ pragma
 prebuild
 preheader
 promisify
-promisified
 pwsh
 readdir
-resx
 search'f
 setlocal
 sln
