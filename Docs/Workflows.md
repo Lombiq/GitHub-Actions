@@ -57,6 +57,38 @@ jobs:
       timeout-minutes: 10
 ```
 
+## Spelling workflow
+
+Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. There are 3 configuration files for filtering false positives:
+
+- _`excludes.txt`_: This file includes file names and extensions to be ignored.
+- _`expect.txt`_: This file contains plain text words that would be considered a spelling mistake.
+- _`allow.txt`_: Same function as `expect.txt`. Out of convention this file contains meaningful words, while `expect.txt` everything else.
+- _`patterns.txt`_: This file contains patterns that would be considered a spelling mistake.
+
+There are more configuration files available, for more information visit the action's [wiki](https://github.com/check-spelling/check-spelling/wiki/Configuration#files).
+
+You can provide these files in your own repository, under the path `.github/actions/spelling`. This can't be configured for another path.
+
+You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above mentioned path.
+
+Example _check-spelling.yml_:
+
+```yaml
+name: Spelling
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+
+jobs:
+  spelling:
+    name: Spelling
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
+```
+
 ## NuGet publish workflow
 
 Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed. Example _publish.yml_:
@@ -118,7 +150,7 @@ If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](htt
 
 Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
 
-## Deploy to Azure App Service
+## Deploy to Azure App Service workflow
 
 This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). Example _deploy-to-azure-app-service.yml_:
 
@@ -146,7 +178,7 @@ jobs:
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
 ```
 
-## Validate Pull Request
+## Validate Pull Request workflow
 
 Labels and comments on Pull Requests with merge conflicts.
 
