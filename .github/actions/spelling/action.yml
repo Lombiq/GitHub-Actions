@@ -19,6 +19,7 @@ inputs:
       cspell:css/css.txt
       cspell:csharp/csharp.txt
       cspell:software-terms/src/software-terms.txt
+      cspell:typescript/typescript.txt
       cspell:rust/rust.txt
       cspell:npm/npm.txt
       cspell:dotnet/dotnet.txt
