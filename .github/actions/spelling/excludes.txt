@@ -30,4 +30,3 @@ UploadingTestFileDOCX.docx
 \.ico$
 \.nupkg$
 \.pdf$
-(?:^|/)wwwroot/
