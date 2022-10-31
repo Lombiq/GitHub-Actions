@@ -128,11 +128,10 @@ jobs:
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
 
     - name: Replace Media
+      # v1.1.0
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
       with:
         inlineScript: |
-          Import-Module Set-AzureWebAppStorageContentFromStorage
-
           Set-AzureWebAppStorageContentFromStorage
         azPSVersion: latest
 
