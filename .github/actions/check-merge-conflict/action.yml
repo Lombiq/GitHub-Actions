@@ -1,10 +1,11 @@
 name: Check For Merge Conflict
-description: Checks for merge conflicts in in the current pull request.
+description: Checks for merge conflicts in the current pull request.
 
 runs:
   using: "composite"
   steps:
     - name: Check for merge conflict
+      if: github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false
       # releases/2.x
       uses: eps1lon/actions-label-merge-conflict@b8bf8341285ec9a4567d4318ba474fee998a6919
       with:
