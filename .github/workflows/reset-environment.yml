@@ -124,6 +124,9 @@ jobs:
 #            -Slot ${{ inputs.destination-slot-name }}
 #        azPSVersion: latest
 
+    - name: Initialize PowerShell modules
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@feature/github-actions
+
     - name: Replace Media
       run: |
         Set-AzureWebAppStorageContentFromStorage `
