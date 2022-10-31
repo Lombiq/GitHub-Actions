@@ -7,7 +7,7 @@ runs:
     - name: Check for merge conflict
       if: github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false
       # releases/2.x
-      uses: eps1lon/actions-label-merge-conflict@b8bf8341285ec9a4567d4318ba474fee998a6919
+      uses: eps1lon/actions-label-merge-conflict@v2.1.0
       with:
         repoToken: ${{ env.GITHUB_TOKEN }}
         commentOnDirty: "This pull request has merge conflicts. Please resolve those before requesting a review."
