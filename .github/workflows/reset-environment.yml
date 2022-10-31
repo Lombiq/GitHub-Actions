@@ -129,6 +129,8 @@ jobs:
 
     - name: Replace Media
       run: |
+        Import-Module Set-AzureWebAppStorageContentFromStorage
+
         Set-AzureWebAppStorageContentFromStorage
 
     - name: Start Web App Slot
