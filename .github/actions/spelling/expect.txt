@@ -94,6 +94,7 @@ sudoing
 symlink
 testid
 textlint
+thenable
 thetheme
 todo
 tundora
