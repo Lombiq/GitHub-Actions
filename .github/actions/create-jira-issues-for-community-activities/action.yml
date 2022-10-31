@@ -47,12 +47,12 @@ runs:
         JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
 
     - name: Initialize Jira Issue Templates
-      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} == 'False'
       shell: pwsh
       run: Initialize-IssueTemplates
 
     - name: Initialize Jira Issue Details
-      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} == 'False'
       id: issue-details
       env:
         # Necessary to pass this via an environment variable, because when assigned directly to a variable in the
@@ -84,17 +84,17 @@ runs:
 
         $fields += '}'
 
-        Set-Output "fields" $fields
+        Set-Output -Key "fields" -Value $fields
 
     - name: Create Jira Issue
-      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} 'False'
       id: create-issue
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
       with:
-        project: ADHOC
-        issuetype: Task
-        summary: Testing
-        description: Testing
+        project: ${{ env.JIRA_PROJECT_KEY }}
+        issuetype: ${{ steps.issue-details.outputs.type }}
+        summary: ${{ steps.issue-details.outputs.summary }}
+        description: ${{ fromJSON(steps.issue-details.outputs.json-description) }}
         fields: ${{ steps.issue-details.outputs.fields }}
 
     - name: Add Remote Link to Jira Issue
@@ -118,7 +118,7 @@ runs:
             }'
 
     - name: Update GitHub Issue
-      if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
+      if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} == 'False' && github.event.issue
       # v3.3.0
       uses: actions-cool/issues-helper@dad28fdb88da5f082c04659b7373d85790f9b135
       with:

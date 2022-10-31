@@ -60,7 +60,7 @@ runs:
         }
         
         Write-Output "Target Version: $version"
-        Set-Output "publish-version" $version
+        Set-Output -Key "publish-version" -Value $version
         
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
