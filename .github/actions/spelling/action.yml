@@ -18,6 +18,8 @@ inputs:
       cspell:html/html.txt
       cspell:css/css.txt
       cspell:csharp/csharp.txt
+      cspell:software-terms/src/software-terms.txt
+      cspell:node/node.txt
       cspell:rust/rust.txt
       cspell:npm/npm.txt
       cspell:dotnet/dotnet.txt
@@ -32,7 +34,7 @@ inputs:
     description: Repository with default configuration to use, the default from Check Spelling is ''.
     required: false
     type: string
-    default: Lombiq/GitHub-Actions@issue/OSOE-84
+    default: Lombiq/GitHub-Actions@issue/OSOE-92
 
 runs:
   using: "composite"
