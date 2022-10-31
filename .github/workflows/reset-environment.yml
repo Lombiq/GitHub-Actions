@@ -129,54 +129,7 @@ jobs:
 
     - name: Replace Media
       run: |
-        Set-AzureWebAppStorageContentFromStorage `
-          -ResourceGroupName ${{ inputs.resource-group-name }}`
-          -WebAppName  ${{ inputs.app-name }} `
-          -SourceSlotName ${{ inputs.source-slot-name }} `
-          -DestinationSlotName ${{ inputs.slot-name }} `
-          -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-          -ContainerBlackList @(${{ fromJson(inputs.container-black-list) }}) `
-          -ContainerWhiteList @(${{ fromJson(inputs.container-white-list) }}) `
-          -FolderBlackList @(${{ fromJson(inputs.folder-black-list) }}) `
-          -FolderWhiteList @(${{ fromJson(inputs.folder-white-list) }})
-
-    - name: Replace Database
-      run: |
-        Copy-AzureWebAppSqlDatabase `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }}  `
-          -SourceSlotName ${{ inputs.source-slot-name }} `
-          -DestinationSlotName ${{ inputs.slot-name }} `
-          -ConnectionStringName ${{ inputs.database-connection-string-name }} `
-          -Force
-
-    - name: Scale Database
-      run: |
-        Set-AzureWebAppSqlDatabaseServiceObjective `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.destination-slot-name }} `
-          -ConnectionStringName ${{ inputs.database-connection-string-name }} `
-          -ServiceObjectiveName ${{ inputs.service-objective-name }}
-
-    - name: Add destination contained User to destination database
-      run: |
-        Add-AzureWebAppSqlDatabaseContainedUser `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
-          -DatabaseConnectionStringName ${{ inputs.database-connection-string-name }} `
-          -UserConnectionStringName ${{ inputs.user-connection-string-name }}
-
-    - name: Remove source contained User from destination database
-      run: |
-        Remove-AzureWebAppSqlDatabaseContainedUser `
-          -ResourceGroupName ${{ inputs.resource-group-name }} ``
-          -WebAppName ${{ inputs.app-name }} `
-          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
-          -UserSlotName ${{ inputs.source-slot-name }} `
-          -DatabaseConnectionStringName ${{ inputs.database-connection-string-name }} `
-          -UserConnectionStringName ${{ inputs.user-connection-string-name }}
+        Set-AzureWebAppStorageContentFromStorage
 
     - name: Start Web App Slot
       # v1.1.0
