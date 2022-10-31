@@ -1,6 +1,6 @@
 param($IsNuget, $IsNpm, $RestoreKeys, $Hash)
 
-function Set-Output($Key, $Value) { Write-Output "$Key=$Value" >> $GITHUB_OUTPUT }
+function Set-Output($Key, $Value) { "$Key=$Value" >> $GITHUB_OUTPUT }
 function Invoke-Maybe($Block) { try { Invoke-Command -ScriptBlock $Block } catch { return } }
 
 $paths = @()
