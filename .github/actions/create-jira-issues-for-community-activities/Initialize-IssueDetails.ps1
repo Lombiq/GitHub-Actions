@@ -51,6 +51,13 @@ switch ($GitHub.event_name)
         $linkUrl = $GitHub.event.pull_request.html_url
         $linkTitle = "GitHub pull request"
     }
+    "push"
+    {
+        $summary = "Testing"
+        $description = $PullReqestJiraIssueDescription
+        $linkUrl = $GitHub.event.push.html_url
+        $linkTitle = "GitHub push Test"
+    }
     default
     {
         $message = "Unknown event `"$($GitHub.event_name)`". Please only call this script for one of the following " +
