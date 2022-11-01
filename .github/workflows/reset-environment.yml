@@ -141,7 +141,7 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }}`
             -WebAppName  ${{ inputs.app-name }} `
             -SourceSlotName ${{ inputs.source-slot-name }} `
-            -DestinationSlotName ${{ inputs.slot-name }} `
+            -DestinationSlotName ${{ inputs.destination-slot-name }} `
             -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
             -ContainerBlackList ${{ inputs.container-exclude-list }} `
             -ContainerWhiteList ${{ inputs.container-white-list }} `
@@ -158,7 +158,7 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }}  `
             -SourceSlotName ${{ inputs.source-slot-name }} `
-            -DestinationSlotName ${{ inputs.slot-name }} `
+            -DestinationSlotName ${{ inputs.destination-slot-name }} `
             -ConnectionStringName ${{ inputs.database-connection-string-name }} `
             -Force
         azPSVersion: latest
