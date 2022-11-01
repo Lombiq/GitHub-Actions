@@ -126,6 +126,12 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
     - uses: actions/checkout@v3.1.0
       with:
         submodules: 'recursive'

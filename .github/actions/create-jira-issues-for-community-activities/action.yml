@@ -33,7 +33,7 @@ runs:
       shell: pwsh
       run: |
         $output = "${{ github.event.pull_request }}" -eq "" ? "False" : (Confirm-PullRequestTitle "$($Env:PR_TITLE)")
-        Set-Output -Key "is-issue-pr" -Value $output
+        Set-Output "is-issue-pr" $output
 
     - name: Login to Jira
       if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} == 'False'
@@ -84,10 +84,10 @@ runs:
 
         $fields += '}'
 
-        Set-Output -Key "fields" -Value $fields
+        Set-Output "fields" $fields
 
     - name: Create Jira Issue
-      if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} 'False'
+      if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} == 'False'
       id: create-issue
       uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
       with:
