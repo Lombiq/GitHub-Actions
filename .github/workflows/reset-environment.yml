@@ -106,23 +106,6 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:      
-    - name: Login to Azure
-      # v1.4.5
-      uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
-      with:
-        creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
-        enable-AzPSSession: true
-
-    - name: Stop Web App Slot
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Stop-AzWebAppSlot `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -Name ${{ inputs.app-name }} `
-            -Slot ${{ inputs.destination-slot-name }}
-        azPSVersion: latest
 
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
@@ -132,6 +115,9 @@ jobs:
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
       with:
         inlineScript: |
+          echo ${{ fromJson(inputs.container-black-list) }}
+
+
           Set-AzureWebAppStorageContentFromStorage `
             -ResourceGroupName ${{ inputs.resource-group-name }}`
             -WebAppName  ${{ inputs.app-name }} `
