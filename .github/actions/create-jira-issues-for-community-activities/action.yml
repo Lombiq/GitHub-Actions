@@ -36,7 +36,7 @@ runs:
         Set-Output "is-issue-pr" $output
 
     - name: Login to Jira
-      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      if: ${{ steps.issue-related-pr.outputs.is-issue-pr == 'False' }}
       # v1.0.0.
       # This will show a "Logged in as: undefined" message if the login works, see:
       # https://github.com/atlassian/gajira-login/issues/30.
