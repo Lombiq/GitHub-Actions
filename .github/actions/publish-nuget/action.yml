@@ -173,7 +173,7 @@ runs:
       uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
       # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
       # v4.3.1-alpha.osoe-86.
-      if: "!contains(steps.setup.outputs.publish-version, '-')"
+      if: "!contains(${{ steps.setup.outputs.publish-version }}, '-')"
       with:
         allowUpdates: true
         generateReleaseNotes: true
