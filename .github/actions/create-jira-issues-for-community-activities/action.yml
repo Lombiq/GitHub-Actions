@@ -34,6 +34,7 @@ runs:
       run: |
         $output = "${{ github.event.pull_request }}" -eq "" ? "True" : (Confirm-PullRequestTitle "$($Env:PR_TITLE)")
         Set-Output "is-issue-pr" $output
+        Write-Output "Output value: $output"
 
     - name: Login to Jira
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
