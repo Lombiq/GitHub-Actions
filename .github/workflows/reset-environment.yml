@@ -63,34 +63,37 @@ on:
         description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
       # These need to be stringified JSON because inputs don't support arrays, see 
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
-      container-black-list:
+      container-exclude-list:
         required: false
         type: string
-        default: "[]"
+        default: "@()"
         description: >
-            Stringified JSON array with the name of the container(s), e.g.
-            "[\"not.media\"]" or "[\"not-media\", \"bad-container\"]".
+            PowerShell string array with the name of the excluded container(s), e.g.
+            "@(\"not-media\")" or "@(\"not-media\", \"bad-container\")". The parameter must be a PowerShell string
+            array.
       container-white-list:
         required: false
         type: string
-        default: "[\"media\"]"
+        default: "@(\"media\")"
         description: >
-            Stringified JSON array with the name of the container(s), e.g.
-            "[\"media\"]" or "[\"media\", \"cool-container\"]".
-      folder-black-list:
+            PowerShell string array with the name of the included container(s), e.g.
+            "@(\"media\")" or "@(\"media\", \"cool-container\")". The parameter must be a PowerShell string array.
+      folder-exclude-list:
         required: false
         type: string
-        default: "[\"RecipeJournal\", \"`$`$`$ORCHARD`$`$`$.`$`$`$\"]"
+        default: "@(\"RecipeJournal\", \"`$`$`$ORCHARD`$`$`$.`$`$`$\")"
         description: >
-            Stringified JSON array with the name of the folder(s), e.g.
-            "[\"RecipeJournal\"]" or "[\"RecipeJournal\", \"BadFolder\"]".
+            PowerShell string array with the name of the excluded folder(s), e.g.
+            "@(\"RecipeJournal\")" or "@(\"RecipeJournal\", \"BadFolder\")". The parameter must be a PowerShell string
+            array.
       folder-white-list:
         required: false
         type: string
-        default: "[]"
+        default: "@()"
         description: >
-            Stringified JSON array with the name of the folder(s), e.g.
-            "[\"NotRecipeJournal\"]" or "[\"NotRecipeJournal\", \"CoolFolder\"]".
+            PowerShell string array with the name of the included folder(s), e.g.
+            "@(\"NotRecipeJournal\")" or "@(\"NotRecipeJournal\", \"CoolFolder\")". The parameter must be a PowerShell
+            string array.
 
 jobs:
   reset-environment:
@@ -108,20 +111,26 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:      
+    - name: Login to Azure
+      # v1.4.5
+      uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
+      with:
+        creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
+        enable-AzPSSession: true
 
-
-    - name: Initialize PowerShell modules
-      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
-
-    - name: Replace Media
+    - name: Stop Web App Slot
       # v1.1.0
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
       with:
         inlineScript: |
-          echo ${{ inputs.container-black-list }}
-          echo ${{ fromJson(inputs.container-black-list) }}
-
+          Stop-AzWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -Name ${{ inputs.app-name }} `
+            -Slot ${{ inputs.destination-slot-name }}
         azPSVersion: latest
+
+    - name: Initialize PowerShell modules
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
 
     - name: Replace Media
       # v1.1.0
@@ -134,10 +143,10 @@ jobs:
             -SourceSlotName ${{ inputs.source-slot-name }} `
             -DestinationSlotName ${{ inputs.slot-name }} `
             -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-            -ContainerBlackList @(${{ fromJson(inputs.container-black-list) }}) `
-            -ContainerWhiteList @(${{ fromJson(inputs.container-white-list) }}) `
-            -FolderBlackList @(${{ fromJson(inputs.folder-black-list) }}) `
-            -FolderWhiteList @(${{ fromJson(inputs.folder-white-list) }})
+            -ContainerBlackList ${{ inputs.container-exclude-list }} `
+            -ContainerWhiteList ${{ inputs.container-white-list }} `
+            -FolderBlackList ${{ inputs.folder-exclude-list }} `
+            -FolderWhiteList ${{ inputs.folder-white-list }}
         azPSVersion: latest
 
     - name: Replace Database
