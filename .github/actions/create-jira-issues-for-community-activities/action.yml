@@ -51,41 +51,6 @@ runs:
       shell: pwsh
       run: Initialize-IssueTemplates
 
-    - name: Initialize Jira Issue Details
-      if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} == 'False'
-      id: issue-details
-      env:
-        # Necessary to pass this via an environment variable, because when assigned directly to a variable in the
-        # script, it can cause escaping issues with backtick characters (like a "`ulong..." causing "The Unicode escape
-        # sequence is not valid."). Also, the github context contains user input and thus shouldn't be used inline in
-        # scripts to prevent script injection.
-        GITHUB_JSON: ${{ toJSON(github) }}
-      shell: pwsh
-      run: |
-        $github = $Env:GITHUB_JSON | ConvertFrom-Json
-
-        $templates = Initialize-IssueTemplates
-
-        Initialize-IssueDetails $github `
-            "${{ inputs.issue-component }}" `
-            $([System.Convert]::ToBoolean("${{ inputs.suffix-issue-titles }}")) `
-            $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] `
-            $templates["ISSUE_JIRA_ISSUE_DESCRIPTION"] `
-            $templates["PULL_REQUEST_JIRA_ISSUE_DESCRIPTION"]
-
-        $fields = @"
-        {"labels": ["created-from-github"]
-        "@
-
-        if ("${{ inputs.issue-component }}" -ne "")
-        {
-            $fields += ', "components": [{"name": "${{ inputs.issue-component }}"}]'
-        }
-
-        $fields += '}'
-
-        Set-Output "fields" $fields
-
     - name: Update GitHub Issue
       if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} == 'False' && github.event.issue
       # v3.3.0
