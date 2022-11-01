@@ -8,4 +8,4 @@ param (
     $Value
 )
 
-$Key=$Value >> $GITHUB_OUTPUT
+"$Key=$Value" >> $GITHUB_OUTPUT
