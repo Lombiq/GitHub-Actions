@@ -66,7 +66,7 @@ on:
       container-black-list:
         required: false
         type: string
-        default: "[]"
+        default: ""
         description: >
             Stringified JSON array with the name of the container(s), e.g.
             "[\"not.media\"]" or "[\"not-media\", \"bad-container\"]".
@@ -87,7 +87,7 @@ on:
       folder-white-list:
         required: false
         type: string
-        default: "[]"
+        default: ""
         description: >
             Stringified JSON array with the name of the folder(s), e.g.
             "[\"NotRecipeJournal\"]" or "[\"NotRecipeJournal\", \"CoolFolder\"]".
