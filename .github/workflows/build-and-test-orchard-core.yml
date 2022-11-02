@@ -56,6 +56,20 @@ on:
           (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
           (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
           API.
+      set-up-sql-server:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          If set to "true", SQL Server Express will be installed and started. This is necessary if the app's UI tests
+          connect to an MS SQL Server database.
+      set-up-azurite:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          If set to "true", the Azurite Azure Blob Storage emulator will be installed and started. This is necessary if
+          the app's UI tests connect to Azure Blob Storage for file storage.
       ui-test-parallelism:
         required: false
         type: string
@@ -118,9 +132,11 @@ jobs:
         cache-version: ${{ inputs.build-cache-version }}
 
     - name: Set up SQL Server
+      if: inputs.set-up-sql-server == 'true'
       uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
 
     - name: Set up Azurite
+      if: inputs.set-up-azurite == 'true'
       uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
       with:
         location: ${{ inputs.build-directory}}
