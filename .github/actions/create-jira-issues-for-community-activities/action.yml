@@ -33,8 +33,7 @@ runs:
       shell: pwsh
       run: |
         $output = "${{ github.event.pull_request }}" -eq "" ? "False" : (Confirm-PullRequestTitle "$($Env:PR_TITLE)")
-        "is-issue-pr=$output" >> $Env:GITHUB_OUTPUT
-        Write-Output "Output value: $is-issue-pr"
+        Set-Output "is-issue-pr" $output
 
     - name: Testing
       id: testing
