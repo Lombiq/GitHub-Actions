@@ -79,7 +79,7 @@ jobs:
         submodules: 'recursive'
 
     - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-397
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
