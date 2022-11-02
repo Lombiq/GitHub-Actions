@@ -59,7 +59,7 @@ runs:
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
     - name: Upload UI testing artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.1
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: success() || failure()
       with:

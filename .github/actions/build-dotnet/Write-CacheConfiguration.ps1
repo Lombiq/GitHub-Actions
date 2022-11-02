@@ -1,6 +1,5 @@
 param($IsNuget, $IsNpm, $RestoreKeys, $Hash)
 
-function Set-Output($Key, $Value) { Write-Output "::set-output name=$Key::$Value" }
 function Invoke-Maybe($Block) { try { Invoke-Command -ScriptBlock $Block } catch { return } }
 
 $paths = @()
