@@ -65,8 +65,8 @@ if ($null -eq $type)
     $type = "Task"
 }
 
-Write-Output "summary=$summary" >> $GITHUB_OUTPUT
-Write-Output "json-description=$($description | ConvertTo-Json)" >> $GITHUB_OUTPUT
-Write-Output "type=$type" >> $GITHUB_OUTPUT
-Write-Output "link-url=$linkUrl" >> $GITHUB_OUTPUT
-Write-Output "link-title=$linkTitle" >> $GITHUB_OUTPUT
+Set-Output "summary" $summary
+Set-Output "json-description" $($description | ConvertTo-Json)
+Set-Output "type" $type
+Set-Output "link-url" $linkUrl
+Set-Output "link-title" $linkTitle
