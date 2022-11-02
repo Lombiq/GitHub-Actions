@@ -27,13 +27,13 @@ on:
       destination-slot-name:
         required: false
         type: string
-        default: staging
+        default: Staging
         description: The slot name of the web app you want to reset. What you see at the top of the blade on the Azure
           Portal, when you open the slot, before the app name in parenthesis.
       source-slot-name:
         required: false
         type: string
-        default: production
+        default: Production
         description: The slot name of the web app you want to reset the destination web app with. What you see at the
           top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
       resource-group-name:
@@ -117,6 +117,17 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
+
+    - name: Stop Web App Slot
+      # v1.1.0
+      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
+      with:
+        inlineScript: |
+          Stop-AzWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -Name ${{ inputs.app-name }} `
+            -Slot ${{ inputs.destination-slot-name }}
+        azPSVersion: latest
 
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
