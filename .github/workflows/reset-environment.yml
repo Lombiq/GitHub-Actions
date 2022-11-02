@@ -27,13 +27,13 @@ on:
       destination-slot-name:
         required: false
         type: string
-        default: Staging
+        default: staging
         description: The slot name of the web app you want to reset. What you see at the top of the blade on the Azure
           Portal, when you open the slot, before the app name in parenthesis.
       source-slot-name:
         required: false
         type: string
-        default: Production
+        default: production
         description: The slot name of the web app you want to reset the destination web app with. What you see at the
           top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
       resource-group-name:
@@ -120,23 +120,6 @@ jobs:
 
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
-
-    - name: Stop Web App Slot
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          $context = Get-AzContext
-    
-          if (!$context) 
-          {
-            echo "connected"
-          } 
-          else 
-          {
-            echo "not connected"
-          }
-        azPSVersion: latest
 
     - name: Replace Media
       # v1.1.0
