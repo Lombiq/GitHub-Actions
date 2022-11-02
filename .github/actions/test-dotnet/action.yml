@@ -55,7 +55,7 @@ runs:
     # The same is true for the next step as well.
     - name: Merge FailureDumps
       shell: pwsh
-      if: (success() || failure()) && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
+      if: success() || failure()
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
     - name: Upload UI testing artifacts
