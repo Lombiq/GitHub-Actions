@@ -31,7 +31,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Setup NuGet Version
       id: setup
       shell: pwsh
       run: |
@@ -40,7 +46,7 @@ runs:
         '@.Trim()
 
         Write-Output "NuGet Source: $source"
-        Write-Output "::set-output name=source-url::$source"
+        Set-Output "source-url" $source
 
         $version = @'
         ${{ inputs.publish-version }}
@@ -60,9 +66,7 @@ runs:
         }
         
         Write-Output "Target Version: $version"
-        Write-Output "::set-output name=publish-version::$version"
-        
-        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        Set-Output "publish-version" $version
 
     - name: Add Source Link package
       shell: bash
@@ -162,7 +166,7 @@ runs:
       run: dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
 
     - name: Publish Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.1
       with:
         name: NuGet-Package
         path: artifacts
