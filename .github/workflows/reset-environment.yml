@@ -123,7 +123,7 @@ jobs:
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
       with:
         inlineScript: |
-          Stop-AzWebAppSlot `
+          Start-AzWebAppSlot `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -Name ${{ inputs.app-name }} `
             -Slot ${{ inputs.destination-slot-name }}
