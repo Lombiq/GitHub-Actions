@@ -34,6 +34,7 @@ runs:
     - name: Setup Scripts
       shell: pwsh
       run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
     - name: Setup NuGet Version
@@ -66,8 +67,6 @@ runs:
         
         Write-Output "Target Version: $version"
         Set-Output "publish-version" $version
-        
-        "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
     - name: Add Source Link package
       shell: bash
