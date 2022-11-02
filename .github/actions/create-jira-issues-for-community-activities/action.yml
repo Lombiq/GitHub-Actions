@@ -63,21 +63,27 @@ runs:
       shell: pwsh
       run: |
         $github = $Env:GITHUB_JSON | ConvertFrom-Json
+
         $templates = Initialize-IssueTemplates
+
         Initialize-IssueDetails $github `
             "${{ inputs.issue-component }}" `
             $([System.Convert]::ToBoolean("${{ inputs.suffix-issue-titles }}")) `
             $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] `
             $templates["ISSUE_JIRA_ISSUE_DESCRIPTION"] `
             $templates["PULL_REQUEST_JIRA_ISSUE_DESCRIPTION"]
+
         $fields = @"
         {"labels": ["created-from-github"]
         "@
+
         if ("${{ inputs.issue-component }}" -ne "")
         {
             $fields += ', "components": [{"name": "${{ inputs.issue-component }}"}]'
         }
+
         $fields += '}'
+
         Set-Output "fields" $fields
 
     - name: Create Jira Issue
