@@ -28,8 +28,10 @@ runs:
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
     - name: Setup & Set UI Test Parallelization
+      id: setup
       shell: pwsh
       run: |
         if (${{ inputs.ui-test-parallelism }} -eq -1)
@@ -41,6 +43,7 @@ runs:
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
 
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
+        Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
     
     - name: Run Tests
       shell: pwsh
@@ -63,7 +66,7 @@ runs:
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: success() || failure()
       with:
-        name: ui-test-failure-dump-${{ inputs.build-directory }}-${{ matrix.machine-type }}
+        name: ui-test-failure-dump-${{ outputs.setup.friendly-build-directory-name }}-${{ matrix.machine-type }}
         path: |
           ${{ inputs.build-directory }}/FailureDumps/
           test.out
