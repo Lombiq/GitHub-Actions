@@ -35,12 +35,6 @@ runs:
         $output = "${{ github.event.pull_request }}" -eq "" ? "False" : (Confirm-PullRequestTitle "$($Env:PR_TITLE)")
         Set-Output "is-issue-pr" $output
 
-    - name: Testing
-      id: testing
-      shell: pwsh
-      run: |
-        Write-Output "is-issue-pr value: ${{ steps.issue-related-pr.outputs.is-issue-pr }}"
-
     - name: Login to Jira
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       # v1.0.0.
@@ -53,12 +47,72 @@ runs:
         JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
 
     - name: Initialize Jira Issue Templates
-      if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} == 'False'
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       shell: pwsh
       run: Initialize-IssueTemplates
 
+    - name: Initialize Jira Issue Details
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      id: issue-details
+      env:
+        # Necessary to pass this via an environment variable, because when assigned directly to a variable in the
+        # script, it can cause escaping issues with backtick characters (like a "`ulong..." causing "The Unicode escape
+        # sequence is not valid."). Also, the github context contains user input and thus shouldn't be used inline in
+        # scripts to prevent script injection.
+        GITHUB_JSON: ${{ toJSON(github) }}
+      shell: pwsh
+      run: |
+        $github = $Env:GITHUB_JSON | ConvertFrom-Json
+        $templates = Initialize-IssueTemplates
+        Initialize-IssueDetails $github `
+            "${{ inputs.issue-component }}" `
+            $([System.Convert]::ToBoolean("${{ inputs.suffix-issue-titles }}")) `
+            $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] `
+            $templates["ISSUE_JIRA_ISSUE_DESCRIPTION"] `
+            $templates["PULL_REQUEST_JIRA_ISSUE_DESCRIPTION"]
+        $fields = @"
+        {"labels": ["created-from-github"]
+        "@
+        if ("${{ inputs.issue-component }}" -ne "")
+        {
+            $fields += ', "components": [{"name": "${{ inputs.issue-component }}"}]'
+        }
+        $fields += '}'
+        Set-Output "fields" $fields
+
+    - name: Create Jira Issue
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      id: create-issue
+      uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
+      with:
+        project: ${{ env.JIRA_PROJECT_KEY }}
+        issuetype: ${{ steps.issue-details.outputs.type }}
+        summary: ${{ steps.issue-details.outputs.summary }}
+        description: ${{ fromJSON(steps.issue-details.outputs.json-description) }}
+        fields: ${{ steps.issue-details.outputs.fields }}
+
+    - name: Add Remote Link to Jira Issue
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      shell: pwsh
+      run: |
+        # Note that while --fail will fail the command if the request fails, it won't show the server output. Thus,
+        # remove for debugging. --fail-with-body provides that too, but is only available under curl >=7.76.0 which is
+        # not yet available for GitHub Actions, see https://github.com/Lombiq/GitHub-Actions/issues/53.
+        curl --request POST `
+          --url '${{ env.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink' `
+          --user '${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}' `
+          --header 'Accept: application/json' `
+          --header 'Content-Type: application/json' `
+          --fail `
+          --data '{
+                \"object\": {
+                    \"url\":\"${{ steps.issue-details.outputs.link-url }}\",
+                    \"title\":\"${{ steps.issue-details.outputs.link-title }}\"
+                }
+            }'
+
     - name: Update GitHub Issue
-      if: ${{ steps.issue-related-pr.outputs.is-issue-pr }} == 'False' && github.event.issue
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
       # v3.3.0
       uses: actions-cool/issues-helper@dad28fdb88da5f082c04659b7373d85790f9b135
       with:
