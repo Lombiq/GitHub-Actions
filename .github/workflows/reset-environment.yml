@@ -121,9 +121,17 @@ jobs:
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
 
+    - name: Install and import modules
+      run: |
+        Install-Module Az.Storage -AllowClobber -Force
+        Import-Module Set-AzureWebAppStorageContentFromStorage
+        Import-Module Copy-AzureWebAppSqlDatabase
+        Import-Module Set-AzureWebAppSqlDatabaseServiceObjective
+        Import-Module Add-AzureWebAppSqlDatabaseContainedUser
+        Import-Module Remove-AzureWebAppSqlDatabaseContainedUser
+
     - name: Replace Media
       run: |
-        Import-Module Set-AzureWebAppStorageContentFromStorage
         Set-AzureWebAppStorageContentFromStorage `
           -ResourceGroupName ${{ inputs.resource-group-name }}`
           -WebAppName  ${{ inputs.app-name }} `
