@@ -124,6 +124,7 @@ jobs:
     - name: Install and import modules
       run: |
         Install-Module Az.Storage -AllowClobber -Force
+        Install-Module Az.Sql -AllowClobber -Force
         Import-Module Set-AzureWebAppStorageContentFromStorage
         Import-Module Copy-AzureWebAppSqlDatabase
         Import-Module Set-AzureWebAppSqlDatabaseServiceObjective
