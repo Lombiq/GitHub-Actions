@@ -45,7 +45,7 @@ runs:
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
 
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
-    
+
     - name: Run Tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
@@ -67,7 +67,7 @@ runs:
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: success() || failure()
       with:
-        name: ui-test-failure-dump-${{ steps.outputs.setup.friendly-build-directory-name }}-${{ matrix.machine-type }}
+        name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ matrix.machine-type }}
         path: |
           ${{ inputs.build-directory }}/FailureDumps/
           test.out
