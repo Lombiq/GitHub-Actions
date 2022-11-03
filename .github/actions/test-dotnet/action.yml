@@ -54,6 +54,14 @@ runs:
         Write-Output "1: ${{ steps.setup-parameters.outputs.friendly-build-directory-name }}"
         Write-Output "2: ${{ steps.setup-parameters.outputs.test }}"
 
+    - name: Set color
+      shell: bash
+      id: random-color-generator
+      run: echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
+    - name: Get color
+      shell: bash
+      run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
+
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
     # FailureDumps into the solution root. The following two steps need to be success() || failure() (excluding the
