@@ -48,7 +48,6 @@ runs:
     
     - name: Run Tests
       shell: pwsh
-      working-directory: ${{ inputs.build-directory }}
       run: |
         Write-Output "Outputs: "
         Write-Output "1: ${{ steps.setup-parameters.outputs.friendly-build-directory-name }}"
