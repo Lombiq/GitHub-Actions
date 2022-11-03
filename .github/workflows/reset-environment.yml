@@ -153,7 +153,7 @@ jobs:
         inlineScript: |
           Set-AzureWebAppStorageContentFromStorage `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName  ${{ inputs.app-name }} `
+            -WebAppName ${{ inputs.app-name }} `
             -SourceSlotName ${{ inputs.source-slot-name }} `
             -DestinationSlotName ${{ inputs.destination-slot-name }} `
             -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
