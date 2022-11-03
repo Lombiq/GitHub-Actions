@@ -31,7 +31,7 @@ runs:
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
     - name: Setup & Set UI Test Parallelization
-      id: setup
+      id: setup-parameters
       shell: pwsh
       run: |
         if (${{ inputs.ui-test-parallelism }} -eq -1)
@@ -50,8 +50,9 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
-        ${{ steps.setup.outputs.friendly-build-directory-name }}
-        ${{ steps.setup.outputs.test }}
+        Write-Output "Outputs: "
+        ${{ steps.setup-parameters.outputs.friendly-build-directory-name }}
+        ${{ steps.setup-parameters.outputs.test }}
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
@@ -69,7 +70,7 @@ runs:
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: success() || failure()
       with:
-        name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ matrix.machine-type }}
+        name: ui-test-failure-dump-${{ steps.setup-parameters.outputs.friendly-build-directory-name }}-${{ matrix.machine-type }}
         path: |
           ${{ inputs.build-directory }}/FailureDumps/
           test.out
