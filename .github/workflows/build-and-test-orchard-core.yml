@@ -131,8 +131,16 @@ jobs:
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
 
+    - name: Set up SQL Server
       if: inputs.set-up-sql-server == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+
+    - name: Set up Azurite
       if: inputs.set-up-azurite == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
+      with:
+        location: ${{ inputs.build-directory}}
+
     - name: Tests
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
