@@ -8,5 +8,4 @@ param (
     $Value
 )
 
-Write-Output "Output: $Key=$Value"
 "$Key=$Value" >> $Env:GITHUB_OUTPUT
