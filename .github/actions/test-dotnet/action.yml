@@ -67,7 +67,7 @@ runs:
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: success() || failure()
       with:
-        name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ matrix.machine-type }}
+        name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ runner.name }}
         path: |
           ${{ inputs.build-directory }}/FailureDumps/
           test.out
@@ -78,7 +78,7 @@ runs:
       uses: phoenix-actions/test-reporting@1e9b578818d03d6df50ce8e60d024a000bf3ab63
       if: (success() || failure()) && (github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false)
       with:
-        name: Test Results (${{inputs.build-directory}}|${{ matrix.machine-type }})
+        name: Test Results (${{inputs.build-directory}}|${{ runner.name }})
         path: '${{inputs.build-directory}}/**/*.trx'
         reporter: dotnet-trx
         fail-on-error: 'false'
