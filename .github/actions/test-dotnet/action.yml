@@ -44,11 +44,14 @@ runs:
 
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
         Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
+        "test=value" >> $Env:GITHUB_OUTPUT
     
     - name: Run Tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
-      run: Invoke-SolutionTests -Verbosity ${{ inputs.test-verbosity }}
+      run: |
+        ${{ steps.setup.outputs.friendly-build-directory-name }}
+        ${{ steps.setup.outputs.test }}
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
