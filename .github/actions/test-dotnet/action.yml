@@ -44,7 +44,7 @@ runs:
 
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
         Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
-        "test=value" >> $Env:GITHUB_OUTPUT
+        Write-Output "test=value" >> $Env:GITHUB_OUTPUT
     
     - name: Run Tests
       shell: pwsh
