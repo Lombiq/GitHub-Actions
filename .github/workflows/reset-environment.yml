@@ -123,6 +123,7 @@ jobs:
 
     - name: Replace Media
       run: |
+        Import-Module Set-AzureWebAppStorageContentFromStorage
         Set-AzureWebAppStorageContentFromStorage `
           -ResourceGroupName ${{ inputs.resource-group-name }}`
           -WebAppName  ${{ inputs.app-name }} `
