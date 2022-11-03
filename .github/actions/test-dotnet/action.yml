@@ -34,6 +34,9 @@ runs:
       id: setup-parameters
       shell: pwsh
       run: |
+        Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
+        "test=value" >> $Env:GITHUB_OUTPUT
+
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
             Write-Output "The UI test parallelism configuration isn't overridden."
@@ -43,8 +46,6 @@ runs:
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
 
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
-        Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
-        "test=value" >> $Env:GITHUB_OUTPUT
     
     - name: Run Tests
       shell: pwsh
