@@ -51,8 +51,8 @@ runs:
       working-directory: ${{ inputs.build-directory }}
       run: |
         Write-Output "Outputs: "
-        ${{ steps.setup-parameters.outputs.friendly-build-directory-name }}
-        ${{ steps.setup-parameters.outputs.test }}
+        Write-Output "1: ${{ steps.setup-parameters.outputs.friendly-build-directory-name }}"
+        Write-Output "2: ${{ steps.setup-parameters.outputs.test }}"
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
