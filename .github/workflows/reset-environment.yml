@@ -136,7 +136,7 @@ jobs:
     - name: Replace Media
       run: |
         Set-AzureWebAppStorageContentFromStorage `
-          -ResourceGroupName ${{ inputs.resource-group-name }}`
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
           -WebAppName ${{ inputs.app-name }} `
           -SourceSlotName ${{ inputs.source-slot-name }} `
           -DestinationSlotName ${{ inputs.destination-slot-name }} `
@@ -152,7 +152,7 @@ jobs:
       with:
         inlineScript: |
           Set-AzureWebAppStorageContentFromStorage `
-            -ResourceGroupName ${{ inputs.resource-group-name }}`
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName  ${{ inputs.app-name }} `
             -SourceSlotName ${{ inputs.source-slot-name }} `
             -DestinationSlotName ${{ inputs.destination-slot-name }} `
