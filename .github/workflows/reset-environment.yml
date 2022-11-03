@@ -121,31 +121,6 @@ jobs:
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
 
-    - name: Install and import modules
-      run: |
-        Install-Module Az.Storage -AllowClobber -Force
-        Install-Module Az.Sql -AllowClobber -Force
-        Install-Module Az.Websites -AllowClobber -Force
-        Import-Module Get-AzureWebAppConnectionString
-        Import-Module Set-AzureWebAppStorageContentFromStorage
-        Import-Module Copy-AzureWebAppSqlDatabase
-        Import-Module Set-AzureWebAppSqlDatabaseServiceObjective
-        Import-Module Add-AzureWebAppSqlDatabaseContainedUser
-        Import-Module Remove-AzureWebAppSqlDatabaseContainedUser
-
-    - name: Replace Media
-      run: |
-        Set-AzureWebAppStorageContentFromStorage `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SourceSlotName ${{ inputs.source-slot-name }} `
-          -DestinationSlotName ${{ inputs.destination-slot-name }} `
-          -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-          -ContainerBlackList ${{ inputs.container-exclude-list }} `
-          -ContainerWhiteList ${{ inputs.container-white-list }} `
-          -FolderBlackList ${{ inputs.folder-exclude-list }} `
-          -FolderWhiteList ${{ inputs.folder-white-list }}
-
     - name: Replace Media
       # v1.1.0
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
