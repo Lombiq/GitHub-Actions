@@ -67,7 +67,7 @@ runs:
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: success() || failure()
       with:
-        name: ui-test-failure-dump-${{ outputs.setup.friendly-build-directory-name }}-${{ matrix.machine-type }}
+        name: ui-test-failure-dump-${{ steps.outputs.setup.friendly-build-directory-name }}-${{ matrix.machine-type }}
         path: |
           ${{ inputs.build-directory }}/FailureDumps/
           test.out
