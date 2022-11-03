@@ -121,6 +121,17 @@ jobs:
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
 
+    - name: Stop Web App Slot
+      # v1.1.0
+      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
+      with:
+        inlineScript: |
+          Stop-AzWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -Name ${{ inputs.app-name }} `
+            -Slot ${{ inputs.destination-slot-name }}
+        azPSVersion: latest
+
     - name: Replace Media
       # v1.1.0
       uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
@@ -184,7 +195,7 @@ jobs:
       with:
         inlineScript: |
           Remove-AzureWebAppSqlDatabaseContainedUser `
-            -ResourceGroupName ${{ inputs.resource-group-name }} ``
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -DatabaseSlotName ${{ inputs.destination-slot-name }} `
             -UserSlotName ${{ inputs.source-slot-name }} `
@@ -198,9 +209,9 @@ jobs:
       with:
         inlineScript: |
           Start-AzWebAppSlot `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -Name ${{ inputs.app-name }} `
-          -Slot ${{ inputs.destination-slot-name }}
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -Name ${{ inputs.app-name }} `
+            -Slot ${{ inputs.destination-slot-name }}
         azPSVersion: latest
 
     - name: Ping Web App Slot
