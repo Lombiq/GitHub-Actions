@@ -125,6 +125,7 @@ jobs:
       run: |
         Install-Module Az.Storage -AllowClobber -Force
         Install-Module Az.Sql -AllowClobber -Force
+        Install-Module Az.Websites -AllowClobber -Force
         Import-Module Get-AzureWebAppConnectionString
         Import-Module Set-AzureWebAppStorageContentFromStorage
         Import-Module Copy-AzureWebAppSqlDatabase
