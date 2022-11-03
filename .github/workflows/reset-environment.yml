@@ -48,10 +48,10 @@ on:
         required: true
         type: string
         description: The name of the database connection string.
-      user-connection-string-name:
+      database-master-connection-string-name:
         required: true
         type: string
-        description: The name of the user connection string.
+        description: The name of the database master connection string.
       storage-connection-string-name:
         required: true
         type: string
@@ -172,7 +172,7 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }} `
-            -ConnectionStringName ${{ inputs.database-connection-string-name }} `
+            -ConnectionStringName ${{ inputs.database-master-connection-string-name }} `
             -ServiceObjectiveName ${{ inputs.service-objective-name }}
         azPSVersion: latest
 
@@ -186,7 +186,7 @@ jobs:
             -WebAppName ${{ inputs.app-name }} `
             -DatabaseSlotName ${{ inputs.destination-slot-name }} `
             -DatabaseConnectionStringName ${{ inputs.database-connection-string-name }} `
-            -UserConnectionStringName ${{ inputs.user-connection-string-name }}
+            -UserConnectionStringName ${{ inputs.database-master-connection-string-name }}
         azPSVersion: latest
 
     - name: Remove source contained User from destination database
@@ -200,7 +200,7 @@ jobs:
             -DatabaseSlotName ${{ inputs.destination-slot-name }} `
             -UserSlotName ${{ inputs.source-slot-name }} `
             -DatabaseConnectionStringName ${{ inputs.database-connection-string-name }} `
-            -UserConnectionStringName ${{ inputs.user-connection-string-name }}
+            -UserConnectionStringName ${{ inputs.database-master-connection-string-name }}
         azPSVersion: latest
 
     - name: Start Web App Slot
