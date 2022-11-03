@@ -44,7 +44,7 @@ runs:
 
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
         Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
-        Write-Output "test=value" >> $Env:GITHUB_OUTPUT
+        "test=value" >> $Env:GITHUB_OUTPUT
     
     - name: Run Tests
       shell: pwsh
@@ -54,9 +54,10 @@ runs:
         Write-Output "2: ${{ steps.setup-parameters.outputs.test }}"
 
     - name: Set color
-      shell: bash
+      shell: pwsh
       id: random-color-generator
-      run: echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
+      run: |
+        "SELECTED_COLOR=green" >> $env:GITHUB_OUTPUT
     - name: Get color
-      shell: bash
-      run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
+      shell: pwsh
+      run: Write-Output "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
