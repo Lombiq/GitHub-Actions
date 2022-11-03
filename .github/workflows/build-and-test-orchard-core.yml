@@ -103,6 +103,11 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
+    - name: Runner test
+      shell: pwsh
+      run: |
+         ${{ toJSON(runner) }}
+
     - uses: actions/checkout@v3.1.0
       with:
         submodules: 'recursive'
