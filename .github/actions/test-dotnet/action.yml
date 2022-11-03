@@ -31,12 +31,11 @@ runs:
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
     - name: Setup & Set UI Test Parallelization
-      id: setup-parameters
+      id: setup
       shell: pwsh
       run: |
         Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
-        "test=value" >> $Env:GITHUB_OUTPUT
-
+        
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
             Write-Output "The UI test parallelism configuration isn't overridden."
@@ -49,16 +48,37 @@ runs:
     
     - name: Run Tests
       shell: pwsh
-      run: |
-        Write-Output "Outputs: "
-        Write-Output "1: ${{ steps.setup-parameters.outputs.friendly-build-directory-name }}"
-        Write-Output "2: ${{ steps.setup-parameters.outputs.test }}"
+      working-directory: ${{ inputs.build-directory }}
+      run: Invoke-SolutionTests -Verbosity ${{ inputs.test-verbosity }}
 
-    - name: Set color
+    # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
+    # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
+    # FailureDumps into the solution root. The following two steps need to be success() || failure() (excluding the
+    # workflow being cancelled), so if there's a failure dump it'll be uploaded even if the tests are ultimately passed
+    # after retries.
+    # The same is true for the next step as well.
+    - name: Merge FailureDumps
       shell: pwsh
-      id: random-color-generator
-      run: |
-        "SELECTED_COLOR=green" >> $env:GITHUB_OUTPUT
-    - name: Get color
-      shell: pwsh
-      run: Write-Output "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
+      if: success() || failure()
+      run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
+
+    - name: Upload UI testing artifacts
+      uses: actions/upload-artifact@v3.1.1
+      # We don't need additional conditions, because of the "if-no-files-found" setting.
+      if: success() || failure()
+      with:
+        name: ui-test-failure-dump-${{ outputs.setup.friendly-build-directory-name }}-${{ matrix.machine-type }}
+        path: |
+          ${{ inputs.build-directory }}/FailureDumps/
+          test.out
+        if-no-files-found: ignore
+
+    - name: Test Report
+      # v8
+      uses: phoenix-actions/test-reporting@1e9b578818d03d6df50ce8e60d024a000bf3ab63
+      if: (success() || failure()) && (github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false)
+      with:
+        name: Test Results (${{inputs.build-directory}}|${{ matrix.machine-type }})
+        path: '${{inputs.build-directory}}/**/*.trx'
+        reporter: dotnet-trx
+        fail-on-error: 'false'
