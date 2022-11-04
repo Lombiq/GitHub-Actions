@@ -2,7 +2,8 @@ param ($Directory)
 
 New-Item -Type Directory "$Directory/FailureDumps"
 
-$rootDirectory = (Test-Path -Path "$Directory/test") ? "$Directory/test" : $Directory
+$testDirectory = "$Directory/test"
+$rootDirectory = (Test-Path -Path $testDirectory) ? $testDirectory : $Directory
 
 Get-ChildItem $rootDirectory -Recurse |
     ? { $_.Name -eq 'FailureDumps' } |
