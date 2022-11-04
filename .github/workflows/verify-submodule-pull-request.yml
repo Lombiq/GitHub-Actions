@@ -16,3 +16,8 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
       with:
         title: ${{ github.event.pull_request.title }}
+    
+    - name: Prefix PR
+      uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
