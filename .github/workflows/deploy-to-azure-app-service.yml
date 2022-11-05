@@ -109,7 +109,7 @@ on:
 jobs:
   deploy:
     runs-on: ${{ inputs.machine-type }}
-    name: Reset Environment
+    name: Deploy to Azure App Service
     defaults:
       run:
         shell: pwsh
