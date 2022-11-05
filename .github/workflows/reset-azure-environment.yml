@@ -92,9 +92,9 @@ on:
             string array.
 
 jobs:
-  reset-environment:
+  reset-azure-environment:
     runs-on: ${{ inputs.machine-type }}
-    name: Reset Environment
+    name: Reset Azure Environment
     defaults:
       run:
         shell: pwsh
