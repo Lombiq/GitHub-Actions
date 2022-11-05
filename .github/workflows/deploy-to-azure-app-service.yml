@@ -126,7 +126,7 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3.1.0
       with:
         submodules: 'recursive'
 
@@ -148,7 +148,7 @@ jobs:
       id: set-up-runtime-option
       if: ${{ inputs.runtime != '' }}
       run: |
-        Write-Output "::set-output name=runtime-option::--runtime=${{ inputs.runtime }}"
+        "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
 
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
