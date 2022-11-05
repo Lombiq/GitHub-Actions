@@ -6,15 +6,11 @@ on:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
         required: true
     inputs:
-      # This needs to be stringified JSON because inputs don't support arrays, see 
-      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
-      machine-types:
+      machine-type:
         required: false
         type: string
-        default: "[\"ubuntu-latest\"]"
-        description: >
-            Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]".
+        default: "ubuntu-latest"
+        description: The name of the type of machine to run the workflow under.
       timeout-minutes:
         required: false
         type: number
@@ -28,13 +24,15 @@ on:
         required: false
         type: string
         default: Staging
-        description: The slot name of the web app you want to reset. What you see at the top of the blade on the Azure
+        description: >
+          The slot name of the web app you want to reset. What you see at the top of the blade on the Azure
           Portal, when you open the slot, before the app name in parenthesis.
       source-slot-name:
         required: false
         type: string
         default: Production
-        description: The slot name of the web app you want to reset the destination web app with. What you see at the
+        description: >
+          The slot name of the web app you want to reset the destination web app with. What you see at the
           top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
       resource-group-name:
         required: true
@@ -61,8 +59,6 @@ on:
         type: string
         default: S0
         description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
-      # These need to be stringified JSON because inputs don't support arrays, see 
-      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       container-exclude-list:
         required: false
         type: string
@@ -71,7 +67,7 @@ on:
             PowerShell string array with the name of the excluded container(s), e.g.
             "@(\"not-media\")" or "@(\"not-media\", \"bad-container\")". The parameter must be a PowerShell string
             array.
-      container-white-list:
+      container-include-list:
         required: false
         type: string
         default: "@(\"media\")"
@@ -86,7 +82,7 @@ on:
             PowerShell string array with the name of the excluded folder(s), e.g.
             "@(\"RecipeJournal\")" or "@(\"RecipeJournal\", \"BadFolder\")". The parameter must be a PowerShell string
             array.
-      folder-white-list:
+      folder-include-list:
         required: false
         type: string
         default: "@()"
@@ -97,19 +93,12 @@ on:
 
 jobs:
   reset-environment:
-    runs-on: ${{ matrix.machine-type }}
+    runs-on: ${{ input.machine-type }}
     name: Reset Environment
     defaults:
       run:
         shell: pwsh
-    # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
-    # https://github.com/actions/runner/issues/1555.
-    strategy:
-      matrix:
-        machine-type: ${{ fromJson(inputs.machine-types) }}
-        timeout-minutes:
-        - ${{ inputs.timeout-minutes }}
-    timeout-minutes: ${{ matrix.timeout-minutes }}
+    timeout-minutes: ${{ input.timeout-minutes }}
     steps:
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
@@ -144,9 +133,9 @@ jobs:
             -DestinationSlotName ${{ inputs.destination-slot-name }} `
             -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
             -ContainerBlackList ${{ inputs.container-exclude-list }} `
-            -ContainerWhiteList ${{ inputs.container-white-list }} `
+            -ContainerWhiteList ${{ inputs.container-include-list }} `
             -FolderBlackList ${{ inputs.folder-exclude-list }} `
-            -FolderWhiteList ${{ inputs.folder-white-list }}
+            -FolderWhiteList ${{ inputs.folder-include-list }}
         azPSVersion: latest
 
     - name: Replace Database
