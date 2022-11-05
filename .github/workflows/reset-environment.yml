@@ -1,4 +1,4 @@
-name: Reset Environment
+name: Reset Azure Environment
 
 on:
   workflow_call:
