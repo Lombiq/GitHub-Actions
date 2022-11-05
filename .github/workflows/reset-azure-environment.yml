@@ -93,12 +93,12 @@ on:
 
 jobs:
   reset-environment:
-    runs-on: ${{ input.machine-type }}
+    runs-on: ${{ inputs.machine-type }}
     name: Reset Environment
     defaults:
       run:
         shell: pwsh
-    timeout-minutes: ${{ input.timeout-minutes }}
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
