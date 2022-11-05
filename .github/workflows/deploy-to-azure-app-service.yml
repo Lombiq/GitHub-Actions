@@ -11,7 +11,7 @@ on:
       machine-type:
         required: false
         type: string
-        default: "ubuntu-latest"
+        default: ubuntu-latest
         description: The name of the type of machine(s) to run the workflow under.
       dotnet-version:
         required: false
@@ -108,12 +108,12 @@ on:
 
 jobs:
   deploy:
-    runs-on: ${{ input.machine-type }}
+    runs-on: ${{ inputs.machine-type }}
     name: Reset Environment
     defaults:
       run:
         shell: pwsh
-    timeout-minutes: ${{ input.timeout-minutes }}
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
     - uses: actions/checkout@v3.1.0
       with:
