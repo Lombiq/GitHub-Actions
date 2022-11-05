@@ -9,7 +9,7 @@ on:
       machine-type:
         required: false
         type: string
-        default: "ubuntu-latest"
+        default: ubuntu-latest
         description: The name of the type of machine to run the workflow under.
       timeout-minutes:
         required: false
