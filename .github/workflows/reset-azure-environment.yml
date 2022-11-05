@@ -110,33 +110,18 @@ jobs:
         creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
-    - name: Stop Web App Slot
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Stop-AzureWebAppSlot `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.destination-slot-name }}
-        azPSVersion: latest
-
     - name: Replace Media
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Set-AzureWebAppStorageContentFromStorage `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SourceSlotName ${{ inputs.source-slot-name }} `
-            -DestinationSlotName ${{ inputs.destination-slot-name }} `
-            -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-            -ContainerBlackList ${{ inputs.container-exclude-list }} `
-            -ContainerWhiteList ${{ inputs.container-include-list }} `
-            -FolderBlackList ${{ inputs.folder-exclude-list }} `
-            -FolderWhiteList ${{ inputs.folder-include-list }}
-        azPSVersion: latest
+      run: |
+        Set-AzureWebAppStorageContentFromStorage `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SourceSlotName ${{ inputs.source-slot-name }} `
+          -DestinationSlotName ${{ inputs.destination-slot-name }} `
+          -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
+          -ContainerBlackList ${{ inputs.container-exclude-list }} `
+          -ContainerWhiteList ${{ inputs.container-include-list }} `
+          -FolderBlackList ${{ inputs.folder-exclude-list }} `
+          -FolderWhiteList ${{ inputs.folder-include-list }}
 
     - name: Replace Database
       # v1.1.0
