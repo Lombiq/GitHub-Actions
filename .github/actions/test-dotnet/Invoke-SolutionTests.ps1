@@ -8,7 +8,7 @@
 # the Actions web UI. Note that we use bash to output the log using bash to avoid pwsh wrapping the output to the
 # default buffer width.
 
-$ConnectionStringSuffix = ";MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;TrustServerCertificate=true;Encrypt=false;MultiSubnetFailover=True";
+$ConnectionStringSuffix = ";MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;TrustServerCertificate=true;Encrypt=false";
 if ($Env:RUNNER_OS -eq "Windows")
 {
     $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
