@@ -41,15 +41,24 @@ on:
       database-connection-string-name:
         required: true
         type: string
-        description: The name of the database connection string.
-      database-master-connection-string-name:
+        description: >
+          The name of the database connection string. The Connection String Name property specifies the name of the
+          named connection string that the SQL Workflow Instance Store should use to connect to the persistence
+          database.
+      master-database-connection-string-name:
         required: true
         type: string
-        description: The name of the database master connection string.
+        description: >
+          The name of the master database connection string. The master database is the primary configuration database
+          in SQL Server. It contains information on all the databases that exist on the server. The Connection String
+          Name property specifies the name of the named connection string that the SQL Workflow Instance Store should
+          use to connect to the persistence database.
       storage-connection-string-name:
         required: true
         type: string
-        description: The name of the storage connection string.
+        description: The name of the storage connection string. The Connection String Name property specifies the name
+          of the named connection string that the SQL Workflow Instance Store should use to connect to the persistence
+          database.
       service-objective-name:
         required: false
         type: string
@@ -145,7 +154,7 @@ jobs:
           -ResourceGroupName ${{ inputs.resource-group-name }} `
           -WebAppName ${{ inputs.app-name }} `
           -SlotName ${{ inputs.destination-slot-name }} `
-          -ConnectionStringName ${{ inputs.database-master-connection-string-name }} `
+          -ConnectionStringName ${{ inputs.master-database-connection-string-name }} `
           -ServiceObjectiveName ${{ inputs.service-objective-name }}
 
     - name: Add Destination Contained User to Destination Database
@@ -155,7 +164,7 @@ jobs:
           -ResourceGroupName ${{ inputs.resource-group-name }} `
           -WebAppName ${{ inputs.app-name }} `
           -DatabaseSlotName ${{ inputs.destination-slot-name }} `
-          -DatabaseConnectionStringName ${{ inputs.database-master-connection-string-name }} `
+          -DatabaseConnectionStringName ${{ inputs.master-database-connection-string-name }} `
           -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
     - name: Remove Source Contained User from Destination Database
@@ -165,7 +174,7 @@ jobs:
           -WebAppName ${{ inputs.app-name }} `
           -DatabaseSlotName ${{ inputs.destination-slot-name }} `
           -UserSlotName ${{ inputs.source-slot-name }} `
-          -DatabaseConnectionStringName ${{ inputs.database-master-connection-string-name }} `
+          -DatabaseConnectionStringName ${{ inputs.master-database-connection-string-name }} `
           -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
     - name: Start Web App Slot
