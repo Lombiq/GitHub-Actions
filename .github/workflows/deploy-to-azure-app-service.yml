@@ -12,7 +12,7 @@ on:
         required: false
         type: string
         default: ubuntu-latest
-        description: The name of the type of machine(s) to run the workflow under.
+        description: The name of the type of machine to run the workflow under.
       dotnet-version:
         required: false
         type: string
