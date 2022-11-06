@@ -110,6 +110,13 @@ jobs:
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
 
+    - name: Stop Web App Slot
+      run: |
+        Stop-AzureWebAppSlot `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.slot-name }}
+
     - name: Replace Media
       run: |
         Set-AzureWebAppStorageContentFromStorage `
@@ -124,70 +131,54 @@ jobs:
           -FolderWhiteList ${{ inputs.folder-include-list }}
 
     - name: Replace Database
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Copy-AzureWebAppSqlDatabase `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }}  `
-            -SourceSlotName ${{ inputs.source-slot-name }} `
-            -DestinationSlotName ${{ inputs.destination-slot-name }} `
-            -ConnectionStringName ${{ inputs.database-connection-string-name }} `
-            -Force
-        azPSVersion: latest
+      run: |
+        Copy-AzureWebAppSqlDatabase `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }}  `
+          -SourceSlotName ${{ inputs.source-slot-name }} `
+          -DestinationSlotName ${{ inputs.destination-slot-name }} `
+          -ConnectionStringName ${{ inputs.database-connection-string-name }} `
+          -Force
 
     - name: Scale Database
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Set-AzureWebAppSqlDatabaseServiceObjective `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.destination-slot-name }} `
-            -ConnectionStringName ${{ inputs.database-master-connection-string-name }} `
-            -ServiceObjectiveName ${{ inputs.service-objective-name }}
-        azPSVersion: latest
+      run: |
+        Set-AzureWebAppSqlDatabaseServiceObjective `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.destination-slot-name }} `
+          -ConnectionStringName ${{ inputs.database-master-connection-string-name }} `
+          -ServiceObjectiveName ${{ inputs.service-objective-name }}
 
     - name: Add Destination Contained User to Destination Database
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Install-Module sqlserver -AllowClobber -Force
-          Add-AzureWebAppSqlDatabaseContainedUser `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -DatabaseSlotName ${{ inputs.destination-slot-name }} `
-            -DatabaseConnectionStringName ${{ inputs.database-master-connection-string-name }} `
-            -UserConnectionStringName ${{ inputs.database-connection-string-name }}
-        azPSVersion: latest
+      run: |
+        Install-Module sqlserver -AllowClobber -Force
+        Add-AzureWebAppSqlDatabaseContainedUser `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
+          -DatabaseConnectionStringName ${{ inputs.database-master-connection-string-name }} `
+          -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
     - name: Remove Source Contained User from Destination Database
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Remove-AzureWebAppSqlDatabaseContainedUser `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -DatabaseSlotName ${{ inputs.destination-slot-name }} `
-            -UserSlotName ${{ inputs.source-slot-name }} `
-            -DatabaseConnectionStringName ${{ inputs.database-master-connection-string-name }} `
-            -UserConnectionStringName ${{ inputs.database-connection-string-name }}
-        azPSVersion: latest
+      run: |
+        Remove-AzureWebAppSqlDatabaseContainedUser `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
+          -UserSlotName ${{ inputs.source-slot-name }} `
+          -DatabaseConnectionStringName ${{ inputs.database-master-connection-string-name }} `
+          -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
     - name: Start Web App Slot
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Start-AzureWebAppSlot `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.destination-slot-name }}
-        azPSVersion: latest
+      run: |
+        Start-AzureWebAppSlot `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.destination-slot-name }}
 
-    - name: Ping Web App Slot
-      run: curl --connect-timeout 100 --retry 3 --retry-delay 15 ${{ inputs.url }}
+    - name: Test Web App Slot
+      run: |
+        Test-AzureWebApp `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.destination-slot-name }}
