@@ -239,3 +239,28 @@ jobs:
       issue-component: Lombiq.MyProject
 
 ```
+
+## Reset Azure Environment workflow
+
+This workflow resets an Azure Environment, by replacing the Media Library and the Database with the ones from a given source slot. Example _reset-azure-environment.yml_:
+
+```yaml
+name: Reset Azure Environment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-reset-azure-environment-workflow:
+    name: Reset Azure Environment
+    uses: Lombiq/GitHub-Actions/.github/workflows/reset-azure-environment.yml@dev
+    with:
+      timeout-minutes: 60
+      app-name: AppName
+      resource-group-name: ResourceGroupName
+      database-connection-string-name: Database__ConnectionString
+      master-database-connection-string-name: Database__ConnectionString-master
+      storage-connection-string-name: Storage_ConnectionString
+    secrets:
+      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_RESET_ENVIRONMENT_SERVICE_PRINCIPAL }}
+```
