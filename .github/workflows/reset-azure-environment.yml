@@ -100,15 +100,15 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-    - name: Initialize PowerShell modules
-      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
-
     - name: Login to Azure
       # v1.4.5
       uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
       with:
         creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
+
+    - name: Initialize PowerShell modules
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
 
     - name: Replace Media
       run: |
