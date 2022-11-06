@@ -42,19 +42,19 @@ on:
         required: true
         type: string
         description: >
-          The name of the database connection string, what's configured as one of the connection strings under the app.
+          The name of the database connection string, that's configured as one of the connection strings under the app.
       master-database-connection-string-name:
         required: true
         type: string
         description: >
-          The name of the master database connection string, what's configured as one of the connection strings under
+          The name of the master database connection string, that's configured as one of the connection strings under
           the app. The master database is the primary configuration database in SQL Server. It contains information on
           all the databases that exist on the server.
       storage-connection-string-name:
         required: true
         type: string
         description: >
-          The name of the storage connection string, what's configured as one of the connection strings under the app.
+          The name of the storage connection string, that's configured as one of the connection strings under the app.
       service-objective-name:
         required: false
         type: string
