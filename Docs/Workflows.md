@@ -242,7 +242,7 @@ jobs:
 
 ## Reset Azure Environment workflow
 
-This workflow resets an Azure Environment, by replacing the Media Library and the Database with the ones from a given source slot. Example _reset-azure-environment.yml_:
+This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Example _reset-azure-environment.yml_:
 
 ```yaml
 name: Reset Azure Environment
