@@ -38,10 +38,6 @@ on:
         required: true
         type: string
         description: Name of the resource group.
-      url:
-        required: true
-        type: string
-        description: The URL of the web app slot.
       database-connection-string-name:
         required: true
         type: string
