@@ -42,24 +42,25 @@ on:
         required: true
         type: string
         description: >
-          The name of the database connection string. The Connection String Name property specifies the name of the
-          named connection string that the SQL Workflow Instance Store should use to connect to the persistence
-          database.
+          The name of the database connection string, what's configured as one of the connection strings under
+          the app. The Connection String Name property specifies the name of the named connection string that the SQL
+          Workflow Instance Store should use to connect to the persistence database.
       master-database-connection-string-name:
         required: true
         type: string
         description: >
-          The name of the master database connection string. The master database is the primary configuration database
-          in SQL Server. It contains information on all the databases that exist on the server. The Connection String
-          Name property specifies the name of the named connection string that the SQL Workflow Instance Store should
-          use to connect to the persistence database.
+          The name of the master database connection string, what's configured as one of the connection strings under
+          the app. The master database is the primary configuration database in SQL Server. It contains information on
+          all the databases that exist on the server. The Connection String Name property specifies the name of the
+          named connection string that the SQL Workflow Instance Store should use to connect to the persistence
+          database.
       storage-connection-string-name:
         required: true
         type: string
         description: >
-          The name of the storage connection string. The Connection String Name property specifies the name of the
-          named connection string that the SQL Workflow Instance Store should use to connect to the persistence
-          database.
+          The name of the storage connection string, what's configured as one of the connection strings under
+          the app. The Connection String Name property specifies the name of the named connection string that the SQL
+          Workflow Instance Store should use to connect to the persistence database.
       service-objective-name:
         required: false
         type: string
@@ -72,16 +73,16 @@ on:
         description: >
           PowerShell string array with the name of the excluded Blob Container(s), e.g.
           "@(\"not-media\")" or "@(\"not-media\", \"bad-container\")". The parameter must be a PowerShell string array.
-          When valid values are provided for "blob-container-include-list", then "blob-container-exclude-list" is not
-          taken into consideration.
+          When a not empty PowerShell string array is provided for "blob-container-include-list", then
+          "blob-container-exclude-list" is not taken into consideration.
       blob-container-include-list:
         required: false
         type: string
         default: "@(\"media\")"
         description: >
           PowerShell string array with the name of the included Blob Container(s), e.g.
-          "@(\"media\")" or "@(\"media\", \"cool-container\")". The parameter must be a PowerShell string array. When
-          valid values are provided, it cancels out "blob-container-exclude-list".
+          "@(\"media\")" or "@(\"media\", \"cool-container\")". The parameter must be a PowerShell string array. When a
+          not empty PowerShell string array is provided, "blob-container-exclude-list" is not taken into consideration.
       folder-exclude-list:
         required: false
         type: string
@@ -89,8 +90,8 @@ on:
         description: >
           PowerShell string array with the name of the excluded folder(s), e.g.
           "@(\"RecipeJournal\")" or "@(\"RecipeJournal\", \"BadFolder\")". The parameter must be a PowerShell string
-          array. When valid values are provided for "folder-include-list", then "folder-exclude-list"
-          is not taken into consideration.
+          array. When a not empty PowerShell string array is provided for "folder-include-list", then
+          "folder-exclude-list" is not taken into consideration.
       folder-include-list:
         required: false
         type: string
@@ -98,7 +99,8 @@ on:
         description: >
           PowerShell string array with the name of the included folder(s), e.g.
           "@(\"NotRecipeJournal\")" or "@(\"NotRecipeJournal\", \"CoolFolder\")". The parameter must be a PowerShell
-          string array. When valid values are provided, it cancels out "folder-exclude-list".
+          string array. When a not empty PowerShell string array is provided, "folder-exclude-list" is not taken into
+          consideration.
 
 jobs:
   reset-azure-environment:
