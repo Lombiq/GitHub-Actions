@@ -109,45 +109,6 @@ jobs:
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
 
-    - name: Stop Web App Slot
-      run: |
-        Stop-AzureWebAppSlot `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.destination-slot-name }}
-
-    - name: Replace Media
-      run: |
-        Set-AzureWebAppStorageContentFromStorage `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SourceSlotName ${{ inputs.source-slot-name }} `
-          -DestinationSlotName ${{ inputs.destination-slot-name }} `
-          -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-          -ContainerBlackList ${{ inputs.container-exclude-list }} `
-          -ContainerWhiteList ${{ inputs.container-include-list }} `
-          -FolderBlackList ${{ inputs.folder-exclude-list }} `
-          -FolderWhiteList ${{ inputs.folder-include-list }}
-
-    - name: Replace Database
-      run: |
-        Copy-AzureWebAppSqlDatabase `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }}  `
-          -SourceSlotName ${{ inputs.source-slot-name }} `
-          -DestinationSlotName ${{ inputs.destination-slot-name }} `
-          -ConnectionStringName ${{ inputs.database-connection-string-name }} `
-          -Force
-
-    - name: Scale Database
-      run: |
-        Set-AzureWebAppSqlDatabaseServiceObjective `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.destination-slot-name }} `
-          -ConnectionStringName ${{ inputs.database-master-connection-string-name }} `
-          -ServiceObjectiveName ${{ inputs.service-objective-name }}
-
     - name: Add Destination Contained User to Destination Database
       run: |
         Install-Module sqlserver -AllowClobber -Force
