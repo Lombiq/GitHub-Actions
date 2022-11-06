@@ -12,7 +12,7 @@ $ConnectionStringSuffix = ";MultipleActiveResultSets=True;Connection Timeout=60;
 if ($Env:RUNNER_OS -eq "Windows")
 {
     $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
-        "Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True" + $ConnectionStringSuffix        
+        "Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True" + $ConnectionStringSuffix
 }
 else
 {
