@@ -28,10 +28,15 @@ runs:
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
     - name: Setup & Set UI Test Parallelization
+      id: setup
       shell: pwsh
       run: |
+        Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
+        Set-Output "runner-suffix" "${{ runner.os }}-${{ runner.arch }}-${{ runner.name }}"
+        
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
             Write-Output "The UI test parallelism configuration isn't overridden."
@@ -41,7 +46,7 @@ runs:
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
 
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
-    
+
     - name: Run Tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
@@ -55,7 +60,7 @@ runs:
     # The same is true for the next step as well.
     - name: Merge FailureDumps
       shell: pwsh
-      if: (success() || failure()) && hashFiles(format('{0}/test/**/FailureDumps', inputs.build-directory))
+      if: success() || failure()
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
     - name: Upload UI testing artifacts
@@ -63,7 +68,7 @@ runs:
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: success() || failure()
       with:
-        name: ui-test-failure-dump-${{ inputs.build-directory }}-${{ matrix.machine-type }}
+        name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ steps.setup.outputs.runner-suffix }}
         path: |
           ${{ inputs.build-directory }}/FailureDumps/
           test.out
@@ -74,7 +79,7 @@ runs:
       uses: phoenix-actions/test-reporting@1e9b578818d03d6df50ce8e60d024a000bf3ab63
       if: (success() || failure()) && (github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false)
       with:
-        name: Test Results (${{inputs.build-directory}}|${{ matrix.machine-type }})
+        name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
         path: '${{inputs.build-directory}}/**/*.trx'
         reporter: dotnet-trx
         fail-on-error: 'false'
