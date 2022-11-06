@@ -55,21 +55,23 @@ on:
         type: string
         default: S0
         description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
-      container-exclude-list:
+      blob-container-exclude-list:
         required: false
         type: string
         default: "@()"
         description: >
-            PowerShell string array with the name of the excluded container(s), e.g.
+            PowerShell string array with the name of the excluded Blob Container(s), e.g.
             "@(\"not-media\")" or "@(\"not-media\", \"bad-container\")". The parameter must be a PowerShell string
-            array.
-      container-include-list:
+            array. When valid values are provided for "blob-container-include-list", then "blob-container-exclude-list"
+            is not taken into consideration.
+      blob-container-include-list:
         required: false
         type: string
         default: "@(\"media\")"
         description: >
-            PowerShell string array with the name of the included container(s), e.g.
-            "@(\"media\")" or "@(\"media\", \"cool-container\")". The parameter must be a PowerShell string array.
+            PowerShell string array with the name of the included Blob Container(s), e.g.
+            "@(\"media\")" or "@(\"media\", \"cool-container\")". The parameter must be a PowerShell string array. When
+            valid values are provided, it cancels out "blob-container-exclude-list".
       folder-exclude-list:
         required: false
         type: string
@@ -77,7 +79,8 @@ on:
         description: >
             PowerShell string array with the name of the excluded folder(s), e.g.
             "@(\"RecipeJournal\")" or "@(\"RecipeJournal\", \"BadFolder\")". The parameter must be a PowerShell string
-            array.
+            array. When valid values are provided for "folder-include-list", then "folder-exclude-list"
+            is not taken into consideration.
       folder-include-list:
         required: false
         type: string
@@ -85,7 +88,7 @@ on:
         description: >
             PowerShell string array with the name of the included folder(s), e.g.
             "@(\"NotRecipeJournal\")" or "@(\"NotRecipeJournal\", \"CoolFolder\")". The parameter must be a PowerShell
-            string array.
+            string array. When valid values are provided, it cancels out "folder-exclude-list".
 
 jobs:
   reset-azure-environment:
