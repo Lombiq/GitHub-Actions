@@ -111,7 +111,7 @@ jobs:
         Stop-AzureWebAppSlot `
           -ResourceGroupName ${{ inputs.resource-group-name }} `
           -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.slot-name }}
+          -SlotName ${{ inputs.destination-slot-name }}
 
     - name: Replace Media
       run: |
