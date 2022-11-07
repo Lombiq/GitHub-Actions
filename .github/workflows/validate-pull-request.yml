@@ -9,5 +9,5 @@ jobs:
     steps:
     - name: Check for Merge Conflict in PR
       uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@dev
-      env:
+      with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

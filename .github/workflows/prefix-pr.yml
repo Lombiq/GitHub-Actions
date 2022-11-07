@@ -2,6 +2,9 @@ name: "Prefix PR"
 
 on:
   workflow_call:
+    inputs:
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
   prbody:
@@ -10,4 +13,4 @@ jobs:
     - name: "Prefix PR"
       uses: Lombiq/GitHub-Actions/.github/actions/prbody@issue/OSOE-425
       with:
-        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
