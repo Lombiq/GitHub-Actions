@@ -60,6 +60,7 @@ jobs:
 ## Spelling workflow
 
 Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. There are 3 configuration files for filtering false positives:
+
 - _`excludes.txt`_: This file includes file names and extensions to be ignored.
 - _`expect.txt`_: This file contains plain text words that would be considered a spelling mistake.
 - _`allow.txt`_: Same function as `expect.txt`. Out of convention this file contains meaningful words, while `expect.txt` everything else.
@@ -185,7 +186,7 @@ Labels and comments on Pull Requests with merge conflicts.
 name: Validate Pull Request
 on:
   push:
-  pull_request_target:
+  pull_request:
     types: [synchronize]
 
 jobs:
@@ -237,4 +238,29 @@ jobs:
     with:
       issue-component: Lombiq.MyProject
 
+```
+
+## Reset Azure Environment workflow
+
+This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Example _reset-azure-environment.yml_:
+
+```yaml
+name: Reset Azure Environment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-reset-azure-environment-workflow:
+    name: Reset Azure Environment
+    uses: Lombiq/GitHub-Actions/.github/workflows/reset-azure-environment.yml@dev
+    with:
+      timeout-minutes: 60
+      app-name: AppName
+      resource-group-name: ResourceGroupName
+      database-connection-string-name: Database__ConnectionString
+      master-database-connection-string-name: Database__ConnectionString-master
+      storage-connection-string-name: Storage_ConnectionString
+    secrets:
+      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_RESET_ENVIRONMENT_SERVICE_PRINCIPAL }}
 ```

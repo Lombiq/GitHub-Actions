@@ -1,0 +1,189 @@
+name: Reset Azure Environment
+
+on:
+  workflow_call:
+    secrets:
+      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
+        required: true
+    inputs:
+      machine-type:
+        required: false
+        type: string
+        default: ubuntu-latest
+        description: The name of the type of machine to run the workflow under.
+      timeout-minutes:
+        required: false
+        type: number
+        default: 360
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      app-name:
+        required: true
+        type: string
+        description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
+      destination-slot-name:
+        required: false
+        type: string
+        default: Staging
+        description: >
+          The slot name of the web app you want to reset. What you see at the top of the blade on the Azure Portal,
+          when you open the slot, before the app name in parenthesis.
+      source-slot-name:
+        required: false
+        type: string
+        default: Production
+        description: >
+          The slot name of the web app you want to reset the destination web app with. What you see at the top of the
+          blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
+      resource-group-name:
+        required: true
+        type: string
+        description: Name of the resource group.
+      database-connection-string-name:
+        required: true
+        type: string
+        description: >
+          The name of the database connection string, that's configured as one of the connection strings under the app.
+      master-database-connection-string-name:
+        required: true
+        type: string
+        description: >
+          The name of the master database connection string, that's configured as one of the connection strings under
+          the app. The master database is the primary configuration database in SQL Server. It contains information on
+          all the databases that exist on the server.
+      storage-connection-string-name:
+        required: true
+        type: string
+        description: >
+          The name of the storage connection string, that's configured as one of the connection strings under the app.
+      service-objective-name:
+        required: false
+        type: string
+        default: S0
+        description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
+      blob-container-exclude-list:
+        required: false
+        type: string
+        default: "@()"
+        description: >
+          PowerShell string array with the name of the excluded Blob Container(s), e.g.
+          "@(\"not-media\")" or "@(\"not-media\", \"bad-container\")". The parameter must be a PowerShell string array.
+          When a not empty PowerShell string array is provided for "blob-container-include-list", then
+          "blob-container-exclude-list" is not taken into consideration.
+      blob-container-include-list:
+        required: false
+        type: string
+        default: "@(\"media\")"
+        description: >
+          PowerShell string array with the name of the included Blob Container(s), e.g.
+          "@(\"media\")" or "@(\"media\", \"cool-container\")". The parameter must be a PowerShell string array. When a
+          not empty PowerShell string array is provided, "blob-container-exclude-list" is not taken into consideration.
+      folder-exclude-list:
+        required: false
+        type: string
+        default: "@(\"RecipeJournal\", \"`$`$`$ORCHARD`$`$`$.`$`$`$\")"
+        description: >
+          PowerShell string array with the name of the excluded folder(s), e.g.
+          "@(\"RecipeJournal\")" or "@(\"RecipeJournal\", \"BadFolder\")". The parameter must be a PowerShell string
+          array. When a not empty PowerShell string array is provided for "folder-include-list", then
+          "folder-exclude-list" is not taken into consideration.
+      folder-include-list:
+        required: false
+        type: string
+        default: "@()"
+        description: >
+          PowerShell string array with the name of the included folder(s), e.g.
+          "@(\"NotRecipeJournal\")" or "@(\"NotRecipeJournal\", \"CoolFolder\")". The parameter must be a PowerShell
+          string array. When a not empty PowerShell string array is provided, "folder-exclude-list" is not taken into
+          consideration.
+
+jobs:
+  reset-azure-environment:
+    runs-on: ${{ inputs.machine-type }}
+    name: Reset Azure Environment
+    defaults:
+      run:
+        shell: pwsh
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+    - name: Login to Azure
+      # v1.4.5
+      uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
+      with:
+        creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
+        enable-AzPSSession: true
+
+    - name: Initialize PowerShell modules
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@feature/github-actions
+
+    - name: Stop Web App Slot
+      run: |
+        Stop-AzureWebAppSlot `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.destination-slot-name }}
+
+    - name: Replace Media
+      run: |
+        Set-AzureWebAppStorageContentFromStorage `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SourceSlotName ${{ inputs.source-slot-name }} `
+          -DestinationSlotName ${{ inputs.destination-slot-name }} `
+          -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
+          -ContainerBlackList ${{ inputs.blob-container-exclude-list }} `
+          -ContainerWhiteList ${{ inputs.blob-container-include-list }} `
+          -FolderBlackList ${{ inputs.folder-exclude-list }} `
+          -FolderWhiteList ${{ inputs.folder-include-list }}
+
+    - name: Replace Database
+      run: |
+        Copy-AzureWebAppSqlDatabase `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }}  `
+          -SourceSlotName ${{ inputs.source-slot-name }} `
+          -DestinationSlotName ${{ inputs.destination-slot-name }} `
+          -ConnectionStringName ${{ inputs.database-connection-string-name }} `
+          -Force
+
+    - name: Scale Database
+      run: |
+        Set-AzureWebAppSqlDatabaseServiceObjective `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.destination-slot-name }} `
+          -ConnectionStringName ${{ inputs.master-database-connection-string-name }} `
+          -ServiceObjectiveName ${{ inputs.service-objective-name }}
+
+    - name: Add Destination Contained User to Destination Database
+      run: |
+        Install-Module sqlserver -AllowClobber -Force
+        Add-AzureWebAppSqlDatabaseContainedUser `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
+          -DatabaseConnectionStringName ${{ inputs.master-database-connection-string-name }} `
+          -UserConnectionStringName ${{ inputs.database-connection-string-name }}
+
+    - name: Remove Source Contained User from Destination Database
+      run: |
+        Remove-AzureWebAppSqlDatabaseContainedUser `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
+          -UserSlotName ${{ inputs.source-slot-name }} `
+          -DatabaseConnectionStringName ${{ inputs.master-database-connection-string-name }} `
+          -UserConnectionStringName ${{ inputs.database-connection-string-name }}
+
+    - name: Start Web App Slot
+      run: |
+        Start-AzureWebAppSlot `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.destination-slot-name }}
+
+    - name: Test Web App Slot
+      run: |
+        Test-AzureWebApp `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.destination-slot-name }}

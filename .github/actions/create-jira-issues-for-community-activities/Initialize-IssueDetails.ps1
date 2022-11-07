@@ -65,8 +65,8 @@ if ($null -eq $type)
     $type = "Task"
 }
 
-Write-Output "::set-output name=summary::$summary"
-Write-Output "::set-output name=json-description::$($description | ConvertTo-Json)"
-Write-Output "::set-output name=type::$type"
-Write-Output "::set-output name=link-url::$linkUrl"
-Write-Output "::set-output name=link-title::$linkTitle"
+Set-Output "summary" $summary
+Set-Output "json-description" $($description | ConvertTo-Json)
+Set-Output "type" $type
+Set-Output "link-url" $linkUrl
+Set-Output "link-title" $linkTitle
