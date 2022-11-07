@@ -9,9 +9,11 @@ const parsePullRequestId = (githubRef) => {
 };
 
 async function run() {
+  const jiraUrl = "https://lombiq.atlassian.net/browse/";
   const githubToken = core.getInput("GITHUB_TOKEN");
-  console.log("T O K E N: ", githubToken);
   const pullRequestId = parsePullRequestId(process.env.GITHUB_REF);
+  console.log('env', process.env);
+  console.log('ref', process.env.GITHUB_REF);
   const octokit = github.getOctokit(githubToken);
 
   const pr = await octokit.rest.pulls.get({
@@ -20,13 +22,27 @@ async function run() {
     pull_number: pullRequestId,
   });
 
-  let branch = pr.data.head.ref;
-  console.log("branch", branch);
-  let title = pr.data.title;
-  let body = pr.data.body;
+  const branch = pr.data.head.ref;
+  if (!branch.includes("issue")) {
+    return;
+  }
 
-  console.log("title", title);
-  console.log("body", body);
+  const issueKey = branch.replace("issue/", "");
+  const issueLink = `[${issueKey}](${jiraUrl + issueKey})`;
+
+  let title = pr.data.title;
+  if (!title.includes(issueKey)) {
+    title = issueKey + ": " + title;
+  }
+
+  let body = pr.data.body;
+  if (!body) {
+    body = issueLink;
+  } else if (!body.includes(issueKey)) {
+    body = issueLink + "\n" + body;
+  } else if (!body.includes(issueLink)) {
+    body = body.replace(issueKey, issueLink);
+  }
 
   await octokit.rest.pulls.update({
     owner: "Lombiq",
