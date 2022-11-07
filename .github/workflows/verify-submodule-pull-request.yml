@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Ensure Prefix PR
       uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
-      env:
+      with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Ensure Parent PR Exists
