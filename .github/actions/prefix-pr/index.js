@@ -20,8 +20,8 @@ async function run() {
     pull_number: pullRequestId,
   });
 
-  let branch = pr;
-  console.log(pr);
+  let branch = pr.headers.ref;
+  console.log("branch", branch);
   let title = pr.data.title;
   let body = pr.data.body;
 
