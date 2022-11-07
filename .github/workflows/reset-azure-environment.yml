@@ -113,7 +113,7 @@ jobs:
         enable-AzPSSession: true
 
     - name: Initialize PowerShell modules
-      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/NEST-338
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
     - name: Stop Web App Slot
       run: |
