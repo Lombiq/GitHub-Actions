@@ -8,15 +8,11 @@ on:
       AZURE_APP_SERVICE_PUBLISH_PROFILE:
         required: true
     inputs:
-      # This needs to be stringified JSON because inputs don't support arrays, see 
-      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
-      machine-types:
+      machine-type:
         required: false
         type: string
-        default: "[\"ubuntu-latest\"]"
-        description: >
-            Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]".
+        default: ubuntu-latest
+        description: The name of the type of machine to run the workflow under.
       dotnet-version:
         required: false
         type: string
@@ -79,10 +75,6 @@ on:
         required: true
         type: string
         description: Name of the resource group.
-      url:
-        required: true
-        type: string
-        description: The URL of the web app slot.
       web-project-path:
         required: false
         type: string
@@ -112,19 +104,12 @@ on:
 
 jobs:
   deploy:
-    runs-on: ${{ matrix.machine-type }}
+    runs-on: ${{ inputs.machine-type }}
     name: Deploy to Azure App Service
     defaults:
       run:
         shell: pwsh
-    # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
-    # https://github.com/actions/runner/issues/1555.
-    strategy:
-      matrix:
-        machine-type: ${{ fromJson(inputs.machine-types) }}
-        timeout-minutes:
-        - ${{ inputs.timeout-minutes }}
-    timeout-minutes: ${{ matrix.timeout-minutes }}
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
     - uses: actions/checkout@v3.1.0
       with:
@@ -182,13 +167,15 @@ jobs:
         creds: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
+    - name: Initialize PowerShell modules
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@feature/github-actions
+
     - name: Stop Web App Slot
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Stop-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
-        azPSVersion: latest
+      run: |
+        Stop-AzureWebAppSlot `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.slot-name }}
 
     - name: Deploy to Azure App Service
       # v2.2.3
@@ -200,12 +187,15 @@ jobs:
         package: ${{ inputs.build-directory }}/Published
 
     - name: Start Web App Slot
-      # v1.1.0
-      uses: Azure/powershell@38b0aa56c413239bd9dcc898d1f62986233658bc
-      with:
-        inlineScript: |
-          Start-AzWebAppSlot -ResourceGroupName ${{ inputs.resource-group-name }} -Name ${{ inputs.app-name }} -Slot ${{ inputs.slot-name }}
-        azPSVersion: latest
+      run: |
+        Start-AzureWebAppSlot `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.slot-name }}
 
-    - name: Ping Web App Slot
-      run: curl --connect-timeout 100 --retry 3 --retry-delay 15 ${{ inputs.url }}
+    - name: Test Web App Slot
+      run: |
+        Test-AzureWebApp `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.slot-name }}
