@@ -10,6 +10,7 @@ const parsePullRequestId = (githubRef) => {
 
 async function run() {
   const githubToken = core.getInput("GITHUB_TOKEN");
+  console.log("T O K E N: ", githubToken);
   const pullRequestId = parsePullRequestId(process.env.GITHUB_REF);
   const octokit = github.getOctokit(githubToken);
 
