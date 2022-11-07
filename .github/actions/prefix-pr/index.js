@@ -12,17 +12,16 @@ async function run() {
   const jiraUrl = "https://lombiq.atlassian.net/browse/";
   const githubToken = core.getInput("GITHUB_TOKEN");
   const pullRequestId = parsePullRequestId(process.env.GITHUB_REF);
-  console.log('env', process.env);
-  console.log('ref', process.env.GITHUB_REF);
+  const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
   const octokit = github.getOctokit(githubToken);
 
   const pr = await octokit.rest.pulls.get({
-    owner: "Lombiq",
-    repo: "GitHub-Actions",
+    owner: owner,
+    repo: repo,
     pull_number: pullRequestId,
   });
 
-  const branch = pr.data.head.ref;
+  const branch = process.env.GITHUB_ACTION_REF;
   if (!branch.includes("issue")) {
     return;
   }
@@ -38,15 +37,17 @@ async function run() {
   let body = pr.data.body;
   if (!body) {
     body = issueLink;
-  } else if (!body.includes(issueKey)) {
+  }
+  else if (!body.includes(issueKey)) {
     body = issueLink + "\n" + body;
-  } else if (!body.includes(issueLink)) {
+  }
+  else if (!body.includes(issueLink)) {
     body = body.replace(issueKey, issueLink);
   }
 
   await octokit.rest.pulls.update({
-    owner: "Lombiq",
-    repo: "GitHub-Actions",
+    owner: owner,
+    repo: repo,
     pull_number: pullRequestId,
     body: body,
     title: title,
