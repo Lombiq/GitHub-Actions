@@ -9,7 +9,7 @@ const parsePullRequestId = (githubRef) => {
 };
 
 async function run() {
-  const jiraUrl = "https://lombiq.atlassian.net/browse/";
+  const jiraBaseUrl = "https://lombiq.atlassian.net/browse/";
   const githubToken = core.getInput("GITHUB_TOKEN");
   const pullRequestId = parsePullRequestId(process.env.GITHUB_REF);
   const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
@@ -27,7 +27,7 @@ async function run() {
   }
 
   const issueKey = branch.replace("issue/", "");
-  const issueLink = `[${issueKey}](${jiraUrl + issueKey})`;
+  const issueLink = `[${issueKey}](${jiraBaseUrl + issueKey})`;
 
   let title = pr.data.title;
   if (!title.includes(issueKey)) {
