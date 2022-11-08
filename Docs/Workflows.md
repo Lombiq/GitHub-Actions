@@ -129,19 +129,19 @@ When `source` is not provided, it assumes a default value of pushing to the [Lom
 
 Valid values for `verbosity` are those defined by [MSBuild](https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022#:~:text=you%20can%20specify%20the%20following%20verbosity%20levels). The default value is `minimal`.
 
-## Submodule verify workflow
+## Submodule validate workflow
 
 Verifies if the submodule contains a JIRA style issue code (e.g. PROJ-123) and if a pull request exists for the parent module. Example _publish.yml_:
 
 ```yaml
-name: Verify OSOCE Pull Request
+name: Validate OSOCE Pull Request
 
 on:
   pull_request:
 
 jobs:
   call-validate-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/validate-submodule-pull-request.yml@issue/OSOE-425
+    uses: Lombiq/GitHub-Actions/.github/workflows/validate-submodule-pull-request.yml@dev
     with:
       repo: Lombiq/Open-Source-Orchard-Core-Extensions
 ```
