@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    prefix-pr:
+    steps:
     - name: Prefix PR
       id: prefix
       uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
@@ -19,8 +19,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   verify-pr:
-    needs: prefix-pr
+    needs: build
     runs-on: ubuntu-latest
+    steps:
     - name: Ensure Parent PR Exists
       uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
       with:
