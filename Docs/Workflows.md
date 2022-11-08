@@ -71,6 +71,7 @@ There are more configuration files available, for more information visit the act
 You can provide these files in your own repository, under the path `.github/actions/spelling`. This can't be configured for another path.
 
 You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above mentioned path.
+This parameter is needed even if you want to update our dictionary, so changing just the workflow's branch from `dev` to your branch wont take any effect, you can leave it as it is.
 
 Example _check-spelling.yml_:
 
