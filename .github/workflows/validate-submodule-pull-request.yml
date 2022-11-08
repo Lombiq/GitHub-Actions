@@ -1,4 +1,4 @@
-name: Verify Submodule Pull Request
+name: Validate Pull Request
 
 on:
   workflow_call:
@@ -12,14 +12,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Prefix PR
-      id: prefix
-      uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Ensure Parent PR Exists
-      if: steps.prefix.outcome == 'success'
       uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
       with:
         title: ${{ github.event.pull_request.title }}
+    
+    - name: Validate Pull Request
+      uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request@issue/OSOE-425
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -140,8 +140,8 @@ on:
   pull_request:
 
 jobs:
-  call-verify-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/verify-submodule-pull-request.yml@dev
+  call-validate-workflow:
+    uses: Lombiq/GitHub-Actions/.github/workflows/validate-submodule-pull-request.yml@issue/OSOE-425
     with:
       repo: Lombiq/Open-Source-Orchard-Core-Extensions
 ```

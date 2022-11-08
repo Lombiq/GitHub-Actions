@@ -7,6 +7,12 @@ jobs:
   validate-pull-request:
     runs-on: ubuntu-latest
     steps:
+    - name: Prefix PR
+      id: prefix
+      uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Check for Merge Conflict in PR
       uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@dev
       with:

@@ -1,4 +1,4 @@
-name: Verify Submodule Pull Request
+name: Validate Pull Request
 description: >
   Assuming that the current repository is a submodule in another repository, this action verifies that a pull request 
   with a matching issue code has been opened there as well.

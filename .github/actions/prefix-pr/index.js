@@ -30,11 +30,12 @@ async function run() {
   const issueLink = `[${issueKey}](${jiraBaseUrl + issueKey})`;
 
   let title = pr.data.title;
+  let body = pr.data.body;
+
   if (!title.includes(issueKey)) {
     title = issueKey + ": " + title;
   }
 
-  let body = pr.data.body;
   if (!body) {
     body = issueLink;
   }
