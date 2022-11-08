@@ -75,11 +75,12 @@ runs:
         if-no-files-found: ignore
 
     - name: Test Report
-      # v8
-      uses: phoenix-actions/test-reporting@1e9b578818d03d6df50ce8e60d024a000bf3ab63
-      if: (success() || failure()) && (github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false)
+      # v9
+      uses: phoenix-actions/test-reporting@c1b717ad3975d216b915b79f50db3f116bad06b2
+      if: success() || failure()
       with:
         name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
         path: '${{inputs.build-directory}}/**/*.trx'
         reporter: dotnet-trx
         fail-on-error: 'false'
+        output-to: 'step-summary'
