@@ -17,7 +17,13 @@ jobs:
       with:
         title: ${{ github.event.pull_request.title }}
     
-    - name: Validate Pull Request
-      uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request@issue/OSOE-425
+    - name: Prefix PR
+      id: prefix
+      uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Check for Merge Conflict in PR
+      uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@dev
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
