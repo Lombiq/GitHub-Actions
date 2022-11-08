@@ -12,13 +12,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Ensure Parent PR Exists
-      uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
-      with:
-        title: ${{ github.event.pull_request.title }}
-    
     - name: Prefix PR
       id: prefix
       uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Ensure Parent PR Exists
+      uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
+      with:
+        title: ${{ github.event.pull_request.title }}
