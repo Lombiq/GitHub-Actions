@@ -9,8 +9,10 @@ runs:
     - name: Prefix PR
       shell: pwsh
       run: |
-        Write-Host $Env:GITHUB_REF
-        echo $Env:GITHUB_REF
+        echo "1"
+        $Env:GITHUB_REF
+        echo "2"
+        $GITHUB_REF
         
         
         
