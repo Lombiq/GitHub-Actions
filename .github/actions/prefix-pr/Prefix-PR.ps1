@@ -5,14 +5,12 @@ param(
 )
 
 $jiraBaseUrl = "https://lombiq.atlassian.net/browse/"
-Write-Output "REF wierd:"
-Write-Output ${$Github_Ref##*/}
-Write-Output "REF"
-Write-Output $Github_Ref
 
 $owner, $repo = $Github_Repository.Split('/')
+$prId = $Github_Ref -replace "refs\/pull\/(\d+)\/merge", '$1'
 Write-Output $owner
 Write-Output $repo
+Write-Output $prId
 
 
 # $url = "https://api.github.com/repos/Lombiq/Github-Actions/pulls/90"
