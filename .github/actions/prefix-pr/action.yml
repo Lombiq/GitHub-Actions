@@ -12,7 +12,7 @@ runs:
         echo "1"
         $Env:GITHUB_REF
         echo "2"
-        $GITHUB_REF
+        $Env:GITHUB_REPOSITORY
         
         
         
