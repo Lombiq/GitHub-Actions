@@ -1,6 +1,7 @@
 param(
     [string] $Github_Repository,
     [string] $Github_Ref,
+    [string] $Branch
     [string] $Github_Token
 )
 
@@ -18,12 +19,12 @@ $body = $pr.body
 $originalTitle = $title
 $originalBody = $body
 
-$branch = "issue/OSOE-425"
-if ($branch -NotLike "*issue*") {
+echo $Branch
+if ($Branch -NotLike "*issue*") {
     Exit
 }
 
-$issueKey = $branch.replace("issue/", "")
+$issueKey = $Branch.replace("issue/", "")
 $issueLink = "[$issueKey]($jiraBaseUrl$issuekey)"
 
 if ($title -NotLike "*$issueKey*") {
