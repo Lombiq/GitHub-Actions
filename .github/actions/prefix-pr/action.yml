@@ -8,4 +8,4 @@ runs:
   steps:
     - name: Prefix PR
       shell: pwsh
-      run: Prefix-PR $Env.GITHUB_REPOSITORY $Env.GITHUB_REF ${{ inputs.GITHUB_TOKEN }}
+      run: ${{ github.action_path }}/Prefix-PR $Env.GITHUB_REPOSITORY $Env.GITHUB_REF ${{ inputs.GITHUB_TOKEN }}
