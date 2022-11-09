@@ -19,7 +19,8 @@ $body = $pr.body
 $originalTitle = $title
 $originalBody = $body
 
-echo $Branch
+Write-Output "Branch"
+Write-Output $Branch
 if ($Branch -NotLike "*issue*") {
     Exit
 }
