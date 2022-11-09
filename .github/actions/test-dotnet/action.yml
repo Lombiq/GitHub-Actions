@@ -75,8 +75,8 @@ runs:
         if-no-files-found: ignore
 
     - name: Test Report
-      # v9
-      uses: phoenix-actions/test-reporting@c1b717ad3975d216b915b79f50db3f116bad06b2
+      # v10
+      uses: phoenix-actions/test-reporting@93ce19fa5882ebe3969ebdb9ee1024b3d29e776f
       if: success() || failure()
       with:
         name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
