@@ -4,5 +4,8 @@ inputs:
     required: true
 
 runs:
-  using: "node16"
-  main: "index.js"
+  using: "composite"
+  steps:
+    - name: Prefix PR
+      shell: pwsh
+      run: GetPR $Env.GITHUB_REPOSITORY $Env.GITHUB_REF ${{ inputs.GITHUB_TOKEN }}
