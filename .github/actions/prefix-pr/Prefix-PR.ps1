@@ -1,7 +1,7 @@
 param(
     [string] $Github_Repository,
     [string] $Github_Ref,
-    [string] $Branch
+    [string] $Branch,
     [string] $Github_Token
 )
 
