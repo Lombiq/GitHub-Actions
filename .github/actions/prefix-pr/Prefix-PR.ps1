@@ -5,9 +5,12 @@ param(
 )
 
 $jiraBaseUrl = "https://lombiq.atlassian.net/browse/"
-Write-Output $Github_Repository
-Write-Output "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
-Write-Output $Github_Ref
+Write-Output ${Github_Ref##*/}
+
+$owner, $repo = $Github_Repository.Split('/')
+Write-Output $owner
+Write-Output $repo
+
 
 # $url = "https://api.github.com/repos/Lombiq/Github-Actions/pulls/90"
 # $headers = @{"Authorization" = "Bearer $Github_Token"; "Accept" = "application/vnd.github+json"}
