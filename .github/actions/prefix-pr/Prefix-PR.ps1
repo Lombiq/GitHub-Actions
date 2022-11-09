@@ -41,6 +41,6 @@ elseif ($body -NotLike "*``[$issueKey``]``($jiraBaseUrl$issuekey``)*") {
 }
 
 if (($title -ne $originalTitle) -or ($body -ne $originalBody)) {
-    $bodyParams = @{"title" = $title; "body" = $body}
+    $bodyParams = @{"title" = $title; "body" = $body} | ConvertTo-Json
     Invoke-WebRequest $url -Headers $headers -Method Patch -Body $bodyParams
 }
