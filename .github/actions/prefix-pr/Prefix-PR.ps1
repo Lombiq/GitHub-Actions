@@ -5,7 +5,10 @@ param(
 )
 
 $jiraBaseUrl = "https://lombiq.atlassian.net/browse/"
+Write-Output "REF wierd:"
 Write-Output ${$Github_Ref##*/}
+Write-Output "REF"
+Write-Output $Github_Ref
 
 $owner, $repo = $Github_Repository.Split('/')
 Write-Output $owner
