@@ -19,6 +19,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Ensure Parent PR Exists
-      uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@issue/OSOE-425
       with:
         title: ${{ github.event.pull_request.title }}
