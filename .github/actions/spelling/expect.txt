@@ -1,6 +1,7 @@
 # Words that start with an UPPER-case letter will be matched as is.
 Accessbility
 Autoprefix
+Argb
 Chro
 Cloudflare
 Cms
