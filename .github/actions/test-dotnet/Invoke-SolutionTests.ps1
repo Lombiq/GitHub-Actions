@@ -1,5 +1,7 @@
 param ($Verbosity)
 
+# Note that this script will only find tests if they were previously build in Release mode.
+
 # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
 # (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output is
 # sanitized from unnecessary diagnostics messages from chromedriver if the output doesn't already contain groupings,
@@ -35,7 +37,17 @@ $tests = dotnet sln list |
     }
 
 foreach ($test in $tests) {
-    dotnet test -c Release --no-restore --no-build --nologo --logger "trx;LogFileName=test-results.trx" --verbosity $Verbosity $test 2>&1 >test.out
+    $dotnetTestSwitches = @(
+        '--configuration', 'Release'
+        '--no-restore',
+        '--no-build',
+        '--nologo',
+        '--logger', 'trx;LogFileName=test-results.trx'
+        '--verbosity', $Verbosity
+        $test
+    )
+
+    dotnet test @dotnetTestSwitches 2>&1 >test.out
 
     if ($?)
     {
