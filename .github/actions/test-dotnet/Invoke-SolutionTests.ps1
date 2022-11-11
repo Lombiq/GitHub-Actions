@@ -1,4 +1,4 @@
-param ($Verbosity)
+param ($Verbosity, $Filter)
 
 # Note that this script will only find tests if they were previously build in Release mode.
 
@@ -44,6 +44,8 @@ foreach ($test in $tests) {
         '--nologo',
         '--logger', 'trx;LogFileName=test-results.trx'
         '--verbosity', $Verbosity
+        [string]::IsNullOrEmpty($Filter) ? '' : "--filter"
+        [string]::IsNullOrEmpty($Filter) ? '' : $Filter
         $test
     )
 
