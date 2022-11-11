@@ -4,7 +4,10 @@ on:
   workflow_call:
     inputs:
       dictionary-source-prefixes:
-        description: JSON map of prefixes for dictionary URLs, "cspell" is necessary. See https://github.com/check-spelling/check-spelling/blob/86a22cfaff3846dbd788acea5d18cf5db6d40dd1/action.yml#L64 for current version.
+        description: >
+          JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
+          https://github.com/check-spelling/check-spelling/blob/86a22cfaff3846dbd788acea5d18cf5db6d40dd1/action.yml#L64
+          for current version.
         required: false
         type: string
         default: '{"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"}'
@@ -33,6 +36,11 @@ on:
         required: false
         type: string
         default: Lombiq/GitHub-Actions@dev
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this work workflow fails.
+        required: false
+        type: string
+        default: "false"
 
 jobs:
   check-spelling:
@@ -62,3 +70,9 @@ jobs:
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
           config: ${{ inputs.config }}
           spell-check-this: ${{ inputs.spell-check-this }}
+
+      - name: Cancel Workflow on Failure
+        if: failure() && cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-433
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,14 @@
+name: Cancel Workflow
+description: >
+  Cancels the current workflow run, i.e. all jobs. Useful if you want to cancel the rest of the workflow when one job
+  fails.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cancel Workflow
+      shell: pwsh
+      run: |
+        $url = "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
+        $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
+        Invoke-WebRequest $url -Headers $headers -Method Post
