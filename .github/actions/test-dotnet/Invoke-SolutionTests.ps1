@@ -1,4 +1,4 @@
-﻿param ($Verbosity)
+param ($Verbosity)
 
 # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
 # (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output is
