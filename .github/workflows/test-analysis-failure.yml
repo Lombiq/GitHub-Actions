@@ -4,6 +4,11 @@ name: Test Analysis Failure
 on:
   workflow_call:
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this work workflow fails.
+        required: false
+        type: string
+        default: "true"
       # This needs to be stringified JSON because inputs don't support arrays, see
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
@@ -97,3 +102,8 @@ jobs:
         cache-version: ${{ inputs.build-cache-version }}
         expected-code-analysis-errors: ${{ inputs.build-expected-code-analysis-errors }}
 
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-433
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -8,6 +8,11 @@ on:
       AZURE_APP_SERVICE_PUBLISH_PROFILE:
         required: true
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this work workflow fails.
+        required: false
+        type: string
+        default: "true"
       machine-type:
         required: false
         type: string
@@ -199,3 +204,9 @@ jobs:
           -ResourceGroupName ${{ inputs.resource-group-name }} `
           -WebAppName ${{ inputs.app-name }} `
           -SlotName ${{ inputs.slot-name }}
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-433
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

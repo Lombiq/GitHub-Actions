@@ -3,6 +3,11 @@ name: Build .NET solution
 on:
   workflow_call:
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this work workflow fails.
+        required: false
+        type: string
+        default: "true"
       # This needs to be stringified JSON because inputs don't support arrays, see 
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
@@ -107,3 +112,9 @@ jobs:
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-433
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
