@@ -40,7 +40,7 @@ on:
         description: When set to "true", will cancel the current workflow run with all jobs if this work workflow fails.
         required: false
         type: string
-        default: "false"
+        default: "true"
 
 jobs:
   check-spelling:
