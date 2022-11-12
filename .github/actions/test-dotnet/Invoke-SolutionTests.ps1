@@ -59,13 +59,5 @@ foreach ($test in $tests) {
         continue
     }
 
-    $needsGrouping = (Select-String "::group::" test.out).Length -eq 0
-
-    if ($needsGrouping) { Write-Output "::group::Test Failed: $test" }
-
-    bash -c "cat test.out | grep -v 'Connection refused \[::ffff:127.0.0.1\]' | grep -v 'ChromeDriver was started successfully'"
-
-    if ($needsGrouping) { Write-Output "::endgroup::" }
-
     exit 100
 }
