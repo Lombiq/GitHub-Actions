@@ -43,13 +43,15 @@ foreach ($test in $tests) {
         '--no-build',
         '--nologo',
         '--logger', 'trx;LogFileName=test-results.trx'
+        # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
+        '--logger', 'console;verbosity=detailed'
         '--verbosity', $Verbosity
         [string]::IsNullOrEmpty($Filter) ? '' : "--filter"
         [string]::IsNullOrEmpty($Filter) ? '' : $Filter
         $test
     )
 
-    dotnet test @dotnetTestSwitches 2>&1 >test.out
+    dotnet test @dotnetTestSwitches
 
     if ($?)
     {
