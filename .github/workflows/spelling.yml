@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this work workflow fails.
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
         required: false
         type: string
         default: "true"
