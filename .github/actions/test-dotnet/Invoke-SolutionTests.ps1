@@ -35,7 +35,7 @@ $tests = dotnet sln list |
     }
 
 foreach ($test in $tests) {
-    dotnet test -c Release --no-restore --no-build --nologo --logger "trx;LogFileName=test-results.trx" --verbosity $Verbosity $test 2>&1 >test.out
+    dotnet test -c Release --no-restore --no-build --nologo --logger "trx;LogFileName=test-results.trx" --verbosity $Verbosity $test
 
     if ($?)
     {
