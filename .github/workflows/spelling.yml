@@ -3,6 +3,11 @@ name: Spelling
 on:
   workflow_call:
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this work workflow fails.
+        required: false
+        type: string
+        default: "true"
       dictionary-source-prefixes:
         description: >
           JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
@@ -36,11 +41,6 @@ on:
         required: false
         type: string
         default: Lombiq/GitHub-Actions@dev
-      cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this work workflow fails.
-        required: false
-        type: string
-        default: "true"
 
 jobs:
   check-spelling:
