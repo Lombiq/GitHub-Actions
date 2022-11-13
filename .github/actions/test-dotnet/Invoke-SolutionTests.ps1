@@ -44,8 +44,8 @@ foreach ($test in $tests) {
         '--nologo',
         '--logger', 'trx;LogFileName=test-results.trx'
         '--verbosity', $Verbosity
-        [string]::IsNullOrEmpty($Filter) ? '' : '--filter'
-        [string]::IsNullOrEmpty($Filter) ? '' : $Filter
+        $Filter ? '--filter' : ''
+        $Filter ? $Filter : ''
         $test
     )
 
