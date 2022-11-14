@@ -70,7 +70,7 @@ There are more configuration files available, for more information visit the [Ch
 
 You can override these files in your own repository, under `.github/actions/spelling/`. This path can be configured by the `config` property.
 
-You can also use existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above mentioned directory.
+You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above-mentioned path. This parameter is needed even if you want to update our dictionary in a custom branch of project consuming this workflow; changing just the workflow's branch from `dev` to your branch won't take any effect, you can leave it as it is.
 
 Example _check-spelling.yml_:
 
