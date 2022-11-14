@@ -51,13 +51,19 @@ foreach ($test in $tests) {
         $test
     )
 
+    Write-Output "::group::{$test tests}"
+
     dotnet test @dotnetTestSwitches
 
     if ($?)
     {
-        Write-Output "Test Successful: $test"
+        Write-Output "Test successful: $test"
+        Write-Output '::endgroup::'
         continue
     }
-
-    exit 100
+    else {
+        Write-Output "Test failed: $test"
+        Write-Output '::endgroup::'
+        exit 100
+    }
 }
