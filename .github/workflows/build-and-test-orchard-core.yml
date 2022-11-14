@@ -75,6 +75,12 @@ on:
         description: >
           If set to "true", the Azurite Azure Blob Storage emulator will be installed and started. This is necessary if
           the app's UI tests connect to Azure Blob Storage for file storage.
+      test-filter:
+        required: false
+        type: string
+        description: >
+          Filter expression for dotnet test. See:
+          https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
       ui-test-parallelism:
         required: false
         type: string
@@ -151,6 +157,7 @@ jobs:
       with:
         build-directory: ${{ inputs.build-directory }}
         test-verbosity: ${{ inputs.build-verbosity }}
+        test-filter: ${{ inputs.test-filter }}
         ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
 
     - name: Cancel Workflow on Failure

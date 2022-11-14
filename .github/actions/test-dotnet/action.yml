@@ -13,6 +13,10 @@ inputs:
     required: false
     default: quiet
     description: Verbosity parameter for dotnet test.
+  test-filter:
+    required: false
+    description: >
+      Filter expression for dotnet test. See: https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
   ui-test-parallelism:
     required: false
     default: "-1"
@@ -50,7 +54,7 @@ runs:
     - name: Run Tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
-      run: Invoke-SolutionTests -Verbosity ${{ inputs.test-verbosity }}
+      run: Invoke-SolutionTests -Verbosity ${{ inputs.test-verbosity }} -Filter "${{ inputs.test-filter }}"
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
