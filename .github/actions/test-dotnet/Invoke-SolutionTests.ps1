@@ -44,6 +44,8 @@ foreach ($test in $tests) {
     # https://github.com/actions/runner/issues/1477. See the # c341ef145d2a0898c5900f64604b67b21d2ea5db commit for a
     # nested grouping implementation.
 
+    Write-Output "Starting to execute tests from the $test project."
+
     $dotnetTestSwitches = @(
         '--configuration', 'Release'
         '--no-restore',
