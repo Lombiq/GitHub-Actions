@@ -2,22 +2,17 @@ param(
     [string] $GitBubRepository,
     [string] $GithubRef,
     [string] $Branch,
-    [string] $GithubToken
+    [string] $GithubToken,
+    [string] $Title,
+    [string] $Body,
+    [string] $prId
 )
 
 $jiraBaseUrl = "https://lombiq.atlassian.net/browse/"
 $owner, $repo = $GitBubRepository.Split('/')
-$prId = $GithubRef -replace "refs\/pull\/(\d+)\/merge", '$1'
 
-$url = "https://api.github.com/repos/$owner/$repo/pulls/$prId"
-$headers = @{"Authorization" = "Bearer $GithubToken"; "Accept" = "application/vnd.github+json"}
-
-$pr = Invoke-WebRequest $url -Headers $headers | % {$_.Content} | ConvertFrom-Json
-$title = $pr.title
-$body = $pr.body
-
-$originalTitle = $title
-$originalBody = $body
+$originalTitle = $Title
+$originalBody = $Body
 
 if ($Branch -NotLike "*issue*") {
     Exit
@@ -27,21 +22,22 @@ $Branch -match '(\w+-\d+)'
 $issueKey = $matches[0]
 $issueLink = "[$issueKey]($jiraBaseUrl$issuekey)"
 
-if ($title -NotLike "*$issueKey*") {
-    $title = $issueKey + ": " + $title
+if ($Title -NotLike "*$issueKey*") {
+    $Title = $issueKey + ": " + $Title
 }
 
-if (-Not $body) {
-    $body = $issueLink
+if (-Not $Body) {
+    $Body = $issueLink
 }
-elseif ($body -NotLike "*$issueKey*") {
-    $body = $issueLink + "`n" + $body
+elseif ($Body -NotLike "*$issueKey*") {
+    $Body = $issueLink + "`n" + $Body
 }
-elseif ($body -NotLike "*``[$issueKey``]``($jiraBaseUrl$issuekey``)*") {
-    $body = $body.replace($issueKey, $issueLink)
+elseif ($Body -NotLike "*``[$issueKey``]``($jiraBaseUrl$issuekey``)*") {
+    $Body = $Body.replace($issueKey, $issueLink)
 }
 
-if (($title -ne $originalTitle) -or ($body -ne $originalBody)) {
-    $bodyParams = @{"title" = $title; "body" = $body} | ConvertTo-Json
+if (($Title -ne $originalTitle) -or ($Body -ne $originalBody)) {
+    $bodyParams = @{"title" = $Title; "body" = $Body} | ConvertTo-Json    
+    $headers = @{"Authorization" = "Bearer $GithubToken"; "Accept" = "application/vnd.github+json"}
     Invoke-WebRequest $url -Headers $headers -Method Patch -Body $bodyParams
 }
