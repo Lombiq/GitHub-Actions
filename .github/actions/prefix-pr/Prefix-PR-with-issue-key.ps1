@@ -37,7 +37,8 @@ elseif ($Body -NotLike "*``[$issueKey``]``($jiraBaseUrl$issuekey``)*") {
 }
 
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody)) {
-    $bodyParams = @{"title" = $Title; "body" = $Body} | ConvertTo-Json    
+    $bodyParams = @{"title" = $Title; "body" = $Body} | ConvertTo-Json
+    $url = "https://api.github.com/repos/$owner/$repo/pulls/$prId"    
     $headers = @{"Authorization" = "Bearer $GithubToken"; "Accept" = "application/vnd.github+json"}
     Invoke-WebRequest $url -Headers $headers -Method Patch -Body $bodyParams
 }
