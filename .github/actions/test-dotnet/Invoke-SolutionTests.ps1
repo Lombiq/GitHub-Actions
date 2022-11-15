@@ -36,6 +36,8 @@ $tests = dotnet sln list |
         -not [string]::IsNullOrEmpty($result) -and $result.Contains("The following Tests are available")
     }
 
+Write-Output "Starting to execute tests from $($tests.Length) projects."
+
 foreach ($test in $tests) {
     # This could benefit from grouping, above the level of the potential groups created by the tests (the Lombiq UI
     # Testing Toolbox adds per-test groups too). However, there's no nested grouping, see
