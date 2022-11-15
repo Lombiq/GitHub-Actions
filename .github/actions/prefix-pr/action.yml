@@ -1,4 +1,4 @@
-name: "Prefix PR"
+name: "Prefix PR with issue key"
 inputs:
   GITHUB_TOKEN:
     required: true
@@ -12,6 +12,6 @@ runs:
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
-    - name: Prefix PR
+    - name: Prefix PR with issue key
       shell: pwsh
       run: Prefix-PR $Env:GITHUB_REPOSITORY $Env:GITHUB_REF $Env:GITHUB_HEAD_REF ${{ inputs.GITHUB_TOKEN }}

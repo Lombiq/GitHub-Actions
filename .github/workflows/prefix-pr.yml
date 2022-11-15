@@ -1,4 +1,4 @@
-name: "Prefix PR"
+name: "Prefix PR with issue key"
 
 on:
   workflow_call:
@@ -10,7 +10,7 @@ jobs:
   prbody:
     runs-on: ubuntu-latest
     steps:
-    - name: "Prefix PR"
+    - name: "Prefix PR with issue key"
       uses: Lombiq/GitHub-Actions/.github/actions/prbody@issue/OSOE-425
       with:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}

@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Prefix PR
+    - name: Prefix PR with issue key
       uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
