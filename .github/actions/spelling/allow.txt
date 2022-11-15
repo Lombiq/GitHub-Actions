@@ -239,6 +239,7 @@ IRead
 IRecipe
 IRegistration
 IRequest
+IResolve
 IResource
 IRole
 IRunning

@@ -70,7 +70,7 @@ There are more configuration files available, for more information visit the act
 
 You can provide these files in your own repository, under the path `.github/actions/spelling`. This can't be configured for another path.
 
-You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above mentioned path.
+You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above-mentioned path. This parameter is needed even if you want to update our dictionary in a custom branch of project consuming this workflow; changing just the workflow's branch from `dev` to your branch won't take any effect, you can leave it as it is.
 
 Example _check-spelling.yml_:
 
@@ -238,4 +238,29 @@ jobs:
     with:
       issue-component: Lombiq.MyProject
 
+```
+
+## Reset Azure Environment workflow
+
+This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Example _reset-azure-environment.yml_:
+
+```yaml
+name: Reset Azure Environment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-reset-azure-environment-workflow:
+    name: Reset Azure Environment
+    uses: Lombiq/GitHub-Actions/.github/workflows/reset-azure-environment.yml@dev
+    with:
+      timeout-minutes: 60
+      app-name: AppName
+      resource-group-name: ResourceGroupName
+      database-connection-string-name: Database__ConnectionString
+      master-database-connection-string-name: Database__ConnectionString-master
+      storage-connection-string-name: Storage_ConnectionString
+    secrets:
+      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_RESET_ENVIRONMENT_SERVICE_PRINCIPAL }}
 ```

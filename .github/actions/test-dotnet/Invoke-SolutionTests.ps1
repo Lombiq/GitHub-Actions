@@ -1,4 +1,6 @@
-﻿param ($Verbosity)
+param ($Verbosity, $Filter)
+
+# Note that this script will only find tests if they were previously build in Release mode.
 
 # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
 # (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output is
@@ -8,15 +10,16 @@
 # the Actions web UI. Note that we use bash to output the log using bash to avoid pwsh wrapping the output to the
 # default buffer width.
 
+$ConnectionStringSuffix = ";MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;TrustServerCertificate=true;Encrypt=false";
 if ($Env:RUNNER_OS -eq "Windows")
 {
     $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
-        "Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True;MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5"
+        "Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True" + $ConnectionStringSuffix
 }
 else
 {
     $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
-        "Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!;MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5"
+        "Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!" + $ConnectionStringSuffix
 
     $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = "sql2019"
 }
@@ -34,7 +37,19 @@ $tests = dotnet sln list |
     }
 
 foreach ($test in $tests) {
-    dotnet test -c Release --no-restore --no-build --nologo --logger "trx;LogFileName=test-results.trx" --verbosity $Verbosity $test 2>&1 >test.out
+    $dotnetTestSwitches = @(
+        '--configuration', 'Release'
+        '--no-restore',
+        '--no-build',
+        '--nologo',
+        '--logger', 'trx;LogFileName=test-results.trx'
+        '--verbosity', $Verbosity
+        $Filter ? '--filter' : ''
+        $Filter ? $Filter : ''
+        $test
+    )
+
+    dotnet test @dotnetTestSwitches 2>&1 >test.out
 
     if ($?)
     {
