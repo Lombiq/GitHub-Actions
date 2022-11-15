@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Prefix PR
-      id: prefix
       uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
