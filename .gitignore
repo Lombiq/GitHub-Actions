@@ -9,4 +9,3 @@ node_modules/
 *.user
 .pnpm-debug.log
 /.editorconfig
-!**/prefix-pr/node_modules
