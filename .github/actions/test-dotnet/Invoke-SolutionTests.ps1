@@ -37,6 +37,11 @@ $tests = dotnet sln list |
     }
 
 foreach ($test in $tests) {
+    # This could benefit from grouping, above the level of the potential groups created by the tests (the Lombiq UI
+    # Testing Toolbox adds per-test groups too). However, there's # no nested grouping, see
+    # https://github.com/actions/runner/issues/1477. See the # c341ef145d2a0898c5900f64604b67b21d2ea5db commit for a
+    # nested grouping implementation.
+
     $dotnetTestSwitches = @(
         '--configuration', 'Release'
         '--no-restore',
@@ -51,19 +56,16 @@ foreach ($test in $tests) {
         $test
     )
 
-    Write-Output "::group::$test"
-
-    dotnet test @dotnetTestSwitches
+    dotnet test @dotnetTestSwitches 2>&1
+        | Where-Object { $_ -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $_ -notlike '*ChromeDriver was started successfully*' }
 
     if ($?)
     {
         Write-Output "Test successful: $test"
-        Write-Output '::endgroup::'
         continue
     }
-    else {
-        Write-Output "Test failed: $test"
-        Write-Output '::endgroup::'
-        exit 100
-    }
+
+    Write-Output "Test failed: $test"
+
+    exit 100
 }
