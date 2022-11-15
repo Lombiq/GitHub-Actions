@@ -162,6 +162,6 @@ jobs:
 
     - name: Cancel Workflow on Failure
       if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-433
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
