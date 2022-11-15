@@ -31,7 +31,7 @@ $tests = dotnet sln list |
     Select-String "\.Tests\." |
     Select-String -NotMatch "Lombiq.Tests.UI.csproj" |
     Select-String -NotMatch "Lombiq.Tests.csproj" |
-    ? {
+    Where-Object {
         $result = dotnet test --no-restore --list-tests --verbosity $Verbosity $_ 2>&1 | Out-String -Width 9999
         -not [string]::IsNullOrEmpty($result) -and $result.Contains("The following Tests are available")
     }
