@@ -8,7 +8,7 @@ param(
     [string] $prId
 )
 
-$jiraBaseUrl = "https://lombiq.atlassian.net/browse/"
+$jiraBaseUrl = $Env:JIRA_BASE_URL + '/browse/';
 $owner, $repo = $GitBubRepository.Split('/')
 
 $originalTitle = $Title
