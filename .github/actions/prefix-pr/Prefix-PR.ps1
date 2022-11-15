@@ -1,16 +1,16 @@
 param(
-    [string] $Github_Repository,
-    [string] $Github_Ref,
+    [string] $GitBubRepository,
+    [string] $GithubRef,
     [string] $Branch,
-    [string] $Github_Token
+    [string] $GithubToken
 )
 
 $jiraBaseUrl = "https://lombiq.atlassian.net/browse/"
-$owner, $repo = $Github_Repository.Split('/')
-$prId = $Github_Ref -replace "refs\/pull\/(\d+)\/merge", '$1'
+$owner, $repo = $GitBubRepository.Split('/')
+$prId = $GithubRef -replace "refs\/pull\/(\d+)\/merge", '$1'
 
 $url = "https://api.github.com/repos/$owner/$repo/pulls/$prId"
-$headers = @{"Authorization" = "Bearer $Github_Token"; "Accept" = "application/vnd.github+json"}
+$headers = @{"Authorization" = "Bearer $GithubToken"; "Accept" = "application/vnd.github+json"}
 
 $pr = Invoke-WebRequest $url -Headers $headers | % {$_.Content} | ConvertFrom-Json
 $title = $pr.title
