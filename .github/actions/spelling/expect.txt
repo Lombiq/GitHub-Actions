@@ -1,4 +1,3 @@
-# Words that start with an UPPER-case letter will be matched as is.
 Accessbility
 Autoprefix
 Argb
@@ -22,7 +21,6 @@ RHEL
 SUSE
 XDG
 
-# Words with all lower-case letters will be matched in a case-insensitive way.
 abcdefghijklmnopqrstuvwxyz
 argv
 binstubs
