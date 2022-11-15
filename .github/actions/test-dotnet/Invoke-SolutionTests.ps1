@@ -51,7 +51,7 @@ foreach ($test in $tests) {
         $test
     )
 
-    Write-Output "::group::{$test tests}"
+    Write-Output "::group::$test"
 
     dotnet test @dotnetTestSwitches
 
