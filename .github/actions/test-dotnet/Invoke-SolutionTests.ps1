@@ -56,8 +56,8 @@ foreach ($test in $tests) {
         $test
     )
 
-    dotnet test @dotnetTestSwitches 2>&1
-        | Where-Object { $_ -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $_ -notlike '*ChromeDriver was started successfully*' }
+    dotnet test @dotnetTestSwitches 2>&1 |
+        Where-Object { $_ -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $_ -notlike '*ChromeDriver was started successfully*' }
 
     if ($?)
     {
