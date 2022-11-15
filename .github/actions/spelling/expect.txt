@@ -59,6 +59,7 @@ linkedin
 linting
 lintrc
 linux
+loglevel
 lookbehind
 mcr
 mixin
