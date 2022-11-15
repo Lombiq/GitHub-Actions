@@ -56,6 +56,8 @@ foreach ($test in $tests) {
         $test
     )
 
+    # Filtering is necessary for annoying messages coming from UI testing but only under Ubuntu. There are no actual
+    # errors.
     dotnet test @dotnetTestSwitches 2>&1 |
         Where-Object { $_ -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $_ -notlike '*ChromeDriver was started successfully*' }
 
