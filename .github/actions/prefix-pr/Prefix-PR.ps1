@@ -23,7 +23,8 @@ if ($Branch -NotLike "*issue*") {
     Exit
 }
 
-$issueKey = $Branch.replace("issue/", "")
+$Branch -match '(\w+-\d+)'
+$issueKey = $matches[0]
 $issueLink = "[$issueKey]($jiraBaseUrl$issuekey)"
 
 if ($title -NotLike "*$issueKey*") {
