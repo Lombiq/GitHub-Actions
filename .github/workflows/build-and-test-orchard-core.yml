@@ -3,6 +3,11 @@ name: Build and Test Orchard Core solution
 on:
   workflow_call:
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
       # This needs to be stringified JSON because inputs don't support arrays, see 
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
@@ -154,3 +159,9 @@ jobs:
         test-verbosity: ${{ inputs.build-verbosity }}
         test-filter: ${{ inputs.test-filter }}
         ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
