@@ -11,6 +11,7 @@ runs:
       if: github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false
       shell: pwsh
       run: |
+        Write-Output "::error::Canceling workflow due to one of the jobs failing."
         $url = "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
         $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
         Invoke-WebRequest $url -Headers $headers -Method Post
