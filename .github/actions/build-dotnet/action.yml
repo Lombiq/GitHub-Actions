@@ -115,6 +115,9 @@ runs:
     - name: Build and Static Code Analysis
       shell: pwsh
       working-directory: ${{ inputs.directory }}
+      env:
+        # See Build-DotNetSolutionOrProject.ps1 for the reasons to disable node reuse.
+        MSBUILDDISABLENODEREUSE: "1"
       run: |
         $buildSwitches = @'
             ${{ inputs.dotnet-build-switches }}
