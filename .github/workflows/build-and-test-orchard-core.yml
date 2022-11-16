@@ -118,11 +118,50 @@ jobs:
       with:
         submodules: 'recursive'
 
-    - id: post-run-command
-      needs: non-existent-command
-      if: ${{ always() }}
-      run: echo "this thing works!"
+    #- name: Set up .NET
+    #  uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+    #  with:
+    #    dotnet-version: ${{ inputs.dotnet-version }}
 
-    - id: non-existent-command
-      name: 'Running an non-existing command will fail...'
-      run: run something that does not exist;
+    - name: Verify that .NET packages are consolidated
+      if: ${{ inputs.verify-dotnet-consolidation }}
+      uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+      with:
+        directory: ${{ inputs.build-directory }}
+
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+    - name: Build and Static Code Analysis
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-464
+      with:
+        directory: ${{ inputs.build-directory }}
+        verbosity: ${{ inputs.build-verbosity }}
+        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+        enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+        enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+        cache-version: ${{ inputs.build-cache-version }}
+
+    - name: Set up SQL Server
+      if: inputs.set-up-sql-server == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+
+    - name: Set up Azurite
+      if: inputs.set-up-azurite == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
+      with:
+        location: ${{ inputs.build-directory}}
+
+    - name: Tests
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-464
+      with:
+        build-directory: ${{ inputs.build-directory }}
+        test-verbosity: ${{ inputs.build-verbosity }}
+        test-filter: ${{ inputs.test-filter }}
+        ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-464
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
