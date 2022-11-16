@@ -99,6 +99,7 @@ postclean
 pragma
 prebuild
 preheader
+publishsettings
 pwsh
 readdir
 search'f
