@@ -3,7 +3,6 @@ Argb
 Chro
 Cloudflare
 Cms
-Cms
 CDNs
 EACCES
 EULA
@@ -100,6 +99,7 @@ postclean
 pragma
 prebuild
 preheader
+publishsettings
 pwsh
 readdir
 search'f
@@ -130,7 +130,6 @@ xxl
 yaml
 yml
 Aig
-Airi
 Airi
 BJRQ
 BOHq
