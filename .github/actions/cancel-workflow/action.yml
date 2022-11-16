@@ -15,4 +15,3 @@ runs:
         $url = "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
         $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
         Invoke-WebRequest $url -Headers $headers -Method Post
-        exit 1
