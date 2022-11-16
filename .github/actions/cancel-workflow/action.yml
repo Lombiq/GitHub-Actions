@@ -6,11 +6,6 @@ description: >
 runs:
   using: "composite"
   steps:
-    - env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      shell: bash
-      run: echo "$GITHUB_CONTEXT"
-
     - name: Cancel Workflow
       # Fork PRs won't have a token with write access to Actions, thus won't be able to cancel the workflow.
       if: github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false
