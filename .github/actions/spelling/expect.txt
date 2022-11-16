@@ -3,7 +3,6 @@ Argb
 Chro
 Cloudflare
 Cms
-Cms
 CDNs
 EACCES
 EULA
@@ -130,7 +129,6 @@ xxl
 yaml
 yml
 Aig
-Airi
 Airi
 BJRQ
 BOHq
