@@ -13,4 +13,4 @@ runs:
       # Post-2.0.1 commit.
       uses: webiny/action-post-run@c09eade5dd0a57b254f766ff7bc3f5725ab5adb4
       with:
-        run: Invoke-WorkflowCancellation.ps1 ${{ github.repository }} ${{ github.run_id }}
+        run: ${{ github.action_path }}/Invoke-WorkflowCancellation.ps1 ${{ github.repository }} ${{ github.run_id }}
