@@ -13,8 +13,4 @@ runs:
       # Post-2.0.1 commit.
       uses: webiny/action-post-run@c09eade5dd0a57b254f766ff7bc3f5725ab5adb4
       with:
-        run: |
-          Write-Output "::error::Canceling workflow due to one of the jobs failing."
-          $url = "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
-          $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
-          Invoke-WebRequest $url -Headers $headers -Method Post
+        run: Invoke-WorkflowCancellation.ps1 ${{ github.repository }} ${{ github.run_id }}
