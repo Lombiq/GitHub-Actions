@@ -118,10 +118,10 @@ jobs:
       with:
         submodules: 'recursive'
 
-    #- name: Set up .NET
-    #  uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
-    #  with:
-    #    dotnet-version: ${{ inputs.dotnet-version }}
+    - name: Set up .NET
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Verify that .NET packages are consolidated
       if: ${{ inputs.verify-dotnet-consolidation }}
