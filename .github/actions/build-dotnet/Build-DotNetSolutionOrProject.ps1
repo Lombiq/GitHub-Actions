@@ -69,6 +69,11 @@ dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
 
+# With node reuse, dotnet build spawns processes that while speed up build, they can cause dotnest test and other dotnet
+# tools to randomly hang. So, here we shut down those processes for later actions.
+# For details see: https://github.com/Lombiq/UI-Testing-Toolbox/issues/228.
+dotnet build-server shutdown
+
 if ($expectedErrorCodes)
 {
     $errorCodes = $errorCodes | Sort-Object
