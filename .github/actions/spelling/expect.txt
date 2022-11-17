@@ -84,6 +84,7 @@ postclean
 prebuild
 preheader
 promisify
+publishsettings
 pwsh
 readdir
 search'f
@@ -109,7 +110,6 @@ wwwroot
 xsessionrc
 xxl
 Aig
-Airi
 Airi
 BJRQ
 BOHq
