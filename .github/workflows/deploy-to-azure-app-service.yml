@@ -116,7 +116,7 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-    - uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+    - uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/CARE-265
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev

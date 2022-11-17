@@ -47,7 +47,7 @@ jobs:
     name: Check Spelling
     runs-on: ubuntu-latest
     steps:
-      - uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      - uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/CARE-265
 
       # This is a workaround for the spelling workflow to check submodules too in the repository.
       - name: Stub repo layout
