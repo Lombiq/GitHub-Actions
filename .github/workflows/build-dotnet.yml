@@ -88,9 +88,7 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - uses: actions/checkout@v3.1.0
-      with:
-        submodules: 'recursive'
+    - uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
