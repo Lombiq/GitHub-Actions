@@ -133,7 +133,7 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-464
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory }}
         verbosity: ${{ inputs.build-verbosity }}
@@ -153,7 +153,7 @@ jobs:
         location: ${{ inputs.build-directory}}
 
     - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-464
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
         build-directory: ${{ inputs.build-directory }}
         test-verbosity: ${{ inputs.build-verbosity }}

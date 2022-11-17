@@ -54,9 +54,6 @@ runs:
     - name: Run Tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
-      env:
-        # See Build-DotNetSolutionOrProject.ps1 for the reasons to disable node reuse.
-        MSBUILDDISABLENODEREUSE: "1"
       run: Invoke-SolutionTests -Verbosity ${{ inputs.test-verbosity }} -Filter "${{ inputs.test-filter }}"
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of

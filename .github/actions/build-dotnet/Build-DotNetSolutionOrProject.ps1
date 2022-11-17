@@ -17,8 +17,6 @@ Write-Output ".NET version number: $Version"
 # - -p:Retries and -p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
 # - --warnAsMessage:MSB3026 is also to prevent random locks along the lines of "warning MSB3026: Could not copy dlls
 #   errors." from breaking the build (since we treat warnings as errors).
-# - /nodeReuse:false, -p:UseRazorBuildServer=false, -p:UseSharedCompilation=false are to prevent dotnest test hangs,
-#   see: https://github.com/Lombiq/UI-Testing-Toolbox/issues/228.
 
 $buildSwitches = ConvertTo-Array @"
     --configuration:Release
@@ -31,9 +29,6 @@ $buildSwitches = ConvertTo-Array @"
     -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
-    /nodeReuse:false
-    -p:UseRazorBuildServer=false
-    -p:UseSharedCompilation=false
     -p:Version=$Version
     $Switches
 "@
@@ -56,7 +51,7 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 # This prepares the solution or project with the Lombiq.Analyzers files. The output and exit code are discarded because
 # they will be in error if there is a project without the LombiqNetAnalyzers target. Then there is nothing to do, and
 # the target will still run on the projects that have it.
-dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $SolutionOrProject '/nodeReuse:false' | Out-Null || bash -c 'true'
+dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $SolutionOrProject | Out-Null || bash -c 'true'
 
 Write-Output "Building solution or project with ``dotnet build $SolutionOrProject $($buildSwitches -join " ")``."
 
