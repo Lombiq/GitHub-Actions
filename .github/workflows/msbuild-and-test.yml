@@ -84,7 +84,7 @@ jobs:
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
 
     - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/CARE-265
       with:
         build-directory: ${{ inputs.build-directory }}
         test-verbosity: ${{ inputs.build-verbosity }}
