@@ -1,0 +1,69 @@
+name: Build and Test Orchard Core solution
+
+on:
+  workflow_call:
+    inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
+      build-directory:
+        required: false
+        type: string
+        default: .
+        description: Path to the directory where a solution file can be found.
+      build-verbosity:
+        required: false
+        type: string
+        default: quiet
+        description: Verbosity parameter for msbuild.
+      build-enable-code-analysis:
+        required: false
+        type: string
+        default: "true"
+        description: Indicates whether to enable static code analysis during msbuild.
+      test-filter:
+        required: false
+        type: string
+        description: >
+          Filter expression for dotnet test. See:
+          https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
+      timeout-minutes:
+        required: false
+        type: number
+        default: 360
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    name: Build and Test
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+    - name: Checkout
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/CARE-265
+
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+    - name: Build and Static Code Analysis
+      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/CARE-265
+      with:
+        directory: ${{ inputs.build-directory }}
+        verbosity: ${{ inputs.build-verbosity }}
+        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+
+    #- name: Tests
+    #  uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+    #  with:
+    #    build-directory: ${{ inputs.build-directory }}
+    #    test-verbosity: ${{ inputs.build-verbosity }}
+    #    test-filter: ${{ inputs.test-filter }}
+    #    ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
