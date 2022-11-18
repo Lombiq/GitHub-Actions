@@ -16,6 +16,13 @@ on:
         required: false
         type: string
         default: "true"
+      machine-type:
+        required: false
+        type: string
+        default: "windows-latest"
+        description: >
+          The name of the type of machine(s) to run the workflow under, e.g. "windows-latest" or "windows-2022". Needs
+          to be Windows.
       build-directory:
         required: false
         type: string
@@ -45,7 +52,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: ${{ inputs.machine-type }}
     name: Build and Test
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
