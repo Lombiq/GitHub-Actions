@@ -59,12 +59,6 @@ Write-Output "Building solution or project with ``msbuild $SolutionOrProject $($
 
 msbuild $SolutionOrProject @buildSwitches
 
-Write-Output "All files: "
-
-Get-ChildItem -Recurse -Path $path | % {
-    Write-Output $_.FullName
-}
-
 # Without this, if the msbuild command fails, then still the error wouldn't be surfaced.
 if ($?)
 {

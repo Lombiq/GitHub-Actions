@@ -26,18 +26,6 @@ else
 
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = "true"
 
-Write-Output "All tests:"
-$tempTests = dotnet sln list |
-    Select-Object -Skip 2 |
-    Select-String "\.Tests\." |
-    Select-String -NotMatch "Lombiq.Tests.UI.csproj" |
-    Select-String -NotMatch "Lombiq.Tests.csproj"
-
-foreach ($test in $tempTests)
-{
-    dotnet test --no-build --configuration Release --list-tests --verbosity $Verbosity $_ 2>&1 | Out-String -Width 9999
-}
-
 $tests = dotnet sln list |
     Select-Object -Skip 2 |
     Select-String "\.Tests\." |
