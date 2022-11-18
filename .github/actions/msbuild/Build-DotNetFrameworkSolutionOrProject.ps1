@@ -42,7 +42,6 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 # Notes on build switches that aren't self-explanatory:
 # - -p:Retries and -p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
 
-
 $buildSwitches = ConvertTo-Array @"
     -p:Configuration=Release
     -restore
