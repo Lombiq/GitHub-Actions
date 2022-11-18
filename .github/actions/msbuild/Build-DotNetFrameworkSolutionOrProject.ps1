@@ -10,6 +10,8 @@ function ConvertTo-Array([string] $rawInput)
     $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $_.Trim() } | Where-Object { $_ }
 }
 
+dotnet sln list
+
 Write-Output ".NET version number: $Version"
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
