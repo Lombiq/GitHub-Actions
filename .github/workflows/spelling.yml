@@ -56,7 +56,7 @@ jobs:
           git commit -m 'stub commit -- includes submodules'
 
       - name: Check Spelling
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/NEST-365
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
