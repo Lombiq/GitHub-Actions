@@ -60,4 +60,14 @@ Write-Output "Building solution or project with ``msbuild $SolutionOrProject $($
 
 msbuild $SolutionOrProject @buildSwitches
 
+# Without this, if the msbuild command fails, then still the error wouldn't be surfaced.
+if ($?)
+{
+    Write-Output "Build successful."
+    continue
+}
+
+Write-Output "::error::Build failed."
+exit 100
+
 Close-DotNetBuildServers
