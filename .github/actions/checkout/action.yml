@@ -3,9 +3,18 @@ description: >
   Runs actions/checkout. Only to centralize which version we use from the action. Intentionally not documented in
   Actions.md since it's meant to be only for internal use.
 
+inputs:
+  token:
+    required: false
+    default: ${{ github.token }}
+    description: >
+      The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules are
+      used.
+
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3.1.0
       with:
         submodules: 'recursive'
+        token: ${{ inputs.token }}
