@@ -62,7 +62,8 @@ jobs:
         timeout-minutes: ${{ fromJSON(format('[ {0} ]', inputs.timeout-minutes)) }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/CARE-265
+    - name: Checkout
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/CARE-265
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
