@@ -76,13 +76,12 @@ jobs:
         verbosity: ${{ inputs.build-verbosity }}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
 
-    #- name: Tests
-    #  uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
-    #  with:
-    #    build-directory: ${{ inputs.build-directory }}
-    #    test-verbosity: ${{ inputs.build-verbosity }}
-    #    test-filter: ${{ inputs.test-filter }}
-    #    ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+    - name: Tests
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+      with:
+        build-directory: ${{ inputs.build-directory }}
+        test-verbosity: ${{ inputs.build-verbosity }}
+        test-filter: ${{ inputs.test-filter }}
 
     - name: Cancel Workflow on Failure
       if: failure() && inputs.cancel-workflow-on-failure == 'true'
