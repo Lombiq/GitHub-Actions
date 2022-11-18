@@ -65,6 +65,10 @@ jobs:
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
+    # This is only necessary for building Gulp Extensions.
+    - name: Set up .NET
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/CARE-265
       with:
