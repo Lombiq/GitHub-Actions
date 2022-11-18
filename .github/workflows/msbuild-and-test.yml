@@ -61,6 +61,8 @@ jobs:
       env:
         CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
       run: |
+        dotnet sln list
+
         $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
         "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
 
