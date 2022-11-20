@@ -60,9 +60,12 @@ foreach ($test in $tests) {
         $test
     )
 
+    # Piping null is an attempt to emulate the fix under
+    # https://github.com/microsoft/vstest/issues/2080#issuecomment-539879345 for dotnet test hangs. See
+    # https://github.com/Lombiq/UI-Testing-Toolbox/issues/228 for details.
     # Filtering is necessary for annoying messages coming from UI testing but only under Ubuntu. There are no actual
     # errors.
-    dotnet test @dotnetTestSwitches 2>&1 |
+    $null | dotnet test @dotnetTestSwitches 2>&1 |
         Where-Object { $_ -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $_ -notlike '*ChromeDriver was started successfully*' }
 
     if ($?)
