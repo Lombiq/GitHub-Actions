@@ -1,4 +1,4 @@
-param ($Verbosity, $Filter)
+param ($Verbosity, $Filter, $Configuration)
 
 # Note that this script will only find tests if they were previously build in Release mode.
 
@@ -32,7 +32,7 @@ $tests = dotnet sln list |
     Select-String -NotMatch "Lombiq.Tests.UI.csproj" |
     Select-String -NotMatch "Lombiq.Tests.csproj" |
     Where-Object {
-        $result = dotnet test --list-tests --verbosity $Verbosity $_ 2>&1 | Out-String -Width 9999
+        $result = dotnet test --no-restore --configuration $Configuration --list-tests --verbosity $Verbosity $_ 2>&1 | Out-String -Width 9999
         -not [string]::IsNullOrEmpty($result) -and $result.Contains("The following Tests are available")
     }
 
