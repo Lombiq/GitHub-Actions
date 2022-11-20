@@ -72,6 +72,6 @@ if ($?)
 }
 
 Write-Output "::error::Build failed. See the errors above in the build log."
-exit 100
+exit 1
 
 Close-DotNetBuildServers
