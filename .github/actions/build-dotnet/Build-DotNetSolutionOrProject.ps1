@@ -71,7 +71,7 @@ dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
 
 if ($noErrors -and !$?)
 {
-    exit 100
+    exit 1
 }
 
 # With node reuse, dotnet build spawns processes that while speed up build, they can cause dotnet test and other dotnet
