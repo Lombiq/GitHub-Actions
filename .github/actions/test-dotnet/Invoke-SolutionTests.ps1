@@ -26,13 +26,18 @@ else
 
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = "true"
 
+# Usually tests should be built with the Debug configuration. If that's selected, then most possibly the whole solution
+# was built with Release, so we need to build but not restore. Otherwise, the Release tests are already built, so we
+# don't need to build either.
+$optOut = $Configuration -eq "Debug" ? "--no-restore" : "--no-build"
+
 $tests = dotnet sln list |
     Select-Object -Skip 2 |
     Select-String "\.Tests\." |
     Select-String -NotMatch "Lombiq.Tests.UI.csproj" |
     Select-String -NotMatch "Lombiq.Tests.csproj" |
     Where-Object {
-        $result = dotnet test --no-build --configuration $Configuration --list-tests --verbosity $Verbosity $_ 2>&1 | Out-String -Width 9999
+        $result = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $_ 2>&1 | Out-String -Width 9999
         -not [string]::IsNullOrEmpty($result) -and $result.Contains("The following Tests are available")
     }
 
