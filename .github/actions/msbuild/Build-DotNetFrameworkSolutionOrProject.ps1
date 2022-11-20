@@ -39,7 +39,6 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output "::endgroup::"
 }
 
-# Notes on build switches that aren't self-explanatory:
 # - -p:Retries and -p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
 
 $buildSwitches = ConvertTo-Array @"
@@ -59,7 +58,13 @@ Write-Output "Building solution or project with ``msbuild $SolutionOrProject $($
 
 msbuild $SolutionOrProject @buildSwitches
 
-# Without this, if the msbuild command fails, then still the error wouldn't be surfaced.
+# Without this, if the msbuild command fails with certain MSB error codes (not build errors), then still the wouldn't
+# cause this script to fail.
+
+# error MSB3644: The reference assemblies for .NETFramework,Version=v4.6.1 were not found. To resolve this, install the
+# Developer Pack (SDK/Targeting Pack) for this framework version or retarget your application. You can download .NET
+# Framework Developer Packs at https://aka.ms/msbuild/developerpacks 
+
 if ($?)
 {
     Write-Output "Build successful."
