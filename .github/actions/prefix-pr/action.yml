@@ -21,5 +21,3 @@ runs:
       if: github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false
       shell: pwsh
       run: Prefix-PR-with-issue-key $Env:GITHUB_REPOSITORY $Env:GITHUB_REF $Env:GITHUB_HEAD_REF ${{ inputs.GITHUB_TOKEN }} "${{ github.event.pull_request.title }}" "${{ github.event.pull_request.body }}" ${{ github.event.pull_request.number }}
-      env:
-        JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}

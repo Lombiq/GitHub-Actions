@@ -21,3 +21,9 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@issue/OSOE-425
       with:
         title: ${{ github.event.pull_request.title }}
+      secrets:
+        JIRA_BASE_URL:
+          required: true
+          description: >
+            Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+            Note that it must NOT end with a slash.
