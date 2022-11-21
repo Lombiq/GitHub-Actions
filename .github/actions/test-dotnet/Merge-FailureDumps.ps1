@@ -9,3 +9,8 @@ Get-ChildItem $rootDirectory -Recurse |
     Where-Object { $_.Name -eq 'FailureDumps' } |
     ForEach-Object { $_.GetDirectories() } |
     ForEach-Object { Move-Item $_.FullName "$Directory/FailureDumps/${_.Name}" }
+
+Get-ChildItem $rootDirectory -Recurse |
+    Where-Object { $_.Name -eq 'Temp' } |
+    ForEach-Object { $_.GetDirectories() } |
+    ForEach-Object { Move-Item $_.FullName "$Directory/Temp/${_.Name}" }
