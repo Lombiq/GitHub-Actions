@@ -1,4 +1,5 @@
 param(
+    [string] $JiraBaseUrl,
     [string] $GitBubRepository,
     [string] $GithubRef,
     [string] $Branch,
@@ -8,7 +9,7 @@ param(
     [string] $prId
 )
 
-$jiraBaseUrl = $Env:JIRA_BASE_URL + '/browse/';
+$jiraBaseUrl = $JiraBaseUrl + '/browse/';
 $owner, $repo = $GitBubRepository.Split('/')
 
 $originalTitle = $Title
