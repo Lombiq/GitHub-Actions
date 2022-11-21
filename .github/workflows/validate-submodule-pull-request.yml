@@ -21,6 +21,8 @@ jobs:
     steps:
     - name: Prefix PR with issue key
       uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
+      env:
+        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -28,5 +30,3 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@issue/OSOE-425
       with:
         title: ${{ github.event.pull_request.title }}
-      env:
-        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
