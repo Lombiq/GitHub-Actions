@@ -153,7 +153,7 @@ jobs:
         location: ${{ inputs.build-directory}}
 
     - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-392
       with:
         build-directory: ${{ inputs.build-directory }}
         test-verbosity: ${{ inputs.build-verbosity }}

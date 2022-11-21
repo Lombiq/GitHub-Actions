@@ -73,7 +73,9 @@ runs:
       if: success() || failure()
       with:
         name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ steps.setup.outputs.runner-suffix }}
-        path: ${{ inputs.build-directory }}/FailureDumps/
+        path: |
+          ${{ inputs.build-directory }}/FailureDumps/
+          ${{ inputs.build-directory }}/Temp/
         if-no-files-found: ignore
 
     - name: Test Report
