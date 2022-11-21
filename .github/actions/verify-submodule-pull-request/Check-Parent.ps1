@@ -4,7 +4,7 @@ param(
 )
 
 $url = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
-$titles = curl -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | % { $_.title }
+$titles = curl -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | ForEach-Object { $_.title }
 
 $issueCode = $Title -replace '^\s*(\w+-\d+)\s*:.*$', '$1'
 $lookFor = "${issueCode}:"

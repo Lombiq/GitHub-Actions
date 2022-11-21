@@ -8,7 +8,7 @@ param (
 
 function ConvertTo-Array([string] $rawInput)
 {
-    $rawInput.Replace("`r", "").Split("`n") | % { $_.Trim() } | ? { $_ }
+    $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $_.Trim() } | Where-Object { $_ }
 }
 
 Write-Output ".NET version number: $Version"
@@ -33,7 +33,7 @@ $buildSwitches = ConvertTo-Array @"
     $Switches
 "@
 
-[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | % { $_.Split(':')[0] } | Sort-Object
+[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | ForEach-Object { $_.Split(':')[0] } | Sort-Object
 $noErrors = $expectedErrorCodes.Count -eq 0
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
@@ -59,7 +59,7 @@ $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
-dotnet build $SolutionOrProject @buildSwitches 2>&1 | % {
+dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
     if ($_ -notmatch $errorFormat) { return $_ }
 
     ($null, $file, $line, $column, $message) = [regex]::Match($_, $errorFormat, 'Compiled').Groups.Value
@@ -68,6 +68,17 @@ dotnet build $SolutionOrProject @buildSwitches 2>&1 | % {
     if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
+
+if ($noErrors -and !$?)
+{
+    exit 1
+}
+
+# With node reuse, dotnet build spawns processes that while speed up build, they can cause dotnet test and other dotnet
+# tools to randomly hang. So, here we shut down those processes for later actions.
+# For details see: https://github.com/Lombiq/UI-Testing-Toolbox/issues/228.
+Write-Output "Shutting down .NET build servers."
+dotnet build-server shutdown
 
 if ($expectedErrorCodes)
 {

@@ -8,8 +8,6 @@ ISetup
 IShell
 IShortcuts
 ISmtp
-ISmtp
-ISql
 ISql
 IStore
 ISystem
@@ -82,7 +80,6 @@ helppopulartopics
 hostnames
 inheritdoc
 isignal
-isignal
 issetuprecipe
 itest
 johndoe
@@ -131,7 +128,6 @@ websites
 whitelisted
 would've
 ASPNETCORE
-ASPNETCORE
 Activatable
 Antiforgery
 Autherization
@@ -157,11 +153,9 @@ IAuthorization
 IBab
 IBackground
 ICaching
-ICaching
 ICant
 IChange
 IClass
-IClock
 IClock
 ICollection
 IColumn
@@ -249,8 +243,6 @@ ISearch
 ISecurity
 ISerializable
 IService
-IService
-ISession
 ISession
 ISet
 IShape
@@ -260,11 +252,9 @@ IString
 ITaxonomy
 ITenant
 ITest
-ITest
 ITested
 ITracking
 IUser
-IWeb
 IWeb
 Intelli
 IntelliSense
@@ -283,7 +273,6 @@ Reappend
 Rowling
 Schoorstra
 Serializer
-Shouldly
 Shouldly
 Sipke
 TClass
@@ -325,13 +314,16 @@ corepack
 chromedriver
 createstate
 darkmode
+dataprotection
 datalabels
 datatable
 deactivatable
 deconstructed
 destructuring
 devblogs
+dotnestcore
 dotnet
+endzone
 executesql
 facebook
 flakyness
@@ -344,6 +336,8 @@ globals
 hackish
 haspopup
 homepage
+hotfix
+hotfixes
 htmlvalidate
 jetbrains
 mediatheme
