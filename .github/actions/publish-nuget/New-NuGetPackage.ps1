@@ -1,13 +1,13 @@
-<#
+﻿<#
 .SYNOPSIS
     Creates a NuGet package from each project in the sln file in the current directory.
 .DESCRIPTION
-    Uses "dotnet sln list" to get all projects in the current directory. This means the current directory must have 
+    Uses "dotnet sln list" to get all projects in the current directory. This means the current directory must have
     exactly one sln file in it. Then calls "dotnet pack" for each csproj file with the provided arguments. If there is
-    a nuspec file in the project's directory too, then it is used to generate the package description instead of the 
+    a nuspec file in the project's directory too, then it is used to generate the package description instead of the
     regular auto-generation.
 .NOTES
-    We go through the projects individually in a foreach loop, because the "-p:NuspecFile=" parameter can't be passed 
+    We go through the projects individually in a foreach loop, because the "-p:NuspecFile=" parameter can't be passed
     to a solution.
 .EXAMPLE
     New-NugetPackage @("--configuration:Release", "--warnaserror")
