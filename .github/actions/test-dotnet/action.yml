@@ -73,9 +73,14 @@ runs:
       if: success() || failure()
       with:
         name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ steps.setup.outputs.runner-suffix }}
-        path: |
-          ${{ inputs.build-directory }}/FailureDumps/
-          ${{ inputs.build-directory }}/Temp/
+        path: ${{ inputs.build-directory }}/FailureDumps/
+        if-no-files-found: ignore
+
+    - name: Upload Temp folder
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: ui-test-temp-folder
+        path: ${{ inputs.build-directory }}/Temp/
         if-no-files-found: ignore
 
     - name: Test Report
