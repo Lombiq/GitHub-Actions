@@ -314,13 +314,16 @@ corepack
 chromedriver
 createstate
 darkmode
+dataprotection
 datalabels
 datatable
 deactivatable
 deconstructed
 destructuring
 devblogs
+dotnestcore
 dotnet
+endzone
 executesql
 facebook
 flakyness
@@ -333,6 +336,8 @@ globals
 hackish
 haspopup
 homepage
+hotfix
+hotfixes
 htmlvalidate
 jetbrains
 mediatheme
