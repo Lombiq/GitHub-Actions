@@ -21,9 +21,9 @@ runs:
       shell: pwsh
       run: |
         $params = @{
-          JiraBaseUrl = ${{ env.JIRA_BASE_URL }};
-          GitHubRepository = ${{ env.GITHUB_REPOSITORY }};
-          Branch = ${{ env.GITHUB_HEAD_REF }};
+          JiraBaseUrl = $Env:JIRA_BASE_URL;
+          GitHubRepository = $Env:GITHUB_REPOSITORY;
+          Branch = $Env:GITHUB_HEAD_REF;
           GitHubToken = ${{ inputs.GITHUB_TOKEN }};
           Title = "${{ github.event.pull_request.title }}";
           Body = "${{ github.event.pull_request.body }}";
