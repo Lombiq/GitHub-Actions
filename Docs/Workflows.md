@@ -191,7 +191,7 @@ on:
     types: [synchronize]
 
 jobs:
-  call-check-merge-conflict:
+  validate-pull-request:
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@dev
 ```
 
