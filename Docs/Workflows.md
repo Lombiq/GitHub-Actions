@@ -132,7 +132,7 @@ Valid values for `verbosity` are those defined by [MSBuild](https://docs.microso
 
 ## Submodule validate workflow
 
-Validates if the submodule contains a JIRA style issue code (e.g. PROJ-123) and if a pull request exists for the parent module. Example _publish.yml_:
+Validates if the submodule contains a JIRA style issue code (e.g. PROJ-123), if it contains the JIRA Style issue code with the link to the JIRA issue in the body, and if a pull request exists for the parent module. Example _publish.yml_:
 
 ```yaml
 name: Validate OSOCE Pull Request
