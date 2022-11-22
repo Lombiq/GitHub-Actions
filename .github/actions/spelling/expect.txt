@@ -25,7 +25,6 @@ abcdefghijklmnopqrstuvwxyz
 ble
 blog
 btn
-Bubl
 buble
 certs
 chainable
