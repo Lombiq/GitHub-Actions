@@ -24,7 +24,7 @@ runs:
           JiraBaseUrl = $Env:JIRA_BASE_URL;
           GitHubRepository = $Env:GITHUB_REPOSITORY;
           Branch = $Env:GITHUB_HEAD_REF;
-          GitHubToken = ${{ inputs.GITHUB_TOKEN }};
+          GitHubToken = $Env:GITHUB_TOKEN;
           Title = "${{ github.event.pull_request.title }}";
           Body = "${{ github.event.pull_request.body }}";
           PullRequestID = ${{ github.event.pull_request.number }};
