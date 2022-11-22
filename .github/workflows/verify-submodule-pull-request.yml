@@ -3,11 +3,10 @@ name: Verify Submodule Pull Request
 on:
   workflow_call:
     inputs:
-      repository:
-        type: string
+      repo:
         required: false
+        type: string
         default: Lombiq/Open-Source-Orchard-Core-Extensions
-        description: The parent repository's full name in "{owner}/{repository}" format.
 
 jobs:
   build:
@@ -17,4 +16,3 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
       with:
         title: ${{ github.event.pull_request.title }}
-        repository: ${{ inputs.repository }}
