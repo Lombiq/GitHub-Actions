@@ -1,16 +1,15 @@
 param(
     [string] $JiraBaseUrl,
-    [string] $GitBubRepository,
-    [string] $GithubRef,
+    [string] $GitHubRepository,
     [string] $Branch,
-    [string] $GithubToken,
+    [string] $GitHubToken,
     [string] $Title,
     [string] $Body,
-    [string] $prId
+    [string] $PullRequestID
 )
 
 $jiraBaseUrl = $JiraBaseUrl + '/browse/';
-$owner, $repo = $GitBubRepository.Split('/')
+$owner, $repo = $GitHubRepository.Split('/')
 
 $originalTitle = $Title
 $originalBody = $Body
@@ -39,7 +38,7 @@ elseif ($Body -NotLike "*``[$issueKey``]``($jiraBaseUrl$issuekey``)*") {
 
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody)) {
     $bodyParams = @{"title" = $Title; "body" = $Body} | ConvertTo-Json
-    $url = "https://api.github.com/repos/$owner/$repo/pulls/$prId"    
-    $headers = @{"Authorization" = "Bearer $GithubToken"; "Accept" = "application/vnd.github+json"}
+    $url = "https://api.github.com/repos/$owner/$repo/pulls/$PullRequestID"
+    $headers = @{"Authorization" = "Bearer $GitHubToken"; "Accept" = "application/vnd.github+json"}
     Invoke-WebRequest $url -Headers $headers -Method Patch -Body $bodyParams
 }
