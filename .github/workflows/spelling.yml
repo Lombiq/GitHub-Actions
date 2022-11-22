@@ -68,7 +68,7 @@ jobs:
       with:
         token: ${{ env.CHECKOUT_TOKEN }}
 
-      # This is a workaround for the spelling workflow to check submodules too in the repository.
+    # This is a workaround for the spelling workflow to check submodules too in the repository.
     - name: Stub repo layout
       shell: pwsh
       run: |
