@@ -1,10 +1,6 @@
 name: Validate Jira Issue Code in Pull Request
 description: Prefixes the PR title with a Jira issue key, and also adds the key to the body if not present
 
-inputs:
-  GITHUB_TOKEN:
-    required: true
-
 runs:
   using: "composite"
   steps:
@@ -21,10 +17,10 @@ runs:
       shell: pwsh
       run: |
         $params = @{
-          JiraBaseUrl = $Env:JIRA_BASE_URL;
+          JiraBaseUrl = $Env:JIRA_BASE_URL ? $Env:JIRA_BASE_URL : "https://lombiq.atlassian.net";
           GitHubRepository = $Env:GITHUB_REPOSITORY;
           Branch = $Env:GITHUB_HEAD_REF;
-          GitHubToken = $Env:GITHUB_TOKEN;
+          GitHubToken = $Env:GITHUB_TOKEN }};
           Title = "${{ github.event.pull_request.title }}";
           Body = "${{ github.event.pull_request.body }}";
           PullRequestID = ${{ github.event.pull_request.number }};
