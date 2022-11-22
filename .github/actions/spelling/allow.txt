@@ -125,9 +125,7 @@ would've
 ASPNETCORE
 Activatable
 Antiforgery
-Autherization
 Configurator
-ConfigureMockAutherizationService
 Demystifier
 Deployer
 Embedd
