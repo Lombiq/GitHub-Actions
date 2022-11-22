@@ -10,7 +10,7 @@ on:
         description: The parent repository's full name in "{owner}/{repository}" format.
 
 jobs:
-  build:
+  verify-submodule-pull-request:
     runs-on: ubuntu-latest
     steps:
     - name: Ensure Parent PR Exists
