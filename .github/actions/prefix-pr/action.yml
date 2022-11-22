@@ -23,6 +23,6 @@ runs:
           GitHubToken = $Env:GITHUB_TOKEN;
           Title = "${{ github.event.pull_request.title }}";
           Body = "${{ github.event.pull_request.body }}";
-          PullRequestID = ${{ github.event.pull_request.number }};
+          PullRequestID = ${{ github.event.number }};
         }
         PrefixPRWithIssueKey @params
