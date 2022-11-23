@@ -26,9 +26,9 @@ else
 
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = "true"
 
-# Usually tests should be built with the Debug configuration. If that's selected, then most possibly the whole solution
-# was built with Release, so we need to build but not restore. Otherwise, the Release tests are already built, so we
-# don't need to build either.
+# We assume that the solution was built in Release configuration. If the tests need to be built in Debug configuration,
+# as they should, we need to first build them, but not restore. Otherwise, the Release tests are already built, so we
+# don't need to build them here.
 $optOut = $Configuration -eq "Debug" ? "--no-restore" : "--no-build"
 
 $tests = dotnet sln list |
