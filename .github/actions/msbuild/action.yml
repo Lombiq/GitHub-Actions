@@ -54,20 +54,20 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        $buildSwitches = @'
+        $givenSwitches = @'
             ${{ inputs.msbuild-switches }}
         '@
 
-        $switches = @{
+        $allSwitches = @{
             SolutionOrProject = (Get-ChildItem ${{ inputs.solution-or-project-path }}).FullName
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"
-            Switches = $buildSwitches
+            Switches = $givenSwitches
         }
 
         $startTime = [DateTime]::Now
-        Build-DotNetFrameworkSolutionOrProject @switches
+        Build-DotNetFrameworkSolutionOrProject @allSwitches
         $endTime = [DateTime]::Now
 
         Write-Output ("Solution or project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
