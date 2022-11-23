@@ -18,7 +18,7 @@ inputs:
     required: false
     default: "1.${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}"
     description: The value given to `msbuild`'s `-Version` switch.
-  dotnet-build-switches:
+  msbuild-switches:
     required: false
     default: ""
     description: >
@@ -55,7 +55,7 @@ runs:
       working-directory: ${{ inputs.directory }}
       run: |
         $buildSwitches = @'
-            ${{ inputs.dotnet-build-switches }}
+            ${{ inputs.msbuild-switches }}
         '@
 
         $switches = @{
