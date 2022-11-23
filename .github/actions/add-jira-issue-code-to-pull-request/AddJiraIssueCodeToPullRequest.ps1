@@ -8,7 +8,7 @@ param(
     [string] $PullRequestId
 )
 
-$jiraBaseUrl = $JiraBaseUrl + '/browse/';
+$jiraBrowseUrl = $JiraBaseUrl + '/browse/';
 $owner, $repo = $GitHubRepository.Split('/')
 
 $originalTitle = $Title
@@ -20,7 +20,7 @@ if ($Branch -NotLike "*issue*") {
 
 $Branch -match '(\w+-\d+)'
 $issueKey = $matches[0]
-$issueLink = "[$issueKey]($jiraBaseUrl$issuekey)"
+$issueLink = "[$issueKey]($jiraBrowseUrl$issuekey)"
 
 if ($Title -NotLike "*$issueKey*") {
     $Title = $issueKey + ": " + $Title
@@ -32,7 +32,7 @@ if (-Not $Body) {
 elseif ($Body -NotLike "*$issueKey*") {
     $Body = $issueLink + "`n" + $Body
 }
-elseif ($Body -NotLike "*``[$issueKey``]``($jiraBaseUrl$issuekey``)*") {
+elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*") {
     $Body = $Body.replace($issueKey, $issueLink)
 }
 
