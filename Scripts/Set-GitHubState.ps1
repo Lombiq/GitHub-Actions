@@ -8,6 +8,4 @@ param (
     $Value
 )
 
-Write-Warning "The 'Set-Output' script will soon be removed/renamed, use 'Set-GitHubOutput' instead!"
-
-"$Key=$Value" >> $Env:GITHUB_OUTPUT
+"$Key=$Value" >> $Env:GITHUB_STATE
