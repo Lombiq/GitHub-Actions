@@ -68,10 +68,10 @@ msbuild $SolutionOrProject @buildSwitches
 if ($?)
 {
     Write-Output "Build successful."
-    continue
+    Close-DotNetBuildServers
 }
-
-Write-Output "::error::Build failed. See the errors above in the build log."
-exit 1
-
-Close-DotNetBuildServers
+else
+{
+    Write-Output "::error::Build failed. See the errors above in the build log."
+    exit 1
+}
