@@ -1,4 +1,4 @@
-name: Build and Test Orchard Core solution
+name: Build and Test .NET Solution with MSBuild
 
 on:
   workflow_call:
