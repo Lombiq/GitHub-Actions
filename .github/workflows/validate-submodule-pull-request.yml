@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Validate Jira Issue Code in Pull Request
+    - name: Add Jira Issue Code to Pull Request
       if: github.event.pull_request != ''
       uses: Lombiq/GitHub-Actions/.github/actions/prefix-pr@issue/OSOE-425
       env:
