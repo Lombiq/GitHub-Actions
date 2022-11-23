@@ -1,5 +1,5 @@
 name: Validate Jira Issue Code in Pull Request
-description: Prefixes the PR title with a Jira issue key, and also adds the key to the body if not present
+description: Prefixes the PR title with a Jira issue key, and also adds the key to the body if not present.
 
 runs:
   using: "composite"
