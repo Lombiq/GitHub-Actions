@@ -1,9 +1,11 @@
 Argb
+Chro
 Cloudflare
 Cms
 CDNs
 EACCES
 EULA
+Egyw
 GDPR
 Hsl
 IShortcode
@@ -21,8 +23,10 @@ SFCs
 SUSE
 XDG
 abcdefghijklmnopqrstuvwxyz
+ble
 blog
 btn
+Bubl
 buble
 certs
 chainable
@@ -125,6 +129,7 @@ xsessionrc
 xxl
 yaml
 yml
+Aig
 BJRQ
 BOHq
 Bcc
