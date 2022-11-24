@@ -74,7 +74,7 @@ if ($noErrors -and !$?)
     exit 1
 }
 
-Close-DotNetBuildServers
+Stop-DotNetBuildServers
 
 if ($expectedErrorCodes)
 {

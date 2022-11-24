@@ -68,7 +68,7 @@ msbuild $SolutionOrProject @buildSwitches
 if ($?)
 {
     Write-Output "Build successful."
-    Close-DotNetBuildServers
+    Stop-DotNetBuildServers
 }
 else
 {
