@@ -132,10 +132,10 @@ Valid values for `verbosity` are those defined by [MSBuild](https://docs.microso
 
 ## Submodule validate workflow
 
-Validates if the submodule contains a Jira-style issue code (e.g. PROJ-123) if it contains the Jira-style issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name), and if a pull request exists for the parent module. Example _publish.yml_:
+Validates if the submodule pull request's title contains a Jira-style issue code (e.g. PROJ-123), and if it contains the issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name). Also checks if a pull request exists for the parent module. Example _validate-submodule-pull-request.yml_:
 
 ```yaml
-name: Validate OSOCE Pull Request
+name: Validate Submodule Pull Request
 
 on:
   pull_request:
@@ -144,7 +144,7 @@ jobs:
   call-validate-workflow:
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-submodule-pull-request.yml@dev
     with:
-      repo: Lombiq/Open-Source-Orchard-Core-Extensions
+      repository: Lombiq/Hastlayer-SDK
 ```
 
 If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/), the `repo` input can be omitted, because the above is its default value. Otherwise, use your parent repository's address in the `{owner}/{repo_name}` format.
@@ -181,7 +181,7 @@ jobs:
 
 ## Validate Pull Request workflow
 
-Labels and comments on Pull Requests with merge conflicts.
+Validates if the pull request's title contains a Jira-style issue code (e.g. PROJ-123), and if it contains the issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name). Also labels and comments on pull requests with merge conflicts.
 
 ```yaml
 name: Validate Pull Request
