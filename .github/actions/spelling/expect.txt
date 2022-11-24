@@ -1,5 +1,4 @@
 Argb
-Chro
 Cloudflare
 Cms
 CDNs
