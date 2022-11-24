@@ -5,7 +5,6 @@ Cms
 CDNs
 EACCES
 EULA
-Egyw
 GDPR
 Hsl
 IShortcode
@@ -23,7 +22,6 @@ SFCs
 SUSE
 XDG
 abcdefghijklmnopqrstuvwxyz
-ble
 blog
 btn
 buble
@@ -81,7 +79,6 @@ mso
 mvc
 myapp
 navbar
-ndproj
 nologo
 npx
 nuget
@@ -129,8 +126,6 @@ xsessionrc
 xxl
 yaml
 yml
-Aig
-Airi
 BJRQ
 BOHq
 Bcc
@@ -165,7 +160,6 @@ Nhd
 Noda
 PII
 PWn
-Panem
 Postgre
 QXSh
 Qhd
