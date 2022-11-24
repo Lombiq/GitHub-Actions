@@ -1,4 +1,4 @@
-param($IsNuget, $IsNpm, $RestoreKeys, $Hash)
+﻿param($IsNuget, $IsNpm, $RestoreKeys, $Hash)
 
 function Invoke-Maybe($Block) { try { Invoke-Command -ScriptBlock $Block } catch { return } }
 
@@ -9,12 +9,12 @@ if ($IsNuget) { $paths += ,'~/.nuget/packages' }
 if ($IsNpm)
 {
     (Invoke-Maybe { pnpm store path }), (npm config get cache) |
-        Where-Object { -not [string]::IsNullOrEmpty($_) } |
-        ForEach-Object { $paths += $_ }
+        Where-Object { -not [string]::IsNullOrEmpty($PSItem) } |
+        ForEach-Object { $paths += $PSItem }
 }
 
 # Ensure the paths exist.
-$paths | ForEach-Object { New-Item -ItemType Directory -Force $_ } | Out-Null
+$paths | ForEach-Object { New-Item -ItemType Directory -Force $PSItem } | Out-Null
 
 # Multiple paths must be separated by "\n", but we can't include newline in the workflow command so we have to misuse
 # the format function like this.

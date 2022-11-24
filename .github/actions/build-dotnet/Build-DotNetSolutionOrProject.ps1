@@ -1,4 +1,4 @@
-param (
+﻿param (
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
@@ -8,7 +8,7 @@ param (
 
 function ConvertTo-Array([string] $rawInput)
 {
-    $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+    $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
 Write-Output ".NET version number: $Version"
@@ -33,7 +33,7 @@ $buildSwitches = ConvertTo-Array @"
     $Switches
 "@
 
-[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | ForEach-Object { $_.Split(':')[0] } | Sort-Object
+[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | ForEach-Object { $PSItem.Split(':')[0] } | Sort-Object
 $noErrors = $expectedErrorCodes.Count -eq 0
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
@@ -60,11 +60,11 @@ $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
-    if ($_ -notmatch $errorFormat) { return $_ }
+    if ($PSItem -notmatch $errorFormat) { return $PSItem }
 
-    ($null, $file, $line, $column, $message) = [regex]::Match($_, $errorFormat, 'Compiled').Groups.Value
+    ($null, $file, $line, $column, $message) = [regex]::Match($PSItem, $errorFormat, 'Compiled').Groups.Value
 
-    $errorLines.Add($_)
+    $errorLines.Add($PSItem)
     if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
