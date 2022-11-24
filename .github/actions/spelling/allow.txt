@@ -46,6 +46,7 @@ TOrder
 TPart
 TResolver
 TResult
+TRole
 TSelf
 TService
 TSource
@@ -101,6 +102,7 @@ teamcity
 tes
 testuser
 timespan
+tkzog
 toolbars
 trainingdemo
 transpiled
