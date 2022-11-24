@@ -1,0 +1,33 @@
+name: Validate Pull Request
+
+on:
+  workflow_call:
+  # We can't access org secrets here so they need to be passed in.    
+    secrets:
+      JIRA_BASE_URL:
+        required: false
+        description: >
+          Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+          Note that it must NOT end with a slash.
+    inputs:
+      repo:
+        required: false
+        type: string
+        default: Lombiq/Open-Source-Orchard-Core-Extensions
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Add Jira Issue Code to Pull Request
+      if: github.event.pull_request != ''
+      uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@issue/OSOE-425
+      env:
+        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Ensure Parent PR Exists
+      if: github.event.pull_request != ''
+      uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@issue/OSOE-425
+      with:
+        title: ${{ github.event.pull_request.title }}
