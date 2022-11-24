@@ -7,7 +7,7 @@ param (
 
 function ConvertTo-Array([string] $rawInput)
 {
-    $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+    $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
 Write-Output ".NET version number: $Version"
