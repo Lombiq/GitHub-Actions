@@ -4,6 +4,7 @@ These actions can be invoked from a step in any other repository's workflow. The
 
 In addition to the below short explanations, check out the inline documentation of the action you want to use, especially its parameters.
 
+- `add-jira-issue-code-to-pull-request`: Adds the Jira issue key prefix and link to pull requests.
 - `build-dotnet`: Builds all .NET solutions or projects in the given directory with optional static code analysis.
 - `cancel-workflow`: Cancels the current workflow run, i.e. all jobs. Useful if you want to cancel the rest of the workflow when one job fails. Suitable workflows in this project expose this functionality via the `cancel-workflow-on-failure` parameter.
 - `check-merge-conflict`: Labels and comments on pull requests with merge conflicts.
