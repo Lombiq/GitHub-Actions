@@ -26,16 +26,8 @@ runs:
         New-Item -ItemType File -Force $Profile | Out-Null
         Get-Content -Raw ${{ github.action_path }}/functions.ps1 >> $Profile
 
-    # We are using env for the title input in these steps because it realistically could contain quotes, apostrophes or
-    # even both. This way those don't need to be escaped.
-    - name: Ensure Current PR Title Includes Issue Code
-      shell: pwsh
-      env:
-        PR_TITLE: ${{ inputs.title }}
-      run: Check-Current $Env:PR_TITLE
-
     - name: Ensure Parent Repository Contains Matching PR
       shell: pwsh
       env:
         PR_TITLE: ${{ inputs.title }}
-      run: Check-Parent '${{ inputs.repository }}' $Env:PR_TITLE
+      run: Check-Parent '${{ inputs.repository }}' $Env:GITHUB_HEAD_REF
