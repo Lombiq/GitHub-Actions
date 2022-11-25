@@ -1,0 +1,11 @@
+name: Post-Checks Automation
+
+on:
+  workflow_call:
+
+jobs:
+  post-checks-automation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Automatically Merge Pull Request
+      uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@issue/OSOE-477
