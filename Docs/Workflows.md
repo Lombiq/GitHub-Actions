@@ -188,7 +188,7 @@ name: Validate Pull Request
 on:
   push:
   pull_request:
-    types: [synchronize]
+    types: [opened, synchronize]
 
 jobs:
   validate-pull-request:
