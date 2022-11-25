@@ -16,19 +16,19 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 {
     Write-Output "::group::Gulp Extensions found. It needs to be explicitly built before the solution."
 
-    # These need to be different than that of msbuild.
+    # These need to be different than those for msbuild.
     $gulpBuildSwitches = ConvertTo-Array @"
-    --configuration:Release
-    --nologo
-    --verbosity:$Verbosity
-    --warnaserror
-    --warnAsMessage:MSB3026
-    --consoleLoggerParameters:NoSummary
-    -p:TreatWarningsAsErrors=true
-    -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
-    -p:Retries=4
-    -p:RetryDelayMilliseconds=1000
-    -p:Version=$Version
+        --configuration:Release
+        --nologo
+        --verbosity:$Verbosity
+        --warnaserror
+        --warnAsMessage:MSB3026
+        --consoleLoggerParameters:NoSummary
+        -p:TreatWarningsAsErrors=true
+        -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
+        -p:Retries=4
+        -p:RetryDelayMilliseconds=1000
+        -p:Version=$Version
 "@
 
     $startTime = [DateTime]::Now
@@ -39,7 +39,7 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output "::endgroup::"
 }
 
-# - -p:Retries and -p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
+# -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
 
 $buildSwitches = ConvertTo-Array @"
     -p:Configuration=Release

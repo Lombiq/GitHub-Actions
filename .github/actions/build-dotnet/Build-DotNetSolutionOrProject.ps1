@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
@@ -14,7 +14,7 @@ function ConvertTo-Array([string] $rawInput)
 Write-Output ".NET version number: $Version"
 
 # Notes on build switches that aren't self-explanatory:
-# - -p:Retries and -p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
+# - -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
 # - --warnAsMessage:MSB3026 is also to prevent random locks along the lines of "warning MSB3026: Could not copy dlls
 #   errors." from breaking the build (since we treat warnings as errors).
 

@@ -115,7 +115,7 @@ jobs:
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
     - name: Checkout
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/CARE-265
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
@@ -132,7 +132,7 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/CARE-265
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory }}
         verbosity: ${{ inputs.build-verbosity }}

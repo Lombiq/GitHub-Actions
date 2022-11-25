@@ -117,7 +117,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
     - name: Checkout
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/CARE-265
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
