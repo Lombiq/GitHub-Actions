@@ -46,7 +46,7 @@ runs:
         '@.Trim()
 
         Write-Output "NuGet Source: $source"
-        Set-Output "source-url" $source
+        Set-GitHubOutput "source-url" $source
 
         $version = @'
         ${{ inputs.publish-version }}
@@ -66,7 +66,7 @@ runs:
         }
         
         Write-Output "Target Version: $version"
-        Set-Output "publish-version" $version
+        Set-GitHubOutput "publish-version" $version
 
     - name: Add Source Link package
       shell: bash

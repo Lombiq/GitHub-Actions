@@ -1,7 +1,7 @@
 name: Checkout
 description: >
-  Runs actions/checkout. Only to centralize which version we use from the action. Intentionally not documented in
-  Actions.md since it's meant to be only for internal use.
+  Runs actions/checkout. Exists only to centralize which version of the action we use. Intentionally not documented in
+  Actions.md since it's only meant for internal use.
 
 inputs:
   token:

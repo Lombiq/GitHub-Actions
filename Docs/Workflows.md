@@ -88,6 +88,9 @@ jobs:
   spelling:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
+    with:
+      # This is only needed if you want to use any other dictionaries than the ones in this project. 
+      spell-check-this: Lombiq/GitHub-Actions@your-custom-branch
 ```
 
 ## NuGet publish workflow
@@ -130,21 +133,21 @@ When `source` is not provided, it assumes a default value of pushing to the [Lom
 
 Valid values for `verbosity` are those defined by [MSBuild](https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022#:~:text=you%20can%20specify%20the%20following%20verbosity%20levels). The default value is `minimal`.
 
-## Submodule verify workflow
+## Submodule validate workflow
 
-Verifies if the submodule contains a JIRA style issue code (e.g. PROJ-123) and if a pull request exists for the parent module. Example _publish.yml_:
+Validates if the submodule pull request's title contains a Jira-style issue code (e.g. PROJ-123), and if it contains the issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name). Also checks if a pull request exists for the parent module. Example _validate-submodule-pull-request.yml_:
 
 ```yaml
-name: Verify OSOCE Pull Request
+name: Validate Submodule Pull Request
 
 on:
   pull_request:
 
 jobs:
-  call-verify-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/verify-submodule-pull-request.yml@dev
+  call-validate-workflow:
+    uses: Lombiq/GitHub-Actions/.github/workflows/validate-submodule-pull-request.yml@dev
     with:
-      repo: Lombiq/Open-Source-Orchard-Core-Extensions
+      repository: Lombiq/Hastlayer-SDK
 ```
 
 If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/), the `repo` input can be omitted, because the above is its default value. Otherwise, use your parent repository's address in the `{owner}/{repo_name}` format.
@@ -181,17 +184,17 @@ jobs:
 
 ## Validate Pull Request workflow
 
-Labels and comments on Pull Requests with merge conflicts.
+Validates if the pull request's title contains a Jira-style issue code (e.g. PROJ-123), and if it contains the issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name). Also labels and comments on pull requests with merge conflicts.
 
 ```yaml
 name: Validate Pull Request
 on:
   push:
   pull_request:
-    types: [synchronize]
+    types: [opened, synchronize]
 
 jobs:
-  call-check-merge-conflict:
+  validate-pull-request:
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@dev
 ```
 

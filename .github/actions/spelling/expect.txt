@@ -9,6 +9,7 @@ EULA
 Egyw
 GDPR
 Hsl
+IShortcode
 JIRA
 MVVM
 NLog
@@ -104,6 +105,7 @@ pwsh
 readdir
 search'f
 setlocal
+shortcode
 sln
 sourced
 sourcemaps
