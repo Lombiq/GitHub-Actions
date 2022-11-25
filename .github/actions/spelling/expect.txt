@@ -222,4 +222,3 @@ sme
 yyyy
 wcag
 abcdef
-[{]?[0-9a-zA-Z]{8}-?([0-9a-zA-Z]{4}-?){3}[0-9a-zA-Z]{12}[}]?
