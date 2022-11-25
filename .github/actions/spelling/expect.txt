@@ -11,6 +11,7 @@ EOL
 EULA
 Egyw
 GDPR
+IShortcode
 JIRA
 MVVM
 NLog
@@ -88,6 +89,7 @@ publishsettings
 pwsh
 readdir
 search'f
+shortcode
 sln
 sourced
 sqlcmd

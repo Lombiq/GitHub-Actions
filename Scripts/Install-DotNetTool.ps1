@@ -1,4 +1,4 @@
-param (
+﻿param (
     [Parameter(Mandatory = $true, Position = 1, HelpMessage = "The name of the tool to install.")]
     [string]
     $Name,
@@ -19,13 +19,13 @@ if ($Global.IsPresent)
 }
 
 $installedTool = dotnet tool list $scopeString | Select-Object -Skip 2 | ForEach-Object {
-    $segments = $_.Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
+    $segments = $PSItem.Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
     return New-Object -TypeName PSObject -Property @{
         PackageId = $segments[0]
         Version   = $segments[1]
         Commands  = $segments[2]
     }
-} | Where-Object { $_.PackageId -eq $Name }
+} | Where-Object { $PSItem.PackageId -eq $Name }
 
 $doInstall = $true
 
