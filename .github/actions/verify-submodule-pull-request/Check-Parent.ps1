@@ -4,7 +4,7 @@
 )
 
 $url = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
-$titles = curl -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | ForEach-Object { $PSItem.title }
+$titles = Invoke-WebRequest -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | ForEach-Object { $PSItem.title }
 
 $Branch -match '(\w+-\d+)'
 $issueCode = $matches[0]

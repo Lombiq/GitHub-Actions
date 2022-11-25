@@ -1,4 +1,4 @@
-param
+﻿param
 (
     $GitHub,
     $IssueComponent,
@@ -8,8 +8,8 @@ param
     $PullReqestJiraIssueDescription
 )
 
-$context = [string]::IsNullOrEmpty($IssueComponent) ? $GitHub.repository : $IssueComponent
-$titleSuffix = $SuffixIssueTitles ? " in $context" : ""
+$context = [string]::IsNullOrEmpty($IssueComponent) Where-Object $GitHub.repository : $IssueComponent
+$titleSuffix = $SuffixIssueTitles Where-Object " in $context" : ""
 Write-Output "Suffix: $titleSuffix"
 
 switch ($GitHub.event_name)
