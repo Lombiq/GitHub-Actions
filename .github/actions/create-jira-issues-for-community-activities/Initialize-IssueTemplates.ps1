@@ -1,4 +1,4 @@
-$templates = @{}
+﻿$templates = @{}
 
 if ([string]::IsNullOrEmpty($Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION))
 {
@@ -26,7 +26,7 @@ h1. Summary
 See the linked GitHub issue, including all the comments. Please do all communication there, unless it's confidential or administrative.
 
 h1. Implementation notes
-* 
+
 
 h1. Checklist
 * Assign yourself to the referenced GitHub issue.
