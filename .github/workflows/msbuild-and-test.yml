@@ -1,0 +1,96 @@
+name: Build and Test .NET Solution with MSBuild
+
+on:
+  workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
+          are used.
+        
+    inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
+      machine-type:
+        required: false
+        type: string
+        default: "windows-latest"
+        description: >
+          The machine type to run the workflow under, e.g. "windows-latest" or "windows-2022". Needs to be Windows.
+      build-directory:
+        required: false
+        type: string
+        default: .
+        description: Path to the directory where a solution file can be found.
+      build-verbosity:
+        required: false
+        type: string
+        default: quiet
+        description: Verbosity parameter for msbuild.
+      build-enable-code-analysis:
+        required: false
+        type: string
+        default: "true"
+        description: Indicates whether to enable static code analysis during msbuild.
+      test-filter:
+        required: false
+        type: string
+        description: >
+          Filter expression for dotnet test. See:
+          https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
+      timeout-minutes:
+        required: false
+        type: number
+        default: 360
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+
+jobs:
+  build-and-test:
+    runs-on: ${{ inputs.machine-type }}
+    name: Build and Test
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+    - name: Set Checkout Token
+      shell: pwsh
+      env:
+        CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
+      run: |
+        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
+        "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
+
+    - name: Checkout
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      with:
+        token: ${{ env.CHECKOUT_TOKEN }}
+
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+    # This is necessary for building Gulp Extensions and test-dotnet.
+    - name: Set up .NET
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+
+    - name: Build and Static Code Analysis
+      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+      with:
+        directory: ${{ inputs.build-directory }}
+        verbosity: ${{ inputs.build-verbosity }}
+        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+
+    - name: Tests
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+      with:
+        build-directory: ${{ inputs.build-directory }}
+        test-verbosity: ${{ inputs.build-verbosity }}
+        test-filter: ${{ inputs.test-filter }}
+        test-configuration: "Release"
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
