@@ -14,12 +14,12 @@ $ConnectionStringSuffix = ";MultipleActiveResultSets=True;Connection Timeout=60;
 if ($Env:RUNNER_OS -eq "Windows")
 {
     $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
-        "Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True" + $ConnectionStringSuffix
+    "Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True" + $ConnectionStringSuffix
 }
 else
 {
     $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
-        "Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!" + $ConnectionStringSuffix
+    "Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!" + $ConnectionStringSuffix
 
     $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = "sql2019"
 }
@@ -38,7 +38,8 @@ $tests = dotnet sln list |
 
 Write-Output "Starting to execute tests from $($tests.Length) projects."
 
-foreach ($test in $tests) {
+foreach ($test in $tests)
+{
     # This could benefit from grouping, above the level of the potential groups created by the tests (the Lombiq UI
     # Testing Toolbox adds per-test groups too). However, there's no nested grouping, see
     # https://github.com/actions/runner/issues/1477. See the # c341ef145d2a0898c5900f64604b67b21d2ea5db commit for a
@@ -55,8 +56,8 @@ foreach ($test in $tests) {
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
         '--logger', 'console;verbosity=detailed'
         '--verbosity', $Verbosity
-        $Filter Where-Object '--filter' : ''
-        $Filter Where-Object $Filter : ''
+        $Filter | Where-Object '--filter' : ''
+        $Filter | Where-Object $Filter : ''
         $test
     )
 

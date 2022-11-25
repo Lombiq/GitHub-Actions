@@ -4,7 +4,7 @@ function Invoke-Maybe($Block) { try { Invoke-Command -ScriptBlock $Block } catch
 
 $paths = @()
 
-if ($IsNuget) { $paths += ,'~/.nuget/packages' }
+if ($IsNuget) { $paths += , '~/.nuget/packages' }
 
 if ($IsNpm)
 {
