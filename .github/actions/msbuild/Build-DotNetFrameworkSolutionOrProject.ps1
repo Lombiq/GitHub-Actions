@@ -18,18 +18,18 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 
     # These need to be different than those for msbuild.
     $gulpBuildSwitches = ConvertTo-Array @"
-    --configuration:Release
-    --nologo
-    --verbosity:$Verbosity
-    --warnaserror
-    --warnAsMessage:MSB3026
-    --consoleLoggerParameters:NoSummary
-    -p:TreatWarningsAsErrors=true
-    -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
-    -p:Retries=4
-    -p:RetryDelayMilliseconds=1000
-    -p:Version=$Version
-"@
+        --configuration:Release
+        --nologo
+        --verbosity:$Verbosity
+        --warnaserror
+        --warnAsMessage:MSB3026
+        --consoleLoggerParameters:NoSummary
+        -p:TreatWarningsAsErrors=true
+        -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
+        -p:Retries=4
+        -p:RetryDelayMilliseconds=1000
+        -p:Version=$Version
+    "@
 
     $startTime = [DateTime]::Now
     dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj @gulpBuildSwitches
