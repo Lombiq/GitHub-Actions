@@ -26,9 +26,9 @@ else
 
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = "true"
 
-# Usually tests should be built with the Debug configuration. If that's selected, then most possibly the whole solution
-# was built with Release, so we need to build but not restore. Otherwise, the Release tests are already built, so we
-# don't need to build either.
+# We assume that the solution was built in Release configuration. If the tests need to be built in Debug configuration,
+# as they should, we need to first build them, but not restore. Otherwise, the Release tests are already built, so we
+# don't need to build them here.
 $optOut = $Configuration -eq "Debug" ? "--no-restore" : "--no-build"
 
 $tests = dotnet sln list |
@@ -37,7 +37,7 @@ $tests = dotnet sln list |
     Select-String -NotMatch "Lombiq.Tests.UI.csproj" |
     Select-String -NotMatch "Lombiq.Tests.csproj" |
     Where-Object {
-        $result = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $_ 2>&1 | Out-String -Width 9999
+        $result = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $PSItem 2>&1 | Out-String -Width 9999
         -not [string]::IsNullOrEmpty($result) -and $result.Contains("The following Tests are available")
     }
 
@@ -71,7 +71,7 @@ foreach ($test in $tests) {
     # Filtering is necessary for annoying messages coming from UI testing but only under Ubuntu. There are no actual
     # errors.
     $null | dotnet test @dotnetTestSwitches 2>&1 |
-        Where-Object { $_ -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $_ -notlike '*ChromeDriver was started successfully*' }
+        Where-Object { $PSItem -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $PSItem -notlike '*ChromeDriver was started successfully*' }
 
     if ($?)
     {
