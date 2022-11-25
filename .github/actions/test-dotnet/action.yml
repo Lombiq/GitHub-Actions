@@ -38,8 +38,8 @@ runs:
       id: setup
       shell: pwsh
       run: |
-        Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
-        Set-Output "runner-suffix" "${{ runner.os }}-${{ runner.arch }}-${{ runner.name }}"
+        Set-GitHubOutput "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
+        Set-GitHubOutput "runner-suffix" "${{ runner.os }}-${{ runner.arch }}-${{ runner.name }}"
         
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
