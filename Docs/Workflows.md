@@ -88,6 +88,9 @@ jobs:
   spelling:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
+    with:
+      # This is only needed if you want to use any other dictionaries than the ones in this project. 
+      spell-check-this: Lombiq/GitHub-Actions@your-custom-branch
 ```
 
 ## NuGet publish workflow
