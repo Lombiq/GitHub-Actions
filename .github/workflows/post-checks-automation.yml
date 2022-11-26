@@ -12,3 +12,9 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@issue/OSOE-477
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Automatically Resolve or Done Jira issue
+      if: github.event.pull_request != ''
+      uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-477
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
