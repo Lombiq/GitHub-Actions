@@ -9,5 +9,4 @@ $content = $response | ConvertFrom-Json
 
 $labelFound = $content.labels.Where({ $PSItem.name -eq $Label1 -or $PSItem.name -eq $Label2 }, 'First').Count -gt 0
 
-Write-Output "Contains label? $labelFound"
 Set-GitHubOutput "contains-label" $labelFound
