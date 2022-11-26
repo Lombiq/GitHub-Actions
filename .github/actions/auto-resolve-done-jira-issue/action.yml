@@ -40,13 +40,13 @@ runs:
       run: |
         Write-Output "Jira issue to Resolved"
 
-    - name: Remove Label
-      if: steps.check-done.outputs.contains-label == 'true' || steps.check-resolve.outputs.contains-label == 'true'
-      # v1.1.1
-      uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
-      with:
-        token: ${{ env.GITHUB_TOKEN }}
-        labels: |
-          resolve-jira-issue-if-checks-succeed
-          done-jira-issue-if-checks-succeed
-          merge-and-resolve-jira-issue-if-checks-succeed
+    #- name: Remove Label
+    #  if: steps.check-done.outputs.contains-label == 'true' || steps.check-resolve.outputs.contains-label == 'true'
+    #  # v1.1.1
+    #  uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
+    #  with:
+    #    token: ${{ env.GITHUB_TOKEN }}
+    #    labels: |
+    #      resolve-jira-issue-if-checks-succeed
+    #      done-jira-issue-if-checks-succeed
+    #      merge-and-resolve-jira-issue-if-checks-succeed
