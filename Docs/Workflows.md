@@ -277,9 +277,9 @@ jobs:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_RESET_ENVIRONMENT_SERVICE_PRINCIPAL }}
 ```
 
-## Post-Checks Automation
+## Post Pull Request Checks Automation
 
-Various automation that should be run after all other checks succeeded. Currently does the following:
+Various automation that should be run after all other checks succeeded for a pull request. Currently does the following:
 
 - Merges the current pull request if the "merge-and-resolve-jira-issue-if-checks-succeed" or "merge-if-checks-succeed" label is present. With prerequisite jobs you can execute this only if all others jobs have succeeded. Unlike [GitHub's auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request), this works without branch protection rules.
 - Resolves the Jira issue corresponding to the pull request if the "resolve-jira-issue-if-checks-succeed" or "merge-and-resolve-jira-issue-if-checks-succeed" label is present, or sets the issue to Done if the "done-jira-issue-if-checks-succeed" label is.

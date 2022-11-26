@@ -1,4 +1,4 @@
-name: Post-Checks Automation
+name: Post Pull Request Checks Automation
 
 on:
   workflow_call:
@@ -17,7 +17,7 @@ on:
         description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
 
 jobs:
-  post-checks-automation:
+  post-pull-request-checks-automation:
     runs-on: ubuntu-latest
     steps:
     - name: Automatically Merge Pull Request
