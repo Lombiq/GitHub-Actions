@@ -13,3 +13,4 @@ $labelFound = $content.labels.Where(
     }, 
     'First').Count -gt 0
 
+Set-GitHubOutput "is-mergeable" $labelFound
