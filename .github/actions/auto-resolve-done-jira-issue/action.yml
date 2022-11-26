@@ -67,4 +67,3 @@ runs:
         labels: |
           resolve-jira-issue-if-checks-succeed
           done-jira-issue-if-checks-succeed
-          merge-and-resolve-jira-issue-if-checks-succeed

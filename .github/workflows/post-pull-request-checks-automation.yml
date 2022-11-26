@@ -34,3 +34,11 @@ jobs:
         JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
         JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
         JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+
+    - name: Remove Label
+      # v1.1.1
+      uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        labels: |
+          merge-and-resolve-jira-issue-if-checks-succeed
