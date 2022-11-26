@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Automatically Merge Pull Request
+      if: github.event.pull_request != ''
       uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@issue/OSOE-477
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
