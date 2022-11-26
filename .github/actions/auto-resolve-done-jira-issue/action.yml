@@ -46,12 +46,7 @@ runs:
       run: |
         Write-Output "Key: ${{ steps.initialize-jira-issue-parameters.outputs.key }}"
         Write-Output "Transition: ${{ steps.initialize-jira-issue-parameters.outputs.transition }}"
-
-    - name: Transition Jira Issue to Resolved
-      if: steps.check-resolve.outputs.contains-label == 'true'
-      shell: pwsh
-      run: |
-        Write-Output "Jira issue to Resolved"
+        Write-Output "Key: ${{ steps.initialize-jira-issue-parameters.outputs.can-transition }}"
 
     - name: Login to Jira
       if: steps.check-done.outputs.contains-label == 'true' || steps.check-resolve.outputs.contains-label == 'true'

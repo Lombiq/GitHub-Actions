@@ -6,8 +6,9 @@ param($Repository, $PullRequestNumber, $IsDone, $IsResolve)
 $url = "https://api.github.com/repos/$Repository/pulls/$PullRequestNumber"
 $response = Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Get
 $content = $response | ConvertFrom-Json
+$issueKey = Get-JiraIssueKeyFromPullRequestTitle $content.title
 
-Set-GitHubOutput 'key' (Get-JiraIssueKeyFromPullRequestTitle $content.title)
+Set-GitHubOutput 'key' $issueKey
 
 if ($IsDone)
 {
@@ -24,6 +25,4 @@ else
 
 Set-GitHubOutput 'transition' $transition
 
-Write-Output $IsDone
-Write-Output $IsResolve
-Write-Output $transition
+Set-GitHubOutput 'can-transition' (-not [string]::IsNullOrEmpty($issueKey) -and $transition -not '')
