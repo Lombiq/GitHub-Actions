@@ -38,4 +38,5 @@ runs:
       with:
         token: ${{ env.GITHUB_TOKEN }}
         labels: |
+          auto-merge-and-resolve-jira-issue-if-checks-succeed
           auto-merge-if-checks-succeed
