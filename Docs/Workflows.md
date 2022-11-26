@@ -302,5 +302,5 @@ jobs:
     secrets:
       JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
       JIRA_USER_EMAIL: ${{ secrets.DEFAULT_JIRA_USER_EMAIL }}
-      JIRA_API_TOKEN: ${{ secrets.DEFAULT_JIRA_API_TOKEN }}}}
+      JIRA_API_TOKEN: ${{ secrets.DEFAULT_JIRA_API_TOKEN }}
 ```
