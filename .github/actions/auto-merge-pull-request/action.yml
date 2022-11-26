@@ -19,7 +19,8 @@ runs:
         # We need to fetch the PR details from the API as opposed to just using the context, because a label added after
         # the start of the run wouldn't be present in it.
         $url = "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}"
-        $response = Invoke-WebRequest $url -Headers Get-GitHubAuthorizationHeader -Method Get
+        $headers = @{"Authorization" = "Bearer $($Env:GITHUB_TOKEN)"; "Accept" = "application/vnd.github+json"}
+        $response = Invoke-WebRequest $url -Headers $headers -Method Get
         Test-Mergeability $response
 
     #- name: Merge Pull Request
@@ -27,7 +28,8 @@ runs:
     #  shell: pwsh
     #  run: |
     #    $url = "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
-    #    Invoke-WebRequest $url -Headers Get-GitHubAuthorizationHeader -Method Put
+    #    $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
+    #    Invoke-WebRequest $url -Headers $headers -Method Put
 
     #- name: Remove Label
     #  if: steps.check-mergeability.outputs.is-mergeable == 'true'
