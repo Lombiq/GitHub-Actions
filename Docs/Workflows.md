@@ -299,4 +299,8 @@ jobs:
   post-checks-automation:
     needs: [build-and-test-workflow, spelling-workflow]
     uses: Lombiq/GitHub-Actions/.github/workflows/post-checks-automation.yml@dev
+    secrets:
+      JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
+      JIRA_USER_EMAIL: ${{ secrets.DEFAULT_JIRA_USER_EMAIL }}
+      JIRA_API_TOKEN: ${{ secrets.DEFAULT_JIRA_API_TOKEN }}}}
 ```

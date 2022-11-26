@@ -40,6 +40,22 @@ runs:
       run: |
         Write-Output "Jira issue to Resolved"
 
+    - name: Login to Jira
+      if: steps.check-done.outputs.contains-label == 'true' || steps.check-resolve.outputs.contains-label == 'true'
+      # v3
+      uses: atlassian/gajira-login@ca13f8850ea309cf44a6e4e0c49d9aa48ac3ca4c
+      env:
+        JIRA_BASE_URL: ${{ env.JIRA_BASE_URL }}
+        JIRA_USER_EMAIL: ${{ env.JIRA_USER_EMAIL }}
+        JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
+
+    - name: Transition Jira Issue
+      # v3
+      uses: atlassian/gajira-transition@4749176faf14633954d72af7a44d7f2af01cc92b
+      with:
+        issue: "OSOE-484"
+        transition: "In progress"
+
     #- name: Remove Label
     #  if: steps.check-done.outputs.contains-label == 'true' || steps.check-resolve.outputs.contains-label == 'true'
     #  # v1.1.1

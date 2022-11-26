@@ -2,6 +2,19 @@ name: Post-Checks Automation
 
 on:
   workflow_call:
+    secrets:
+      # We can't access org secrets here so they need to be passed in.
+      JIRA_BASE_URL:
+        required: true
+        description: >
+          Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
+          it must NOT end with a slash.
+      JIRA_USER_EMAIL:
+        required: true
+        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+      JIRA_API_TOKEN:
+        required: true
+        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
 
 jobs:
   post-checks-automation:
@@ -18,3 +31,6 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-477
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+        JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
