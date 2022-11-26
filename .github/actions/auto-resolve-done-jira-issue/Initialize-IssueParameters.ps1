@@ -9,9 +9,18 @@ $content = $response | ConvertFrom-Json
 
 Set-GitHubOutput 'key' (Get-JiraIssueKeyFromPullRequestTitle $content.title)
 
-if ($IsDone) $transition = 'Done'
-elseif ($IsResolve) $transition = 'Resolve'
-else $transition = ''
+if ($IsDone)
+{
+    $transition = 'Done'
+}
+elseif ($IsResolve)
+{
+    $transition = 'Resolve'
+}
+else
+{
+    $transition = ''
+}
 
 Set-GitHubOutput 'transition' $transition
 
