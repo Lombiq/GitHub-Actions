@@ -1,7 +1,7 @@
 name: Automatically Resolve or Done Jira issue
 description: >
   Resolves the Jira issue corresponding to the pull request if the "resolve-jira-issue-if-checks-succeed" or
-  "merge-and-resolve-jira-issue-if-checks-succeed"" label is present, or sets the issue to Done if the
+  "merge-and-resolve-jira-issue-if-checks-succeed" label is present, or sets the issue to Done if the
   "done-jira-issue-if-checks-succeed" label is.
 
 runs:
