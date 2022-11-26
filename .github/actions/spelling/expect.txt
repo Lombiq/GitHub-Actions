@@ -6,7 +6,6 @@ CDNs
 EACCES
 EULA
 GDPR
-Hsl
 IShortcode
 JIRA
 MVVM
@@ -128,7 +127,6 @@ xsessionrc
 xxl
 yaml
 yml
-Aig
 Bcc
 DBs
 Dci
