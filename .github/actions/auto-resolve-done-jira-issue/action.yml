@@ -28,11 +28,24 @@ runs:
         label1: "resolve-jira-issue-if-checks-succeed"
         label2: "merge-and-resolve-jira-issue-if-checks-succeed"
 
-    - name: Transition Jira Issue to Done
-      if: steps.check-done.outputs.contains-label == 'true'
+    - name: Initialize Jira Issue Parameters
+      id: initialize-jira-issue-parameters
+      if: steps.check-done.outputs.contains-label == 'true' || steps.check-resolve.outputs.contains-label == 'true'
       shell: pwsh
       run: |
-        Write-Output "Jira issue to Done"
+        $parameters = @{
+            Repository = "${{ github.repository }}"
+            PullRequestNumber = "${{ github.event.pull_request.number }}"
+            IsDone = ${{ steps.check-done.outputs.contains-label }} -eq "True"
+            IsResolve = ${{ steps.check-resolve.outputs.contains-label }} -eq "True"
+        }
+        Initialize-IssueParameters @parameters
+
+    - name: Outputs
+      shell: pwsh
+      run: |
+        Write-Output "Key: ${{ steps.initialize-jira-issue-parameters.outputs.key }}"
+        Write-Output "Transition: ${{ steps.initialize-jira-issue-parameters.outputs.transition }}"
 
     - name: Transition Jira Issue to Resolved
       if: steps.check-resolve.outputs.contains-label == 'true'
