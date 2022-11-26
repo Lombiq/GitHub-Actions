@@ -6,12 +6,10 @@ if ($Response.StatusCode -ne 200)
     exit 1
 }
 
-
 $content = $Response | ConvertFrom-Json
-$labelFound = $content.labels
-    .Where(
-        { $PSItem.name -eq 'auto-merge-if-checks-succeed' -or $PSItem.name -eq 'auto-merge-and-resolve-jira-issue-if-checks-succeed' },
-        'First')
-    .Count -gt 0
+$labelFound = $content.labels.Where(
+    {
+        $PSItem.name -eq 'auto-merge-if-checks-succeed' -or $PSItem.name -eq 'auto-merge-and-resolve-jira-issue-if-checks-succeed'
+    }, 
+    'First').Count -gt 0
 
-Set-GitHubOutput "is-mergeable" $labelFound
