@@ -7,6 +7,7 @@ if ($Response.StatusCode -ne 200)
 }
 
 $content = $Response | ConvertFrom-Json
+Write-Output $content
 $labelFound = $content.labels.Where(
     {
         $PSItem.name -eq 'merge-if-checks-succeed' -or $PSItem.name -eq 'merge-and-resolve-jira-issue-if-checks-succeed'
