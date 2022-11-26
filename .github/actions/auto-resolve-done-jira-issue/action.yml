@@ -54,7 +54,7 @@ runs:
       uses: atlassian/gajira-transition@4749176faf14633954d72af7a44d7f2af01cc92b
       with:
         issue: "OSOE-484"
-        transition: "Done"
+        transition: "Resolved"
 
     #- name: Remove Label
     #  if: steps.check-done.outputs.contains-label == 'true' || steps.check-resolve.outputs.contains-label == 'true'
