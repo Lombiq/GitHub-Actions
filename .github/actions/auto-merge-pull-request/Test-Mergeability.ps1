@@ -9,7 +9,7 @@ if ($Response.StatusCode -ne 200)
 $content = $Response | ConvertFrom-Json
 $labelFound = $content.labels.Where(
     {
-        $PSItem.name -eq 'merge-if-checks-succeed' -or $PSItem.name -eq 'merge-and-resolve-jira-if-checks-succeed'
+        $PSItem.name -eq 'merge-if-checks-succeed' -or $PSItem.name -eq 'merge-and-resolve-jira-issue-if-checks-succeed'
     }, 
     'First').Count -gt 0
 
