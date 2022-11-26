@@ -41,13 +41,6 @@ runs:
         }
         Initialize-IssueParameters @parameters
 
-    - name: Outputs
-      shell: pwsh
-      run: |
-        Write-Output "Key: ??${{ steps.initialize-jira-issue-parameters.outputs.key }}??"
-        Write-Output "Transition: ${{ steps.initialize-jira-issue-parameters.outputs.transition }}"
-        Write-Output "Can transition: ${{ steps.initialize-jira-issue-parameters.outputs.can-transition }}"
-
     - name: Login to Jira
       if: steps.initialize-jira-issue-parameters.outputs.can-transition == 'true'
       # v3
@@ -65,13 +58,13 @@ runs:
         issue: ${{ steps.initialize-jira-issue-parameters.outputs.key }}
         transition: ${{ steps.initialize-jira-issue-parameters.outputs.transition }}
 
-    #- name: Remove Label
-    #  if: steps.initialize-jira-issue-parameters.outputs.can-transition == 'true'
-    #  # v1.1.1
-    #  uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
-    #  with:
-    #    token: ${{ env.GITHUB_TOKEN }}
-    #    labels: |
-    #      resolve-jira-issue-if-checks-succeed
-    #      done-jira-issue-if-checks-succeed
-    #      merge-and-resolve-jira-issue-if-checks-succeed
+    - name: Remove Label
+      if: steps.initialize-jira-issue-parameters.outputs.can-transition == 'true'
+      # v1.1.1
+      uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        labels: |
+          resolve-jira-issue-if-checks-succeed
+          done-jira-issue-if-checks-succeed
+          merge-and-resolve-jira-issue-if-checks-succeed
