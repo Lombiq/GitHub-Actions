@@ -36,4 +36,4 @@ runs:
             Label1 = '${{ inputs.label1 }}'
             Label2 = '${{ inputs.label2 }}'
         }
-        Test-PullRequestLabels $parameters
+        Test-PullRequestLabels @parameters
