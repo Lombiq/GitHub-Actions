@@ -28,7 +28,7 @@ on:
       - dev
 
 jobs:
-  call-build-and-test-workflow:
+  build-and-test:
     name: Build and Test
     uses: Lombiq/GitHub-Actions/.github/workflows/build-and-test-orchard-core.yml@dev
     with:
@@ -50,7 +50,7 @@ on:
       - dev
 
 jobs:
-  call-build-workflow:
+  build:
     name: Build
     uses: Lombiq/GitHub-Actions/.github/workflows/build-dotnet.yml@dev
     with:
@@ -106,7 +106,7 @@ on:
       - v*
 
 jobs:
-  call-publish-workflow:
+  publish-nuget:
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     secrets:
       apikey: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
@@ -120,7 +120,7 @@ It takes one non-optional secret parameter, `apikey`, the organization API key f
 
 ```yaml
 jobs:
-  call-publish-workflow:
+  publish:
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
@@ -138,13 +138,13 @@ Valid values for `verbosity` are those defined by [MSBuild](https://docs.microso
 Validates if the submodule pull request's title contains a Jira-style issue code (e.g. PROJ-123), and if it contains the issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name). Also checks if a pull request exists for the parent module. Example _validate-submodule-pull-request.yml_:
 
 ```yaml
-name: Validate Submodule Pull Request
+name: Validate Pull Request
 
 on:
   pull_request:
 
 jobs:
-  call-validate-workflow:
+  validate-pull-request:
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-submodule-pull-request.yml@dev
     with:
       repository: Lombiq/Hastlayer-SDK
@@ -165,7 +165,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-deploy-workflow:
+  deploy:
     name: Deploy to Azure App Service
     uses: Lombiq/GitHub-Actions/.github/workflows/deploy-to-azure-app-service.yml@dev
     with:
@@ -229,7 +229,7 @@ on:
     types: opened
 
 jobs:
-  call-publish-workflow:
+  create-jira-issues-for-community-activities:
     uses: Lombiq/GitHub-Actions/.github/workflows/create-jira-issues-for-community-activities.yml@dev
     secrets:
       JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
@@ -255,7 +255,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-reset-azure-environment-workflow:
+  reset-azure-environment:
     name: Reset Azure Environment
     uses: Lombiq/GitHub-Actions/.github/workflows/reset-azure-environment.yml@dev
     with:
@@ -288,15 +288,15 @@ on:
       - dev
 
 jobs:
-  call-build-and-test-workflow:
+  build-and-test:
     name: Build and Test
     uses: Lombiq/GitHub-Actions/.github/workflows/build-and-test-orchard-core.yml@dev
 
-  call-spelling-workflow:
+  spelling:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
 
-  call-post-checks-automation-workflow:
-    needs: [call-build-and-test-workflow, call-spelling-workflow]
+  post-checks-automation:
+    needs: [build-and-test-workflow, spelling-workflow]
     uses: Lombiq/GitHub-Actions/.github/workflows/post-checks-automation.yml@dev
 ```
