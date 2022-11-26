@@ -39,6 +39,6 @@ jobs:
       # v1.1.1
       uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
       with:
-        token: ${{ env.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         labels: |
           merge-and-resolve-jira-issue-if-checks-succeed
