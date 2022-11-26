@@ -16,15 +16,10 @@ runs:
       id: check-mergeability
       # Fork PR runs won't have permissions to add labels to or merge PRs.
       if: github.event.pull_request.head.repo.fork == false
-      shell: pwsh
-      run: |
-        $parameters = @{
-            Repository = "${{ github.repository }}"
-            PullRequestNumber = "${{ github.event.pull_request.number }}"
-            Label1 = 'merge-if-checks-succeed'
-            Label2 = 'merge-and-resolve-jira-issue-if-checks-succeed'
-        }
-        Test-PullRequestLabels $parameters
+      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@issue/OSOE-477
+      with:
+        label1: "merge-if-checks-succeed"
+        label2: "merge-and-resolve-jira-issue-if-checks-succeed"
 
     - name: Merge Pull Request
       if: steps.check-mergeability.outputs.contains-label == 'true'
