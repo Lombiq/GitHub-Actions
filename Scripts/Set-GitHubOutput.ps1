@@ -3,7 +3,7 @@ param (
     [string]
     $Key,
 
-    [Parameter(Mandatory = $true, Position = 1)]
+    [Parameter(Mandatory = $false, Position = 1)]
     [string]
     $Value
 )
