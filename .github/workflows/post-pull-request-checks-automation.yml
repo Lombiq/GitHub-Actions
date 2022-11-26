@@ -39,7 +39,7 @@ jobs:
       env:
         MERGE_TOKEN: ${{ secrets.MERGE_TOKEN }}
       run: |
-        if ([string]::IsNullOrEmpty("${{ secrets.MERGE_TOKEN }}"))
+        if ([string]::IsNullOrEmpty($Env:MERGE_TOKEN ))
         {
             Write-Output "Empty"
         }
