@@ -32,9 +32,6 @@ runs:
       if: steps.check-done.outputs.contains-label == 'true'
       shell: pwsh
       run: |
-        Write-Output "Base: ${{ env.JIRA_BASE_URL }}"
-        Write-Output "Email: ${{ env.JIRA_USER_EMAIL }}"
-
         Write-Output "Jira issue to Done"
 
     - name: Transition Jira Issue to Resolved
