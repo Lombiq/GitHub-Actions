@@ -12,6 +12,11 @@ description: >
 runs:
   using: "composite"
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
     - name: Cancel Workflow
       # Fork PRs won't have a token with write access to Actions, thus won't be able to cancel the workflow.
       if: github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false
@@ -19,5 +24,4 @@ runs:
       run: |
         Write-Output "::error::Canceling workflow due to one of the jobs failing."
         $url = "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
-        $headers = @{"Authorization" = "Bearer $($Env:GITHUB_TOKEN)"; "Accept" = "application/vnd.github+json"}
-        Invoke-WebRequest $url -Headers $headers -Method Post
+        Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Post
