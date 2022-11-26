@@ -23,20 +23,20 @@ runs:
         $response = Invoke-WebRequest $url -Headers $headers -Method Get
         Test-Mergeability $response
 
-    #- name: Merge Pull Request
-    #  if: steps.check-mergeability.outputs.is-mergeable == 'true'
-    #  shell: pwsh
-    #  run: |
-    #    $url = "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
-    #    $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
-    #    Invoke-WebRequest $url -Headers $headers -Method Put
+    - name: Merge Pull Request
+      if: steps.check-mergeability.outputs.is-mergeable == 'true'
+      shell: pwsh
+      run: |
+        $url = "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
+        $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
+        Invoke-WebRequest $url -Headers $headers -Method Put
 
-    #- name: Remove Label
-    #  if: steps.check-mergeability.outputs.is-mergeable == 'true'
-    #  # v1.1.1
-    #  uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
-    #  with:
-    #    token: ${{ env.GITHUB_TOKEN }}
-    #    labels: |
-    #      merge-and-resolve-jira-issue-if-checks-succeed
-    #      merge-if-checks-succeed
+    - name: Remove Label
+      if: steps.check-mergeability.outputs.is-mergeable == 'true'
+      # v1.1.1
+      uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        labels: |
+          merge-and-resolve-jira-issue-if-checks-succeed
+          merge-if-checks-succeed
