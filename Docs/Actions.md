@@ -6,6 +6,7 @@ In addition to the below short explanations, check out the inline documentation 
 
 - `add-jira-issue-code-to-pull-request`: Adds the Jira issue key prefix and link to pull requests.
 - `auto-merge-pull-request`: Merges the current pull request automatically if the "merge-and-resolve-jira-issue-if-checks-succeed" or "merge-if-checks-succeed" label is present.
+- `auto-resolve-done-jira-issue`: Resolves the Jira issue corresponding to the pull request if the "resolve-jira-issue-if-checks-succeed" or "merge-and-resolve-jira-issue-if-checks-succeed" label is present, or sets the issue to Done if the "done-jira-issue-if-checks-succeed" label is.
 - `build-dotnet`: Builds all .NET solutions or projects in the given directory with optional static code analysis.
 - `cancel-workflow`: Cancels the current workflow run, i.e. all jobs. Useful if you want to cancel the rest of the workflow when one job fails. Suitable workflows in this project expose this functionality via the `cancel-workflow-on-failure` parameter.
 - `check-merge-conflict`: Labels and comments on pull requests with merge conflicts.
