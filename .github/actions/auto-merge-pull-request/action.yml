@@ -4,12 +4,6 @@ description: Merges the current pull request automatically if the "auto-merge-if
 runs:
   using: "composite"
   steps:
-    #- name: Output test
-    #  env:
-    #    GITHUB_CONTEXT: ${{ toJSON(github) }}
-    #  shell: bash
-    #  run: echo "$GITHUB_CONTEXT"
-
     - name: Setup Scripts
       shell: pwsh
       run: |
