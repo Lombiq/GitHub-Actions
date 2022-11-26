@@ -31,8 +31,8 @@ runs:
       shell: pwsh
       run: |
         $parameters = @{
-            Repository = "${{ github.repository }}"
-            PullRequestNumber = "${{ github.event.pull_request.number }}"
+            Repository = '${{ github.repository }}'
+            PullRequestNumber = '${{ github.event.pull_request.number }}'
             Label1 = '${{ inputs.label1 }}'
             Label2 = '${{ inputs.label2 }}'
         }
