@@ -135,7 +135,12 @@ Valid values for `verbosity` are those defined by [MSBuild](https://docs.microso
 
 ## Submodule validate workflow
 
-Validates if the submodule pull request's title contains a Jira-style issue code (e.g. PROJ-123), and if it contains the issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name). Also checks if a pull request exists for the parent module. Example _validate-submodule-pull-request.yml_:
+Validates pull requests in submodule repositories for various criteria:
+
+- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet.
+- Checks if a pull request exists in the parent repository.
+
+Example _validate-pull-request.yml_:
 
 ```yaml
 name: Validate Pull Request
@@ -184,7 +189,10 @@ jobs:
 
 ## Validate Pull Request workflow
 
-Validates if the pull request's title contains a Jira-style issue code (e.g. PROJ-123), and if it contains the issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name). Also labels and comments on pull requests with merge conflicts.
+Validates pull requests for various criteria:
+
+- Labels and comments on pull requests with merge conflicts.
+- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet. 
 
 ```yaml
 name: Validate Pull Request
