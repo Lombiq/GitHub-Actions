@@ -44,7 +44,7 @@ runs:
     - name: Outputs
       shell: pwsh
       run: |
-        Write-Output "Key: ${{ steps.initialize-jira-issue-parameters.outputs.key }}"
+        Write-Output "Key: ??${{ steps.initialize-jira-issue-parameters.outputs.key }}??"
         Write-Output "Transition: ${{ steps.initialize-jira-issue-parameters.outputs.transition }}"
         Write-Output "Can transition: ${{ steps.initialize-jira-issue-parameters.outputs.can-transition }}"
 
@@ -62,8 +62,8 @@ runs:
       # v3
       uses: atlassian/gajira-transition@4749176faf14633954d72af7a44d7f2af01cc92b
       with:
-        issue: steps.initialize-jira-issue-parameters.outputs.key
-        transition: steps.initialize-jira-issue-parameters.outputs.transition
+        issue: ${{ steps.initialize-jira-issue-parameters.outputs.key }}
+        transition: ${{ steps.initialize-jira-issue-parameters.outputs.transition }}
 
     #- name: Remove Label
     #  if: steps.initialize-jira-issue-parameters.outputs.can-transition == 'true'
