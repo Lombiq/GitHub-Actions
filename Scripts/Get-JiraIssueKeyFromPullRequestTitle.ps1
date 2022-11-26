@@ -4,4 +4,4 @@ param (
 )
 
 $isMatch = $Title -match '^\s*(\w+-\d+)\s*:'
-$isMatch ? $matches[1] : $null
+$isMatch ? $matches[1] : ''
