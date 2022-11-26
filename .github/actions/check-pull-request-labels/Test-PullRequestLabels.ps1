@@ -4,12 +4,9 @@
 param($Repository, $PullRequestNumber, $Label1, $Label2)
 
 $url = "https://api.github.com/repos/$Repository/pulls/$PullRequestNumber"
-Write-Output $url
-Write-Output ([string]::IsNullOrEmpty($Env:GITHUB_TOKEN))
 $response = Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Get
 $content = $response | ConvertFrom-Json
 
 $labelFound = $content.labels.Where({ $PSItem.name -eq $Label1 -or $PSItem.name -eq $Label2 }, 'First').Count -gt 0
 
-Write-Output "Label found? $labelFound"
 Set-GitHubOutput "contains-label" $labelFound
