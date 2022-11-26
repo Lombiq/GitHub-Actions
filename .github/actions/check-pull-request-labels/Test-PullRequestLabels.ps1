@@ -3,7 +3,7 @@
 
 param($Repository, $PullRequestNumber, $Label1, $Label2)
 
-$url = "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}"
+$url = "https://api.github.com/repos/$Repository/pulls/$PullRequestNumber"
 $response = Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Get
 $content = $response | ConvertFrom-Json
 
