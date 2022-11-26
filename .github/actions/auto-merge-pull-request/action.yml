@@ -4,11 +4,11 @@ description: Merges the current pull request automatically if the "auto-merge-if
 runs:
   using: "composite"
   steps:
-    - name: Output test
-      env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      shell: bash
-      run: echo "$GITHUB_CONTEXT"
+    #- name: Output test
+    #  env:
+    #    GITHUB_CONTEXT: ${{ toJSON(github) }}
+    #  shell: bash
+    #  run: echo "$GITHUB_CONTEXT"
 
     - name: Setup Scripts
       shell: pwsh
@@ -22,7 +22,7 @@ runs:
       if: github.event.pull_request.head.repo.fork == false
       shell: pwsh
       run: |
-        $url = "https://api.github.com/repos/${{ github.repository }}/actions/pulls/${{ github.event.pull_request.number }}"
+        $url = "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}"
         $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
         $response = (Invoke-WebRequest $url -Headers $headers -Method Get) | ConvertFrom-Json
         Write-Output $response
