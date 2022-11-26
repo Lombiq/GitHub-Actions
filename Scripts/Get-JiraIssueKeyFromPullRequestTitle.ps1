@@ -3,4 +3,5 @@ param (
     [string] $Title
 )
 
--not [string]::IsNullOrEmpty((Get-JiraIssueKeyFromPullRequestTitle $Title))
+$isMatch = $Title -match '^\s*(\w+-\d+)\s*:'
+$isMatch ? $matches[1] : $null
