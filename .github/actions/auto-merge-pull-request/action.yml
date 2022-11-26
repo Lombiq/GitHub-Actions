@@ -27,7 +27,9 @@ runs:
       if: steps.check-mergeability.outputs.is-mergeable == 'true'
       shell: pwsh
       run: |
-        Write-Output "This is mergeable."
+        $url = "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
+        $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
+        Invoke-WebRequest $url -Headers $headers -Method Put
 
     - name: Remove Label
       if: steps.check-mergeability.outputs.is-mergeable == 'true'
