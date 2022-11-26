@@ -39,30 +39,38 @@ jobs:
       env:
         MERGE_TOKEN: ${{ secrets.MERGE_TOKEN }}
       run: |
+        if ([string]::IsNullOrEmpty($Env:MERGE_TOKEN ))
+        {
+            Write-Output "Empty"
+        }
+        else
+        {
+            Write-Output "Not empty"
+        }
         $mergeToken = $Env:MERGE_TOKEN ? $Env:MERGE_TOKEN : "${{ secrets.GITHUB_TOKEN }}"
         "MERGE_TOKEN=$mergeToken" >> $Env:GITHUB_ENV
 
-    - name: Automatically Merge Pull Request
-      if: github.event.pull_request != ''
-      uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@issue/OSOE-477
-      env:
-        GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
+    #- name: Automatically Merge Pull Request
+    #  if: github.event.pull_request != ''
+    #  uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@issue/OSOE-477
+    #  env:
+    #    GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
 
-    - name: Automatically Resolve or Done Jira issue
-      if: github.event.pull_request != ''
-      uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-477
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-        JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
-        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+    #- name: Automatically Resolve or Done Jira issue
+    #  if: github.event.pull_request != ''
+    #  uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-477
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #    JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+    #    JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+    #    JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
 
-    - name: Remove Label
-      # Fork PR runs won't have permissions to remove labels.
-      if: github.event.pull_request.head.repo.fork == false
-      # v1.1.1
-      uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        labels: |
-          merge-and-resolve-jira-issue-if-checks-succeed
+    #- name: Remove Label
+    #  # Fork PR runs won't have permissions to remove labels.
+    #  if: github.event.pull_request.head.repo.fork == false
+    #  # v1.1.1
+    #  uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
+    #  with:
+    #    token: ${{ secrets.GITHUB_TOKEN }}
+    #    labels: |
+    #      merge-and-resolve-jira-issue-if-checks-succeed
