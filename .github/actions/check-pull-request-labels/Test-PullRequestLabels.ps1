@@ -4,6 +4,8 @@
 param($Repository, $PullRequestNumber, $Label1, $Label2)
 
 $url = "https://api.github.com/repos/$Repository/pulls/$PullRequestNumber"
+Write-Output $url
+Write-Output ([string]::IsNullOrEmpty($Env:GITHUB_TOKEN))
 $response = Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Get
 $content = $response | ConvertFrom-Json
 
