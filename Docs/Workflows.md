@@ -306,6 +306,7 @@ jobs:
 
   post-pull-request-checks-automation:
     needs: [build-and-test-workflow, spelling-workflow]
+    if: github.event.pull_request != ''
     uses: Lombiq/GitHub-Actions/.github/workflows/post-pull-request-checks-automation.yml@dev
     secrets:
       JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
