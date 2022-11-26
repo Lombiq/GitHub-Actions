@@ -26,7 +26,7 @@ runs:
         $headers = @{"Authorization" = "Bearer ${{ env.GITHUB_TOKEN }}"; "Accept" = "application/vnd.github+json"}
         $response = Invoke-WebRequest $url -Headers $headers -Method Get
 
-        if ($response.StatusCode != 200)
+        if ($response.StatusCode -ne 200)
         {
             Write-Output "Getting the pull request details failed with HTTP $($response.StatusCode)."
             exit 1
