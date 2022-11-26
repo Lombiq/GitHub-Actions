@@ -29,7 +29,7 @@ runs:
         Set-GitHubOutput "is-mergeable" "true"
 
     - name: Merge Pull Request
-      if: steps.check-mergeability.outputs.is-mergeable == "true"
+      if: steps.check-mergeability.outputs.is-mergeable == 'true'
       shell: pwsh
       run: |
         Write-Output "Worked"
