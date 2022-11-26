@@ -146,10 +146,7 @@ Qhd
 Qvga
 Qwxga
 Regexes
-Rkao
-Rrg
 SEH
-SHx
 Smo
 Svga
 Sxga
@@ -165,7 +162,6 @@ Wysiwyg
 XSRF
 Xga
 Yarp
-Yeuw
 amet
 bak
 baz
