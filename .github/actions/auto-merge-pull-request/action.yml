@@ -1,5 +1,7 @@
 name: Automatically Merge Pull Request
-description: Merges the current pull request automatically if the "auto-merge-if-checks-succeed" label is present.
+description: >
+  Merges the current pull request automatically if the "merge-and-resolve-jira-issue-if-checks-succeed" or
+  "merge-if-checks-succeed" label is present.
 
 runs:
   using: "composite"
