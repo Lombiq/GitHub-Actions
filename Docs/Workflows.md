@@ -120,7 +120,7 @@ It takes one non-optional secret parameter, `apikey`, the organization API key f
 
 ```yaml
 jobs:
-  publish:
+  publish-nuget:
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
@@ -170,7 +170,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  deploy-to-azure-app-service:
     name: Deploy to Azure App Service
     uses: Lombiq/GitHub-Actions/.github/workflows/deploy-to-azure-app-service.yml@dev
     with:
