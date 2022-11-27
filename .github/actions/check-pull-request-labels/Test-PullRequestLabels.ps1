@@ -1,4 +1,4 @@
-# We need to fetch the PR details from the API as opposed to just using the context, because a label added after the
+# We need to fetch the PR details from the API as opposed to just using the context because a label added after the
 # start of the run wouldn't be present in it.
 
 param($Repository, $PullRequestNumber, $Label1, $Label2)
