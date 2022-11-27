@@ -24,5 +24,4 @@ else
 }
 
 Set-GitHubOutput 'transition' $transition
-
 Set-GitHubOutput 'can-transition' (-not [string]::IsNullOrEmpty($issueKey) -and $transition -ne '')
