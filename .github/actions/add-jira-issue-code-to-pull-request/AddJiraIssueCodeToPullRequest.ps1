@@ -9,7 +9,6 @@ param(
 )
 
 $jiraBrowseUrl = $JiraBaseUrl + '/browse/';
-$owner, $repo = $GitHubRepository.Split('/')
 
 $originalTitle = $Title
 $originalBody = $Body
@@ -38,6 +37,6 @@ elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*") {
 
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody)) {
     $bodyParams = @{"title" = $Title; "body" = $Body} | ConvertTo-Json
-    $url = "https://api.github.com/repos/$owner/$repo/pulls/$PullRequestId"
+    $url = "https://api.github.com/repos/$GitHubRepository/pulls/$PullRequestId"
     Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Patch -Body $bodyParams
 }
