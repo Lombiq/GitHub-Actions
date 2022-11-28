@@ -6,7 +6,11 @@
 $url = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
 $titles = curl -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | ForEach-Object { $PSItem.title }
 
-$Branch -match '(\w+-\d+)'
+$isIssueBranch = $Branch -match '(\w+-\d+)'
+if(!$isIssueBranch) {
+    Exit
+}
+
 $issueCode = $matches[0]
 $lookFor = "${issueCode}:"
 if (($titles | Where-Object { $PSItem -and $PSItem.Trim().StartsWith($lookFor) }).Count -gt 0) { exit 0 }
