@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
@@ -14,7 +14,7 @@ function ConvertTo-Array([string] $rawInput)
 Write-Output ".NET version number: $Version"
 
 # Notes on build switches that aren't self-explanatory:
-# - -p:Retries and -p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
+# - -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
 # - --warnAsMessage:MSB3026 is also to prevent random locks along the lines of "warning MSB3026: Could not copy dlls
 #   errors." from breaking the build (since we treat warnings as errors).
 
@@ -74,11 +74,7 @@ if ($noErrors -and !$?)
     exit 1
 }
 
-# With node reuse, dotnet build spawns processes that while speed up build, they can cause dotnet test and other dotnet
-# tools to randomly hang. So, here we shut down those processes for later actions.
-# For details see: https://github.com/Lombiq/UI-Testing-Toolbox/issues/228.
-Write-Output "Shutting down .NET build servers."
-dotnet build-server shutdown
+Stop-DotNetBuildServers
 
 if ($expectedErrorCodes)
 {

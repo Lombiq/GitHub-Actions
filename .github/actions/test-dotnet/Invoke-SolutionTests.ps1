@@ -1,4 +1,4 @@
-﻿param ($Verbosity, $Filter)
+param ($Verbosity, $Filter, $Configuration)
 
 # Note that this script will only find tests if they were previously build in Release mode.
 
@@ -26,13 +26,18 @@ else
 
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = "true"
 
+# We assume that the solution was built in Release configuration. If the tests need to be built in Debug configuration,
+# as they should, we need to first build them, but not restore. Otherwise, the Release tests are already built, so we
+# don't need to build them here.
+$optOut = $Configuration -eq "Debug" ? "--no-restore" : "--no-build"
+
 $tests = dotnet sln list |
     Select-Object -Skip 2 |
     Select-String "\.Tests\." |
     Select-String -NotMatch "Lombiq.Tests.UI.csproj" |
     Select-String -NotMatch "Lombiq.Tests.csproj" |
     Where-Object {
-        $result = dotnet test --no-restore --list-tests --verbosity $Verbosity $PSItem 2>&1 | Out-String -Width 9999
+        $result = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $PSItem 2>&1 | Out-String -Width 9999
         -not [string]::IsNullOrEmpty($result) -and $result.Contains("The following Tests are available")
     }
 
