@@ -30,7 +30,6 @@ chmod
 chown
 chromedriver
 cjs
-cmdlet
 cref
 crlf
 csharp

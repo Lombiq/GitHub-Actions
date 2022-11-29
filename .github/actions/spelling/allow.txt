@@ -59,6 +59,7 @@ Timezones
 Uninstalling
 asynchronicity
 atata
+cmdlet
 codebase
 colorpicker
 configurator
