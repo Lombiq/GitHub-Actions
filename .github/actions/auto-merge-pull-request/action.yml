@@ -1,0 +1,37 @@
+name: Automatically Merge Pull Request
+description: >
+  Merges the current pull request automatically if the "merge-and-resolve-jira-issue-if-checks-succeed" or
+  "merge-if-checks-succeed" label is present.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Check Mergeability
+      id: check-mergeability
+      # Fork PR runs won't have permissions to remove labels, nor do we want to allow auto-merging them.
+      if: github.event.pull_request.head.repo.fork == false
+      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
+      with:
+        label1: "merge-if-checks-succeed"
+        label2: "merge-and-resolve-jira-issue-if-checks-succeed"
+
+    - name: Merge Pull Request
+      if: steps.check-mergeability.outputs.contains-label == 'true'
+      shell: pwsh
+      run: |
+        $url = "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
+        Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Put
+
+    - name: Remove Label
+      if: steps.check-mergeability.outputs.contains-label == 'true'
+      # v1.1.1
+      uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        labels: |
+          merge-if-checks-succeed

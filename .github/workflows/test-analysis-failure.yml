@@ -67,7 +67,7 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
 
 jobs:
-  build-and-test:
+  test-analysis-failure:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
     # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
