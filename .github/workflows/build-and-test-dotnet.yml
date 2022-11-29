@@ -34,6 +34,13 @@ on:
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
+      build-solution-path:
+        required: false
+        type: string
+        default: "*.sln"
+        description: >
+          The path of the solution or project file to be built. If there's exactly one .sln file in the build directory
+          then this can be omitted. For further information, see the documentation of the build-dotnet action.
       build-verbosity:
         required: false
         type: string
@@ -134,6 +141,7 @@ jobs:
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
+        solution-or-project-path: ${{ inputs.build-solution-path }}
 
     - name: Tests
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/HAST-290
