@@ -37,10 +37,8 @@ runs:
 
     - name: Login to Jira
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
-      # v1.0.0.
-      # This will show a "Logged in as: undefined" message if the login works, see:
-      # https://github.com/atlassian/gajira-login/issues/30.
-      uses: atlassian/gajira-login@90a599561baaf8c05b080645ed73db7391c246ed
+      # v3
+      uses: atlassian/gajira-login@ca13f8850ea309cf44a6e4e0c49d9aa48ac3ca4c
       env:
         JIRA_BASE_URL: ${{ env.JIRA_BASE_URL }}
         JIRA_USER_EMAIL: ${{ env.JIRA_USER_EMAIL }}
@@ -89,7 +87,8 @@ runs:
     - name: Create Jira Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       id: create-issue
-      uses: atlassian/gajira-create@c0a9c69ac9d6aa063fed57201e55336ada860183
+      # v3
+      uses: atlassian/gajira-create@1ff0b6bd115a780592b47bfbb63fc4629132e6ec
       with:
         project: ${{ env.JIRA_PROJECT_KEY }}
         issuetype: ${{ steps.issue-details.outputs.type }}
@@ -119,8 +118,8 @@ runs:
 
     - name: Update GitHub Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
-      # v3.3.0
-      uses: actions-cool/issues-helper@dad28fdb88da5f082c04659b7373d85790f9b135
+      # v3.3.3
+      uses: actions-cool/issues-helper@275328970dbc3bfc3bc43f5fe741bf3638300c0a
       with:
         actions: "update-issue"
         token: ${{ env.GITHUB_TOKEN }}
