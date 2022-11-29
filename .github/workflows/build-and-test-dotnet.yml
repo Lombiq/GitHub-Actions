@@ -73,6 +73,11 @@ on:
           Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
           only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
           until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+      test-disable:
+        required: false
+        type: string
+        default: "false"
+        description: Disables test execution completely if set to "true".
       test-filter:
         required: false
         type: string
@@ -144,6 +149,7 @@ jobs:
         solution-or-project-path: ${{ inputs.build-solution-path }}
 
     - name: Tests
+      if: inputs.test-disable = 'false'
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/HAST-290
       with:
         build-directory: ${{ inputs.build-directory }}
