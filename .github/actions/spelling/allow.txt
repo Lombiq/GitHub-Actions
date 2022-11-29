@@ -1,7 +1,6 @@
 Cdp
 Codeuctivity
 Deactivatable
-Handlingtests
 ISetup
 IShell
 IShortcuts
@@ -101,7 +100,6 @@ taghelper
 taxonomyexpensetags
 taxonomyincometags
 teamcity
-tes
 testuser
 timespan
 toolbars
@@ -124,7 +122,6 @@ Antiforgery
 Configurator
 Demystifier
 Deployer
-Embedd
 Enums
 Firefox
 Formattable
