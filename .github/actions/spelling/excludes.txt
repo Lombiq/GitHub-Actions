@@ -14,7 +14,7 @@ ignore$
 dotnet-tools.json$
 .git
 \.htmlvalidate.json$
-appsettings.json$
+appsettings.*.json$
 package.json$
 package-lock.json
 \.psm1$
