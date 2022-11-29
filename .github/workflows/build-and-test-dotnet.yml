@@ -119,7 +119,7 @@ jobs:
         cache-version: ${{ inputs.build-cache-version }}
 
     - name: Tests
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@HAST-290
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/HAST-290
       with:
         build-directory: ${{ inputs.build-directory }}
         test-verbosity: ${{ inputs.build-verbosity }}
