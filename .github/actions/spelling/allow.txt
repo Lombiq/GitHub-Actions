@@ -1,6 +1,5 @@
 Cdp
 Codeuctivity
-Deactivatable
 ISetup
 IShell
 IShortcuts
@@ -136,7 +135,6 @@ IApplication
 IAsync
 IAudit
 IAuthorization
-IBab
 IBackground
 ICaching
 ICant
@@ -302,7 +300,6 @@ darkmode
 dataprotection
 datalabels
 datatable
-deactivatable
 deconstructed
 destructuring
 devblogs
@@ -333,8 +330,6 @@ multisubmit
 plugin
 plugins
 refactoring
-registrationhttpevent
-registrationworkflow
 rolename
 ruleset
 screenshots
@@ -347,7 +342,6 @@ subfolder
 subfolders
 submenu
 superproject
-tanspiled
 taxonomyfield
 versioning
 visualstudio
