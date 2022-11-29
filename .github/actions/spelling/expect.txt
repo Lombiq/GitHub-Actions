@@ -7,7 +7,7 @@ EACCES
 EULA
 GDPR
 IShortcode
-JIRA
+jira
 MVVM
 NLog
 NONINFRINGEMENT
@@ -30,6 +30,7 @@ chmod
 chown
 chromedriver
 cjs
+cmdlet
 cref
 crlf
 csharp
@@ -50,6 +51,7 @@ https
 icbin
 idx
 iife
+iis
 ipsum
 itemprop
 json
@@ -80,6 +82,7 @@ omnisharp
 onspecial
 onwarn
 orchardcore
+osoce
 parallelizable
 pickr
 plusplus
@@ -92,6 +95,7 @@ preheader
 publishsettings
 pwsh
 readdir
+sdk
 setlocal
 shortcode
 sln
