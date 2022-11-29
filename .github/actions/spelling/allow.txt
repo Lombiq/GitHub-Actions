@@ -246,8 +246,7 @@ Interop
 Interoperability
 JObject
 JToken
-LOMBIQ
-Lombiq
+lombiq
 Lucene
 Meziantou
 Namespaced
