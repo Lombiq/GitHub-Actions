@@ -182,7 +182,7 @@ jobs:
         location: ${{ inputs.build-directory}}
 
     - name: Tests
-      if: inputs.test-disable = 'false'
+      if: inputs.test-disable == 'false'
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/MENT-157
       with:
         build-directory: ${{ inputs.build-directory }}

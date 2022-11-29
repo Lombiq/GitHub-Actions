@@ -87,7 +87,7 @@ jobs:
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
 
     - name: Tests
-      if: inputs.test-disable = 'false'
+      if: inputs.test-disable == 'false'
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
         build-directory: ${{ inputs.build-directory }}

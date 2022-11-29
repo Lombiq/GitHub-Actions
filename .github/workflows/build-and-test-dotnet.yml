@@ -149,7 +149,7 @@ jobs:
         solution-or-project-path: ${{ inputs.build-solution-path }}
 
     - name: Tests
-      if: inputs.test-disable = 'false'
+      if: inputs.test-disable == 'false'
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/HAST-290
       with:
         build-directory: ${{ inputs.build-directory }}
