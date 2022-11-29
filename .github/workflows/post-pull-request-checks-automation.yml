@@ -42,12 +42,12 @@ jobs:
         "MERGE_TOKEN=$mergeToken" >> $Env:GITHUB_ENV
 
     - name: Automatically Merge Pull Request
-      uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@issue/OSOE-477
+      uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@dev
       env:
         GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
 
     - name: Automatically Resolve or Done Jira issue
-      uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-477
+      uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@dev
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
