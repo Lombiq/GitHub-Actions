@@ -1,0 +1,39 @@
+name: Check Pull Request Labels
+description: >
+  Checks if the current pull request has any of the given labels. Intentionally not documented in Actions.md since it's
+  only meant for internal use.
+
+# This could support any number of labels in the future, but right now, we only need exactly two.
+inputs:
+  label1:
+    required: true
+    description: The first label to check for.
+  label2:
+    required: true
+    description: The second label to check for.
+
+outputs:
+  contains-label:
+    description: "A boolean value indicating whether any of the labels are present."
+    value: ${{ steps.check-labels.outputs.contains-label }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Check Labels
+      id: check-labels
+      shell: pwsh
+      run: |
+        $parameters = @{
+            Repository = '${{ github.repository }}'
+            PullRequestNumber = '${{ github.event.pull_request.number }}'
+            Label1 = '${{ inputs.label1 }}'
+            Label2 = '${{ inputs.label2 }}'
+        }
+        Test-PullRequestLabels @parameters
