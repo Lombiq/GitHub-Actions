@@ -1,4 +1,4 @@
-param ($Verbosity, $Filter, $Configuration)
+param ($Solution, $Verbosity, $Filter, $Configuration)
 
 # Note that this script will only find tests if they were previously build in Release mode.
 
@@ -31,7 +31,7 @@ $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = "true"
 # don't need to build them here.
 $optOut = $Configuration -eq "Debug" ? "--no-restore" : "--no-build"
 
-$tests = dotnet sln list |
+$tests = dotnet sln $Solution list |
     Select-Object -Skip 2 |
     Select-String "\.Tests\." |
     Select-String -NotMatch "Lombiq.Tests.UI.csproj" |

@@ -183,9 +183,10 @@ jobs:
 
     - name: Tests
       if: inputs.test-disable == 'false'
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/MENT-157
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/HAST-290
       with:
         build-directory: ${{ inputs.build-directory }}
+        solution-path: ${{ inputs.build-solution-path }}
         test-verbosity: ${{ inputs.build-verbosity }}
         test-filter: ${{ inputs.test-filter }}
         ui-test-parallelism: ${{ inputs.ui-test-parallelism }}

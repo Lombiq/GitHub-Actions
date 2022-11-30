@@ -153,6 +153,7 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/HAST-290
       with:
         build-directory: ${{ inputs.build-directory }}
+        solution-path: ${{ inputs.build-solution-path }}
         test-verbosity: ${{ inputs.build-verbosity }}
         test-filter: ${{ inputs.test-filter }}
 

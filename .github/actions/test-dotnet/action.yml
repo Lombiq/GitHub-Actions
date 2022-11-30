@@ -9,6 +9,13 @@ inputs:
     required: false
     default: .
     description: Path to the directory where a solution file can be found and thus the .NET build has run.
+  solution-path:
+    required: false
+    default: "*.sln"
+    description: >
+      The path of the solution or project file to be built. If you have exactly one .sln file in the current directory
+      then this can be omitted. Otherwise make sure to specify it to avoid a "Found more than one solution file in
+      <path>. Specify which one to use." error that is thrown when the `*.sln` wildcard results in multiple files.
   test-verbosity:
     required: false
     default: quiet
@@ -61,6 +68,7 @@ runs:
       working-directory: ${{ inputs.build-directory }}
       run: |
         $switches = @{
+          Solution = "(Get-ChildItem ${{ inputs.solution-path }}).FullName"
           Verbosity = "${{ inputs.test-verbosity }}"
           Filter = "${{ inputs.test-filter }}"
           Configuration = "${{ inputs.test-configuration }}"
