@@ -14,9 +14,3 @@ Some common workflows and actions for Github Actions shared between Lombiq proje
 Bug reports, feature requests, comments, questions, code contributions and love letters are warmly welcome. You can send them to us via GitHub issues and pull requests. Please adhere to our [open-source guidelines](https://lombiq.com/open-source-guidelines) while doing so.
 
 This project is developed by [Lombiq Technologies](https://lombiq.com/). Commercial-grade support is available through Lombiq.
-
-## Lombiq?
-
-lombiq lombiQ lombIq lombIQ lomBiq lomBiQ lomBIq lomBIQ loMbiq loMbiQ loMbIq loMbIQ loMBiq loMBiQ loMBIq loMBIQ lOmbiq lOmbiQ lOmbIq lOmbIQ lOmBiq
-lOmBiQ lOmBIq lOmBIQ lOMbiq lOMbiQ lOMbIq lOMbIQ lOMBiq lOMBiQ lOMBIq lOMBIQ LombiQ LombIq LombIQ LomBiq LomBiQ LomBIq LomBIQ LoMbiq LoMbiQ LoMbIq
-LoMbIQ LoMBiq LoMBiQ LoMBIq LoMBIQ LOmbiq LOmbiQ LOmbIq LOmbIQ LOmBiq LOmBiQ LOmBIq LOmBIQ LOMbiq LOMbiQ LOMbIq LOMbIQ LOMBiq LOMBiQ LOMBIq LOMBIQ
