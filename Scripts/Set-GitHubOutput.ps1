@@ -3,7 +3,8 @@ param (
     [string]
     $Key,
 
-    [Parameter(Mandatory = $true, Position = 1)]
+    # Not mandatory so it can be intentionally an empty string.
+    [Parameter(Mandatory = $false, Position = 1)]
     [string]
     $Value
 )

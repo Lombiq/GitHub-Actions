@@ -28,7 +28,7 @@ on:
       - dev
 
 jobs:
-  call-build-and-test-workflow:
+  build-and-test:
     name: Build and Test
     uses: Lombiq/GitHub-Actions/.github/workflows/build-and-test-orchard-core.yml@dev
     with:
@@ -50,7 +50,7 @@ on:
       - dev
 
 jobs:
-  call-build-workflow:
+  build:
     name: Build
     uses: Lombiq/GitHub-Actions/.github/workflows/build-dotnet.yml@dev
     with:
@@ -106,7 +106,7 @@ on:
       - v*
 
 jobs:
-  call-publish-workflow:
+  publish-nuget:
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     secrets:
       apikey: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
@@ -120,7 +120,7 @@ It takes one non-optional secret parameter, `apikey`, the organization API key f
 
 ```yaml
 jobs:
-  call-publish-workflow:
+  publish-nuget:
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
@@ -135,16 +135,21 @@ Valid values for `verbosity` are those defined by [MSBuild](https://docs.microso
 
 ## Submodule validate workflow
 
-Validates if the submodule pull request's title contains a Jira-style issue code (e.g. PROJ-123), and if it contains the issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name). Also checks if a pull request exists for the parent module. Example _validate-submodule-pull-request.yml_:
+Validates pull requests in submodule repositories for various criteria:
+
+- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet.
+- Checks if a pull request exists in the parent repository.
+
+Example _validate-pull-request.yml_:
 
 ```yaml
-name: Validate Submodule Pull Request
+name: Validate Pull Request
 
 on:
   pull_request:
 
 jobs:
-  call-validate-workflow:
+  validate-pull-request:
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-submodule-pull-request.yml@dev
     with:
       repository: Lombiq/Hastlayer-SDK
@@ -165,7 +170,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-deploy-workflow:
+  deploy-to-azure-app-service:
     name: Deploy to Azure App Service
     uses: Lombiq/GitHub-Actions/.github/workflows/deploy-to-azure-app-service.yml@dev
     with:
@@ -184,7 +189,10 @@ jobs:
 
 ## Validate Pull Request workflow
 
-Validates if the pull request's title contains a Jira-style issue code (e.g. PROJ-123), and if it contains the issue code with the link to the Jira issue in the body (or adds both if it can be figured out from the branch name). Also labels and comments on pull requests with merge conflicts.
+Validates pull requests for various criteria:
+
+- Labels and comments on pull requests with merge conflicts.
+- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet. 
 
 ```yaml
 name: Validate Pull Request
@@ -222,14 +230,14 @@ name: Create Jira issues for community activities
 
 on:
   discussion:
-    types: created
+    types: [created]
   issues:
-    types: opened
+    types: [opened]
   pull_request:
-    types: opened
+    types: [opened]
 
 jobs:
-  call-publish-workflow:
+  create-jira-issues-for-community-activities:
     uses: Lombiq/GitHub-Actions/.github/workflows/create-jira-issues-for-community-activities.yml@dev
     secrets:
       JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
@@ -255,7 +263,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-reset-azure-environment-workflow:
+  reset-azure-environment:
     name: Reset Azure Environment
     uses: Lombiq/GitHub-Actions/.github/workflows/reset-azure-environment.yml@dev
     with:
@@ -267,4 +275,42 @@ jobs:
       storage-connection-string-name: Storage_ConnectionString
     secrets:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_RESET_ENVIRONMENT_SERVICE_PRINCIPAL }}
+```
+
+## Post Pull Request Checks Automation
+
+Various automation that should be run after all other checks succeeded for a pull request. Currently does the following:
+
+- Merges the current pull request if the "merge-and-resolve-jira-issue-if-checks-succeed" or "merge-if-checks-succeed" label is present. With prerequisite jobs you can execute this only if all others jobs have succeeded. Unlike [GitHub's auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request), this works without branch protection rules.
+- Resolves the Jira issue corresponding to the pull request if the "resolve-jira-issue-if-checks-succeed" or "merge-and-resolve-jira-issue-if-checks-succeed" label is present, or sets the issue to Done if the "done-jira-issue-if-checks-succeed" label is.
+
+See an example of how you can utilize this workflow, together with jobs that do other checks below. For configuring the `JIRA_*` secrets see the documentation of `create-jira-issues-for-community-activities` above, and for details on `MERGE_TOKEN` check out the workflow's inline documentation.
+
+```yaml
+name: Build and Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    uses: Lombiq/GitHub-Actions/.github/workflows/build-and-test-orchard-core.yml@dev
+
+  spelling:
+    name: Spelling
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
+
+  post-pull-request-checks-automation:
+    needs: [build-and-test-workflow, spelling-workflow]
+    if: github.event.pull_request != ''
+    uses: Lombiq/GitHub-Actions/.github/workflows/post-pull-request-checks-automation.yml@dev
+    secrets:
+      JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
+      JIRA_USER_EMAIL: ${{ secrets.DEFAULT_JIRA_USER_EMAIL }}
+      JIRA_API_TOKEN: ${{ secrets.DEFAULT_JIRA_API_TOKEN }}
+      MERGE_TOKEN: ${{ secrets.DEFAULT_MERGE_TOKEN }}
 ```

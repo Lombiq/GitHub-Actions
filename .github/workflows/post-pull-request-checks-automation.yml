@@ -1,0 +1,65 @@
+name: Post Pull Request Checks Automation
+
+on:
+  workflow_call:
+    secrets:
+      # We can't access org secrets here so they need to be passed in.
+      MERGE_TOKEN:
+        required: false
+        description: >
+          An authentication token, like a personal access token (PAT), that provides write access to the repository and
+          can be used to merge the pull request. This is necessary because when a pull request is merged while being
+          authenticated with the default GITHUB_TOKEN of a workflow run, then the merge won't trigger other workflows
+          (like a build workflow on the target branch). This is an intentional limitation, see:
+          https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow.
+          Thus, we need to use an alternative authentication token. See
+          https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+          for info on how to create PATs; you'll need one with the "repo" scope. Check out
+          https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
+          for instructions on what other tokens you can use.
+      JIRA_BASE_URL:
+        required: true
+        description: >
+          Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
+          it must NOT end with a slash.
+      JIRA_USER_EMAIL:
+        required: true
+        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+      JIRA_API_TOKEN:
+        required: true
+        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+
+jobs:
+  post-pull-request-checks-automation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set Merge Token
+      shell: pwsh
+      env:
+        MERGE_TOKEN: ${{ secrets.MERGE_TOKEN }}
+      run: |
+        $mergeToken = $Env:MERGE_TOKEN ? $Env:MERGE_TOKEN : "${{ secrets.GITHUB_TOKEN }}"
+        "MERGE_TOKEN=$mergeToken" >> $Env:GITHUB_ENV
+
+    - name: Automatically Merge Pull Request
+      uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@dev
+      env:
+        GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
+
+    - name: Automatically Resolve or Done Jira issue
+      uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+        JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+
+    - name: Remove Label
+      # Fork PR runs won't have permissions to remove labels.
+      if: github.event.pull_request.head.repo.fork == false
+      # v1.1.1
+      uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        labels: |
+          merge-and-resolve-jira-issue-if-checks-succeed
