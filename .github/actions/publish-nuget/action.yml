@@ -46,7 +46,7 @@ runs:
         '@.Trim()
 
         Write-Output "NuGet Source: $source"
-        Set-Output "source-url" $source
+        Set-GitHubOutput "source-url" $source
 
         $version = @'
         ${{ inputs.publish-version }}
@@ -66,7 +66,7 @@ runs:
         }
         
         Write-Output "Target Version: $version"
-        Set-Output "publish-version" $version
+        Set-GitHubOutput "publish-version" $version
 
     - name: Add Source Link package
       shell: bash
@@ -173,8 +173,8 @@ runs:
 
     # This is not in its own action because it's all very specific to this NuGet publishing.
     - name: Create Release
-      # v1.10.0
-      uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
+      # v1.11.2
+      uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169
       # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
       # v4.3.1-alpha.osoe-86.
       if: "!contains(steps.setup.outputs.publish-version, '-')"

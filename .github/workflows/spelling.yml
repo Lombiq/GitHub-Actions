@@ -2,9 +2,24 @@ name: Spelling
 
 on:
   workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
+          are used.
+
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
       dictionary-source-prefixes:
-        description: JSON map of prefixes for dictionary URLs, "cspell" is necessary. See https://github.com/check-spelling/check-spelling/blob/86a22cfaff3846dbd788acea5d18cf5db6d40dd1/action.yml#L64 for current version.
+        description: >
+          JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
+          https://github.com/check-spelling/check-spelling/blob/86a22cfaff3846dbd788acea5d18cf5db6d40dd1/action.yml#L64
+          for current version.
         required: false
         type: string
         default: '{"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"}'
@@ -39,10 +54,18 @@ jobs:
     name: Check Spelling
     runs-on: ubuntu-latest
     steps:
+      - name: Set Checkout Token
+        shell: pwsh
+        env:
+          CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
+        run: |
+          $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
+          "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
+
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
-          submodules: 'recursive'
+          token: ${{ env.CHECKOUT_TOKEN }}
 
       # This is a workaround for the spelling workflow to check submodules too in the repository.
       - name: Stub repo layout
@@ -62,3 +85,9 @@ jobs:
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
           config: ${{ inputs.config }}
           spell-check-this: ${{ inputs.spell-check-this }}
+
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

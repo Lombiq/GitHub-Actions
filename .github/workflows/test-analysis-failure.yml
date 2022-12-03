@@ -4,6 +4,11 @@ name: Test Analysis Failure
 on:
   workflow_call:
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
       # This needs to be stringified JSON because inputs don't support arrays, see
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
@@ -62,7 +67,7 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
 
 jobs:
-  build-and-test:
+  test-analysis-failure:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
     # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
@@ -74,9 +79,8 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - uses: actions/checkout@v3.1.0
-      with:
-        submodules: 'recursive'
+    - name: Checkout
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
@@ -97,3 +101,8 @@ jobs:
         cache-version: ${{ inputs.build-cache-version }}
         expected-code-analysis-errors: ${{ inputs.build-expected-code-analysis-errors }}
 
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

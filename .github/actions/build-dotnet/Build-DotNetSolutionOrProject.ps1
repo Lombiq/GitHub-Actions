@@ -8,13 +8,13 @@ param (
 
 function ConvertTo-Array([string] $rawInput)
 {
-    $rawInput.Replace("`r", "").Split("`n") | % { $_.Trim() } | ? { $_ }
+    $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
 Write-Output ".NET version number: $Version"
 
 # Notes on build switches that aren't self-explanatory:
-# - -p:Retries and -p:RetryDelayMilliseconds are to retry builds if it fails the first time due to random locks.
+# - -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
 # - --warnAsMessage:MSB3026 is also to prevent random locks along the lines of "warning MSB3026: Could not copy dlls
 #   errors." from breaking the build (since we treat warnings as errors).
 
@@ -33,7 +33,7 @@ $buildSwitches = ConvertTo-Array @"
     $Switches
 "@
 
-[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | % { $_.Split(':')[0] } | Sort-Object
+[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | ForEach-Object { $PSItem.Split(':')[0] } | Sort-Object
 $noErrors = $expectedErrorCodes.Count -eq 0
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
@@ -59,15 +59,22 @@ $errorLines = New-Object "System.Collections.Generic.List[string]"
 $errorCodes = New-Object "System.Collections.Generic.List[string]"
 
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
-dotnet build $SolutionOrProject @buildSwitches 2>&1 | % {
-    if ($_ -notmatch $errorFormat) { return $_ }
+dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
+    if ($PSItem -notmatch $errorFormat) { return $PSItem }
 
-    ($null, $file, $line, $column, $message) = [regex]::Match($_, $errorFormat, 'Compiled').Groups.Value
+    ($null, $file, $line, $column, $message) = [regex]::Match($PSItem, $errorFormat, 'Compiled').Groups.Value
 
-    $errorLines.Add($_)
+    $errorLines.Add($PSItem)
     if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
+
+if ($noErrors -and !$?)
+{
+    exit 1
+}
+
+Stop-DotNetBuildServers
 
 if ($expectedErrorCodes)
 {

@@ -8,6 +8,11 @@ on:
       AZURE_APP_SERVICE_PUBLISH_PROFILE:
         required: true
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
       machine-type:
         required: false
         type: string
@@ -111,9 +116,8 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-    - uses: actions/checkout@v3.1.0
-      with:
-        submodules: 'recursive'
+    - name: Checkout
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
@@ -161,14 +165,14 @@ jobs:
           ${{ steps.set-up-runtime-option.outputs.runtime-option }}
         
     - name: Login to Azure
-      # v1.4.5
-      uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
+      # v1.4.6
+      uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
       with:
         creds: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
     - name: Initialize PowerShell modules
-      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@feature/github-actions
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
     - name: Stop Web App Slot
       run: |
@@ -178,8 +182,8 @@ jobs:
           -SlotName ${{ inputs.slot-name }}
 
     - name: Deploy to Azure App Service
-      # v2.2.3
-      uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
+      # v2.2.4
+      uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644
       with:
         app-name: ${{ inputs.app-name }}
         slot-name: ${{ inputs.slot-name }}
@@ -199,3 +203,9 @@ jobs:
           -ResourceGroupName ${{ inputs.resource-group-name }} `
           -WebAppName ${{ inputs.app-name }} `
           -SlotName ${{ inputs.slot-name }}
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

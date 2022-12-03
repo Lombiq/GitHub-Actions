@@ -2,13 +2,14 @@
 
 These workflows can be invoked from a step from any other repository's workflow. The utilize [our composite actions](Actions.md).
 
-In addition to the below short explanations and samples, check out the inline documentation of the workflow you want to use, especially its parameters. These examples don't necessarily utilize all parameters.
+## General notes
 
-To add the workflows to a project create a folder in the root of the repository that will call them, e.g. _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_. Things to keep in mind:
-
-- If you have multiple projects in the repository or if the project you want to build is in a subfolder, then add a solution to the root of the repository that references all projects you want to build.
-- References to projects (`<ProjectReference>` elements) not in the repository won't work, these need to be changed to package references (`<PackageReference>` elements). Make the conditional based on `$(NuGetBuild)`. See the [Helpful Extensions project file](https://github.com/Lombiq/Helpful-Extensions/blob/dev/Lombiq.HelpfulExtensions.csproj) for an example. References to projects in the repository will work and those projects, if configured with the proper metadata, will be published together, with dependencies retained among the packages too.
-- Projects building client-side assets with [Gulp Extensions](https://github.com/Lombiq/Gulp-Extensions) won't work during such builds. Until [we fix this](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/issues/48), you have to commit the _wwwroot_ folder to the repository and add the same conditional to the Gulp and NPM Import elements too ([example](https://github.com/Lombiq/Orchard-Data-Tables/blob/58458b5d6381c71c094cb8d960e12b15a59f62d7/Lombiq.DataTables/Lombiq.DataTables.csproj#L33-L35)).
+- In addition to the below short explanations and samples, check out the inline documentation of the workflow you want to use, especially its parameters. These examples don't necessarily utilize all parameters.
+- Workflows with a `cancel-workflow-on-failure` parameter will by default cancel all jobs in the workflow run when the given reusable workflow fails (to save computing resources). You can disable this by setting the parameter to `"false"`.
+- To add the workflows to a project create a folder in the root of the repository that will call them, e.g. _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_. Things to keep in mind:
+    - If you have multiple projects in the repository or if the project you want to build is in a subfolder, then add a solution to the root of the repository that references all projects you want to build.
+    - References to projects (`<ProjectReference>` elements) not in the repository won't work, these need to be changed to package references (`<PackageReference>` elements). Make the conditional based on `$(NuGetBuild)`. See the [Helpful Extensions project file](https://github.com/Lombiq/Helpful-Extensions/blob/dev/Lombiq.HelpfulExtensions.csproj) for an example. References to projects in the repository will work and those projects, if configured with the proper metadata, will be published together, with dependencies retained among the packages too.
+    - Projects building client-side assets with [Gulp Extensions](https://github.com/Lombiq/Gulp-Extensions) won't work during such builds. Until [we fix this](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/issues/48), you have to commit the _wwwroot_ folder to the repository and add the same conditional to the Gulp and NPM Import elements too ([example](https://github.com/Lombiq/Orchard-Data-Tables/blob/58458b5d6381c71c094cb8d960e12b15a59f62d7/Lombiq.DataTables/Lombiq.DataTables.csproj#L33-L35)).
 
 ## Build and Test Orchard Core solution workflow
 
@@ -27,7 +28,7 @@ on:
       - dev
 
 jobs:
-  call-build-and-test-workflow:
+  build-and-test:
     name: Build and Test
     uses: Lombiq/GitHub-Actions/.github/workflows/build-and-test-orchard-core.yml@dev
     with:
@@ -49,7 +50,7 @@ on:
       - dev
 
 jobs:
-  call-build-workflow:
+  build:
     name: Build
     uses: Lombiq/GitHub-Actions/.github/workflows/build-dotnet.yml@dev
     with:
@@ -70,7 +71,7 @@ There are more configuration files available, for more information visit the act
 
 You can provide these files in your own repository, under the path `.github/actions/spelling`. This can't be configured for another path.
 
-You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above mentioned path.
+You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above-mentioned path. This parameter is needed even if you want to update our dictionary in a custom branch of project consuming this workflow; changing just the workflow's branch from `dev` to your branch won't take any effect, you can leave it as it is.
 
 Example _check-spelling.yml_:
 
@@ -87,6 +88,9 @@ jobs:
   spelling:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
+    with:
+      # This is only needed if you want to use any other dictionaries than the ones in this project. 
+      spell-check-this: Lombiq/GitHub-Actions@your-custom-branch
 ```
 
 ## NuGet publish workflow
@@ -102,7 +106,7 @@ on:
       - v*
 
 jobs:
-  call-publish-workflow:
+  publish-nuget:
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     secrets:
       apikey: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
@@ -116,7 +120,7 @@ It takes one non-optional secret parameter, `apikey`, the organization API key f
 
 ```yaml
 jobs:
-  call-publish-workflow:
+  publish-nuget:
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
@@ -129,21 +133,26 @@ When `source` is not provided, it assumes a default value of pushing to the [Lom
 
 Valid values for `verbosity` are those defined by [MSBuild](https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022#:~:text=you%20can%20specify%20the%20following%20verbosity%20levels). The default value is `minimal`.
 
-## Submodule verify workflow
+## Submodule validate workflow
 
-Verifies if the submodule contains a JIRA style issue code (e.g. PROJ-123) and if a pull request exists for the parent module. Example _publish.yml_:
+Validates pull requests in submodule repositories for various criteria:
+
+- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet.
+- Checks if a pull request exists in the parent repository.
+
+Example _validate-pull-request.yml_:
 
 ```yaml
-name: Verify OSOCE Pull Request
+name: Validate Pull Request
 
 on:
   pull_request:
 
 jobs:
-  call-verify-workflow:
-    uses: Lombiq/GitHub-Actions/.github/workflows/verify-submodule-pull-request.yml@dev
+  validate-pull-request:
+    uses: Lombiq/GitHub-Actions/.github/workflows/validate-submodule-pull-request.yml@dev
     with:
-      repo: Lombiq/Open-Source-Orchard-Core-Extensions
+      repository: Lombiq/Hastlayer-SDK
 ```
 
 If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/), the `repo` input can be omitted, because the above is its default value. Otherwise, use your parent repository's address in the `{owner}/{repo_name}` format.
@@ -161,7 +170,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-deploy-workflow:
+  deploy-to-azure-app-service:
     name: Deploy to Azure App Service
     uses: Lombiq/GitHub-Actions/.github/workflows/deploy-to-azure-app-service.yml@dev
     with:
@@ -180,17 +189,20 @@ jobs:
 
 ## Validate Pull Request workflow
 
-Labels and comments on Pull Requests with merge conflicts.
+Validates pull requests for various criteria:
+
+- Labels and comments on pull requests with merge conflicts.
+- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet. 
 
 ```yaml
 name: Validate Pull Request
 on:
   push:
   pull_request:
-    types: [synchronize]
+    types: [opened, synchronize]
 
 jobs:
-  call-check-merge-conflict:
+  validate-pull-request:
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@dev
 ```
 
@@ -218,14 +230,14 @@ name: Create Jira issues for community activities
 
 on:
   discussion:
-    types: created
+    types: [created]
   issues:
-    types: opened
+    types: [opened]
   pull_request:
-    types: opened
+    types: [opened]
 
 jobs:
-  call-publish-workflow:
+  create-jira-issues-for-community-activities:
     uses: Lombiq/GitHub-Actions/.github/workflows/create-jira-issues-for-community-activities.yml@dev
     secrets:
       JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
@@ -251,7 +263,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-reset-azure-environment-workflow:
+  reset-azure-environment:
     name: Reset Azure Environment
     uses: Lombiq/GitHub-Actions/.github/workflows/reset-azure-environment.yml@dev
     with:
@@ -263,4 +275,42 @@ jobs:
       storage-connection-string-name: Storage_ConnectionString
     secrets:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_RESET_ENVIRONMENT_SERVICE_PRINCIPAL }}
+```
+
+## Post Pull Request Checks Automation
+
+Various automation that should be run after all other checks succeeded for a pull request. Currently does the following:
+
+- Merges the current pull request if the "merge-and-resolve-jira-issue-if-checks-succeed" or "merge-if-checks-succeed" label is present. With prerequisite jobs you can execute this only if all others jobs have succeeded. Unlike [GitHub's auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request), this works without branch protection rules.
+- Resolves the Jira issue corresponding to the pull request if the "resolve-jira-issue-if-checks-succeed" or "merge-and-resolve-jira-issue-if-checks-succeed" label is present, or sets the issue to Done if the "done-jira-issue-if-checks-succeed" label is.
+
+See an example of how you can utilize this workflow, together with jobs that do other checks below. For configuring the `JIRA_*` secrets see the documentation of `create-jira-issues-for-community-activities` above, and for details on `MERGE_TOKEN` check out the workflow's inline documentation.
+
+```yaml
+name: Build and Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    uses: Lombiq/GitHub-Actions/.github/workflows/build-and-test-orchard-core.yml@dev
+
+  spelling:
+    name: Spelling
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
+
+  post-pull-request-checks-automation:
+    needs: [build-and-test-workflow, spelling-workflow]
+    if: github.event.pull_request != ''
+    uses: Lombiq/GitHub-Actions/.github/workflows/post-pull-request-checks-automation.yml@dev
+    secrets:
+      JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
+      JIRA_USER_EMAIL: ${{ secrets.DEFAULT_JIRA_USER_EMAIL }}
+      JIRA_API_TOKEN: ${{ secrets.DEFAULT_JIRA_API_TOKEN }}
+      MERGE_TOKEN: ${{ secrets.DEFAULT_MERGE_TOKEN }}
 ```

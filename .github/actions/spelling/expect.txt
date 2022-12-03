@@ -3,13 +3,13 @@ Argb
 Chro
 Cloudflare
 Cms
-Cms
 CDNs
 EACCES
 EULA
 Egyw
 GDPR
 Hsl
+IShortcode
 JIRA
 MVVM
 NLog
@@ -100,10 +100,12 @@ postclean
 pragma
 prebuild
 preheader
+publishsettings
 pwsh
 readdir
 search'f
 setlocal
+shortcode
 sln
 sourced
 sourcemaps
@@ -130,7 +132,6 @@ xxl
 yaml
 yml
 Aig
-Airi
 Airi
 BJRQ
 BOHq
@@ -224,3 +225,4 @@ pwd
 sme
 yyyy
 wcag
+abcdef

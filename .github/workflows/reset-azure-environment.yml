@@ -6,6 +6,11 @@ on:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
         required: true
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
       machine-type:
         required: false
         type: string
@@ -106,14 +111,14 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
     - name: Login to Azure
-      # v1.4.5
-      uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
+      # v1.4.6
+      uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
       with:
         creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
     - name: Initialize PowerShell modules
-      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@feature/github-actions
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
     - name: Stop Web App Slot
       run: |
@@ -187,3 +192,9 @@ jobs:
           -ResourceGroupName ${{ inputs.resource-group-name }} `
           -WebAppName ${{ inputs.app-name }} `
           -SlotName ${{ inputs.destination-slot-name }}
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

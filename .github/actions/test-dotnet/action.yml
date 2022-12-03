@@ -13,6 +13,14 @@ inputs:
     required: false
     default: quiet
     description: Verbosity parameter for dotnet test.
+  test-filter:
+    required: false
+    description: >
+      Filter expression for dotnet test. See: https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
+  test-configuration:
+    required: false
+    description: Value passed to the --configuration parameter of dotnet test.
+    default: "Debug"
   ui-test-parallelism:
     required: false
     default: "-1"
@@ -34,8 +42,8 @@ runs:
       id: setup
       shell: pwsh
       run: |
-        Set-Output "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
-        Set-Output "runner-suffix" "${{ runner.os }}-${{ runner.arch }}-${{ runner.name }}"
+        Set-GitHubOutput "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
+        Set-GitHubOutput "runner-suffix" "${{ runner.os }}-${{ runner.arch }}-${{ runner.name }}"
         
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
@@ -50,7 +58,14 @@ runs:
     - name: Run Tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
-      run: Invoke-SolutionTests -Verbosity ${{ inputs.test-verbosity }}
+      run: |
+        $switches = @{
+          Verbosity = "${{ inputs.test-verbosity }}"
+          Filter = "${{ inputs.test-filter }}"
+          Configuration = "${{ inputs.test-configuration }}"
+        }
+
+        Invoke-SolutionTests @switches
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
@@ -69,17 +84,16 @@ runs:
       if: success() || failure()
       with:
         name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ steps.setup.outputs.runner-suffix }}
-        path: |
-          ${{ inputs.build-directory }}/FailureDumps/
-          test.out
+        path: ${{ inputs.build-directory }}/FailureDumps/
         if-no-files-found: ignore
 
     - name: Test Report
-      # v8
-      uses: phoenix-actions/test-reporting@1e9b578818d03d6df50ce8e60d024a000bf3ab63
-      if: (success() || failure()) && (github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false)
+      # v10
+      uses: phoenix-actions/test-reporting@93ce19fa5882ebe3969ebdb9ee1024b3d29e776f
+      if: success() || failure()
       with:
         name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
         path: '${{inputs.build-directory}}/**/*.trx'
         reporter: dotnet-trx
         fail-on-error: 'false'
+        output-to: 'step-summary'

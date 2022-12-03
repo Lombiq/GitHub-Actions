@@ -3,6 +3,11 @@ name: Publish to NuGet
 on:
   workflow_call:
     inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
       source:
         required: false
         type: string
@@ -48,7 +53,7 @@ on:
         required: true
 
 jobs:
-  build:
+  publish-nuget:
     runs-on: ubuntu-latest
     # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
     # https://github.com/actions/runner/issues/1555.
@@ -57,9 +62,8 @@ jobs:
         timeout-minutes: ${{ fromJSON(format('[ {0} ]', inputs.timeout-minutes)) }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - uses: actions/checkout@v3.1.0
-      with:
-        submodules: 'recursive'
+    - name: Checkout
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
@@ -76,3 +80,9 @@ jobs:
         publish-version: ${{ inputs.publish-version }}
       env:
         API_KEY: ${{ secrets.API_KEY }}
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
