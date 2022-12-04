@@ -6,6 +6,10 @@ inputs:
     required: false
     default: .
     description: Path to the directory where a solution file can be found.
+  configuration:
+    required: false
+    default: Release
+    description: Configuration parameter for dotnet build (e.g. Debug, Release).
   verbosity:
     required: false
     default: quiet
@@ -126,6 +130,7 @@ runs:
         '@
 
         $switches = @{
+            Configuration = "${{ inputs.configuration }}"
             SolutionOrProject = (Get-ChildItem ${{ inputs.solution-or-project-path }}).FullName
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"

@@ -1,4 +1,5 @@
 param (
+    [string] $Configuration,
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
@@ -19,7 +20,7 @@ Write-Output "Version number for the .NET build products: $Version"
 #   errors." from breaking the build (since we treat warnings as errors).
 
 $buildSwitches = ConvertTo-Array @"
-    --configuration:Release
+    --configuration:$Configuration
     --nologo
     --verbosity:$Verbosity
     --warnaserror

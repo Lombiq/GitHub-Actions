@@ -34,6 +34,11 @@ on:
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
+      build-configuration:
+        required: false
+        type: string
+        default: Release
+        description: Configuration parameter for dotnet build (e.g. Debug, Release).
       build-solution-path:
         required: false
         type: string
@@ -164,6 +169,7 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory }}
+        configuration: ${{ inputs.build-configuration}}
         verbosity: ${{ inputs.build-verbosity }}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
