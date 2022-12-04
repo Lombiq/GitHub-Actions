@@ -54,7 +54,7 @@ foreach ($test in $tests) {
     Write-Output "Starting to execute tests from the $test project."
 
     $dotnetTestSwitches = @(
-        '--configuration', 'Release'
+        '--configuration', $Configuration
         '--no-restore',
         '--no-build',
         '--nologo',
