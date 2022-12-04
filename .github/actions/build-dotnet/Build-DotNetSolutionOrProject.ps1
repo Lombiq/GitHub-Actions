@@ -11,7 +11,7 @@ function ConvertTo-Array([string] $rawInput)
     $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
-Write-Output ".NET version number: $Version"
+Write-Output "Version number for the .NET build products: $Version"
 
 # Notes on build switches that aren't self-explanatory:
 # - -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
