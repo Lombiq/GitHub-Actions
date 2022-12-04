@@ -143,7 +143,7 @@ jobs:
         directory: ${{ inputs.build-directory }}
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/HAST-290
       with:
         directory: ${{ inputs.build-directory}}
         configuration: ${{ inputs.build-configuration}}
