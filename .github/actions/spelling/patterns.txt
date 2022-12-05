@@ -4,6 +4,6 @@
 [Cc](loud|LOUD)[Ss](mith|MITH)
 [Xx][Uu]nit
 [Xx][Pp]ath
-[{]?[0-9a-zA-Z]{8}-([0-9a-zA-Z]{4}-){3}[0-9a-zA-Z]{12}[}]?
+\b[0-9a-zA-Z]{8}-([0-9a-zA-Z]{4}-){3}[0-9a-zA-Z]{12}\b
 [s][h][a][0-9]{3}-[0-9a-zA-Z\+\/]{64}
 \b([a-f0-9]{40})\b
