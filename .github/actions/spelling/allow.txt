@@ -28,6 +28,8 @@ JValue
 MTHML
 NCrontab
 Subresource
+TAttribute
+TBase
 TCategory
 TCd
 TClient
