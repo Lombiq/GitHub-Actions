@@ -14,6 +14,8 @@
 
 # SHA checksums.
 sha[0-9]{3}-[0-9a-zA-Z+/]{64}
+
+# Git commit hashes.
 \b([0-9a-f]{40})\b
 
 # Hex color codes.
