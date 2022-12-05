@@ -1,3 +1,4 @@
+# DEPRECATED! Use build-and-test-dotnet instead, that can also execute tests. 
 name: Build .NET solution
 
 on:
