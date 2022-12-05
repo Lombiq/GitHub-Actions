@@ -26,11 +26,6 @@ on:
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
-      build-configuration:
-        required: false
-        type: string
-        default: Release
-        description: Configuration parameter for dotnet build (e.g. Debug, Release).
       build-verbosity:
         required: false
         type: string
@@ -95,7 +90,6 @@ jobs:
       if: inputs.test-disable == 'false'
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
-        configuration: ${{ inputs.build-configuration}}
         build-directory: ${{ inputs.build-directory }}
         test-verbosity: ${{ inputs.build-verbosity }}
         test-filter: ${{ inputs.test-filter }}
