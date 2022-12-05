@@ -35,6 +35,8 @@ MTHML
 NCrontab
 Satou
 Subresource
+TAttribute
+TBase
 TCategory
 TCd
 TClient
