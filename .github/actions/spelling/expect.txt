@@ -1,10 +1,11 @@
-Accessbility
 Argb
 Chro
 Cloudflare
 Cms
 CDNs
 EACCES
+# Embedd is added to allow referencing the EmbeddModuleTargets build target used in Orchard Core before version 1.4.
+Embedd
 EULA
 Egyw
 GDPR

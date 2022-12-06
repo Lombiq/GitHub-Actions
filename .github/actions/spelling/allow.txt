@@ -37,6 +37,8 @@ MTHML
 NCrontab
 Satou
 Subresource
+TAttribute
+TBase
 TCategory
 TCd
 TClient
@@ -140,7 +142,6 @@ Configurator
 ConfigureMockAutherizationService
 Demystifier
 Deployer
-Embedd
 Enums
 Firefox
 Formattable
