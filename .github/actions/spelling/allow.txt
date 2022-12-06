@@ -139,7 +139,6 @@ Configurator
 ConfigureMockAutherizationService
 Demystifier
 Deployer
-Embedd
 Enums
 Firefox
 Formattable
