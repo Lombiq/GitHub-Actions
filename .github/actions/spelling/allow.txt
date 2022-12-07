@@ -76,6 +76,7 @@ contentitemid
 crontab
 deserialized
 dirent
+dirname
 endcapture
 extname
 flyout
