@@ -47,7 +47,7 @@ on:
         description: Repository with default configuration to use, the default from Check Spelling is ''
         required: false
         type: string
-        default: Lombiq/GitHub-Actions@issue/OSOE-84-final
+        default: Lombiq/GitHub-Actions@dev
 
 jobs:
   check-spelling:
@@ -79,7 +79,7 @@ jobs:
           git commit -m 'stub commit -- includes submodules'
 
       - name: Check Spelling
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-84-final
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
