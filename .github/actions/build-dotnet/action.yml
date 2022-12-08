@@ -152,5 +152,5 @@ runs:
       if: (success() || failure()) && inputs.create-binary-log == 'true'
       with:
         name: build.binlog
-        path: build.binlog
+        path: ${{ inputs.directory }}/build.binlog
         if-no-files-found: ignore
