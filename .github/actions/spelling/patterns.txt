@@ -1,9 +1,3 @@
-# Text entries with special casing.
-[Cc](loud|LOUD)[Ss](mith|MITH)
-[Hh]ome[Pp]age
-[Xx][Pp]ath
-[Xx][Uu]nit
-
 # URL formats.
 https?:\/\/\S+
 www.\S+
