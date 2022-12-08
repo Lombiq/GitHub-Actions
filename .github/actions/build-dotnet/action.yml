@@ -154,6 +154,6 @@ runs:
       uses: actions/upload-artifact@v3.1.1
       if: (success() || failure()) && inputs.create-binary-log == 'true'
       with:
-        name: build-binary-log-${{ steps.build.outputs.artifact-name-suffix }}.binlog
+        name: build-binary-log-${{ steps.build.outputs.artifact-name-suffix }}
         path: ${{ inputs.directory }}/build.binlog
         if-no-files-found: ignore
