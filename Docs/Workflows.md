@@ -60,16 +60,16 @@ jobs:
 
 ## Spelling workflow
 
-Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. The following configuration files for filtering false positives are used:
+Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. There are 3 configuration files for filtering false positives:
 
 - _`excludes.txt`_: This file includes file names and extensions to be ignored.
 - _`expect.txt`_: This file contains plain text words that would be considered a spelling mistake.
 - _`allow.txt`_: Same function as `expect.txt`. Out of convention this file contains meaningful words, while `expect.txt` everything else.
 - _`patterns.txt`_: This file contains patterns that would be considered a spelling mistake.
 
-There are more configuration files available, for more information visit the [Check Spelling wiki](https://github.com/check-spelling/check-spelling/wiki/Configuration#files).
+There are more configuration files available, for more information visit the action's [wiki](https://github.com/check-spelling/check-spelling/wiki/Configuration#files).
 
-You can override these files in your own repository, under `.github/actions/spelling/`. This path can be configured by the `config` property.
+You can provide these files in your own repository, under the path `.github/actions/spelling`. This can't be configured for another path.
 
 You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above-mentioned path. This parameter is needed even if you want to update our dictionary in a custom branch of project consuming this workflow; changing just the workflow's branch from `dev` to your branch won't take any effect, you can leave it as it is.
 

@@ -30,5 +30,3 @@ UploadingTestFileDOCX.docx
 \.ico$
 \.nupkg$
 \.pdf$
-# For Lombiq.DataTables
-UnmanagedNodeModules
