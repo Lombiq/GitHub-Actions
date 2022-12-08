@@ -29,7 +29,7 @@ runs:
         RELEASE_NAME: ${{ inputs.release-name }}
       run: |
         $params = @{
-            ApplicationInsightsResourceId = `${{ inputs.application-insights-resource-id }}`
+            ApplicationInsightsResourceId = '${{ inputs.application-insights-resource-id }}'
             ReleaseName = $Env:RELEASE_NAME ? $Env:RELEASE_NAME : $Env:GITHUB_RUN_NUMBER
         }
         Add-ReleaseAnnotation @params
