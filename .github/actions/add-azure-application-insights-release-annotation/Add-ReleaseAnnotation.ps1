@@ -15,16 +15,5 @@ $annotation = @{
     Properties = ConvertTo-Json $ReleaseProperties -Compress
 }
 
-$params = @{
-    Path = "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" 
-    Method = 'PUT'
-    Payload = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
-}
-
-$response = Invoke-AzRestMethod @params
-
-if ($response.StatusCode -ne 200)
-{
-    Write-Output $response
-    Write-Error "Adding the release annotation failed with the status code $($response.StatusCode) and the above response."
-}
+$body = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
+az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) "
