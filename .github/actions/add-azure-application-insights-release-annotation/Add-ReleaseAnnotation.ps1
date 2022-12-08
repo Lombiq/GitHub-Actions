@@ -17,3 +17,8 @@ $annotation = @{
 
 $body = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
 az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) "
+
+if (!$?)
+{
+    exit 1
+}
