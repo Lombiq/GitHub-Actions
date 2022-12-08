@@ -31,3 +31,5 @@ UploadingTestFileDOCX.docx
 \.nupkg$
 \.pdf$
 \.css.map
+\.min.css
+\.min.js
