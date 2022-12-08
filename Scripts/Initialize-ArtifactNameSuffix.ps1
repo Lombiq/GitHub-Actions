@@ -10,7 +10,7 @@ param (
 )
 
 $friendlyBuildDirectoryName = $BuildDirectoryPath.Replace('/', '__')
-$runnerSuffix = "$Env:RUNNER_OS-$Env:RUNNER_ARCH-$Env:RUNNER_NAME-$Env:GITHUB_JOB"
+$runnerSuffix = "$Env:RUNNER_OS-$Env:RUNNER_ARCH-$Env:RUNNER_NAME"
 
 Set-GitHubOutput 'friendly-build-directory-name' $friendlyBuildDirectoryName
 Set-GitHubOutput 'runner-suffix' $runnerSuffix
