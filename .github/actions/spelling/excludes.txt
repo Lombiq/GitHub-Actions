@@ -30,6 +30,3 @@ UploadingTestFileDOCX.docx
 \.ico$
 \.nupkg$
 \.pdf$
-\.css.map
-\.min.css
-\.min.js
