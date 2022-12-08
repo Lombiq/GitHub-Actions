@@ -15,8 +15,13 @@ $annotation = @{
     Properties = ConvertTo-Json $ReleaseProperties -Compress
 }
 
-$body = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
-$response = Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body
+$params = @{
+    Path = "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" 
+    Method = 'PUT'
+    Payload = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
+}
+
+$response = Invoke-AzRestMethod @params
 
 if ($response.StatusCode -ne 200)
 {
