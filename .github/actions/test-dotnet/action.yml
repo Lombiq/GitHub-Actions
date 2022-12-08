@@ -42,8 +42,7 @@ runs:
       id: setup
       shell: pwsh
       run: |
-        Set-GitHubOutput "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
-        Set-GitHubOutput "runner-suffix" "${{ runner.os }}-${{ runner.arch }}-${{ runner.name }}"
+        Initialize-ArtifactNameSuffix '${{ inputs.build-directory }}'
         
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
@@ -83,7 +82,7 @@ runs:
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: success() || failure()
       with:
-        name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ steps.setup.outputs.runner-suffix }}
+        name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/FailureDumps/
         if-no-files-found: ignore
 
