@@ -99,6 +99,12 @@ on:
         default: "false"
         description: Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the
           target machine.
+      application-insights-resource-id:
+        required: true
+        type: string
+        description: >
+          ID of the Application Insights resource that the release annotation for the deployment should be added to.
+          This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
       ready-to-run:
         required: false
         type: string
@@ -189,6 +195,11 @@ jobs:
         slot-name: ${{ inputs.slot-name }}
         publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
         package: ${{ inputs.build-directory }}/Published
+
+    - name: Add Azure Application Insights Release Annotation
+      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/NEST-325
+      with:
+        application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
     - name: Start Web App Slot
       run: |
