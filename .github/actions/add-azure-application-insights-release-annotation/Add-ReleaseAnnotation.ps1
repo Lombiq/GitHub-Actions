@@ -4,7 +4,7 @@ param(
     [parameter(Mandatory = $false)]$ReleaseProperties = @()
 )
 
-Write-Output "Adding release annotation with the release name \"$ReleaseName\"."
+Write-Output "Adding release annotation with the release name `"$ReleaseName`"."
 
 $annotation = @{
     Id = [GUID]::NewGuid();
