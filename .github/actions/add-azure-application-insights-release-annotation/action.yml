@@ -26,7 +26,7 @@ runs:
       shell: pwsh
       env:
         # Might contain user input so should go via an env var for security.
-        RELEASE_NAME: `${{ inputs.release-name }}
+        RELEASE_NAME: ${{ inputs.release-name }}
       run: |
         $params = @{
             ApplicationInsightsResourceId = `${{ inputs.application-insights-resource-id }}`
