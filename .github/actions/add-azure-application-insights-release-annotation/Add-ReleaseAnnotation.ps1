@@ -21,5 +21,5 @@ $response = Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotation
 if ($response.StatusCode -ne 200)
 {
     Write-Error "Adding the release annotation failed with the status code $($response.StatusCode)."
-    Write-Output response
+    Write-Output $response
 }
