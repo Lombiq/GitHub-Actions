@@ -294,6 +294,7 @@ basethemesample
 beforeunload
 bootstraptab
 browsersync
+cloudsmith
 codeanalysis
 codemirror
 codestyle
