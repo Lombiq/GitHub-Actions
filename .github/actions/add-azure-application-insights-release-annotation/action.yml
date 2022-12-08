@@ -3,7 +3,7 @@ description: >
  Can be used to add release annotations in Azure Application Insights, to mark when a new version of an app was rolled
  out to a given environment. See https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations for details.
 
- inputs:
+inputs:
   application-insights-resource-id:
     required: true
     description: >
