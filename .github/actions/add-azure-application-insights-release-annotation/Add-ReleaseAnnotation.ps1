@@ -4,6 +4,8 @@ param(
     [parameter(Mandatory = $false)]$ReleaseProperties = @()
 )
 
+Write-Output "Adding release annotation with the release name \"$ReleaseName\"."
+
 $annotation = @{
     Id = [GUID]::NewGuid();
     AnnotationName = $ReleaseName;
@@ -14,9 +16,9 @@ $annotation = @{
 }
 
 $body = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
-Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body
+$response = Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body
 
-if (!$?)
+if ($response.StatusCode -ne 200)
 {
     exit 1
 }
