@@ -59,6 +59,7 @@ TView
 Timestamped
 Timezones
 Uninstalling
+addons
 asynchronicity
 atata
 cmdlet
@@ -70,7 +71,9 @@ contentitemid
 crontab
 deserialized
 dirent
+dirname
 endcapture
+extname
 flyout
 formattable
 hashable
