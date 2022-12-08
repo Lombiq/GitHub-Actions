@@ -124,7 +124,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        Initialize-ArtifactNameSuffix '${{ inputs.build-directory }}'
+        Initialize-ArtifactNameSuffix '${{ inputs.directory }}'
 
         $buildSwitches = @'
             ${{ inputs.dotnet-build-switches }}
