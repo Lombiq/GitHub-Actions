@@ -87,7 +87,15 @@ on:
         default: "-1"
         description: >
           Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
-          the MaxParallelTests configuration of Lombiq UI Testing Toolbox.
+          the MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming
+          from the code won't be overridden.
+      xunit-max-parallel-threads:
+        required: false
+        type: string
+        default: "0"
+        description: >
+          Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
+          https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
       timeout-minutes:
         required: false
         type: number
@@ -158,6 +166,7 @@ jobs:
         test-verbosity: ${{ inputs.build-verbosity }}
         test-filter: ${{ inputs.test-filter }}
         ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+        xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
 
     - name: Cancel Workflow on Failure
       if: failure() && inputs.cancel-workflow-on-failure == 'true'
