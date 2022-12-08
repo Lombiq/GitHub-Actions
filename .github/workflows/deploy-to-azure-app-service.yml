@@ -177,8 +177,8 @@ jobs:
         creds: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
 
-    #- name: Initialize PowerShell modules
-    #  uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+    - name: Initialize PowerShell modules
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
     #- name: Stop Web App Slot
     #  run: |
