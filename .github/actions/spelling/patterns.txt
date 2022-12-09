@@ -8,6 +8,9 @@ www.\S+
 # SHA checksums.
 sha[0-9]{3}-[0-9a-zA-Z+/]{64}
 
+# Orchard Core content item ID.
+\b[0-9a-z]{26}\b
+
 # Git commit hashes.
 \b([0-9a-f]{40})\b
 
