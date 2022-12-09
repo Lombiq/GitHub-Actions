@@ -4,7 +4,8 @@ param (
     [string] $EnableCodeAnalysis,
     [string] $Version,
     [string] $Switches,
-    [string] $ExpectedCodeAnalysisErrors)
+    [string] $ExpectedCodeAnalysisErrors,
+    [boolean] $CreateBinaryLog)
 
 function ConvertTo-Array([string] $rawInput)
 {
@@ -30,6 +31,7 @@ $buildSwitches = ConvertTo-Array @"
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
+    $($CreateBinaryLog ? '-binaryLogger:build.binlog' : '')
     $Switches
 "@
 
