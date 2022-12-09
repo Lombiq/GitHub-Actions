@@ -30,7 +30,7 @@ runs:
       run: |
         $params = @{
             ApplicationInsightsResourceId = '${{ inputs.application-insights-resource-id }}'
-            ReleaseName = $Env:RELEASE_NAME ? $Env:RELEASE_NAME : "Run #$Env:GITHUB_RUN_NUMBER of $Env:GITHUB_WORKFLOW"
-            ReleaseProperties = @{"CommitSha" = $Env:GITHUB_SHA }
+            ReleaseName = $Env:RELEASE_NAME ? $Env:RELEASE_NAME : "Run #$Env:GITHUB_RUN_NUMBER"
+            ReleaseProperties = @{ 'Workflow' = $Env:GITHUB_WORKFLOW; 'Commit SHA' = $Env:GITHUB_SHA }
         }
         Add-ReleaseAnnotation @params
