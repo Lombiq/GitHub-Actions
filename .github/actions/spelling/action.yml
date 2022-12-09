@@ -24,7 +24,6 @@ inputs:
       cspell:npm/npm.txt
       cspell:dotnet/dotnet.txt
       cspell:scala/scala.txt
-      lombiq:expect.txt
   config:
     description: Spelling configuration directory
     required: false

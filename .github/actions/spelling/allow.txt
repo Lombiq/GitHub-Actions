@@ -273,7 +273,6 @@ Namespaced
 Newtonsoft
 Portainer
 Reappend
-RESTful
 Schoorstra
 Serializer
 Shouldly
