@@ -15,4 +15,3 @@ $runnerSuffix = "$Env:RUNNER_OS-$Env:RUNNER_ARCH-$Env:RUNNER_NAME"
 Set-GitHubOutput 'friendly-build-directory-name' $friendlyBuildDirectoryName
 Set-GitHubOutput 'runner-suffix' $runnerSuffix
 Set-GitHubOutput 'artifact-name-suffix' "$friendlyBuildDirectoryName-$runnerSuffix"
-Write-Output "artifact-name-suffix: $friendlyBuildDirectoryName-$runnerSuffix"
