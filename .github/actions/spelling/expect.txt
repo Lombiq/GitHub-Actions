@@ -4,7 +4,7 @@ Cloudflare
 Cms
 CDNs
 EACCES
-EmbeddModuleTargets
+Embedd
 EULA
 GDPR
 IShortcode
@@ -48,6 +48,7 @@ fff
 fixme
 hsva
 https
+HHmmss
 icbin
 idx
 iife
@@ -166,3 +167,5 @@ sme
 yyyy
 wcag
 abcdef
+Bublé
+dest
