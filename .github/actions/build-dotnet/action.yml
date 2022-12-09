@@ -60,6 +60,12 @@ inputs:
       If not empty, it indicates that the static code analysis should fail. Then each line should contain one error
       code. The static code analysis should yield these and only these errors. This is ignored if `enable-code-analysis`
       is not "true". You may add a colon and then an explanation of the expected error.
+  create-binary-log:
+    required: false
+    default: "false"
+    description: >
+      Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
+      https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
 
 runs:
   using: "composite"
@@ -114,9 +120,12 @@ runs:
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
     - name: Build and Static Code Analysis
+      id: build
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        Initialize-ArtifactNameSuffix '${{ inputs.directory }}'
+
         $buildSwitches = @'
             ${{ inputs.dotnet-build-switches }}
         '@
@@ -132,6 +141,7 @@ runs:
             Version = "${{ inputs.publish-version }}"
             Switches = $buildSwitches
             ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+            CreateBinaryLog = $${{ inputs.create-binary-log }}
         }
 
         $startTime = [DateTime]::Now
@@ -139,3 +149,11 @@ runs:
         $endTime = [DateTime]::Now
 
         Write-Output ("Solution or project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
+
+    - name: Upload MSBuild Binary Log
+      uses: actions/upload-artifact@v3.1.1
+      if: (success() || failure()) && inputs.create-binary-log == 'true'
+      with:
+        name: build-binary-log-${{ steps.build.outputs.artifact-name-suffix }}.binlog
+        path: ${{ inputs.directory }}/build.binlog
+        if-no-files-found: ignore
