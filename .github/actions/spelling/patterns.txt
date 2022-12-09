@@ -14,5 +14,5 @@ sha[0-9]{3}-[0-9a-zA-Z+/]{64}
 # Hex color codes.
 #[0-9a-fA-F]{3,6}\b
 
-# Ignores lines that contain the "#no-spell-check-line" text.
-^.*/\* #no-spell-check-line \*/.*$
+# Ignores lines that contain the "#spell-check-ignore-line" text.
+^.*/\* #spell-check-ignore-line \*/.*$
