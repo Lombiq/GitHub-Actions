@@ -129,10 +129,6 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      shell: pwsh
-      run: Write-Output $Env:GITHUB_CONTEXT
     - name: Checkout
       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
