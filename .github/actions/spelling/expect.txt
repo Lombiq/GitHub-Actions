@@ -73,7 +73,6 @@ markdownlint
 mcr
 mixin
 mkdir
-mouseup
 msbuild
 mscorlib
 msedgedriver
