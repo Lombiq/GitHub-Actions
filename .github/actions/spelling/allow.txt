@@ -273,6 +273,7 @@ Namespaced
 Newtonsoft
 Portainer
 Reappend
+RESTful
 Schoorstra
 Serializer
 Shouldly
@@ -289,7 +290,6 @@ TProvider
 TUser
 TValue
 Toolset
-Trumbowyg
 USERPROFILE
 uncomment
 airbnb
@@ -351,6 +351,7 @@ metadata
 middlewares
 multiline
 multisubmit
+permalink
 plugin
 plugins
 refactoring
@@ -367,6 +368,7 @@ subfolders
 submenu
 superproject
 taxonomyfield
+trumbowyg
 versioning
 visualstudio
 visualstudioextension

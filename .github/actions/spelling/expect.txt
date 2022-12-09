@@ -9,6 +9,7 @@ EULA
 GDPR
 IShortcode
 jira
+JMES
 MVVM
 NLog
 NONINFRINGEMENT
@@ -59,6 +60,7 @@ json
 jsoneditor
 jsoneditoronline
 labelledby
+lastgremlinsclick
 linebreak
 linkedin
 linting
@@ -66,10 +68,12 @@ linux
 localhost
 lockfile
 lookbehind
+lombiqdt
 markdownlint
 mcr
 mixin
 mkdir
+mouseup
 msbuild
 mscorlib
 msedgedriver
@@ -148,6 +152,7 @@ Uwqhd
 Vga
 Wsxga
 Wuxga
+Wqhd
 Wxga
 Wysiwyg
 XSRF
@@ -164,8 +169,11 @@ mde
 mogwais
 pwd
 sme
+MMM
 yyyy
 wcag
 abcdef
-Bublé
+Bubl
 dest
+XPATH
+xunit
