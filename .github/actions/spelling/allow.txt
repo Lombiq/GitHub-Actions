@@ -67,6 +67,7 @@ Testenant
 Timestamped
 Timezones
 Uninstalling
+addons
 asynchronicity
 codebase
 colorpicker
@@ -75,7 +76,9 @@ contentitemid
 crontab
 deserialized
 dirent
+dirname
 endcapture
+extname
 flyout
 formattable
 hashable
