@@ -7,7 +7,7 @@
     [string]
     $Version,
 
-    [Parameter(HelpMessage = "When present, the tool will be installed globaly, locally otherwise.")]
+    [Parameter(HelpMessage = "When present, the tool will be installed globally, locally otherwise.")]
     [switch]
     $Global
 )
