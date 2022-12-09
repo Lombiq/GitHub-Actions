@@ -17,5 +17,5 @@ sha[0-9]{3}-[0-9a-zA-Z+/]{64}
 # Hex color codes.
 \b#[0-9a-fA-F]{3,6}\b
 
-# Ignores lines that contain the "#spell-check-ignore-line" text.
-pleasejustignorethis
+# Ignores lines that contain the "pleasejustignorethis" text.
+.*pleasejustignorethis.*
