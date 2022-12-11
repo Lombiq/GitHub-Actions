@@ -93,6 +93,7 @@ jobs:
       shell: pwsh
       run: |
         Write-Output '::warning::This workflow is deprecated. Use build-and-test-dotnet instead, that can also execute tests.'
+
     - name: Checkout
       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
