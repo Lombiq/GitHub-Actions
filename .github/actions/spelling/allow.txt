@@ -77,10 +77,13 @@ crontab
 deserialized
 dirent
 dirname
+dragleave
+dragover
 endcapture
 extname
 flyout
 formattable
+glyphicon
 hashable
 hca
 helppopulartopics
