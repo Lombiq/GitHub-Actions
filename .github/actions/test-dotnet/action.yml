@@ -55,11 +55,10 @@ runs:
       id: setup
       shell: pwsh
       run: |
-        Set-GitHubOutput "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
-        Set-GitHubOutput "runner-suffix" "${{ runner.os }}-${{ runner.arch }}-${{ runner.name }}"
-
-        Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.xunit-max-parallel-threads }}
+        Initialize-ArtifactNameSuffix '${{ inputs.build-directory }}'
         
+        Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.xunit-max-parallel-threads }}
+
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
             Write-Output "The UI test parallelism configuration isn't overridden."
@@ -98,7 +97,7 @@ runs:
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
-        name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ steps.setup.outputs.runner-suffix }}
+        name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/FailureDumps/
         if-no-files-found: ignore
 
