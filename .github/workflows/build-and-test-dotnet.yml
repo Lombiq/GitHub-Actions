@@ -89,6 +89,13 @@ on:
         description: >
           Filter expression for dotnet test. See:
           https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
+      xunit-max-parallel-threads:
+        required: false
+        type: string
+        default: "0"
+        description: >
+          Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
+          https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
       timeout-minutes:
         required: false
         type: number
@@ -162,6 +169,7 @@ jobs:
         solution-path: ${{ inputs.build-solution-path }}
         test-verbosity: ${{ inputs.build-verbosity }}
         test-filter: ${{ inputs.test-filter }}
+        xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
 
     - name: Cancel Workflow on Failure
       if: failure() && inputs.cancel-workflow-on-failure == 'true'
