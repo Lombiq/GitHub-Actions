@@ -12,7 +12,6 @@ inputs:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
     default: |
-      cspell:cpp/src/cpp.txt
       cspell:aws/aws.txt
       cspell:csharp/csharp.txt
       cspell:css/css.txt
