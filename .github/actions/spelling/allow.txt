@@ -27,6 +27,7 @@ JProperty
 JValue
 MTHML
 NCrontab
+RESTful
 Subresource
 TAttribute
 TBase
