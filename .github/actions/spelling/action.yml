@@ -1,4 +1,3 @@
-# Spell check test: RESTful.
 # This file needs to be present in this exact folder for the workflow using this action to be able to work with submodules.
 name: Spelling
 description: Checks for spelling errors in files.
