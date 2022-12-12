@@ -1,0 +1,92 @@
+name: Swap Azure Web App Slots
+
+on:
+  workflow_call:
+    secrets:
+      AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL:
+        required: true
+    inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
+      machine-type:
+        required: false
+        type: string
+        default: ubuntu-latest
+        description: The name of the type of machine to run the workflow under.
+      timeout-minutes:
+        required: false
+        type: number
+        default: 360
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      app-name:
+        required: true
+        type: string
+        description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
+      source-slot-name:
+        required: false
+        type: string
+        default: Staging
+        description: >
+          The slot name of the web app you want to swap the destination web app with. What you see at the top of the
+          blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
+      destination-slot-name:
+        required: false
+        type: string
+        default: Production
+        description: >
+          The slot name of the web app you want to swap. What you see at the top of the blade on the Azure Portal,
+          when you open the slot, before the app name in parenthesis.
+      resource-group-name:
+        required: true
+        type: string
+        description: Name of the resource group.
+
+jobs:
+  reset-azure-environment:
+    runs-on: ${{ inputs.machine-type }}
+    name: Swap Azure Web App Slots
+    defaults:
+      run:
+        shell: pwsh
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+    - name: Login to Azure
+      # v1.4.6
+      uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
+      with:
+        creds: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL }}
+        enable-AzPSSession: true
+
+    - name: Initialize PowerShell modules
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+
+    - name: Test Source Web App Slot
+      run: |
+        Test-AzureWebApp `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.source-slot-name }}
+
+    - name: Swap Web App Slots 
+      run: |
+        Switch-AzWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -Name ${{ inputs.app-name }} `
+            -SourceSlotName ${{ inputs.source-slot-name }} `
+            -DestinationSlotName ${{ inputs.destination-slot-name }} `
+
+    - name: Test Destination Web App Slot
+      run: |
+        Test-AzureWebApp `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -WebAppName ${{ inputs.app-name }} `
+          -SlotName ${{ inputs.destination-slot-name }}
+
+    - name: Cancel Workflow on Failure
+      if: failure() && inputs.cancel-workflow-on-failure == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
