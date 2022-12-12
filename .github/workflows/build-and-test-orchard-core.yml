@@ -61,6 +61,13 @@ on:
           (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
           (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
           API.
+      build-create-binary-log:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
+          https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
       set-up-sql-server:
         required: false
         type: string
@@ -87,7 +94,15 @@ on:
         default: "-1"
         description: >
           Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
-          the MaxParallelTests configuration of Lombiq UI Testing Toolbox.
+          the MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming
+          from the code won't be overridden.
+      xunit-max-parallel-threads:
+        required: false
+        type: string
+        default: "0"
+        description: >
+          Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
+          https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
       timeout-minutes:
         required: false
         type: number
@@ -140,6 +155,7 @@ jobs:
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
+        create-binary-log: ${{ inputs.build-create-binary-log}}
 
     - name: Set up SQL Server
       if: inputs.set-up-sql-server == 'true'
@@ -158,6 +174,7 @@ jobs:
         test-verbosity: ${{ inputs.build-verbosity }}
         test-filter: ${{ inputs.test-filter }}
         ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+        xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
 
     - name: Cancel Workflow on Failure
       if: failure() && inputs.cancel-workflow-on-failure == 'true'

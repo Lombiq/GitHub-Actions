@@ -28,6 +28,12 @@ inputs:
       Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
       MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming from the
       code won't be overridden.
+  xunit-max-parallel-threads:
+    required: false
+    default: "0"
+    description: >
+      Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
+      https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
 
 runs:
   using: "composite"
@@ -38,13 +44,14 @@ runs:
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
-    - name: Setup & Set UI Test Parallelization
+    - name: Setup & Set Test Parallelization
       id: setup
       shell: pwsh
       run: |
-        Set-GitHubOutput "friendly-build-directory-name" "${{ inputs.build-directory }}".Replace("/", "__")
-        Set-GitHubOutput "runner-suffix" "${{ runner.os }}-${{ runner.arch }}-${{ runner.name }}"
+        Initialize-ArtifactNameSuffix '${{ inputs.build-directory }}'
         
+        Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.xunit-max-parallel-threads }}
+
         if (${{ inputs.ui-test-parallelism }} -eq -1)
         {
             Write-Output "The UI test parallelism configuration isn't overridden."
@@ -53,9 +60,8 @@ runs:
 
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
 
-        Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.ui-test-parallelism }}
-
     - name: Run Tests
+      id: run-tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
@@ -75,22 +81,22 @@ runs:
     # The same is true for the next step as well.
     - name: Merge FailureDumps
       shell: pwsh
-      if: success() || failure()
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
     - name: Upload UI testing artifacts
       uses: actions/upload-artifact@v3.1.1
       # We don't need additional conditions, because of the "if-no-files-found" setting.
-      if: success() || failure()
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
-        name: ui-test-failure-dump-${{ steps.setup.outputs.friendly-build-directory-name }}-${{ steps.setup.outputs.runner-suffix }}
+        name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/FailureDumps/
         if-no-files-found: ignore
 
     - name: Test Report
       # v10
       uses: phoenix-actions/test-reporting@93ce19fa5882ebe3969ebdb9ee1024b3d29e776f
-      if: success() || failure()
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
         name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
         path: '${{inputs.build-directory}}/**/*.trx'
