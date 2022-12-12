@@ -161,7 +161,7 @@ Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/
 
 ## Deploy to Azure App Service workflow
 
-This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). Example _deploy-to-azure-app-service.yml_:
+This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _deploy-to-azure-app-service.yml_:
 
 ```yaml
 name: Deploy to Azure App Service
@@ -182,6 +182,7 @@ jobs:
       runtime: win-x86
       self-contained: true
       ready-to-run: true
+      application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
     secrets:
       AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
