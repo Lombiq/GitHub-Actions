@@ -11,43 +11,40 @@ inputs:
   extra-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
-    default:
-      cspell:filetypes/filetypes.txt
-      cspell:django/django.txt
+    default: |
       cspell:aws/aws.txt
-      cspell:html/html.txt
-      cspell:css/css.txt
       cspell:csharp/csharp.txt
+      cspell:css/css.txt
+      cspell:django/django.txt
+      cspell:dotnet/dotnet.txt
+      cspell:filetypes/filetypes.txt
+      cspell:html/html.txt
+      cspell:npm/npm.txt
+      cspell:rust/rust.txt
+      cspell:scala/scala.txt
       cspell:software-terms/src/software-terms.txt
       cspell:node/node.txt
       cspell:typescript/typescript.txt
-      cspell:rust/rust.txt
-      cspell:npm/npm.txt
-      cspell:dotnet/dotnet.txt
-      cspell:scala/scala.txt
-      lombiq:expect.txt
   config:
     description: Spelling configuration directory
     required: false
-    type: string
     default: .github/actions/spelling
   spell-check-this:
     description: Repository with default configuration to use, the default from Check Spelling is ''.
     required: false
-    type: string
     default: Lombiq/GitHub-Actions@issue/OSOE-84-final
 
 runs:
   using: "composite"
   steps:
-  - name: Check Spelling
-    # Prerelease, this commit includes a specific fix we utilize. Use v0.0.21 once available.
-    uses: check-spelling/check-spelling@86a22cfaff3846dbd788acea5d18cf5db6d40dd1
-    with:
-      dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
-      extra_dictionaries: ${{ inputs.extra-dictionaries }}
-      experimental_apply_changes_via_bot: 0
-      suppress_push_for_open_pull_request: 1
-      post_comment: 1
-      spell_check_this: ${{ inputs.spell-check-this }}
-      config: ${{ inputs.config }}
+    - name: Check Spelling
+      # Prerelease, this commit includes a specific fix we utilize. Use v0.0.21 once available.
+      uses: check-spelling/check-spelling@86a22cfaff3846dbd788acea5d18cf5db6d40dd1
+      with:
+        dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
+        extra_dictionaries: ${{ inputs.extra-dictionaries }}
+        experimental_apply_changes_via_bot: 0
+        suppress_push_for_open_pull_request: 1
+        post_comment: 1
+        spell_check_this: ${{ inputs.spell-check-this }}
+        config: ${{ inputs.config }}

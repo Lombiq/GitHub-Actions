@@ -61,6 +61,7 @@ runs:
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
 
     - name: Run Tests
+      id: run-tests
       shell: pwsh
       working-directory: ${{ inputs.build-directory }}
       run: |
@@ -80,13 +81,13 @@ runs:
     # The same is true for the next step as well.
     - name: Merge FailureDumps
       shell: pwsh
-      if: success() || failure()
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
     - name: Upload UI testing artifacts
       uses: actions/upload-artifact@v3.1.1
       # We don't need additional conditions, because of the "if-no-files-found" setting.
-      if: success() || failure()
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
         name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/FailureDumps/
@@ -95,7 +96,7 @@ runs:
     - name: Test Report
       # v10
       uses: phoenix-actions/test-reporting@93ce19fa5882ebe3969ebdb9ee1024b3d29e776f
-      if: success() || failure()
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
         name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
         path: '${{inputs.build-directory}}/**/*.trx'
