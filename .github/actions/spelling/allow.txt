@@ -83,6 +83,7 @@ glyphicon
 hashable
 hca
 hostnames
+iis
 inheritdoc
 isignal
 issetuprecipe
@@ -93,6 +94,7 @@ jsonparse
 langword
 linq
 listheader
+localhost
 logtest
 misconfigured
 multiselect
