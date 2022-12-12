@@ -10,11 +10,11 @@ if ($matchCount -ne 1)
 {
     $errorMessage =
         "The solution or project path pattern `"$PathPattern`" matches $matchCount items, see below. Fix the " +
-        "pattern so it matches exactly one file."
+        "pattern so it matches exactly one file.
+$($matchedItems | Select-Object $PSItem.Name)"
+
 
     Write-Error $errorMessage
-
-    $matchedItems.FullName
 
     exit 1
 }
