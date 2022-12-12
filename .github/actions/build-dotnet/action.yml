@@ -140,7 +140,7 @@ runs:
 
         $switches = @{
             Configuration = "${{ inputs.configuration }}"
-            SolutionOrProject = (Get-ChildItem ${{ inputs.solution-or-project-path }}).FullName
+            SolutionOrProject = Get-SolutionOrProjectPath ${{ inputs.solution-or-project-path }}
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"

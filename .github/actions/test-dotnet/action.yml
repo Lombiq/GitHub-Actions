@@ -73,7 +73,7 @@ runs:
       working-directory: ${{ inputs.build-directory }}
       run: |
         $switches = @{
-          Solution = (Get-ChildItem ${{ inputs.solution-path }}).FullName
+          Solution = Get-SolutionOrProjectPath ${{ inputs.solution-path }}
           Verbosity = "${{ inputs.test-verbosity }}"
           Filter = "${{ inputs.test-filter }}"
           Configuration = "${{ inputs.test-configuration }}"
