@@ -1,4 +1,4 @@
-name: Build and Test Orchard Core solution
+name: Build and Test .NET solution
 
 on:
   workflow_call:
@@ -20,10 +20,10 @@ on:
       machine-types:
         required: false
         type: string
-        default: "[\"ubuntu-22.04\"]"
+        default: "[\"ubuntu-latest\"]"
         description: >
             Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-            "[\"ubuntu-22.04\"]" or "[\"ubuntu-22.04\", \"windows-2022\"]".
+            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]".
       dotnet-version:
         required: false
         type: string
@@ -75,32 +75,9 @@ on:
         type: string
         default: "0"
         description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
-          easiest current way to force "clear" the cache
-          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
-          (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
-          API.
-      build-create-binary-log:
-        required: false
-        type: string
-        default: "false"
-        description: >
-          Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
-          https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
-      set-up-sql-server:
-        required: false
-        type: string
-        default: "false"
-        description: >
-          If set to "true", SQL Server Express will be installed and started. This is necessary if the app's UI tests
-          connect to an MS SQL Server database.
-      set-up-azurite:
-        required: false
-        type: string
-        default: "false"
-        description: >
-          If set to "true", the Azurite Azure Blob Storage emulator will be installed and started. This is necessary if
-          the app's UI tests connect to Azure Blob Storage for file storage.
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
+          only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
+          until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
       test-disable:
         required: false
         type: string
@@ -112,14 +89,6 @@ on:
         description: >
           Filter expression for dotnet test. See:
           https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
-      ui-test-parallelism:
-        required: false
-        type: string
-        default: "-1"
-        description: >
-          Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
-          the MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming
-          from the code won't be overridden.
       xunit-max-parallel-threads:
         required: false
         type: string
@@ -141,6 +110,9 @@ on:
           the same version of a given package is used in all projects.
 
 jobs:
+  # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call
+  # other workflows, they'd need to be encapsulated in a composite action. That, however, will result in a single step
+  # being shown under the build details with all below steps mushed together.
   build-and-test:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
@@ -177,31 +149,17 @@ jobs:
       with:
         directory: ${{ inputs.build-directory }}
 
-    - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
-
     - name: Build and Static Code Analysis
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
-        directory: ${{ inputs.build-directory }}
+        directory: ${{ inputs.build-directory}}
         configuration: ${{ inputs.build-configuration}}
-        verbosity: ${{ inputs.build-verbosity }}
-        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+        verbosity: ${{ inputs.build-verbosity}}
+        enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
         solution-or-project-path: ${{ inputs.build-solution-path }}
-        create-binary-log: ${{ inputs.build-create-binary-log}}
-
-    - name: Set up SQL Server
-      if: inputs.set-up-sql-server == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
-
-    - name: Set up Azurite
-      if: inputs.set-up-azurite == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
-      with:
-        location: ${{ inputs.build-directory}}
 
     - name: Tests
       if: inputs.test-disable == 'false'
@@ -211,7 +169,6 @@ jobs:
         solution-path: ${{ inputs.build-solution-path }}
         test-verbosity: ${{ inputs.build-verbosity }}
         test-filter: ${{ inputs.test-filter }}
-        ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
         xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
 
     - name: Cancel Workflow on Failure

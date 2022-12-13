@@ -36,6 +36,11 @@ on:
         type: string
         default: "true"
         description: Indicates whether to enable static code analysis during msbuild.
+      test-disable:
+        required: false
+        type: string
+        default: "false"
+        description: Disables test execution completely if set to "true".
       test-filter:
         required: false
         type: string
@@ -82,6 +87,7 @@ jobs:
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
 
     - name: Tests
+      if: inputs.test-disable == 'false'
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
         build-directory: ${{ inputs.build-directory }}
