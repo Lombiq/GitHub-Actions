@@ -17,5 +17,8 @@ sha[0-9]{3}-[0-9a-zA-Z+/]{64}
 # Hex color codes.
 (?:#[0-9a-fA-F]{3,6})
 
+# Hexadecimal literals in C# code.
+\b0x[0-9a-fA-F]+\b
+
 # Ignore lines that contain the "#spell-check-ignore-line" marker text.
 .*#spell-check-ignore-line.*
