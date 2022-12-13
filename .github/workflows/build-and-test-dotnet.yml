@@ -150,7 +150,7 @@ jobs:
         directory: ${{ inputs.build-directory }}
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/HAST-290
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory}}
         configuration: ${{ inputs.build-configuration}}
@@ -163,7 +163,7 @@ jobs:
 
     - name: Tests
       if: inputs.test-disable == 'false'
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/HAST-290
+      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
         build-directory: ${{ inputs.build-directory }}
         solution-path: ${{ inputs.build-solution-path }}
