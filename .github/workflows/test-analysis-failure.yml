@@ -14,10 +14,10 @@ on:
       machine-types:
         required: false
         type: string
-        default: "[\"ubuntu-22.04\"]"
+        default: "['ubuntu-22.04']"
         description: >
             Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-            "[\"ubuntu-22.04\"]" or "[\"ubuntu-22.04\", \"windows-2022\"]".
+            "['ubuntu-22.04']" or "['ubuntu-22.04\", \"windows-2022']".
       dotnet-version:
         required: false
         type: string
