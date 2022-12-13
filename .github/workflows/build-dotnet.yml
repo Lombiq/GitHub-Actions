@@ -1,3 +1,4 @@
+# DEPRECATED! Use build-and-test-dotnet instead, that can also execute tests. 
 name: Build .NET solution
 
 on:
@@ -88,6 +89,11 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
+    - name: Deprecation Warning
+      shell: pwsh
+      run: |
+        Write-Output '::warning::This workflow is deprecated. Use build-and-test-dotnet instead, that can also execute tests.'
+
     - name: Checkout
       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
