@@ -54,7 +54,7 @@ jobs:
     name: Build and Test
     uses: Lombiq/GitHub-Actions/.github/workflows/build-and-test-dotnet.yml@dev
     with:
-      machine-types: "[\"ubuntu-latest\", \"windows-latest\"]"
+      machine-types: "[\"ubuntu-22.04\", \"windows-2022\"]"
       timeout-minutes: 10
 ```
 
@@ -306,7 +306,7 @@ jobs:
 
   post-pull-request-checks-automation:
     name: Post Pull Request Checks Automation
-    needs: [build-and-test-workflow, spelling-workflow]
+    needs: [build-and-test, spelling]
     if: github.event.pull_request != ''
     uses: Lombiq/GitHub-Actions/.github/workflows/post-pull-request-checks-automation.yml@dev
     secrets:
