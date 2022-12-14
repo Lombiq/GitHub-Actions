@@ -52,7 +52,7 @@ on:
 jobs:
   check-spelling:
     name: Check Spelling
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Set Checkout Token
         shell: pwsh
