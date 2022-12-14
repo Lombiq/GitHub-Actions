@@ -18,9 +18,9 @@ on:
       machine-type:
         required: false
         type: string
-        default: "windows-latest"
+        default: "windows-2022"
         description: >
-          The machine type to run the workflow under, e.g. "windows-latest" or "windows-2022". Needs to be Windows.
+          The machine type to run the workflow under, e.g. "windows-2022" or "windows-2022". Needs to be Windows.
       build-directory:
         required: false
         type: string
