@@ -2,6 +2,13 @@ name: Build and Test Orchard Core solution
 
 on:
   workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
+          are used.
+
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
@@ -13,10 +20,10 @@ on:
       machine-types:
         required: false
         type: string
-        default: "[\"ubuntu-latest\"]"
+        default: "['ubuntu-22.04']"
         description: >
             Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-            "[\"ubuntu-latest\"]" or "[\"ubuntu-latest\", \"windows-latest\"]".
+            "['ubuntu-22.04']" or "['ubuntu-22.04\", \"windows-2022']".
       dotnet-version:
         required: false
         type: string
@@ -27,6 +34,18 @@ on:
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
+      build-configuration:
+        required: false
+        type: string
+        default: Release
+        description: Configuration parameter for dotnet build (e.g. Debug, Release).
+      build-solution-path:
+        required: false
+        type: string
+        default: "*.sln"
+        description: >
+          The path of the solution or project file to be built. If there's exactly one .sln file in the build directory
+          then this can be omitted. For further information, see the documentation of the build-dotnet action.
       build-verbosity:
         required: false
         type: string
@@ -61,6 +80,13 @@ on:
           (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
           (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
           API.
+      build-create-binary-log:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
+          https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
       set-up-sql-server:
         required: false
         type: string
@@ -75,6 +101,11 @@ on:
         description: >
           If set to "true", the Azurite Azure Blob Storage emulator will be installed and started. This is necessary if
           the app's UI tests connect to Azure Blob Storage for file storage.
+      test-disable:
+        required: false
+        type: string
+        default: "false"
+        description: Disables test execution completely if set to "true".
       test-filter:
         required: false
         type: string
@@ -87,7 +118,15 @@ on:
         default: "-1"
         description: >
           Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
-          the MaxParallelTests configuration of Lombiq UI Testing Toolbox.
+          the MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming
+          from the code won't be overridden.
+      xunit-max-parallel-threads:
+        required: false
+        type: string
+        default: "0"
+        description: >
+          Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
+          https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
       timeout-minutes:
         required: false
         type: number
@@ -114,8 +153,18 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
+    - name: Set Checkout Token
+      shell: pwsh
+      env:
+        CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
+      run: |
+        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
+        "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
+
     - name: Checkout
       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      with:
+        token: ${{ env.CHECKOUT_TOKEN }}
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
@@ -135,11 +184,14 @@ jobs:
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       with:
         directory: ${{ inputs.build-directory }}
+        configuration: ${{ inputs.build-configuration}}
         verbosity: ${{ inputs.build-verbosity }}
         enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
         enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
         enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
         cache-version: ${{ inputs.build-cache-version }}
+        solution-or-project-path: ${{ inputs.build-solution-path }}
+        create-binary-log: ${{ inputs.build-create-binary-log}}
 
     - name: Set up SQL Server
       if: inputs.set-up-sql-server == 'true'
@@ -152,12 +204,15 @@ jobs:
         location: ${{ inputs.build-directory}}
 
     - name: Tests
+      if: inputs.test-disable == 'false'
       uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
       with:
         build-directory: ${{ inputs.build-directory }}
+        solution-path: ${{ inputs.build-solution-path }}
         test-verbosity: ${{ inputs.build-verbosity }}
         test-filter: ${{ inputs.test-filter }}
         ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+        xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
 
     - name: Cancel Workflow on Failure
       if: failure() && inputs.cancel-workflow-on-failure == 'true'
