@@ -42,6 +42,11 @@ on:
         type: string
         default: quiet
         description: Verbosity parameter for msbuild.
+      build-treat-warnings-as-errors:
+        required: false
+        type: string
+        default: "true"
+        description: Indicates whether warnings should be treated as errors during msbuild.
       build-enable-code-analysis:
         required: false
         type: string
@@ -96,6 +101,7 @@ jobs:
           directory: ${{ inputs.build-directory }}
           solution-or-project-path: ${{ inputs.solution-or-project-path }}
           verbosity: ${{ inputs.build-verbosity }}
+          treat-warnings-as-errors: ${{ inputs.build-treat-warnings-as-errors }}
           enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
 
       - name: Tests

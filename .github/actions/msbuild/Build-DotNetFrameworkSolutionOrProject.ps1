@@ -1,6 +1,7 @@
 param (
     [string] $SolutionOrProject,
     [string] $Verbosity,
+    [string] $TreatWarningsAsErrors,
     [string] $EnableCodeAnalysis,
     [string] $Version,
     [string] $Switches)
@@ -12,6 +13,13 @@ function ConvertTo-Array([string] $rawInput)
 
 Write-Output ".NET version number: $Version"
 
+$treatWarningsAsErrorSwitches = @()
+if ($TreatWarningsAsErrors -eq "true")
+{
+    $treatWarningsAsErrorSwitches += "--warnaserror"
+    $treatWarningsAsErrorSwitches += "-p:TreatWarningsAsErrors=true"
+}
+
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
     Write-Output "::group::Gulp Extensions found. It needs to be explicitly built before the solution."
@@ -21,14 +29,13 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
         --configuration:Release
         --nologo
         --verbosity:$Verbosity
-        --warnaserror
         --warnAsMessage:MSB3026
         --consoleLoggerParameters:NoSummary
-        -p:TreatWarningsAsErrors=true
         -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
         -p:Retries=4
         -p:RetryDelayMilliseconds=1000
         -p:Version=$Version
+        $treatWarningsAsErrorSwitches
 "@
 
     $startTime = [DateTime]::Now
@@ -45,13 +52,12 @@ $buildSwitches = ConvertTo-Array @"
     -p:Configuration=Release
     -restore
     --verbosity:$Verbosity
-    --warnaserror
-    -p:TreatWarningsAsErrors=true
     -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
     $Switches
+    $treatWarningsAsErrorSwitches
 "@
 
 Write-Output "Building solution or project with ``msbuild $SolutionOrProject $($buildSwitches -join " ")``."
