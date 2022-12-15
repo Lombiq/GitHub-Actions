@@ -11,6 +11,8 @@ function ConvertTo-Array([string] $rawInput)
     $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
+nuget restore $SolutionOrProject
+
 Write-Output ".NET version number: $Version"
 
 $treatWarningsAsErrorSwitches = @()
