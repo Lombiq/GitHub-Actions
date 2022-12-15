@@ -15,10 +15,13 @@ nuget restore $SolutionOrProject
 
 Write-Output ".NET version number: $Version"
 
-$treatWarningsAsErrorSwitches = ""
+$treatWarningsAsErrorSwitches = @()
 if ($TreatWarningsAsErrors -eq "true")
 {
-    $treatWarningsAsErrorSwitches = "--warnaserror -p:TreatWarningsAsErrors=true"
+    $treatWarningsAsErrorSwitches = ConvertTo-Array @"
+        --warnaserror
+        -p:TreatWarningsAsErrors=true
+"@
 }
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
@@ -36,11 +39,10 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
         -p:Retries=4
         -p:RetryDelayMilliseconds=1000
         -p:Version=$Version
-        $treatWarningsAsErrorSwitches
 "@
 
     $startTime = [DateTime]::Now
-    dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj @gulpBuildSwitches
+    dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj @gulpBuildSwitches @treatWarningsAsErrorSwitches
     $endTime = [DateTime]::Now
 
     Write-Output ("Gulp Extensions build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
@@ -57,13 +59,12 @@ $buildSwitches = ConvertTo-Array @"
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
-    $treatWarningsAsErrorSwitches
     $Switches
 "@
 
 Write-Output "Building solution or project with ``msbuild $SolutionOrProject $($buildSwitches -join " ")``."
 
-msbuild $SolutionOrProject @buildSwitches
+msbuild $SolutionOrProject @buildSwitches @treatWarningsAsErrorSwitches
 
 # Without this, if the msbuild command fails with certain MSB error codes (not build errors), they still won't cause
 # this script to fail.
