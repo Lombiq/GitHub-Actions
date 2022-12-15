@@ -8,7 +8,7 @@ on:
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
-        
+
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
@@ -59,44 +59,44 @@ jobs:
     name: Build and Test
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-    - name: Set Checkout Token
-      shell: pwsh
-      env:
-        CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
-      run: |
-        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
-        "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
+      - name: Set Checkout Token
+        shell: pwsh
+        env:
+          CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
+        run: |
+          $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
+          "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
 
-    - name: Checkout
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-      with:
-        token: ${{ env.CHECKOUT_TOKEN }}
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ env.CHECKOUT_TOKEN }}
 
-    - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+      - name: Enable Node corepack
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
-    # This is necessary for building Gulp Extensions and test-dotnet.
-    - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+      # This is necessary for building Gulp Extensions and test-dotnet.
+      - name: Set up .NET
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
 
-    - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
-      with:
-        directory: ${{ inputs.build-directory }}
-        verbosity: ${{ inputs.build-verbosity }}
-        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+      - name: Build and Static Code Analysis
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
 
-    - name: Tests
-      if: inputs.test-disable == 'false'
-      uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
-      with:
-        build-directory: ${{ inputs.build-directory }}
-        test-verbosity: ${{ inputs.build-verbosity }}
-        test-filter: ${{ inputs.test-filter }}
-        test-configuration: "Release"
+      - name: Tests
+        if: inputs.test-disable == 'false'
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        with:
+          build-directory: ${{ inputs.build-directory }}
+          test-verbosity: ${{ inputs.build-verbosity }}
+          test-filter: ${{ inputs.test-filter }}
+          test-configuration: "Release"
 
-    - name: Cancel Workflow on Failure
-      if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
