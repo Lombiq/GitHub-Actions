@@ -10,6 +10,10 @@ inputs:
     required: false
     default: quiet
     description: Verbosity parameter for msbuild.
+  treat-warnings-as-errors:
+    required: false
+    default: "true"
+    description: If set to "true", warnings produced during the build will be treated as errors and fail the build.
   enable-code-analysis:
     required: false
     default: "true"
@@ -61,6 +65,7 @@ runs:
         $allSwitches = @{
             SolutionOrProject = (Get-ChildItem ${{ inputs.solution-or-project-path }}).FullName
             Verbosity = "${{ inputs.verbosity }}"
+            TreatWarningsAsErrors = "${{ inputs.treat-warnings-as-errors }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"
             Switches = $givenSwitches
