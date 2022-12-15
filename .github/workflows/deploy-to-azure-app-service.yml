@@ -197,7 +197,7 @@ jobs:
         package: ${{ inputs.build-directory }}/Published
 
     - name: Add Azure Application Insights Release Annotation
-      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/NEST-325
+      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
       with:
         application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
