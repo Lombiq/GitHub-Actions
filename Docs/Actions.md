@@ -4,6 +4,8 @@ These actions can be invoked from a step in any other repository's workflow. The
 
 In addition to the below short explanations, check out the inline documentation of the action you want to use, especially its parameters.
 
+- `add-azure-application-insights-release-annotation`: Can be used to add [release annotations in Azure Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations), to mark when a new version of an app was rolled
+ out to a given environment.
 - `add-jira-issue-code-to-pull-request`: Adds the Jira issue key prefix and link to pull requests.
 - `auto-merge-pull-request`: Merges the current pull request automatically if the "merge-and-resolve-jira-issue-if-checks-succeed" or "merge-if-checks-succeed" label is present.
 - `auto-resolve-done-jira-issue`: Resolves the Jira issue corresponding to the pull request if the "resolve-jira-issue-if-checks-succeed" or "merge-and-resolve-jira-issue-if-checks-succeed" label is present, or sets the issue to Done if the "done-jira-issue-if-checks-succeed" label is.

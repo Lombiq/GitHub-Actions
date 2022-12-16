@@ -1,6 +1,7 @@
 param (
     [string] $SolutionOrProject,
     [string] $Verbosity,
+    [string] $TreatWarningsAsErrors,
     [string] $EnableCodeAnalysis,
     [string] $Version,
     [string] $Switches)
@@ -10,26 +11,37 @@ function ConvertTo-Array([string] $rawInput)
     $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
+nuget restore $SolutionOrProject
+
 Write-Output ".NET version number: $Version"
+
+$commonSwitches = ConvertTo-Array @"
+    --verbosity:$Verbosity
+    -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
+    -p:Retries=4
+    -p:RetryDelayMilliseconds=1000
+    -p:Version=$Version
+"@
+
+if ($TreatWarningsAsErrors -eq "true")
+{
+    $commonSwitches += ConvertTo-Array @"
+        --warnaserror
+        -p:TreatWarningsAsErrors=true
+"@
+}
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
     Write-Output "::group::Gulp Extensions found. It needs to be explicitly built before the solution."
 
     # These need to be different than those for msbuild.
-    $gulpBuildSwitches = ConvertTo-Array @"
+    $gulpBuildSwitches = $commonSwitches + (ConvertTo-Array @"
         --configuration:Release
         --nologo
-        --verbosity:$Verbosity
-        --warnaserror
         --warnAsMessage:MSB3026
         --consoleLoggerParameters:NoSummary
-        -p:TreatWarningsAsErrors=true
-        -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
-        -p:Retries=4
-        -p:RetryDelayMilliseconds=1000
-        -p:Version=$Version
-"@
+"@)
 
     $startTime = [DateTime]::Now
     dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj @gulpBuildSwitches
@@ -41,18 +53,11 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 
 # -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
 
-$buildSwitches = ConvertTo-Array @"
+$buildSwitches = $commonSwitches + (ConvertTo-Array @"
     -p:Configuration=Release
     -restore
-    --verbosity:$Verbosity
-    --warnaserror
-    -p:TreatWarningsAsErrors=true
-    -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
-    -p:Retries=4
-    -p:RetryDelayMilliseconds=1000
-    -p:Version=$Version
     $Switches
-"@
+"@)
 
 Write-Output "Building solution or project with ``msbuild $SolutionOrProject $($buildSwitches -join " ")``."
 
