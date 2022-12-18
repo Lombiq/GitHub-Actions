@@ -31,7 +31,7 @@ on:
 
 jobs:
   post-pull-request-checks-automation:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Set Merge Token
       shell: pwsh

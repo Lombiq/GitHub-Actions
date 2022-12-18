@@ -1,4 +1,4 @@
-﻿param (
+param (
     [Parameter(Mandatory = $true)]
     $MaxParallelThreads
 )
@@ -20,8 +20,17 @@ $configFiles = Get-ChildItem @parameters
 
 $configFiles | ForEach-Object {
     $json = Get-Content $PSItem | ConvertFrom-Json
-    $json.maxParallelThreads = $MaxParallelThreads
+
+    if ($json | Get-Member maxParallelThreads)
+    {
+        $json.maxParallelThreads = $MaxParallelThreads
+    }
+    else
+    {
+        $json | Add-Member -Name 'maxParallelThreads' -value $MaxParallelThreads -MemberType NoteProperty
+    }
+
     ConvertTo-Json -InputObject $json > $PSItem
 }
 
-Write-Output "Replaced $($configFiles.Count) occurrences."
+Write-Output "Replaced or added $($configFiles.Count) occurrences."

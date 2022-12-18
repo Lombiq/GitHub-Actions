@@ -1,17 +1,19 @@
 param (
+    [string] $Configuration,
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $EnableCodeAnalysis,
     [string] $Version,
     [string] $Switches,
-    [string] $ExpectedCodeAnalysisErrors)
+    [string] $ExpectedCodeAnalysisErrors,
+    [boolean] $CreateBinaryLog)
 
 function ConvertTo-Array([string] $rawInput)
 {
     $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
-Write-Output ".NET version number: $Version"
+Write-Output "Version number for the .NET build products: $Version"
 
 # Notes on build switches that aren't self-explanatory:
 # - -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
@@ -19,7 +21,7 @@ Write-Output ".NET version number: $Version"
 #   errors." from breaking the build (since we treat warnings as errors).
 
 $buildSwitches = ConvertTo-Array @"
-    --configuration:Release
+    --configuration:$Configuration
     --nologo
     --verbosity:$Verbosity
     --warnaserror
@@ -30,6 +32,7 @@ $buildSwitches = ConvertTo-Array @"
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
+    $($CreateBinaryLog ? '-binaryLogger:build.binlog' : '')
     $Switches
 "@
 

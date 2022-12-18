@@ -1,0 +1,36 @@
+name: Add Azure Application Insights Release Annotation
+description: >
+ Can be used to add release annotations in Azure Application Insights, to mark when a new version of an app was rolled
+ out to a given environment. See https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations for details.
+
+inputs:
+  application-insights-resource-id:
+    required: true
+    description: >
+      ID of the Application Insights resource that the release annotation should be added to. This can e.g. be looked up
+      on the Azure Portal under the given AI resource's Overview page -> JSON View.
+  release-name:
+    required: false
+    description: >
+      The name to give the created release annotation. This will be visible on the Azure Portal when viewing it.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
+    - name: Add Azure Application Insights Release Annotation
+      shell: pwsh
+      env:
+        # Might contain user input so should go via an env var for security.
+        RELEASE_NAME: ${{ inputs.release-name }}
+      run: |
+        $params = @{
+            ApplicationInsightsResourceId = '${{ inputs.application-insights-resource-id }}'
+            ReleaseName = $Env:RELEASE_NAME ? $Env:RELEASE_NAME : "Run #$Env:GITHUB_RUN_NUMBER"
+            ReleaseProperties = @{ 'Workflow' = $Env:GITHUB_WORKFLOW; 'Commit SHA' = $Env:GITHUB_SHA }
+        }
+        Add-ReleaseAnnotation @params

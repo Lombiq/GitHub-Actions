@@ -18,11 +18,11 @@ runs:
       shell: pwsh
       run: |
         $params = @{
-          JiraBaseUrl = $Env:JIRA_BASE_URL ? $Env:JIRA_BASE_URL : "https://lombiq.atlassian.net"
-          GitHubRepository = $Env:GITHUB_REPOSITORY
-          Branch = $Env:GITHUB_HEAD_REF
-          Title = "${{ github.event.pull_request.title }}"
-          Body = "${{ github.event.pull_request.body }}"
-          PullRequestID = ${{ github.event.number }}
+            JiraBaseUrl = $Env:JIRA_BASE_URL ? $Env:JIRA_BASE_URL : "https://lombiq.atlassian.net"
+            GitHubRepository = $Env:GITHUB_REPOSITORY
+            Branch = $Env:GITHUB_HEAD_REF
+            Title = "${{ github.event.pull_request.title }}"
+            Body = "${{ github.event.pull_request.body }}"
+            PullRequestID = ${{ github.event.number }}
         }
         AddJiraIssueCodeToPullRequest @params

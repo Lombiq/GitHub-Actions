@@ -14,7 +14,7 @@ on:
       machine-type:
         required: false
         type: string
-        default: ubuntu-latest
+        default: ubuntu-22.04
         description: The name of the type of machine to run the workflow under.
       timeout-minutes:
         required: false
@@ -111,8 +111,8 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
     - name: Login to Azure
-      # v1.4.5
-      uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
+      # v1.4.6
+      uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
       with:
         creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
         enable-AzPSSession: true
