@@ -7,8 +7,8 @@ Write-Output "Setting maxParallelThreads in xunit.runner.json files to $MaxParal
 
 $parameters = @{
     # -Filter is the fastest way to find files because its value is passed directly to the file system API.
-    Filter        = "xunit.runner.json"
-    Recurse       = $true
+    Filter = "xunit.runner.json"
+    Recurse = $true
     # -FollowSymLink is needed because without it errors will be thrown of type:
     # "Get-ChildItem: The system cannot find the path specified."
     FollowSymlink = $true
@@ -27,7 +27,7 @@ $configFiles | ForEach-Object {
     }
     else
     {
-        $json | Add-Member -Name 'maxParallelThreads' -value $MaxParallelThreads -MemberType NoteProperty
+        $json | Add-Member -Name 'maxParallelThreads' -Value $MaxParallelThreads -MemberType NoteProperty
     }
 
     ConvertTo-Json -InputObject $json > $PSItem
