@@ -16,7 +16,7 @@
 
 param([array] $Arguments)
 
-$projects = (Test-Path *.sln) | Where-Object (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
+$projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
 {

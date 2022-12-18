@@ -12,7 +12,7 @@ else
         '--detach', 'mcr.microsoft.com/mssql/server:2019-latest'
     )
 
-    docker pull mcr.microsoft.com/mssql/server
-    docker run @dockerRunSwitches
+    docker pull mcr.microsoft.com/mssql/server &&
+    docker run @dockerRunSwitches &&
     docker exec --user 0 sql2019 bash -c 'mkdir /data; chmod 777 /data --recursive; chown mssql:root /data'
 }

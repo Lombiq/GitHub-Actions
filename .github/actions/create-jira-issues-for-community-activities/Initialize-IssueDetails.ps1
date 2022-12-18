@@ -8,8 +8,8 @@
     $PullReqestJiraIssueDescription
 )
 
-$context = [string]::IsNullOrEmpty($IssueComponent) | Where-Object $GitHub.repository : $IssueComponent
-$titleSuffix = $SuffixIssueTitles | Where-Object " in $context" : ""
+$context = [string]::IsNullOrEmpty($IssueComponent) ? $GitHub.repository : $IssueComponent
+$titleSuffix = $SuffixIssueTitles ? " in $context" : ""
 Write-Output "Suffix: $titleSuffix"
 
 switch ($GitHub.event_name)
@@ -54,7 +54,7 @@ switch ($GitHub.event_name)
     default
     {
         $message = "Unknown event `"$($GitHub.event_name)`". Please only call this script for one of the following " +
-        "events: discussion, issues, pull_request."
+            "events: discussion, issues, pull_request."
         Write-Error "::error::$message"
         exit 1
     }
