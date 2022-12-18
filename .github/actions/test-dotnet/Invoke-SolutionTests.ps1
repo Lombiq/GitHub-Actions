@@ -63,8 +63,7 @@ foreach ($test in $tests)
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
         '--logger', 'console;verbosity=detailed'
         '--verbosity', $Verbosity
-        $Filter ? '--filter' : ''
-        $Filter ? $Filter : ''
+        $Filter ? '--filter', $Filter : ''
         $test
     )
 
