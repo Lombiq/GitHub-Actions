@@ -2,7 +2,7 @@ name: Validate Pull Request
 
 on:
   workflow_call:
-  # We can't access org secrets here so they need to be passed in.    
+    # We can't access org secrets here so they need to be passed in.
     secrets:
       JIRA_BASE_URL:
         required: false
@@ -20,16 +20,16 @@ jobs:
   validate-submodule-pull-request:
     runs-on: ubuntu-22.04
     steps:
-    - name: Add Jira Issue Code to Pull Request
-      if: github.event.pull_request != ''
-      uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@issue/OSOE-482
-      env:
-        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Add Jira Issue Code to Pull Request
+        if: github.event.pull_request != ''
+        uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@issue/OSOE-482
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Ensure Parent PR Exists
-      if: github.event.pull_request != ''
-      uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@issue/OSOE-482
-      with:
-        title: ${{ github.event.pull_request.title }}
-        repository: ${{ inputs.repository }}
+      - name: Ensure Parent PR Exists
+        if: github.event.pull_request != ''
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@issue/OSOE-482
+        with:
+          title: ${{ github.event.pull_request.title }}
+          repository: ${{ inputs.repository }}
