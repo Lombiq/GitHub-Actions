@@ -60,7 +60,7 @@ jobs:
 
 ## Spelling workflow
 
-Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](../.github/actions/spelling/advice.md) describing the configuration options and contribution guidelines. This documentation is also displayed automatically in every spellchecking report of a pull request.
+Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](../.github/actions/spelling/advice.md) describing the configuration options and contribution guidelines. This documentation is also displayed automatically in every spell checking report of a pull request.
 
 You can use already existing configuration files by setting the `spell-check-this` parameter to another existing repository. This parameter is needed even if you want to update our dictionary in a custom branch of project consuming this workflow; changing just the workflow's branch from `dev` to your branch won't take any effect, you can leave it as it is.
 
