@@ -3,12 +3,17 @@
     [string] $Branch
 )
 
-$url = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
-$titles = curl -s -H 'Accept: application/vnd.github.v3+json' $url | ConvertFrom-Json | ForEach-Object { $PSItem.title }
+$ProgressPreference = "SilentlyContinue"
+$requestParameters = @{
+    Uri = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
+    Method = "Get"
+    Headers = @{ Accept = "application/vnd.github.v3+json" }
+}
+$titles = (Invoke-WebRequest @requestParameters).Content | ConvertFrom-Json | ForEach-Object { $PSItem.title }
 
 if (!($Branch -match '(\w+-\d+)'))
 {
-    Exit
+    exit
 }
 
 $issueCode = $matches[0]
