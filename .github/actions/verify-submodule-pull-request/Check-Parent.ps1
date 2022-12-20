@@ -3,7 +3,6 @@
     [string] $Branch
 )
 
-$ProgressPreference = "SilentlyContinue"
 $requestParameters = @{
     Uri = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
     Method = "Get"
