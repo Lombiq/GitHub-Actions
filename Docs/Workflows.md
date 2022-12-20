@@ -284,7 +284,7 @@ jobs:
     name: Swap Azure Web App Slots
     uses: Lombiq/GitHub-Actions/.github/workflows/swap-azure-web-app-slots.yml@dev
     with:
-      timeout-minutes: 30
+      timeout-minutes: 5
       app-name: AppName
       resource-group-name: ResourceGroupName
       application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
