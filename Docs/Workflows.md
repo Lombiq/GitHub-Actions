@@ -269,6 +269,30 @@ jobs:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_RESET_ENVIRONMENT_SERVICE_PRINCIPAL }}
 ```
 
+## Swap Azure Web App Slots workflow
+
+This workflow swaps two Azure Web App Slots associated with an Azure Web App. [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _swap-azure-web-app-slots.yml_:
+
+```yaml
+name: Swap Azure Web App Slots
+
+on:
+  workflow_dispatch:
+
+jobs:
+  swap-azure-web-app-slots:
+    name: Swap Azure Web App Slots
+    uses: Lombiq/GitHub-Actions/.github/workflows/swap-azure-web-app-slots.yml@dev
+    with:
+      timeout-minutes: 30
+      app-name: AppName
+      resource-group-name: ResourceGroupName
+      application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
+    secrets:
+      AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SWAP_WEB_APP_SLOTS_SERVICE_PRINCIPAL }}
+
+```
+
 ## Post Pull Request Checks Automation
 
 Various automation that should be run after all other checks succeeded for a pull request. Currently does the following:
