@@ -51,7 +51,7 @@ on:
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
 
 jobs:
-  reset-azure-environment:
+  swap-azure-web-app-slots:
     runs-on: ${{ inputs.machine-type }}
     name: Swap Azure Web App Slots
     defaults:
