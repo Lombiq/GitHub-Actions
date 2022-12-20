@@ -43,6 +43,12 @@ on:
         required: true
         type: string
         description: Name of the resource group.
+      application-insights-resource-id:
+        required: true
+        type: string
+        description: >
+          ID of the Application Insights resource that the release annotation for the swap should be added to.
+          This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
 
 jobs:
   reset-azure-environment:
@@ -62,6 +68,11 @@ jobs:
 
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+
+    - name: Add Azure Application Insights Release Annotation
+      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+      with:
+        application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
     - name: Test Source Web App Slot
       run: |
