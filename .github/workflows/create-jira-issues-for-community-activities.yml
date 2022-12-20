@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Create Jira issues for community activities
-      uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-community-activities@issue/OSOE-482
+      uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-community-activities@dev
       env:
         JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
         JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
