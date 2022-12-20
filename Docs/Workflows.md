@@ -35,12 +35,12 @@ jobs:
       timeout-minutes: 60
 ```
 
-## Build .NET solution workflow
+## Build and Test .NET solution workflow
 
-Builds a .NET solution (or project) with static code analysis. You can use it along the lines of the following:
+Builds a .NET solution (or project) with static code analysis, and runs tests with a test report like `build-and-test-orchard-core`. You can use it along the lines of the following:
 
 ```yaml
-name: Build
+name: Build and Test
 
 # Runs for PRs opened for any branch, and pushes to the dev branch.
 on:
@@ -50,28 +50,19 @@ on:
       - dev
 
 jobs:
-  build:
-    name: Build
-    uses: Lombiq/GitHub-Actions/.github/workflows/build-dotnet.yml@dev
+  build-and-test:
+    name: Build and Test
+    uses: Lombiq/GitHub-Actions/.github/workflows/build-and-test-dotnet.yml@dev
     with:
-      machine-types: "[\"ubuntu-latest\", \"windows-latest\"]"
+      machine-types: "['ubuntu-22.04', 'windows-2022']"
       timeout-minutes: 10
 ```
 
 ## Spelling workflow
 
-Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action. There are 3 configuration files for filtering false positives:
+Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](../.github/actions/spelling/advice.md) describing the configuration options and contribution guidelines. This documentation is also displayed automatically in every spell checking report of a pull request.
 
-- _`excludes.txt`_: This file includes file names and extensions to be ignored.
-- _`expect.txt`_: This file contains plain text words that would be considered a spelling mistake.
-- _`allow.txt`_: Same function as `expect.txt`. Out of convention this file contains meaningful words, while `expect.txt` everything else.
-- _`patterns.txt`_: This file contains patterns that would be considered a spelling mistake.
-
-There are more configuration files available, for more information visit the action's [wiki](https://github.com/check-spelling/check-spelling/wiki/Configuration#files).
-
-You can provide these files in your own repository, under the path `.github/actions/spelling`. This can't be configured for another path.
-
-You can also use already existing configuration files by setting the `spell-check-this` parameter to another existing repository, where the files are found in the above-mentioned path. This parameter is needed even if you want to update our dictionary in a custom branch of project consuming this workflow; changing just the workflow's branch from `dev` to your branch won't take any effect, you can leave it as it is.
+You can use already existing configuration files by setting the `spell-check-this` parameter to another existing repository. This parameter is needed even if you want to update our dictionary in a custom branch of project consuming this workflow; changing just the workflow's branch from `dev` to your branch won't take any effect, you can leave it as it is.
 
 Example _check-spelling.yml_:
 
@@ -161,7 +152,7 @@ Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/
 
 ## Deploy to Azure App Service workflow
 
-This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). Example _deploy-to-azure-app-service.yml_:
+This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _deploy-to-azure-app-service.yml_:
 
 ```yaml
 name: Deploy to Azure App Service
@@ -182,6 +173,7 @@ jobs:
       runtime: win-x86
       self-contained: true
       ready-to-run: true
+      application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
     secrets:
       AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
@@ -306,7 +298,7 @@ jobs:
 
   post-pull-request-checks-automation:
     name: Post Pull Request Checks Automation
-    needs: [build-and-test-workflow, spelling-workflow]
+    needs: [build-and-test, spelling]
     if: github.event.pull_request != ''
     uses: Lombiq/GitHub-Actions/.github/workflows/post-pull-request-checks-automation.yml@dev
     secrets:
