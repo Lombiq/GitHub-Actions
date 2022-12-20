@@ -106,19 +106,20 @@ runs:
                 title = '${{ steps.issue-details.outputs.link-title }}'
             }
         }
+        $authorizationBytes = [Text.Encoding]::ASCII.GetBytes('${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}')
+        $authorizationBytesBase64 = [Convert]::ToBase64String($authorizationBytes)
         $requestParameters = @{
             Uri = '${{ env.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink'
             Method = 'POST'
             ContentType = 'application/json'
             Headers = @{
                 Accept = 'application/json'
-                Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes('${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}'))
-                ContentType = 'application/json'
+                Authorization = "Basic $authorizationBytesBase64"
             }
             Body = ConvertTo-Json($linkProperties)
         }
 
-        Invoke-WebRequest @requestParameters
+        $response = Invoke-WebRequest @requestParameters
 
     - name: Update GitHub Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
