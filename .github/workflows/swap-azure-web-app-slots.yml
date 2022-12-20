@@ -73,10 +73,10 @@ jobs:
     - name: Swap Web App Slots 
       run: |
         Switch-AzWebAppSlot `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -Name ${{ inputs.app-name }} `
-            -SourceSlotName ${{ inputs.source-slot-name }} `
-            -DestinationSlotName ${{ inputs.destination-slot-name }} `
+          -ResourceGroupName ${{ inputs.resource-group-name }} `
+          -Name ${{ inputs.app-name }} `
+          -SourceSlotName ${{ inputs.source-slot-name }} `
+          -DestinationSlotName ${{ inputs.destination-slot-name }}
 
     - name: Test Destination Web App Slot
       run: |
