@@ -12,8 +12,8 @@ inputs:
     required: false
     default: "true"
     description: >
-        If set to "true", Jira issue titles will be suffixed with "in <issue-component>" if the issue-component
-        parameter is specified, or the repository name. If set to "false", no suffix will be added to Jira issue titles.
+      If set to "true", Jira issue titles will be suffixed with "in <issue-component>" if the issue-component
+      parameter is specified, or the repository name. If set to "false", no suffix will be added to Jira issue titles.
 
 runs:
   using: "composite"
@@ -100,21 +100,26 @@ runs:
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
       shell: pwsh
       run: |
-        # Note that while --fail will fail the command if the request fails, it won't show the server output. Thus,
-        # remove for debugging. --fail-with-body provides that too, but is only available under curl >=7.76.0 which is
-        # not yet available for GitHub Actions, see https://github.com/Lombiq/GitHub-Actions/issues/53.
-        curl --request POST `
-          --url '${{ env.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink' `
-          --user '${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}' `
-          --header 'Accept: application/json' `
-          --header 'Content-Type: application/json' `
-          --fail `
-          --data '{
-                \"object\": {
-                    \"url\":\"${{ steps.issue-details.outputs.link-url }}\",
-                    \"title\":\"${{ steps.issue-details.outputs.link-title }}\"
-                }
-            }'
+        $linkProperties = @{
+            object = @{
+                url = '${{ steps.issue-details.outputs.link-url }}'
+                title = '${{ steps.issue-details.outputs.link-title }}'
+            }
+        }
+        $authorizationBytes = [Text.Encoding]::ASCII.GetBytes('${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}')
+        $authorizationBytesBase64 = [Convert]::ToBase64String($authorizationBytes)
+        $requestParameters = @{
+            Uri = '${{ env.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink'
+            Method = 'POST'
+            ContentType = 'application/json'
+            Headers = @{
+                Accept = 'application/json'
+                Authorization = "Basic $authorizationBytesBase64"
+            }
+            Body = ConvertTo-Json($linkProperties)
+        }
+
+        Invoke-WebRequest @requestParameters
 
     - name: Update GitHub Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
@@ -126,4 +131,4 @@ runs:
         issue-number: ${{ github.event.issue.number }}
         title: ${{ github.event.issue.title }} (${{ steps.create-issue.outputs.issue }})
         body: "${{ github.event.issue.body }}\n\n[Jira issue](${{ env.JIRA_BASE_URL }}/browse/${{ steps.create-issue.outputs.issue }})"
-        update-mode: 'replace'
+        update-mode: "replace"
