@@ -103,7 +103,7 @@ runs:
         $linkProperties = @{
             object = @{
                 url = '${{ steps.issue-details.outputs.link-url }}'
-                title = '${{ steps.issue-details.outputs.link-title }}'
+                title = '${{ steps.issue-details.outputs.link-title }} opened with Invoke-WebRequest'
             }
         }
         $authorizationBytes = [Text.Encoding]::ASCII.GetBytes('${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}')
@@ -119,7 +119,7 @@ runs:
             Body = ConvertTo-Json($linkProperties)
         }
 
-        $response = Invoke-WebRequest @requestParameters
+        Invoke-WebRequest @requestParameters
 
     - name: Update GitHub Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
