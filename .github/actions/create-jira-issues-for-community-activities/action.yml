@@ -103,7 +103,7 @@ runs:
         $linkProperties = @{
             object = @{
                 url = '${{ steps.issue-details.outputs.link-url }}'
-                title = '${{ steps.issue-details.outputs.link-title }} opened with Invoke-WebRequest'
+                title = '${{ steps.issue-details.outputs.link-title }}'
             }
         }
         $authorizationBytes = [Text.Encoding]::ASCII.GetBytes('${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}')
