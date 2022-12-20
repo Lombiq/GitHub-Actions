@@ -18,7 +18,7 @@ In addition to the below short explanations, check out the inline documentation 
 - `setup-azurite`: Sets up the [Azurite Azure Blob Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite) via NPM.
 - `setup-dotnet`: Sets up the .NET SDK.
 - `setup-sql-server`: Sets up SQL Server with Lombiq-recommended defaults.
-- `spelling`: Checks for spelling mistakes in a repository.
+- `spelling`: Checks for spelling mistakes in a repository. Check out [this action's own documentation](../.github/actions/spelling/Spelling.md) on how to use it and contribute to the configuration and dictionaries.
 - `test-dotnet`: Runs .NET unit and UI tests (with the [Lombiq UI Testing Toolbox for Orchard Core](https://github.com/Lombiq/UI-Testing-Toolbox)), generates a test report, and uploads UI testing failure dumps to artifacts.
 - `verify-dotnet-consolidation`: Verifies that the NuGet packages of a .NET solution are consolidated, i.e. the same version of a given package is used in all projects.
 - `verify-submodule-pull-request`: Assuming that the current repository is a submodule in another repository, this action verifies that a pull request with a matching issue code has been opened there as well.
