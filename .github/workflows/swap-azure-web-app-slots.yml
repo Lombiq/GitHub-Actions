@@ -60,11 +60,9 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
     - name: Login to Azure
-      # v1.4.6
-      uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
+      uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/NEST-337
       with:
-        creds: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL }}
-        enable-AzPSSession: true
+        service-principal: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL }}
 
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
