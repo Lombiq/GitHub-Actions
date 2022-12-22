@@ -23,6 +23,7 @@ Cms
 cref
 crlf
 csharp
+cspell
 ctor
 ctx
 cwd
