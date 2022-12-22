@@ -82,17 +82,17 @@ jobs:
           -SourceSlotName ${{ inputs.source-slot-name }} `
           -DestinationSlotName ${{ inputs.destination-slot-name }}
 
+    - name: Add Azure Application Insights Release Annotation
+      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+      with:
+        application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+
     - name: Test Destination Web App Slot
       run: |
         Test-AzureWebApp `
           -ResourceGroupName ${{ inputs.resource-group-name }} `
           -WebAppName ${{ inputs.app-name }} `
           -SlotName ${{ inputs.destination-slot-name }}
-
-    - name: Add Azure Application Insights Release Annotation
-      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
-      with:
-        application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
     - name: Cancel Workflow on Failure
       if: failure() && inputs.cancel-workflow-on-failure == 'true'
