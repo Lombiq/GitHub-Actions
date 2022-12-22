@@ -1,11 +1,15 @@
 name: Login to Azure
-description: Logs in to Azure using a service principal.
+description: >
+  Logs in to Azure using a service principal. After a successful login, the action will set up the necessary credentials
+  and environment variables for the service to be able to access Azure resources. The service can then use these
+  credentials to make API calls to Azure services. Intentionally not documented in Actions.md since it's only meant for
+  internal use.
 
 inputs:
-  enable-azure-powershell-session:
+  enable-az-ps-session:
     required: false
     default: "true"
-    description: Whether to enable an Az PowerShell session.
+    description: Whether to enable an Azure PowerShell session.
   service-principal:
     required: true
     description: The Azure service principal credentials.
