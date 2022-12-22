@@ -7,7 +7,10 @@ inputs:
     # When v0.0.21 is out update this and the one in spelling.yml with the version below.
     description: JSON map of prefixes for dictionary urls, "cspell" is necessary. See https://github.com/check-spelling/check-spelling/blob/86a22cfaff3846dbd788acea5d18cf5db6d40dd1/action.yml#L64 for current version.
     required: false
-    default: '{"cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"}'
+    default: >
+      {
+        "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"
+      }
   extra-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
