@@ -61,8 +61,8 @@ jobs:
     steps:
     - name: Login to Azure
       uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/NEST-337
-      with:
-        service-principal: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL }}
+      env:
+        SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL }}
 
     - name: Initialize PowerShell modules
       uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
