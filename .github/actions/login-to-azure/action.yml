@@ -5,7 +5,7 @@ inputs:
   enable-azure-powershell-session:
     required: false
     default: "true"
-    description: Whether to enable an Azure PowerShell session.
+    description: Whether to enable an Az PowerShell session.
   service-principal:
     required: true
     description: The Azure service principal credentials.
