@@ -2,8 +2,8 @@
 https?:\/\/\S+
 www.\S+
 
-# GUIDs.
-\b[0-9a-zA-Z]{8}-([0-9a-zA-Z]{4}-){3}[0-9a-zA-Z]{12}\b
+# GUIDs with or without hyphens.
+\b[0-9a-zA-Z]{8}-?(([0-9a-zA-Z]{4}-?){3})[0-9a-zA-Z]{12}\b
 
 # SHA checksums.
 sha[0-9]{3}-[0-9a-zA-Z+/]{64}
