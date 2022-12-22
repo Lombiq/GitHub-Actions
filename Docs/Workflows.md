@@ -80,7 +80,18 @@ jobs:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
     with:
-      # This is only needed if you want to use any other dictionaries than the ones in this project. 
+      # Add this parameter if you want to use dictionary files from Lombiq's or any other repository outside "cspell".
+      dictionary-source-prefixes: >
+        {
+          "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/",
+          "lombiq": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/"
+        }
+      # Use this parameter to list the external dictionary files to use, but beware that check-spelling only accepts flat lists of words (so, for example patterns.txt can't be referenced like this).
+      extra-dictionaries: |
+        cspell:csharp/csharp.txt
+        lombiq:allow.txt
+        lombiq:expect.txt
+      # This is only needed if you want to use any other dictionaries than the ones in this project.
       spell-check-this: Lombiq/GitHub-Actions@your-custom-branch
 ```
 
@@ -184,7 +195,7 @@ jobs:
 Validates pull requests for various criteria:
 
 - Labels and comments on pull requests with merge conflicts.
-- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet. 
+- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet.
 
 ```yaml
 name: Validate Pull Request
