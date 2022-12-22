@@ -42,7 +42,6 @@ EULA
 eur
 falsey
 favicon
-fff
 ffff
 Fhd
 fixme
