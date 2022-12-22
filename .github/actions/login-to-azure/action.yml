@@ -9,7 +9,7 @@ inputs:
   enable-az-ps-session:
     required: false
     default: "true"
-    description: Whether to enable an Azure PowerShell session.
+    description: Whether to enable an Az PowerShell session.
   service-principal:
     required: true
     description: The Azure service principal credentials.
@@ -22,4 +22,4 @@ runs:
       uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
       with:
         creds: ${{ inputs.service-principal }}
-        enable-AzPSSession: ${{ inputs.enable-azure-powershell-session }}
+        enable-AzPSSession: ${{ inputs.enable-az-ps-session }}
