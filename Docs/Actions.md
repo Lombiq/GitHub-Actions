@@ -14,7 +14,6 @@ In addition to the below short explanations, check out the inline documentation 
 - `check-merge-conflict`: Labels and comments on pull requests with merge conflicts.
 - `create-jira-issues-for-community-activities`: Creates Jira issues for community activities happening on GitHub, like issues, discussions, and pull requests being opened. Pull requests are only taken into account if they're not already related to a Jira issue (by starting their title with a Jira issue key).
 - `enable-corepack`: Enables [Node corepack](https://nodejs.org/docs/latest-v16.x/api/corepack.html) so any package manager can be used seamlessly.
-- `login-to-azure`: Logs in to Azure using a service principal and the [azure/login action](https://github.com/Azure/login). 
 - `publish-nuget`: Publishes the content of the current directory as a NuGet package.
 - `setup-azurite`: Sets up the [Azurite Azure Blob Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite) via NPM.
 - `setup-dotnet`: Sets up the .NET SDK.
