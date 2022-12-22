@@ -1,6 +1,7 @@
 \.bat$
 \.config$
 \.csproj$
+\.css$
 \.css\.map$
 \.DotSettings$
 \.editorconfig$
@@ -8,12 +9,14 @@
 \.git
 \.htmlvalidate\.json$
 \.ico$
+\.jfif$
 \.jpg$
 \.min\.css$
 \.min\.js$
 \.ndproj$
 \.nupkg$
 \.nuspec\.template$
+\.otf$
 \.pdf$
 \.png$
 \.ps1$
@@ -22,7 +25,9 @@
 \.ruleset$
 \.sln$
 \.stylelintrc$
+\.svg$
 \.t$
+\.woff2$
 ^\.github/
 ^LICENSE\.txt$
 appsettings\.*\.json$
