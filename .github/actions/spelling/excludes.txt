@@ -1,5 +1,3 @@
-\.git
-\.jpg$
 \.bat$
 \.config$
 \.csproj$
@@ -7,8 +5,10 @@
 \.DotSettings$
 \.editorconfig$
 \.eslintrc$
+\.git
 \.htmlvalidate\.json$
 \.ico$
+\.jpg$
 \.min\.css$
 \.min\.js$
 \.ndproj$
@@ -28,8 +28,8 @@
 appsettings\.*\.json$
 dotnet-tools\.json$
 ignore$
-package-lock\.json$
 package\.json$
+package-lock\.json$
 pnpm-lock\.yaml$
 UploadingTestFileDOCX\.docx$
 UploadingTestFileXLSX\.xlsx$
