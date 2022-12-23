@@ -129,17 +129,17 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
     - name: Checkout
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-508
       with:
         token: ${{ env.CHECKOUT_TOKEN }}
 
     - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-508
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-508
 
     # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
     # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
@@ -151,7 +151,7 @@ jobs:
         "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
 
     - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-508
       with:
         directory: ${{ inputs.build-directory }}
         verbosity: ${{ inputs.build-verbosity }}
@@ -186,7 +186,7 @@ jobs:
         enable-AzPSSession: true
 
     - name: Initialize PowerShell modules
-      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/OSOE-508
 
     - name: Stop Web App Slot
       run: |
@@ -205,7 +205,7 @@ jobs:
         package: ${{ inputs.build-directory }}/Published
 
     - name: Add Azure Application Insights Release Annotation
-      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-508
       with:
         application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
@@ -225,6 +225,6 @@ jobs:
 
     - name: Cancel Workflow on Failure
       if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-508
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
