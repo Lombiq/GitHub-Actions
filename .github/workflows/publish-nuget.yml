@@ -53,7 +53,7 @@ on:
         default: "14"
         description: >
           Duration in days after which the artifact of the NuGet package publishing (if any) will expire. See
-          https://github.com/actions/upload-artifact#retention-period for more details
+          https://github.com/actions/upload-artifact#retention-period for more details.
     secrets:
       # We can't access org secrets here so they need to be passed in.
       API_KEY:
