@@ -14,15 +14,16 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set Checkout Token
-      shell: pwsh
-      env:
-        CHECKOUT_TOKEN: ${{ inputs.token }}
-      run: |
-        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : $Env:GITHUB_TOKEN
-        "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
-
-    - uses: actions/checkout@v3.1.0
+    - name: Checkout with supplied token
+      uses: actions/checkout@v3.1.0
+      if: "${{ inputs.token != '' }}"
       with:
         submodules: "recursive"
-        token: ${{ env.CHECKOUT_TOKEN }}
+        token: ${{ inputs.token }}
+
+    - name: Checkout with default token
+      uses: actions/checkout@v3.1.0
+      if: "${{ inputs.token == '' }}"
+      with:
+        submodules: "recursive"
+        token: ${{ github.token }}
