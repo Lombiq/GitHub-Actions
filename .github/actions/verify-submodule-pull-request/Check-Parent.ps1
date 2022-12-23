@@ -3,7 +3,8 @@ param(
     [string] $Branch
 )
 
-$url = "https://api.github.com/repos/GitHub-Actions/pulls?state=open&per_page=100"
+$url = "https://api.github.com/repos/Lombiq/GitHub-Actions/pulls?state=open&per_page=100"
+Write-Output $url
 $response = Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Get
 $titles = $response.Content | ConvertFrom-Json | ForEach-Object { $PSItem.title }
 
