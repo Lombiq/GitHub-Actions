@@ -14,13 +14,16 @@ inputs:
 runs:
   using: "composite"
   steps:
+    # This step is needed when the workflow calling this action receives the checkout token as a secret, but when that
+    # parameter is not supplied, the runner sets the value of that secret to empty string, which is passed on to this
+    # action, thus the default value of the parameter will not be applied. Related bugreport:
+    # https://github.com/actions/runner/issues/924
     - name: Set Checkout Token
       shell: pwsh
       env:
         CHECKOUT_TOKEN: ${{ inputs.token }}
       run: |
-        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
-        "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
+        if (!$Env:CHECKOUT_TOKEN) { "CHECKOUT_TOKEN=${{ github.token }}" >> $Env:GITHUB_ENV }
 
     - uses: actions/checkout@v3.1.0
       with:
