@@ -3,12 +3,9 @@ param(
     [string] $Branch
 )
 
-$requestParameters = @{
-    Uri = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
-    Method = "Get"
-    Headers = Get-GitHubApiAuthorizationHeader
-}
-$titles = (Invoke-WebRequest @requestParameters).Content | ConvertFrom-Json | ForEach-Object { $PSItem.title }
+$url = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
+$response = Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Get
+$titles = $response.Content | ConvertFrom-Json | ForEach-Object { $PSItem.title }
 
 if (!($Branch -match '(\w+-\d+)'))
 {
