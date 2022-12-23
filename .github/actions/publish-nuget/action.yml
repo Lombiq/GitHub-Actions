@@ -32,7 +32,9 @@ inputs:
     default: "14"
     description: >
       Duration in days after which the artifact of the NuGet package publishing (if any) will expire. See
-      https://github.com/actions/upload-artifact#retention-period for more details.
+      https://github.com/actions/upload-artifact#retention-period for more details. Note that this only affects the
+      retention of the workflow run's artifact, not the artifacts attached to the release created on GitHub; those will
+      remain indefinitely.
 
 runs:
   using: "composite"
