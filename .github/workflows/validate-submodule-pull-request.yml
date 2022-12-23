@@ -33,3 +33,4 @@ jobs:
         with:
           title: ${{ github.event.pull_request.title }}
           repository: ${{ inputs.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
