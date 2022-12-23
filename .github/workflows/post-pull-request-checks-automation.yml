@@ -51,7 +51,7 @@ jobs:
         "MERGE_TOKEN=$mergeToken" >> $Env:GITHUB_ENV
 
     - name: Automatically Merge Pull Request
-      uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@issue/OCC-113
+      uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@dev
       env:
         GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
       with:
