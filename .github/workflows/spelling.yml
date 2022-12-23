@@ -54,18 +54,10 @@ jobs:
     name: Check Spelling
     runs-on: ubuntu-22.04
     steps:
-      - name: Set Checkout Token
-        shell: pwsh
-        env:
-          CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
-        run: |
-          $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
-          "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
-
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
-          token: ${{ env.CHECKOUT_TOKEN }}
+          token: ${{ secrets.CHECKOUT_TOKEN }}
 
       # This is a workaround for the spelling workflow to check submodules too in the repository.
       - name: Stub repo layout
