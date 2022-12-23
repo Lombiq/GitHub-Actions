@@ -36,7 +36,7 @@ on:
           "merge_method" for applicable values: https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#merge-a-pull-request
         required: false
         type: string
-        default: "merge"
+        default: merge
 
 jobs:
   post-pull-request-checks-automation:
