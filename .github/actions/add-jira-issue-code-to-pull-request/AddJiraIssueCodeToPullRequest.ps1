@@ -17,6 +17,9 @@ if ($Branch -NotLike "*issue*")
     Exit
 }
 
+Write-Output "Header:"
+Write-Output (Get-GitHubApiAuthorizationHeader)
+
 $Branch -match '(\w+-\d+)'
 $issueKey = $matches[0]
 $issueLink = "[$issueKey]($jiraBrowseUrl$issuekey)"
