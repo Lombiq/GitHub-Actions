@@ -23,7 +23,8 @@ runs:
       env:
         CHECKOUT_TOKEN: ${{ inputs.token }}
       run: |
-        if (!$Env:CHECKOUT_TOKEN) { "CHECKOUT_TOKEN=${{ github.token }}" >> $Env:GITHUB_ENV }
+        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
+        "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
 
     - uses: actions/checkout@v3.1.0
       with:
