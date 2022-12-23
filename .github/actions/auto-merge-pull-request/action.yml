@@ -3,6 +3,14 @@ description: >
   Merges the current pull request automatically if the "merge-and-resolve-jira-issue-if-checks-succeed" or
   "merge-if-checks-succeed" label is present.
 
+inputs:
+  merge-method:
+    required: false
+    default: merge
+    description: >
+      The merge strategy to be used. See the API documentation for "merge_method" for applicable values:
+      https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#merge-a-pull-request
+
 runs:
   using: "composite"
   steps:
@@ -24,8 +32,8 @@ runs:
       if: steps.check-mergeability.outputs.contains-label == 'true'
       shell: pwsh
       run: |
-        $url = "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
-        Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Put
+        $url = '/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge'
+        gh api --method PUT $url --raw-field merge_method='${{ inputs.merge-method }}'
 
     - name: Remove Label
       if: steps.check-mergeability.outputs.contains-label == 'true'
