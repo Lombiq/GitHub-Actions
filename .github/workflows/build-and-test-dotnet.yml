@@ -139,18 +139,10 @@ jobs:
         - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - name: Set Checkout Token
-      shell: pwsh
-      env:
-        CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
-      run: |
-        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
-        "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
-
     - name: Checkout
       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
       with:
-        token: ${{ env.CHECKOUT_TOKEN }}
+        token: ${{ secrets.CHECKOUT_TOKEN }}
 
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
