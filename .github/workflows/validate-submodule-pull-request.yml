@@ -30,8 +30,6 @@ jobs:
       - name: Ensure Parent PR Exists
         if: github.event.pull_request != ''
         uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           title: ${{ github.event.pull_request.title }}
           repository: ${{ inputs.repository }}
