@@ -15,11 +15,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup and Print PR Title
+    - name: Setup Scripts
       shell: pwsh
       run: |
-        Write-Output "Pull Request Title: ${{ inputs.title }}"
-
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
