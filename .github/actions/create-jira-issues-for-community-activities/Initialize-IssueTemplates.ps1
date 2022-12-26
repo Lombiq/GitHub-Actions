@@ -2,7 +2,7 @@
 
 if ([string]::IsNullOrEmpty($Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION))
 {
-    $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] =  @"
+    $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] = @"
 h1. Summary
 See the linked GitHub discussion, including all the comments. Please do all communication there, unless it's confidential or administrative.
 

@@ -42,6 +42,11 @@ on:
         type: string
         default: quiet
         description: Verbosity parameter for msbuild.
+      build-treat-warnings-as-errors:
+        required: false
+        type: string
+        default: "true"
+        description: Indicates whether warnings should be treated as errors during msbuild.
       build-enable-code-analysis:
         required: false
         type: string
@@ -70,18 +75,10 @@ jobs:
     name: Build and Test
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Set Checkout Token
-        shell: pwsh
-        env:
-          CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
-        run: |
-          $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
-          "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
-
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
-          token: ${{ env.CHECKOUT_TOKEN }}
+          token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Enable Node corepack
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
@@ -96,6 +93,7 @@ jobs:
           directory: ${{ inputs.build-directory }}
           solution-or-project-path: ${{ inputs.solution-or-project-path }}
           verbosity: ${{ inputs.build-verbosity }}
+          treat-warnings-as-errors: ${{ inputs.build-treat-warnings-as-errors }}
           enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
 
       - name: Tests

@@ -45,7 +45,8 @@ Set-GitHubOutput "test-count" $tests.Length
 
 Write-Output "Starting to execute tests from $($tests.Length) projects."
 
-foreach ($test in $tests) {
+foreach ($test in $tests)
+{
     # This could benefit from grouping, above the level of the potential groups created by the tests (the Lombiq UI
     # Testing Toolbox adds per-test groups too). However, there's no nested grouping, see
     # https://github.com/actions/runner/issues/1477. See the # c341ef145d2a0898c5900f64604b67b21d2ea5db commit for a
@@ -62,8 +63,7 @@ foreach ($test in $tests) {
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
         '--logger', 'console;verbosity=detailed'
         '--verbosity', $Verbosity
-        $Filter ? '--filter' : ''
-        $Filter ? $Filter : ''
+        $Filter ? '--filter', $Filter : ''
         $test
     )
 
