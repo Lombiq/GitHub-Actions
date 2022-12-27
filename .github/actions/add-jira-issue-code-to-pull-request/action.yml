@@ -16,13 +16,16 @@ runs:
       # run during push, for example). See https://github.com/Lombiq/GitHub-Actions/issues/72 for details.
       if: github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false
       shell: pwsh
+      env:
+        PR_TITLE: ${{ github.event.pull_request.title }}
+        PR_BODY: ${{ github.event.pull_request.body }
       run: |
         $params = @{
             JiraBaseUrl = $Env:JIRA_BASE_URL ? $Env:JIRA_BASE_URL : "https://lombiq.atlassian.net"
             GitHubRepository = $Env:GITHUB_REPOSITORY
             Branch = $Env:GITHUB_HEAD_REF
-            Title = "${{ github.event.pull_request.title }}"
-            Body = "${{ github.event.pull_request.body }}"
+            Title = $Env:PR_TITLE
+            Body = $Env:PR_BODY
             PullRequestID = ${{ github.event.number }}
         }
         AddJiraIssueCodeToPullRequest @params
