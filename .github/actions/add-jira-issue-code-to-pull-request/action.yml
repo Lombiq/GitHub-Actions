@@ -28,4 +28,4 @@ runs:
             Body = $Env:PR_BODY
             PullRequestID = ${{ github.event.number }}
         }
-        AddJiraIssueCodeToPullRequest @params
+        Add-JiraIssueCodeToPullRequest @params
