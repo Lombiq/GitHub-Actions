@@ -30,8 +30,8 @@ on:
         type: string
         default: Staging
         description: >
-          The slot name of the web app you want to reset. What you see at the top of the blade on the Azure Portal,
-          when you open the slot, before the app name in parenthesis.
+          The slot name of the web app you want to reset. What you see at the top of the blade on the Azure Portal, when
+          you open the slot, before the app name in parenthesis.
       source-slot-name:
         required: false
         type: string
@@ -70,36 +70,35 @@ on:
         type: string
         default: "@()"
         description: >
-          PowerShell string array with the name of the excluded Blob Container(s), e.g.
-          '@("not-media")' or '@("not-media", "bad-container")'. The parameter must be a PowerShell string array.
-          When a not empty PowerShell string array is provided for "blob-container-include-list", then
-          "blob-container-exclude-list" is not taken into consideration.
+          PowerShell string array with the name of the excluded Blob Container(s), e.g. '@("not-media")' or
+          '@("not-media", "bad-container")'. The parameter must be a PowerShell string array. When a not empty
+          PowerShell string array is provided for "blob-container-include-list", then "blob-container-exclude-list" is
+          not taken into consideration.
       blob-container-include-list:
         required: false
         type: string
         default: '@("media")'
         description: >
-          PowerShell string array with the name of the included Blob Container(s), e.g.
-          '@("media")' or '@("media", "cool-container")'. The parameter must be a PowerShell string array. When a
-          not empty PowerShell string array is provided, "blob-container-exclude-list" is not taken into consideration.
+          PowerShell string array with the name of the included Blob Container(s), e.g. '@("media")' or '@("media",
+          "cool-container")'. The parameter must be a PowerShell string array. When a not empty PowerShell string array
+          is provided, "blob-container-exclude-list" is not taken into consideration.
       folder-exclude-list:
         required: false
         type: string
         default: '@("RecipeJournal", "`$`$`$ORCHARD`$`$`$.`$`$`$")'
         description: >
-          PowerShell string array with the name of the excluded folder(s), e.g.
-          '@("RecipeJournal")' or '@("RecipeJournal", "BadFolder")'. The parameter must be a PowerShell string
-          array. When a not empty PowerShell string array is provided for "folder-include-list", then
-          "folder-exclude-list" is not taken into consideration.
+          PowerShell string array with the name of the excluded folder(s), e.g. '@("RecipeJournal")' or
+          '@("RecipeJournal", "BadFolder")'. The parameter must be a PowerShell string array. When a not empty
+          PowerShell string array is provided for "folder-include-list", then "folder-exclude-list" is not taken into
+          consideration.
       folder-include-list:
         required: false
         type: string
         default: "@()"
         description: >
-          PowerShell string array with the name of the included folder(s), e.g.
-          '@("NotRecipeJournal")' or '@("NotRecipeJournal", "CoolFolder")'. The parameter must be a PowerShell
-          string array. When a not empty PowerShell string array is provided, "folder-exclude-list" is not taken into
-          consideration.
+          PowerShell string array with the name of the included folder(s), e.g. '@("NotRecipeJournal")' or
+          '@("NotRecipeJournal", "CoolFolder")'. The parameter must be a PowerShell string array. When a not empty
+          PowerShell string array is provided, "folder-exclude-list" is not taken into consideration.
 
 jobs:
   reset-azure-environment:
