@@ -71,7 +71,7 @@ on:
         default: "@()"
         description: >
           PowerShell string array with the name of the excluded Blob Container(s), e.g.
-          "@(\"not-media\")" or "@(\"not-media\", \"bad-container\")". The parameter must be a PowerShell string array.
+          '@("not-media")' or '@("not-media", "bad-container")'. The parameter must be a PowerShell string array.
           When a not empty PowerShell string array is provided for "blob-container-include-list", then
           "blob-container-exclude-list" is not taken into consideration.
       blob-container-include-list:
@@ -80,7 +80,7 @@ on:
         default: '@("media")'
         description: >
           PowerShell string array with the name of the included Blob Container(s), e.g.
-          "@(\"media\")" or "@(\"media\", \"cool-container\")". The parameter must be a PowerShell string array. When a
+          '@("media")' or '@("media", "cool-container")'. The parameter must be a PowerShell string array. When a
           not empty PowerShell string array is provided, "blob-container-exclude-list" is not taken into consideration.
       folder-exclude-list:
         required: false
@@ -88,7 +88,7 @@ on:
         default: '@("RecipeJournal", "`$`$`$ORCHARD`$`$`$.`$`$`$")'
         description: >
           PowerShell string array with the name of the excluded folder(s), e.g.
-          "@(\"RecipeJournal\")" or "@(\"RecipeJournal\", \"BadFolder\")". The parameter must be a PowerShell string
+          '@("RecipeJournal")' or '@("RecipeJournal", "BadFolder")'. The parameter must be a PowerShell string
           array. When a not empty PowerShell string array is provided for "folder-include-list", then
           "folder-exclude-list" is not taken into consideration.
       folder-include-list:
@@ -97,7 +97,7 @@ on:
         default: "@()"
         description: >
           PowerShell string array with the name of the included folder(s), e.g.
-          "@(\"NotRecipeJournal\")" or "@(\"NotRecipeJournal\", \"CoolFolder\")". The parameter must be a PowerShell
+          '@("NotRecipeJournal")' or '@("NotRecipeJournal", "CoolFolder")'. The parameter must be a PowerShell
           string array. When a not empty PowerShell string array is provided, "folder-exclude-list" is not taken into
           consideration.
 
