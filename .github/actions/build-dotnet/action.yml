@@ -147,7 +147,7 @@ runs:
         # Allowing the use of an empty solution or project path, to enable the default dotnet build behavior of
         # "build the only project or only solution, or fail if there are multiple projects".
         $solutionOrProjectPathInput = '${{ inputs.solution-or-project-path }}'
-        $solutionOrProjectPath = $solutionOrProjectPathInput ? Get-SolutionOrProjectPath $solutionOrProjectPathInput : ''
+        $solutionOrProjectPath = $solutionOrProjectPathInput ? (Get-SolutionOrProjectPath $solutionOrProjectPathInput) : ''
 
         $switches = @{
             Configuration = "${{ inputs.configuration }}"
