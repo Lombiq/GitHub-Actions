@@ -144,9 +144,14 @@ runs:
             ${{ inputs.expected-code-analysis-errors }}
         '@
 
+        # Allowing the use of an empty solution or project path, to enable the default dotnet build behavior of
+        # "build the only project or only solution, or fail if there are multiple projects".
+        $solutionOrProjectPathInput = '${{ inputs.solution-or-project-path }}'
+        $solutionOrProjectPath = $solutionOrProjectPathInput ? Get-SolutionOrProjectPath $solutionOrProjectPathInput : ''
+
         $switches = @{
             Configuration = "${{ inputs.configuration }}"
-            SolutionOrProject = Get-SolutionOrProjectPath ${{ inputs.solution-or-project-path }}
+            SolutionOrProject = $solutionOrProjectPath
             Verbosity = "${{ inputs.verbosity }}"
             EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
             Version = "${{ inputs.publish-version }}"
