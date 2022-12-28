@@ -97,7 +97,7 @@ runs:
       run: ./ConvertTo-Nuspec.ps1 '${{ steps.setup.outputs.publish-version }}'
 
     - name: Build
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-521
       # Notes on the configuration:
       # * -p:NuGetBuild=true is our property to load Lombiq dependencies from NuGet by switching project references
       #   to package references.
@@ -112,6 +112,9 @@ runs:
         verbosity: ${{ inputs.verbosity }}
         enable-code-analysis: false
         publish-version: ${{ steps.setup.outputs.publish-version }}
+        # Intentionally an empty string to use the default dotnet build behavior of "build the only project or only
+        # solution, or fail if there are multiple projects".
+        solution-or-project-path: ""
         dotnet-build-switches: |
             --no-restore
             -p:NuGetBuild=true
