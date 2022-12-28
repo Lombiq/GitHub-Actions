@@ -1,4 +1,4 @@
-param (
+﻿param (
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $TreatWarningsAsErrors,
@@ -68,7 +68,7 @@ msbuild $SolutionOrProject @buildSwitches
 
 # error MSB3644: The reference assemblies for .NETFramework,Version=v4.6.1 were not found. To resolve this, install the
 # Developer Pack (SDK/Targeting Pack) for this framework version or retarget your application. You can download .NET
-# Framework Developer Packs at https://aka.ms/msbuild/developerpacks 
+# Framework Developer Packs at https://aka.ms/msbuild/developerpacks
 
 if ($?)
 {

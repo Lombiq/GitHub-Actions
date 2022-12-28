@@ -1,4 +1,4 @@
-param (
+﻿param (
     [string] $Configuration,
     [string] $SolutionOrProject,
     [string] $Verbosity,
@@ -111,7 +111,8 @@ if ($expectedErrorCodes)
         }
     }
 
-    if ($fail -gt 0) {
+    if ($fail -gt 0)
+    {
         Write-Warning $report.ToString() # We use warning so it doesn't stop prematurely.
         Write-Output ("::error::Verification Mismatch " + ($errorLines -join " "))
         exit 1
