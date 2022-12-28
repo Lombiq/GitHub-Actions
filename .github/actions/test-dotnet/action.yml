@@ -35,6 +35,12 @@ inputs:
       Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
       MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming from the
       code won't be overridden.
+  ui-test-artifact-retention-days:
+    required: false
+    default: "7"
+    description: >
+      Duration in days after which the artifact of UI testing (if any) will expire. See
+      https://github.com/actions/upload-artifact#retention-period for more details.
   xunit-max-parallel-threads:
     required: false
     default: "0"
@@ -92,7 +98,7 @@ runs:
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
-    - name: Upload UI testing artifacts
+    - name: Upload UI Testing Artifacts
       uses: actions/upload-artifact@v3.1.1
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
@@ -100,6 +106,7 @@ runs:
         name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/FailureDumps/
         if-no-files-found: ignore
+        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
 
     - name: Test Report
       # v10

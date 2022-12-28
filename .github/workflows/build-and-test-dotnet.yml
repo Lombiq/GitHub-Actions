@@ -78,6 +78,20 @@ on:
           Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
           only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
           until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+      build-create-binary-log:
+        required: false
+        type: string
+        default: "false"
+        description: >
+          Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
+          https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
+      build-binary-log-artifact-retention-days:
+        required: false
+        type: string
+        default: "14"
+        description: >
+          Duration in days after which the artifact of the build's binary log (if any) will expire. See
+          https://github.com/actions/upload-artifact#retention-period for more details.
       test-disable:
         required: false
         type: string
@@ -152,6 +166,8 @@ jobs:
           enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
           cache-version: ${{ inputs.build-cache-version }}
           solution-or-project-path: ${{ inputs.build-solution-path }}
+        create-binary-log: ${{ inputs.build-create-binary-log }}
+        binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
 
       - name: Tests
         if: inputs.test-disable == 'false'
