@@ -70,6 +70,12 @@ inputs:
     description: >
       Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
       https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
+  binary-log-artifact-retention-days:
+    required: false
+    default: "14"
+    description: >
+      Duration in days after which the artifact of the binary log (if any) will expire. See
+      https://github.com/actions/upload-artifact#retention-period for more details.
 
 runs:
   using: "composite"
@@ -162,3 +168,4 @@ runs:
         name: build-binary-log-${{ steps.build.outputs.artifact-name-suffix }}.binlog
         path: ${{ inputs.directory }}/build.binlog
         if-no-files-found: ignore
+        retention-days: ${{ inputs.binary-log-artifact-retention-days }}
