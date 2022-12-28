@@ -56,7 +56,7 @@ runs:
       shell: pwsh
       run: |
         Initialize-ArtifactNameSuffix '${{ inputs.build-directory }}'
-        
+
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.xunit-max-parallel-threads }}
 
         if (${{ inputs.ui-test-parallelism }} -eq -1)
@@ -107,7 +107,7 @@ runs:
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
         name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
-        path: '${{inputs.build-directory}}/**/*.trx'
+        path: "${{inputs.build-directory}}/**/*.trx"
         reporter: dotnet-trx
-        fail-on-error: 'false'
-        output-to: 'step-summary'
+        fail-on-error: "false"
+        output-to: "step-summary"

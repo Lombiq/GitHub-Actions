@@ -77,7 +77,7 @@ on:
       blob-container-include-list:
         required: false
         type: string
-        default: "@(\"media\")"
+        default: '@("media")'
         description: >
           PowerShell string array with the name of the included Blob Container(s), e.g.
           "@(\"media\")" or "@(\"media\", \"cool-container\")". The parameter must be a PowerShell string array. When a
@@ -85,7 +85,7 @@ on:
       folder-exclude-list:
         required: false
         type: string
-        default: "@(\"RecipeJournal\", \"`$`$`$ORCHARD`$`$`$.`$`$`$\")"
+        default: '@("RecipeJournal", "`$`$`$ORCHARD`$`$`$.`$`$`$")'
         description: >
           PowerShell string array with the name of the excluded folder(s), e.g.
           "@(\"RecipeJournal\")" or "@(\"RecipeJournal\", \"BadFolder\")". The parameter must be a PowerShell string
@@ -110,91 +110,91 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-    - name: Login to Azure
-      # v1.4.6
-      uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
-      with:
-        creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
-        enable-AzPSSession: true
+      - name: Login to Azure
+        # v1.4.6
+        uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
+        with:
+          creds: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
+          enable-AzPSSession: true
 
-    - name: Initialize PowerShell modules
-      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+      - name: Initialize PowerShell modules
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
-    - name: Stop Web App Slot
-      run: |
-        Stop-AzureWebAppSlot `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.destination-slot-name }}
+      - name: Stop Web App Slot
+        run: |
+          Stop-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }}
 
-    - name: Replace Media
-      run: |
-        Set-AzureWebAppStorageContentFromStorage `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SourceSlotName ${{ inputs.source-slot-name }} `
-          -DestinationSlotName ${{ inputs.destination-slot-name }} `
-          -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-          -ContainerBlackList ${{ inputs.blob-container-exclude-list }} `
-          -ContainerWhiteList ${{ inputs.blob-container-include-list }} `
-          -FolderBlackList ${{ inputs.folder-exclude-list }} `
-          -FolderWhiteList ${{ inputs.folder-include-list }}
+      - name: Replace Media
+        run: |
+          Set-AzureWebAppStorageContentFromStorage `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SourceSlotName ${{ inputs.source-slot-name }} `
+            -DestinationSlotName ${{ inputs.destination-slot-name }} `
+            -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
+            -ContainerBlackList ${{ inputs.blob-container-exclude-list }} `
+            -ContainerWhiteList ${{ inputs.blob-container-include-list }} `
+            -FolderBlackList ${{ inputs.folder-exclude-list }} `
+            -FolderWhiteList ${{ inputs.folder-include-list }}
 
-    - name: Replace Database
-      run: |
-        Copy-AzureWebAppSqlDatabase `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }}  `
-          -SourceSlotName ${{ inputs.source-slot-name }} `
-          -DestinationSlotName ${{ inputs.destination-slot-name }} `
-          -ConnectionStringName ${{ inputs.database-connection-string-name }} `
-          -Force
+      - name: Replace Database
+        run: |
+          Copy-AzureWebAppSqlDatabase `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }}  `
+            -SourceSlotName ${{ inputs.source-slot-name }} `
+            -DestinationSlotName ${{ inputs.destination-slot-name }} `
+            -ConnectionStringName ${{ inputs.database-connection-string-name }} `
+            -Force
 
-    - name: Scale Database
-      run: |
-        Set-AzureWebAppSqlDatabaseServiceObjective `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.destination-slot-name }} `
-          -ConnectionStringName ${{ inputs.master-database-connection-string-name }} `
-          -ServiceObjectiveName ${{ inputs.service-objective-name }}
+      - name: Scale Database
+        run: |
+          Set-AzureWebAppSqlDatabaseServiceObjective `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }} `
+            -ConnectionStringName ${{ inputs.master-database-connection-string-name }} `
+            -ServiceObjectiveName ${{ inputs.service-objective-name }}
 
-    - name: Add Destination Contained User to Destination Database
-      run: |
-        Install-Module sqlserver -AllowClobber -Force
-        Add-AzureWebAppSqlDatabaseContainedUser `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
-          -DatabaseConnectionStringName ${{ inputs.master-database-connection-string-name }} `
-          -UserConnectionStringName ${{ inputs.database-connection-string-name }}
+      - name: Add Destination Contained User to Destination Database
+        run: |
+          Install-Module sqlserver -AllowClobber -Force
+          Add-AzureWebAppSqlDatabaseContainedUser `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -DatabaseSlotName ${{ inputs.destination-slot-name }} `
+            -DatabaseConnectionStringName ${{ inputs.master-database-connection-string-name }} `
+            -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
-    - name: Remove Source Contained User from Destination Database
-      run: |
-        Remove-AzureWebAppSqlDatabaseContainedUser `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -DatabaseSlotName ${{ inputs.destination-slot-name }} `
-          -UserSlotName ${{ inputs.source-slot-name }} `
-          -DatabaseConnectionStringName ${{ inputs.master-database-connection-string-name }} `
-          -UserConnectionStringName ${{ inputs.database-connection-string-name }}
+      - name: Remove Source Contained User from Destination Database
+        run: |
+          Remove-AzureWebAppSqlDatabaseContainedUser `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -DatabaseSlotName ${{ inputs.destination-slot-name }} `
+            -UserSlotName ${{ inputs.source-slot-name }} `
+            -DatabaseConnectionStringName ${{ inputs.master-database-connection-string-name }} `
+            -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
-    - name: Start Web App Slot
-      run: |
-        Start-AzureWebAppSlot `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.destination-slot-name }}
+      - name: Start Web App Slot
+        run: |
+          Start-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }}
 
-    - name: Test Web App Slot
-      run: |
-        Test-AzureWebApp `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.destination-slot-name }}
+      - name: Test Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }}
 
-    - name: Cancel Workflow on Failure
-      if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
