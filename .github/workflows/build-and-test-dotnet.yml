@@ -167,8 +167,8 @@ jobs:
           enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
           cache-version: ${{ inputs.build-cache-version }}
           solution-or-project-path: ${{ inputs.build-solution-path }}
-        create-binary-log: ${{ inputs.build-create-binary-log }}
-        binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
 
       - name: Tests
         if: inputs.test-disable == 'false'

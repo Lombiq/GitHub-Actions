@@ -95,7 +95,7 @@ jobs:
           dotnet-pack-ignore-warning: ${{ inputs.dotnet-pack-ignore-warning }}
           dotnet-pack-include-symbols: ${{ inputs.dotnet-pack-include-symbols }}
           publish-version: ${{ inputs.publish-version }}
-        nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
+          nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
         env:
           API_KEY: ${{ secrets.API_KEY }}
 
