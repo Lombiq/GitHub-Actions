@@ -1,6 +1,6 @@
 <#
 .Synopsis
-    Merges entries from one dictionary files into another.
+    Merges entries from one dictionary file into another.
 
 .DESCRIPTION
     Merges the entries from the source dictionary file into the target dictionary file, then removes duplicates and
