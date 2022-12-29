@@ -87,6 +87,13 @@ on:
         description: >
           Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
           https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
+      build-binary-log-artifact-retention-days:
+        required: false
+        type: string
+        default: "14"
+        description: >
+          Duration in days after which the artifact of the build's binary log (if any) will expire. See
+          https://github.com/actions/upload-artifact#retention-period for more details.
       set-up-sql-server:
         required: false
         type: string
@@ -120,6 +127,13 @@ on:
           Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
           the MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming
           from the code won't be overridden.
+      ui-test-artifact-retention-days:
+        required: false
+        type: string
+        default: "7"
+        description: >
+          Duration in days after which the artifact of UI testing (if any) will expire. See
+          https://github.com/actions/upload-artifact#retention-period for more details.
       xunit-max-parallel-threads:
         required: false
         type: string
@@ -153,18 +167,10 @@ jobs:
           - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-      - name: Set Checkout Token
-        shell: pwsh
-        env:
-          CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
-        run: |
-          $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
-          "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
-
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
-          token: ${{ env.CHECKOUT_TOKEN }}
+          token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
         uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
@@ -191,7 +197,8 @@ jobs:
           enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
           cache-version: ${{ inputs.build-cache-version }}
           solution-or-project-path: ${{ inputs.build-solution-path }}
-          create-binary-log: ${{ inputs.build-create-binary-log}}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
@@ -212,6 +219,7 @@ jobs:
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
           ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
+          ui-test-artifact-retention-days: ${{ inputs.ui-test-artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
 
       - name: Cancel Workflow on Failure
