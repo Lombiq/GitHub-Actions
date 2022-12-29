@@ -112,6 +112,9 @@ runs:
         verbosity: ${{ inputs.verbosity }}
         enable-code-analysis: false
         publish-version: ${{ steps.setup.outputs.publish-version }}
+        # Intentionally an empty string to use the default dotnet build behavior of "build the only project or only
+        # solution, or fail if there are multiple projects".
+        solution-or-project-path: ""
         dotnet-build-switches: |
           --no-restore
           -p:NuGetBuild=true
