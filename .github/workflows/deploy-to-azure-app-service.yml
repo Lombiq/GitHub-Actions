@@ -80,7 +80,7 @@ on:
       slot-name:
         required: true
         type: string
-        description:
+        description: >
           What you see at the top of the blade on the Azure Portal, when you open the slot, before the app
           name in parenthesis.
       resource-group-name:
@@ -104,7 +104,7 @@ on:
         required: false
         type: string
         default: "false"
-        description:
+        description: >
           Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the
           target machine.
       application-insights-resource-id:
