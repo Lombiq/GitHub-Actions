@@ -41,7 +41,6 @@ elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*")
 
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))
 {
-    $bodyParams = @{"title" = $Title; "body" = $Body } | ConvertTo-Json
-    $url = "https://api.github.com/repos/$GitHubRepository/pulls/$PullRequestId"
-    Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Patch -Body $bodyParams
+    # See https://cli.github.com/manual/gh_pr_edit
+    gh pr edit $PullRequestId --title $Title --body $Body --repo $GitHubRepository
 }
