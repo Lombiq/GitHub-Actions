@@ -76,8 +76,9 @@ on:
         default: "0"
         description: >
           Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
-          only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
-          until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+          only current way to force "clear" the cache
+          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
+          (https://github.com/actions/cache/issues/2) is resolved.
       build-create-binary-log:
         required: false
         type: string

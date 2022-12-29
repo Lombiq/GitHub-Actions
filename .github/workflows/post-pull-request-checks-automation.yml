@@ -33,7 +33,8 @@ on:
       merge-method:
         description: >
           The merge strategy to be used for the auto-merge-pull-request action. See the API documentation for
-          "merge_method" for applicable values: https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#merge-a-pull-request
+          "merge_method" for applicable values:
+          https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#merge-a-pull-request
         required: false
         type: string
         default: merge

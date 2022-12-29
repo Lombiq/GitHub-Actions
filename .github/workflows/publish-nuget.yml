@@ -43,8 +43,8 @@ on:
         type: string
         default: ""
         description: >
-          Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be
-          separated by any whitespace, including newlines.
+          Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be separated by any
+          whitespace, including newlines.
       dotnet-pack-include-symbols:
         required: false
         type: string

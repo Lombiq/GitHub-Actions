@@ -23,7 +23,8 @@ inputs:
   test-filter:
     required: false
     description: >
-      Filter expression for dotnet test. See: https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
+      Filter expression for dotnet test. See:
+      https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
   test-configuration:
     required: false
     description: Value passed to the --configuration parameter of dotnet test.
