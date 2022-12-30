@@ -58,6 +58,8 @@ dotnestcore
 dotnet
 dragleave
 dragover
+eastus
+EUS
 endcapture
 endgroup
 endzone
