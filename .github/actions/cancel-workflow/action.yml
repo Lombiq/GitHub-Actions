@@ -23,5 +23,5 @@ runs:
       shell: pwsh
       run: |
         Write-Output "::error::Canceling workflow due to one of the jobs failing."
-        $url = "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
-        Invoke-WebRequest $url -Headers (Get-GitHubApiAuthorizationHeader) -Method Post
+        # See https://cli.github.com/manual/gh_run_cancel
+        gh run cancel --repo ${{ github.repository }} ${{ github.run_id }}

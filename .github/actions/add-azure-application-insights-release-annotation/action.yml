@@ -1,7 +1,7 @@
 name: Add Azure Application Insights Release Annotation
 description: >
- Can be used to add release annotations in Azure Application Insights, to mark when a new version of an app was rolled
- out to a given environment. See https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations for details.
+  Can be used to add release annotations in Azure Application Insights, to mark when a new version of an app was rolled
+  out to a given environment. See https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations for details.
 
 inputs:
   application-insights-resource-id:
