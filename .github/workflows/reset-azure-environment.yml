@@ -110,7 +110,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/NEST-337
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
         env:
           SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
 
