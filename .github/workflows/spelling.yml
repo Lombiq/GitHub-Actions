@@ -27,7 +27,7 @@ on:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists.
         required: false
         type: string
-        default:
+        default: |
           cspell:filetypes/filetypes.txt
           cspell:django/django.txt
           cspell:aws/aws.txt
