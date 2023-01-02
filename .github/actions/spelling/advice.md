@@ -24,7 +24,7 @@ Before adding an entry to one of the dictionary files, consider the following:
 
 1. The order of entries in the spelling dictionary prefixes parameter in your workflow call matters, so the most specific ones, like your own should come before more generic ones, like "cspell".
 2. When confronted with unrecognized words in a spell checking report, consider which of those are actually words that make sense to type, instead of just being remainders (because some parts of the original text were replaced with a space character due to matching an earlier entry) of another word or a technical string.
-3. Rare cases that we don't expect to show up overall more than 3 times and strings that are valid in a single situation should be ignored in-place without adding them to a dictionary file. Placing the `#spell-check-ignore-line` string somewhere in a line (for example in a comment at the end of a line of code) will exclude that line completely from spell checking.
+3. Rare cases that we don't expect to show up overall more than 3 times and strings that are valid in a single situation should be ignored in-place without adding them to a dictionary file. Placing the `#spell-check-ignore-line` string somewhere in a line (for example in a comment at the end of a line of code) will exclude that line completely from spell checking. In Markdown, add an HTML comment at the end of the line: `<!-- #spell-check-ignore-line -->`.
 
 ## Helper scripts for local development
 
