@@ -2,7 +2,9 @@
 
 ## About
 
-Some common workflows and actions for Github Actions shared between Lombiq projects, e.g. to build and test [Orchard Core](https://www.orchardcore.net/) apps, publish packages to NuGet, verify that a Git submodule pull request has a corresponding superproject one. These can be invoked from any other repository's build. [Here](https://www.youtube.com/watch?v=bhMnX0TsybM) you can also see a demo of it.
+Reusable workflows and actions for Github Actions shared between Lombiq projects, e.g. to build and test [Orchard Core](https://www.orchardcore.net/) apps and .NET Framework and .NET Core applications in general, publish packages to NuGet, verifying and validating pull requests, spell checking, static code analysis and linting, and more! These can be invoked from any other repository's build.
+
+[Check out a demo](https://www.youtube.com/watch?v=bhMnX0TsybM) on our YouTube channel!
 
 ## Documentation
 

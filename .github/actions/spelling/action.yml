@@ -5,7 +5,10 @@ description: Checks for spelling errors in files.
 inputs:
   dictionary-source-prefixes:
     # When v0.0.21 is out update this and the one in spelling.yml with the version below.
-    description: JSON map of prefixes for dictionary urls, "cspell" is necessary. See https://github.com/check-spelling/check-spelling/blob/86a22cfaff3846dbd788acea5d18cf5db6d40dd1/action.yml#L64 for current version.
+    description: >
+      JSON map of prefixes for dictionary urls, "cspell" is necessary. See
+      https://github.com/check-spelling/check-spelling/blob/86a22cfaff3846dbd788acea5d18cf5db6d40dd1/action.yml#L64 for
+      current version.
     required: false
     default: >
       {

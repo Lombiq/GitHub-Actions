@@ -5,7 +5,7 @@ inputs:
   source:
     required: false
     default: https://api.nuget.org/v3/index.json
-    description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument. 
+    description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument.
   verbosity:
     required: false
     default: minimal
@@ -14,8 +14,8 @@ inputs:
     required: false
     default: ""
     description: >
-      Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be 
-      separated by any whitespace, including newlines.
+      Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be separated by any
+      whitespace, including newlines.
   dotnet-pack-include-symbols:
     required: false
     default: "true"
@@ -62,9 +62,9 @@ runs:
 
         if ($version -eq 'USE_GITHUB_REF_NAME') { $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v") }
         if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
-          $tags = git tag | 
-            ? { $_ -match '^v?\d+(\.\d+){0,3}$' } | 
-            % { [version]($_.TrimStart("v")) } | 
+          $tags = git tag |
+            ? { $_ -match '^v?\d+(\.\d+){0,3}$' } |
+            % { [version]($_.TrimStart("v")) } |
             Sort-Object -Descending
           $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
 
@@ -72,7 +72,7 @@ runs:
 
           $version = "$next-preview-$Env:GITHUB_RUN_NUMBER"
         }
-        
+
         Write-Output "Target Version: $version"
         Set-GitHubOutput "publish-version" $version
 
@@ -116,15 +116,15 @@ runs:
         # solution, or fail if there are multiple projects".
         solution-or-project-path: ""
         dotnet-build-switches: |
-            --no-restore
-            -p:NuGetBuild=true
-            -p:LangVersion=Latest
-            -p:GenerateDocumentationFile=True
-            -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200
-            -p:EnableNETAnalyzers=false
-            -p:ContinuousIntegrationBuild=true
-            -p:DebugSymbols=true
-            -p:DebugType=portable
+          --no-restore
+          -p:NuGetBuild=true
+          -p:LangVersion=Latest
+          -p:GenerateDocumentationFile=True
+          -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200
+          -p:EnableNETAnalyzers=false
+          -p:ContinuousIntegrationBuild=true
+          -p:DebugSymbols=true
+          -p:DebugType=portable
 
     - name: Actions prior to dotnet pack
       if: hashFiles('Invoke-BeforePack.ps1')
