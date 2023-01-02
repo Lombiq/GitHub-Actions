@@ -3,6 +3,13 @@ name: Test Analysis Failure
 
 on:
   workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
+          are used.
+
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
@@ -16,8 +23,8 @@ on:
         type: string
         default: "['ubuntu-22.04']"
         description: >
-            Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-            "['ubuntu-22.04']" or "['ubuntu-22.04\", \"windows-2022']".
+          Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
+          "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
       dotnet-version:
         required: false
         type: string
@@ -53,13 +60,13 @@ on:
           (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
           API.
       build-expected-code-analysis-errors:
-          required: false
-          type: string
-          default: ""
-          description: >
-              If not empty, it indicates that the static code analysis should fail. Then each line should contain one error
-              code. The static code analysis should yield these and only these errors. This is ignored if
-              `enable-code-analysis` is not "true". You may add a colon and then an explanation of the expected error.
+        required: false
+        type: string
+        default: ""
+        description: >
+          If not empty, it indicates that the static code analysis should fail. Then each line should contain one error
+          code. The static code analysis should yield these and only these errors. This is ignored if
+          `enable-code-analysis` is not "true". You may add a colon and then an explanation of the expected error.
       timeout-minutes:
         required: false
         type: number
@@ -76,33 +83,35 @@ jobs:
       matrix:
         machine-type: ${{ fromJson(inputs.machine-types) }}
         timeout-minutes:
-        - ${{ inputs.timeout-minutes }}
+          - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - name: Checkout
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
 
-    - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
-      with:
-        dotnet-version: ${{ inputs.dotnet-version }}
+      - name: Set up .NET
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
 
-    - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+      - name: Enable Node corepack
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
-    - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
-      with:
-        directory: ${{ inputs.build-directory }}
-        verbosity: quiet
-        enable-code-analysis: true
-        enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
-        enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
-        cache-version: ${{ inputs.build-cache-version }}
-        expected-code-analysis-errors: ${{ inputs.build-expected-code-analysis-errors }}
+      - name: Build and Static Code Analysis
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          verbosity: quiet
+          enable-code-analysis: true
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          expected-code-analysis-errors: ${{ inputs.build-expected-code-analysis-errors }}
 
-    - name: Cancel Workflow on Failure
-      if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

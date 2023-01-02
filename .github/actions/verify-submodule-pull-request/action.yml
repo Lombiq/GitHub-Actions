@@ -1,6 +1,6 @@
 name: Verify Submodule Pull Request
 description: >
-  Assuming that the current repository is a submodule in another repository, this action verifies that a pull request 
+  Assuming that the current repository is a submodule in another repository, this action verifies that a pull request
   with a matching issue code has been opened there as well.
 
 inputs:
@@ -15,11 +15,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup and Print PR Title
+    - name: Setup Scripts
       shell: pwsh
       run: |
-        Write-Output "Pull Request Title: ${{ inputs.title }}"
-
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 

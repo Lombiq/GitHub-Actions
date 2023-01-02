@@ -1,19 +1,15 @@
-﻿param(
+param(
     [string] $Repository,
     [string] $Branch
 )
-
-$requestParameters = @{
-    Uri = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
-    Method = "Get"
-    Headers = @{ Accept = "application/vnd.github.v3+json" }
-}
-$titles = (Invoke-WebRequest @requestParameters).Content | ConvertFrom-Json | ForEach-Object { $PSItem.title }
 
 if (!($Branch -match '(\w+-\d+)'))
 {
     exit
 }
+
+# See https://cli.github.com/manual/gh_pr_list and https://cli.github.com/manual/gh_help_formatting
+$titles = gh pr list --repo $Repository --limit 100 --json title --template '{{range .}}{{tablerow .title}}{{end}}'
 
 $issueCode = $matches[0]
 $lookFor = "${issueCode}:"
