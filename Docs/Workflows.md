@@ -80,7 +80,18 @@ jobs:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
     with:
-      # This is only needed if you want to use any other dictionaries than the ones in this project. 
+      # Add this parameter if you want to use dictionary files from Lombiq's or any other repository outside "cspell". The order of entries matters, so the most specific ones, like your own should come before more generic ones, like "cspell".
+      dictionary-source-prefixes: >
+        {
+          "lombiq": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/",
+          "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"
+        }
+      # Use this parameter to list the external dictionary files to use, but beware that check-spelling only accepts flat lists of words (so, for example patterns.txt can't be referenced like this). The order doesn't matter, but sorting it alphabetically makes it easier to maintain.
+      extra-dictionaries: |
+        cspell:csharp/csharp.txt
+        lombiq:allow.txt
+        lombiq:expect.txt
+      # This is only needed if you want to use any other dictionaries than the ones in this project.
       spell-check-this: Lombiq/GitHub-Actions@your-custom-branch
 ```
 
