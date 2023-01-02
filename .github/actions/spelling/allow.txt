@@ -3,6 +3,7 @@ addons
 airbnb
 allowlist
 Antiforgery
+antiforgerytoken
 apiclienttenant
 apikey
 apps
@@ -33,7 +34,9 @@ commonjs
 configurator
 Configurator
 contentfiles
+contentitem
 contentitemid
+contenttype
 contextmenu
 corepack
 createstate
@@ -55,6 +58,8 @@ dotnestcore
 dotnet
 dragleave
 dragover
+eastus
+EUS
 endcapture
 endgroup
 endzone
@@ -252,7 +257,7 @@ linq
 listheader
 logtest
 lombiq
-Lucene
+lucene
 mediatheme
 mentoring
 metadata
@@ -293,6 +298,7 @@ shortcutting
 Shouldly
 Sipke
 sitesettings
+sku
 smtpport
 sqlite
 standalone
