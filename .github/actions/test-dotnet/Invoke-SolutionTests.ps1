@@ -62,6 +62,7 @@ foreach ($test in $tests)
         '--logger', 'console;verbosity=detailed'
         '--verbosity', $Verbosity
         $Filter ? '--filter', $Filter : ''
+        '--blame-hang-timeout', '5s'
         $test
     )
 
