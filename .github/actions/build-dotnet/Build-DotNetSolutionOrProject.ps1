@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string] $Configuration,
     [string] $SolutionOrProject,
     [string] $Verbosity,
@@ -76,8 +76,6 @@ if ($noErrors -and !$?)
 {
     exit 1
 }
-
-Stop-DotNetBuildServers
 
 if ($expectedErrorCodes)
 {

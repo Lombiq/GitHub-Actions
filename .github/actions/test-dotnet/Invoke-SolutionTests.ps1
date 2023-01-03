@@ -41,8 +41,6 @@ $tests = dotnet sln $Solution list |
         -not [string]::IsNullOrEmpty($result) -and $result.Contains("The following Tests are available")
     }
 
-Set-GitHubOutput "test-count" $tests.Length
-
 Write-Output "Starting to execute tests from $($tests.Length) projects."
 
 foreach ($test in $tests)
