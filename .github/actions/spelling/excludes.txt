@@ -30,7 +30,7 @@
 \.woff2$
 ^\.github/
 ^LICENSE\.txt$
-appsettings\.*\.json$
+appsettings.*\.json$
 dotnet-tools\.json$
 ignore$
 package\.json$
