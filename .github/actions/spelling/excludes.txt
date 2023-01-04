@@ -7,10 +7,10 @@
 \.editorconfig$
 \.eslintrc$
 \.git
-\.htmlvalidate\.json$
 \.ico$
 \.jfif$
 \.jpg$
+\.json$
 \.min\.css$
 \.min\.js$
 \.ndproj$
@@ -21,7 +21,6 @@
 \.png$
 \.ps1$
 \.psm1$
-\.recipe\.json$
 \.ruleset$
 \.sln$
 \.stylelintrc$
@@ -30,11 +29,7 @@
 \.woff2$
 ^\.github/
 ^LICENSE\.txt$
-appsettings.*\.json$
-dotnet-tools\.json$
 ignore$
-package\.json$
-package-lock\.json$
 pnpm-lock\.yaml$
 UploadingTestFileDOCX\.docx$
 UploadingTestFileXLSX\.xlsx$
