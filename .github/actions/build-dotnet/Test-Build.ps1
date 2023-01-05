@@ -1,6 +1,6 @@
 <#
 .Synopsis
-   Local testing script to run the Build-DotNetSolutionOrProject script.
+   Local testing script to run the Build-DotNetSolutionOrProject script. This needs to be invoked from its own folder.
 #>
 
 $buildSwitches = @'
