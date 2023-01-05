@@ -190,7 +190,7 @@ jobs:
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
 ```
 
-If the app uses the [`Lombiq.Hosting.BuildVersionDisplay` module](https://github.com/Lombiq/Hosting-Build-Version-Display), then the workflow play along with it: The module will display a link to the run.
+If the app uses the [`Lombiq.Hosting.BuildVersionDisplay` module](https://github.com/Lombiq/Hosting-Build-Version-Display), then the workflow plays along with it: The module will display a link to the run.
 
 ## Validate Pull Request workflow
 
