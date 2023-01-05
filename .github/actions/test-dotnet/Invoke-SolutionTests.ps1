@@ -35,48 +35,12 @@ $tests = dotnet sln $Solution list |
     Select-Object -Skip 2 |
     Select-String "\.Tests\." |
     Select-String -NotMatch "Lombiq.Tests.UI.csproj" |
-    Select-String -NotMatch "Lombiq.Tests.csproj" |
-    Where-Object {
-        $result = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $PSItem 2>&1 | Out-String -Width 9999
-        -not [string]::IsNullOrEmpty($result) -and $result.Contains("The following Tests are available")
-    }
-
-Set-GitHubOutput "test-count" $tests.Length
+    Select-String -NotMatch "Lombiq.Tests.csproj"
 
 Write-Output "Starting to execute tests from $($tests.Length) projects."
 
 foreach ($test in $tests)
 {
-    # This could benefit from grouping, above the level of the potential groups created by the tests (the Lombiq UI
-    # Testing Toolbox adds per-test groups too). However, there's no nested grouping, see
-    # https://github.com/actions/runner/issues/1477. See the # c341ef145d2a0898c5900f64604b67b21d2ea5db commit for a
-    # nested grouping implementation.
-
     Write-Output "Starting to execute tests from the $test project."
-
-    $dotnetTestSwitches = @(
-        '--configuration', $Configuration
-        '--no-restore',
-        '--no-build',
-        '--nologo',
-        '--logger', 'trx;LogFileName=test-results.trx'
-        # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
-        '--logger', 'console;verbosity=detailed'
-        '--verbosity', $Verbosity
-        $Filter ? '--filter', $Filter : ''
-        $test
-    )
-
-    dotnet test @dotnetTestSwitches 2>&1 |
-        Where-Object { $PSItem -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $PSItem -notlike '*ChromeDriver was started successfully*' }
-
-    if ($?)
-    {
-        Write-Output "Test successful: $test"
-        continue
-    }
-
-    Write-Output "Test failed: $test"
-
-    exit 100
+    dotnet test --configuration $Configuration --list-tests --verbosity $Verbosity $test
 }
