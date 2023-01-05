@@ -81,7 +81,7 @@ runs:
       run: |
         $switches = @{
           Solution = Get-SolutionOrProjectPath ${{ inputs.solution-path }}
-          Verbosity = "${{ inputs.test-verbosity }}"
+          Verbosity = "d"
           Filter = "${{ inputs.test-filter }}"
           Configuration = "${{ inputs.test-configuration }}"
         }
