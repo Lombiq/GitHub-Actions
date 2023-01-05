@@ -10,6 +10,7 @@ $expectedCodeAnalysisErrors = @'
 '@
 
 $switches = @{
+    Configuration = "Release"
     SolutionOrProject = "../../../../../Lombiq.OSOCE.sln"
     Verbosity = "quiet"
     EnableCodeAnalysis = "true"
