@@ -168,6 +168,7 @@ jobs:
             ${{ inputs.self-contained }}
             -p:PublishReadyToRun=${{ inputs.ready-to-run }}
             ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+            -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       - name: Publish
         run: |
