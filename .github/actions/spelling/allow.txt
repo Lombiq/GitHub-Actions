@@ -101,6 +101,7 @@ Interoperability
 isignal
 issetuprecipe
 itest
+IXL
 JArray
 jetbrains
 JObject
