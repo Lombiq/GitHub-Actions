@@ -22,8 +22,8 @@ $installedTool = dotnet tool list $scopeString | Select-Object -Skip 2 | ForEach
     $segments = $PSItem.Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
     return New-Object -TypeName PSObject -Property @{
         PackageId = $segments[0]
-        Version   = $segments[1]
-        Commands  = $segments[2]
+        Version = $segments[1]
+        Commands = $segments[2]
     }
 } | Where-Object { $PSItem.PackageId -eq $Name }
 
