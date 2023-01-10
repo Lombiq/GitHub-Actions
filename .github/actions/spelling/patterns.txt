@@ -20,5 +20,8 @@ sha[0-9]{3}-[0-9a-zA-Z+/]{64}
 # Hexadecimal literals in C# code.
 \b0x[0-9a-fA-F]+\b
 
+# Remove the "I" from the beginning of interface names and the "T" from the beginning of generic type parameter names.
+\b(I|T)[A-Z][a-zA-Z]+\b
+
 # Ignore lines that contain the "#spell-check-ignore-line" marker text.
 .*#spell-check-ignore-line.*
