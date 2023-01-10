@@ -13,13 +13,13 @@ param ($Solution, $Verbosity, $Filter, $Configuration)
 $ConnectionStringSuffix = ";MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;TrustServerCertificate=true;Encrypt=false"
 if ($Env:RUNNER_OS -eq "Windows")
 {
-    $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
-        "Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True" + $ConnectionStringSuffix
+    $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = ("Server=.\SQLEXPRESS;" +
+        "Database=LombiqUITestingToolbox_{{id}};Integrated Security=True" + $ConnectionStringSuffix)
 }
 else
 {
-    $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate =
-        "Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!" + $ConnectionStringSuffix
+    $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = ("Server=.;" +
+        "Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!" + $ConnectionStringSuffix)
 
     $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = "sql2019"
 }
