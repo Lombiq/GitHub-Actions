@@ -121,6 +121,7 @@ mediatheme
 mentoring
 metadata
 Meziantou
+MHTML
 middlewares
 misconfigured
 multiline
