@@ -7,7 +7,7 @@ param(
     [string] $PullRequestId
 )
 
-$jiraBrowseUrl = $JiraBaseUrl + '/browse/';
+$jiraBrowseUrl = $JiraBaseUrl + '/browse/'
 
 $originalTitle = $Title
 $originalBody = $Body

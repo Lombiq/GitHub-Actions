@@ -16,7 +16,7 @@ Add notes here if anything needs to be done after the issue is resolved, like ma
 }
 else
 {
-    $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] = $Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION;
+    $templates["DISCUSSION_JIRA_ISSUE_DESCRIPTION"] = $Env:DISCUSSION_JIRA_ISSUE_DESCRIPTION
 }
 
 if ([string]::IsNullOrEmpty($Env:ISSUE_JIRA_ISSUE_DESCRIPTION))
@@ -39,7 +39,7 @@ Add notes here if anything needs to be done after the issue is resolved, like ma
 }
 else
 {
-    $templates["ISSUE_JIRA_ISSUE_DESCRIPTION"] = $Env:ISSUE_JIRA_ISSUE_DESCRIPTION;
+    $templates["ISSUE_JIRA_ISSUE_DESCRIPTION"] = $Env:ISSUE_JIRA_ISSUE_DESCRIPTION
 }
 
 if ([string]::IsNullOrEmpty($Env:PULL_REQUEST_JIRA_ISSUE_DESCRIPTION))
@@ -58,7 +58,7 @@ Add notes here if anything needs to be done after the issue is resolved, like ma
 }
 else
 {
-    $templates["PULL_REQUEST_JIRA_ISSUE_DESCRIPTION"] = $Env:PULL_REQUEST_JIRA_ISSUE_DESCRIPTION;
+    $templates["PULL_REQUEST_JIRA_ISSUE_DESCRIPTION"] = $Env:PULL_REQUEST_JIRA_ISSUE_DESCRIPTION
 }
 
 return $templates
