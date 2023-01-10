@@ -20,8 +20,10 @@ sha[0-9]{3}-[0-9a-zA-Z+/]{64}
 # Hexadecimal literals in C# code.
 \b0x[0-9a-fA-F]+\b
 
-# Remove the "I" from the beginning of interface names and the "T" from the beginning of generic type parameter names.
-\b(I|T)[A-Z][a-zA-Z]+\b
+# Match the "I" from the beginning of interface names and the "T" from the beginning of generic type parameter names.
+# The pattern matches, if the first letter is "I" or "T", followed by a capital letter, followed by any word character.
+# Only the first captured, so the rest is still spell-checked as they are usually made up of actual words.
+\b(I|T)(?=[A-Z][\w]+)
 
 # Ignore lines that contain the "#spell-check-ignore-line" marker text.
 .*#spell-check-ignore-line.*
