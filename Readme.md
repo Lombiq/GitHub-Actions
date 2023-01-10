@@ -38,3 +38,6 @@ TCategory
 TCd
 TClass
 TClient
+
+ILlinois
+TEmperature
