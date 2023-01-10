@@ -16,3 +16,25 @@ Reusable workflows and actions for GitHub Actions shared between Lombiq projects
 Bug reports, feature requests, comments, questions, code contributions and love letters are warmly welcome. You can send them to us via GitHub issues and pull requests. Please adhere to our [open-source guidelines](https://lombiq.com/open-source-guidelines) while doing so.
 
 This project is developed by [Lombiq Technologies](https://lombiq.com/). Commercial-grade support is available through Lombiq.
+
+IVue
+IWait
+IWeb
+IWorkflow
+IXL
+IZone
+JArray
+jetbrains
+JObject
+Subresource
+superproject
+taghelper
+TAttribute
+taxonomyexpensetags
+taxonomyfield
+taxonomyincometags
+TBase
+TCategory
+TCd
+TClass
+TClient
