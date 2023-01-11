@@ -24,7 +24,7 @@ sha[0-9]{3}-[0-9a-zA-Z+/]{64}
 # The pattern matches, if the first letter is "I" or "T", followed by a capital letter, followed by a word character
 # that is not a capital letter, followed by 0 or more word characters. Only the first letter is captured, so the rest is
 # still spell-checked as they are usually made up of actual words.
-\b(I|T)(?=[A-Z][a-z0-9_][\w]*)
+\b(I|T)(?=[A-Z][a-z0-9_]\w*)
 
 # Ignore lines that contain the "#spell-check-ignore-line" marker text.
 .*#spell-check-ignore-line.*
