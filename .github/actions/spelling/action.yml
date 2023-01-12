@@ -46,10 +46,10 @@ runs:
     - name: Check Spelling
       uses: check-spelling/check-spelling@v0.0.21
       with:
+        config: ${{ inputs.config }}
         dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
-        extra_dictionaries: ${{ inputs.extra-dictionaries }}
         experimental_apply_changes_via_bot: 0
-        suppress_push_for_open_pull_request: 1
+        extra_dictionaries: ${{ inputs.extra-dictionaries }}
         post_comment: 1
         spell_check_this: ${{ inputs.spell-check-this }}
-        config: ${{ inputs.config }}
+        suppress_push_for_open_pull_request: 1
