@@ -46,6 +46,7 @@ runs:
     - name: Check Spelling
       uses: check-spelling/check-spelling@v0.0.21
       with:
+        check_file_names: 1
         config: ${{ inputs.config }}
         dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
         experimental_apply_changes_via_bot: 0
