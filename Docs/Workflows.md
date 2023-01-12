@@ -306,6 +306,8 @@ jobs:
 
 ```
 
+To restrict who can run the swap workflow, we recommend putting it into its own repository. [GitHub environments](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) would be better, because they not only provide [a nice display of what's currently deployed where](https://docs.github.com/en/actions/deployment/managing-your-deployments/viewing-deployment-history), but allow secrets specific to environments like staging/production, and also can have required reviewers (i.e. not everyone is able to run a swap who has write access to the repository). However, this latter one is [only available under the Enterprise plan](https://github.com/orgs/community/discussions/26262). (Branch protection rules are not a suitable substitute.)
+
 ## Post Pull Request Checks Automation
 
 Various automation that should be run after all other checks succeeded for a pull request. Currently does the following:
