@@ -56,7 +56,6 @@ idx
 iife
 iis
 ipsum
-IShortcode
 itemprop
 jira
 JMES
