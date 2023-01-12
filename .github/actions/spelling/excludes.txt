@@ -2,6 +2,7 @@
 \.config$
 \.csproj$
 \.css$
+\.css\.map$
 \.DotSettings$
 \.editorconfig$
 \.eslintrc$
@@ -10,6 +11,8 @@
 \.jfif$
 \.jpg$
 \.json$
+\.min\.css$
+\.min\.js$
 \.ndproj$
 \.nupkg$
 \.nuspec\.template$
