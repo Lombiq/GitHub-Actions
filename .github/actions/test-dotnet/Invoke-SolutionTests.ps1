@@ -10,20 +10,22 @@ param ($Solution, $Verbosity, $Filter, $Configuration)
 # the Actions web UI. Note that we use bash to output the log using bash to avoid pwsh wrapping the output to the
 # default buffer width.
 
-$ConnectionStringSuffix = ";MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;TrustServerCertificate=true;Encrypt=false"
+$connectionStringSuffix = @(
+    ";MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;Encrypt=false;"
+    "TrustServerCertificate=true"
+) -join ''
 if ($Env:RUNNER_OS -eq "Windows")
 {
-    $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = ("Server=.\SQLEXPRESS;" +
-        "Database=LombiqUITestingToolbox_{{id}};Integrated Security=True" + $ConnectionStringSuffix)
+    $connectionStringStem = "Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True"
 }
 else
 {
-    $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = ("Server=.;" +
-        "Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!" + $ConnectionStringSuffix)
+    $connectionStringStem = "Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!"
 
     $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = "sql2019"
 }
 
+$Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionStringStem + $connectionStringSuffix
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = "true"
 
 # We assume that the solution was built in Release configuration. If the tests need to be built in Debug configuration,

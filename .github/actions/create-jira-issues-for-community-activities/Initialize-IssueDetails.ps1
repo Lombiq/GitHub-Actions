@@ -53,8 +53,10 @@ switch ($GitHub.event_name)
     }
     default
     {
-        $message = ("Unknown event `"$($GitHub.event_name)`". Please only call this script for one of the following" +
-            " events: discussion, issues, pull_request.")
+        $message = @(
+            "Unknown event `"$($GitHub.event_name)`". Please only call this script for one of the following events:"
+            "discussion, issues, pull_request."
+        ) -join ' '
         Write-Error "::error::$message"
         exit 1
     }
