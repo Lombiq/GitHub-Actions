@@ -187,6 +187,8 @@ submenu
 Subresource
 superproject
 symlink
+symlinks
+symlinked
 taghelper
 taxonomyexpensetags
 taxonomyfield
