@@ -23,6 +23,7 @@ Cms
 cref
 crlf
 csharp
+cspell
 ctor
 ctx
 cwd
@@ -41,7 +42,6 @@ EULA
 eur
 falsey
 favicon
-fff
 ffff
 Fhd
 fixme

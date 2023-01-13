@@ -80,8 +80,9 @@ on:
       slot-name:
         required: true
         type: string
-        description: What you see at the top of the blade on the Azure Portal, when you open the slot, before the app
-          name in parenthesis.
+        description: >
+          What you see at the top of the blade on the Azure Portal, when you open the slot, before the app name in
+          parenthesis.
       resource-group-name:
         required: true
         type: string
@@ -97,14 +98,15 @@ on:
         required: false
         type: string
         description: >
-          Publishes the application for a given runtime. If you use this option, set "self-contained" to the
-          desired value also. "self-contained" is "false" by default.
+          Publishes the application for a given runtime. If you use this option, set "self-contained" to the desired
+          value also. "self-contained" is "false" by default.
       self-contained:
         required: false
         type: string
         default: "false"
-        description: Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the
-          target machine.
+        description: >
+          Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the target
+          machine.
       application-insights-resource-id:
         required: true
         type: string
@@ -128,103 +130,102 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-    - name: Checkout
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-      with:
-        token: ${{ secrets.CHECKOUT_TOKEN }}
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
 
-    - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
-      with:
-        dotnet-version: ${{ inputs.dotnet-version }}
+      - name: Set up .NET
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
 
-    - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+      - name: Enable Node corepack
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
-    # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
-    # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
-    # take advantage of the dotnet CLI tolerating the usage of the equal sign.
-    - name: Set up runtime option
-      id: set-up-runtime-option
-      if: ${{ inputs.runtime != '' }}
-      run: |
-        "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
+      # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
+      # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
+      # take advantage of the dotnet CLI tolerating the usage of the equal sign.
+      - name: Set up runtime option
+        id: set-up-runtime-option
+        if: ${{ inputs.runtime != '' }}
+        run: |
+          "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
 
-    - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
-      with:
-        directory: ${{ inputs.build-directory }}
-        verbosity: ${{ inputs.build-verbosity }}
-        enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
-        enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
-        enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
-        cache-version: ${{ inputs.build-cache-version }}
-        solution-or-project-path: ${{ inputs.web-project-path }}
-        # Arguments need to be separated into newlines: https://stackoverflow.com/a/59077879/16192320
-        dotnet-build-switches: |
-          --self-contained
-          ${{ inputs.self-contained }}
-          -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-          ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+      - name: Build and Static Code Analysis
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.web-project-path }}
+          # Arguments need to be separated into newlines: https://stackoverflow.com/a/59077879/16192320
+          dotnet-build-switches: |
+            --self-contained
+            ${{ inputs.self-contained }}
+            -p:PublishReadyToRun=${{ inputs.ready-to-run }}
+            ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+            -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-    - name: Publish
-      run: |
-        dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
-          --no-build `
-          --configuration Release `
-          --output '${{ inputs.build-directory }}/Published' `
-          --verbosity ${{ inputs.build-verbosity }} `
-          --self-contained ${{ inputs.self-contained }} `
-          -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
-          ${{ steps.set-up-runtime-option.outputs.runtime-option }}
-        
-    - name: Login to Azure
-      # v1.4.6
-      uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
-      with:
-        creds: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
-        enable-AzPSSession: true
+      - name: Publish
+        run: |
+          dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
+            --no-build `
+            --configuration Release `
+            --output '${{ inputs.build-directory }}/Published' `
+            --verbosity ${{ inputs.build-verbosity }} `
+            --self-contained ${{ inputs.self-contained }} `
+            -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
+            ${{ steps.set-up-runtime-option.outputs.runtime-option }}
 
-    - name: Initialize PowerShell modules
-      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+      - name: Login to Azure
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        env:
+          SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
 
-    - name: Stop Web App Slot
-      run: |
-        Stop-AzureWebAppSlot `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.slot-name }}
+      - name: Initialize PowerShell modules
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
-    - name: Deploy to Azure App Service
-      # v2.2.4
-      uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644
-      with:
-        app-name: ${{ inputs.app-name }}
-        slot-name: ${{ inputs.slot-name }}
-        publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-        package: ${{ inputs.build-directory }}/Published
+      - name: Stop Web App Slot
+        run: |
+          Stop-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
 
-    - name: Add Azure Application Insights Release Annotation
-      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
-      with:
-        application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+      - name: Deploy to Azure App Service
+        # v2.2.4
+        uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644
+        with:
+          app-name: ${{ inputs.app-name }}
+          slot-name: ${{ inputs.slot-name }}
+          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+          package: ${{ inputs.build-directory }}/Published
 
-    - name: Start Web App Slot
-      run: |
-        Start-AzureWebAppSlot `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.slot-name }}
+      - name: Add Azure Application Insights Release Annotation
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        with:
+          application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
-    - name: Test Web App Slot
-      run: |
-        Test-AzureWebApp `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.slot-name }}
+      - name: Start Web App Slot
+        run: |
+          Start-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
 
-    - name: Cancel Workflow on Failure
-      if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
+
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

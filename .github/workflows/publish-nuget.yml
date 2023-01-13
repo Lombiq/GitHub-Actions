@@ -22,7 +22,7 @@ on:
         required: false
         type: string
         default: https://api.nuget.org/v3/index.json
-        description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument. 
+        description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument.
       verbosity:
         required: false
         type: string
@@ -43,8 +43,8 @@ on:
         type: string
         default: ""
         description: >
-          Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be 
-          separated by any whitespace, including newlines.
+          Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be separated by any
+          whitespace, including newlines.
       dotnet-pack-include-symbols:
         required: false
         type: string
@@ -57,6 +57,15 @@ on:
         description: >
           The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment
           variable is used which is suitable if the version is derived from a git tag.
+      nuget-artifact-retention-days:
+        required: false
+        type: string
+        default: "14"
+        description: >
+          Duration in days after which the artifact of the NuGet package publishing (if any) will expire. See
+          https://github.com/actions/upload-artifact#retention-period for more details. Note that this only affects the
+          retention of the workflow run's artifact, not the artifacts attached to the release created on GitHub; those
+          will remain indefinitely.
 
 jobs:
   publish-nuget:
@@ -68,29 +77,30 @@ jobs:
         timeout-minutes: ${{ fromJSON(format('[ {0} ]', inputs.timeout-minutes)) }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - name: Checkout
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-      with:
-        token: ${{ secrets.CHECKOUT_TOKEN }}
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
 
-    - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
-      with:
-        dotnet-version: ${{ inputs.dotnet-version }}
+      - name: Set up .NET
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
 
-    - name: Publish to NuGet
-      uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
-      with:
-        source: ${{ inputs.source }}
-        verbosity: ${{ inputs.verbosity }}
-        dotnet-pack-ignore-warning: ${{ inputs.dotnet-pack-ignore-warning }}
-        dotnet-pack-include-symbols: ${{ inputs.dotnet-pack-include-symbols }}
-        publish-version: ${{ inputs.publish-version }}
-      env:
-        API_KEY: ${{ secrets.API_KEY }}
+      - name: Publish to NuGet
+        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
+        with:
+          source: ${{ inputs.source }}
+          verbosity: ${{ inputs.verbosity }}
+          dotnet-pack-ignore-warning: ${{ inputs.dotnet-pack-ignore-warning }}
+          dotnet-pack-include-symbols: ${{ inputs.dotnet-pack-include-symbols }}
+          publish-version: ${{ inputs.publish-version }}
+          nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
 
-    - name: Cancel Workflow on Failure
-      if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

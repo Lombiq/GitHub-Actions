@@ -26,8 +26,8 @@ inputs:
     required: false
     default: ""
     description: >
-      Additional command line switches given to `msbuild`. You must split these into multiple lines, even the
-      parameter value.
+      Additional command line switches given to `msbuild`. You must split these into multiple lines, even the parameter
+      value.
   solution-or-project-path:
     required: false
     default: "*.sln"

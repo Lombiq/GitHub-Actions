@@ -1,4 +1,4 @@
-# DEPRECATED! Use build-and-test-dotnet instead, that can also execute tests. 
+# DEPRECATED! Use build-and-test-dotnet instead, that can also execute tests.
 name: Build .NET solution
 
 on:
@@ -16,15 +16,15 @@ on:
         required: false
         type: string
         default: "true"
-      # This needs to be stringified JSON because inputs don't support arrays, see 
+      # This needs to be stringified JSON because inputs don't support arrays, see
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
         required: false
         type: string
         default: "['ubuntu-22.04']"
         description: >
-            Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-            "['ubuntu-22.04']" or "['ubuntu-22.04\", \"windows-2022']".
+          Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
+          "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
       dotnet-version:
         required: false
         type: string
@@ -64,9 +64,10 @@ on:
         type: string
         default: "0"
         description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the 
-          only current way to force "clear" the cache (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5)
-          until the associated issue (https://github.com/actions/cache/issues/2) is resolved.
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
+          only current way to force "clear" the cache
+          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
+          (https://github.com/actions/cache/issues/2) is resolved.
       timeout-minutes:
         required: false
         type: number
@@ -76,7 +77,7 @@ on:
         required: false
         type: boolean
         default: true
-        description:  >
+        description: >
           When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
           the same version of a given package is used in all projects.
 
@@ -93,42 +94,42 @@ jobs:
       matrix:
         machine-type: ${{ fromJson(inputs.machine-types) }}
         timeout-minutes:
-        - ${{ inputs.timeout-minutes }}
+          - ${{ inputs.timeout-minutes }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
     steps:
-    - name: Deprecation Warning
-      shell: pwsh
-      run: |
-        Write-Output '::warning::This workflow is deprecated. Use build-and-test-dotnet instead, that can also execute tests.'
+      - name: Deprecation Warning
+        shell: pwsh
+        run: |
+          Write-Output '::warning::This workflow is deprecated. Use build-and-test-dotnet instead, that can also execute tests.'
 
-    - name: Checkout
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-      with:
-        token: ${{ secrets.CHECKOUT_TOKEN }}
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
 
-    - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
-      with:
-        dotnet-version: ${{ inputs.dotnet-version }}
+      - name: Set up .NET
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
 
-    - name: Verify that .NET packages are consolidated
-      if: ${{ inputs.verify-dotnet-consolidation }}
-      uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
-      with:
-        directory: ${{ inputs.build-directory }}
+      - name: Verify that .NET packages are consolidated
+        if: ${{ inputs.verify-dotnet-consolidation }}
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+        with:
+          directory: ${{ inputs.build-directory }}
 
-    - name: Build and Static Code Analysis
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
-      with:
-        directory: ${{ inputs.build-directory}}
-        verbosity: ${{ inputs.build-verbosity}}
-        enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
-        enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
-        enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
-        cache-version: ${{ inputs.build-cache-version }}
+      - name: Build and Static Code Analysis
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory}}
+          verbosity: ${{ inputs.build-verbosity}}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
 
-    - name: Cancel Workflow on Failure
-      if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

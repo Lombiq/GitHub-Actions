@@ -7,9 +7,9 @@ These workflows can be invoked from a step from any other repository's workflow.
 - In addition to the below short explanations and samples, check out the inline documentation of the workflow you want to use, especially its parameters. These examples don't necessarily utilize all parameters.
 - Workflows with a `cancel-workflow-on-failure` parameter will by default cancel all jobs in the workflow run when the given reusable workflow fails (to save computing resources). You can disable this by setting the parameter to `"false"`.
 - To add the workflows to a project create a folder in the root of the repository that will call them, e.g. _.github/workflows/build.yml_ and/or _.github/workflows/publish.yml_. Things to keep in mind:
-    - If you have multiple projects in the repository or if the project you want to build is in a subfolder, then add a solution to the root of the repository that references all projects you want to build.
-    - References to projects (`<ProjectReference>` elements) not in the repository won't work, these need to be changed to package references (`<PackageReference>` elements). Make the conditional based on `$(NuGetBuild)`. See the [Helpful Extensions project file](https://github.com/Lombiq/Helpful-Extensions/blob/dev/Lombiq.HelpfulExtensions.csproj) for an example. References to projects in the repository will work and those projects, if configured with the proper metadata, will be published together, with dependencies retained among the packages too.
-    - Projects building client-side assets with [Gulp Extensions](https://github.com/Lombiq/Gulp-Extensions) won't work during such builds. Until [we fix this](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/issues/48), you have to commit the _wwwroot_ folder to the repository and add the same conditional to the Gulp and NPM Import elements too ([example](https://github.com/Lombiq/Orchard-Data-Tables/blob/58458b5d6381c71c094cb8d960e12b15a59f62d7/Lombiq.DataTables/Lombiq.DataTables.csproj#L33-L35)).
+  - If you have multiple projects in the repository or if the project you want to build is in a subfolder, then add a solution to the root of the repository that references all projects you want to build.
+  - References to projects (`<ProjectReference>` elements) not in the repository won't work, these need to be changed to package references (`<PackageReference>` elements). Make the conditional based on `$(NuGetBuild)`. See the [Helpful Extensions project file](https://github.com/Lombiq/Helpful-Extensions/blob/dev/Lombiq.HelpfulExtensions.csproj) for an example. References to projects in the repository will work and those projects, if configured with the proper metadata, will be published together, with dependencies retained among the packages too.
+  - Projects building client-side assets with [Gulp Extensions](https://github.com/Lombiq/Gulp-Extensions) won't work during such builds. Until [we fix this](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/issues/48), you have to commit the _wwwroot_ folder to the repository and add the same conditional to the Gulp and NPM Import elements too ([example](https://github.com/Lombiq/Orchard-Data-Tables/blob/58458b5d6381c71c094cb8d960e12b15a59f62d7/Lombiq.DataTables/Lombiq.DataTables.csproj#L33-L35)).
 
 ## Build and Test Orchard Core solution workflow
 
@@ -80,7 +80,18 @@ jobs:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
     with:
-      # This is only needed if you want to use any other dictionaries than the ones in this project. 
+      # Add this parameter if you want to use dictionary files from Lombiq's or any other repository outside "cspell". The order of entries matters, so the most specific ones, like your own should come before more generic ones, like "cspell".
+      dictionary-source-prefixes: >
+        {
+          "lombiq": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/",
+          "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"
+        }
+      # Use this parameter to list the external dictionary files to use, but beware that check-spelling only accepts flat lists of words (so, for example patterns.txt can't be referenced like this). The order doesn't matter, but sorting it alphabetically makes it easier to maintain.
+      extra-dictionaries: |
+        cspell:csharp/csharp.txt
+        lombiq:allow.txt
+        lombiq:expect.txt
+      # This is only needed if you want to use any other dictionaries than the ones in this project.
       spell-check-this: Lombiq/GitHub-Actions@your-custom-branch
 ```
 
@@ -179,12 +190,14 @@ jobs:
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
 ```
 
+If the app uses the [`Lombiq.Hosting.BuildVersionDisplay` module](https://github.com/Lombiq/Hosting-Build-Version-Display), then the workflow plays along with it: The module will display a link to the run.
+
 ## Validate Pull Request workflow
 
 Validates pull requests for various criteria:
 
 - Labels and comments on pull requests with merge conflicts.
-- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet. 
+- Adds a Jira-style issue code (e.g. PROJ-123) to the pull request's title, and a link to the Jira issue in the body if it's not there yet.
 
 ```yaml
 name: Validate Pull Request
@@ -268,6 +281,32 @@ jobs:
     secrets:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_RESET_ENVIRONMENT_SERVICE_PRINCIPAL }}
 ```
+
+## Swap Azure Web App Slots workflow
+
+This workflow swaps two Azure Web App Slots associated with an Azure Web App. [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _swap-azure-web-app-slots.yml_:
+
+```yaml
+name: Swap Azure Web App Slots
+
+on:
+  workflow_dispatch:
+
+jobs:
+  swap-azure-web-app-slots:
+    name: Swap Azure Web App Slots
+    uses: Lombiq/GitHub-Actions/.github/workflows/swap-azure-web-app-slots.yml@dev
+    with:
+      timeout-minutes: 10
+      app-name: AppName
+      resource-group-name: ResourceGroupName
+      application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
+    secrets:
+      AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SWAP_WEB_APP_SLOTS_SERVICE_PRINCIPAL }}
+
+```
+
+To restrict who can run the swap workflow, we recommend putting it into its own repository. [GitHub environments](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) would be better, because they not only provide [a nice display of what's currently deployed where](https://docs.github.com/en/actions/deployment/managing-your-deployments/viewing-deployment-history), but allow secrets specific to environments like staging/production, and also can have required reviewers (i.e. not everyone is able to run a swap who has write access to the repository). However, this latter one is [only available under the Enterprise plan](https://github.com/orgs/community/discussions/26262). (Branch protection rules are not a suitable substitute.)
 
 ## Post Pull Request Checks Automation
 
