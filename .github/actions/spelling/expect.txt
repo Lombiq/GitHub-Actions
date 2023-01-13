@@ -24,6 +24,7 @@ Cms
 cref
 crlf
 csharp
+cshtml
 cspell
 ctor
 ctx
