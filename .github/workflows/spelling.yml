@@ -49,7 +49,7 @@ on:
         description: Repository with default configuration to use, the default from Check Spelling is ''
         required: false
         type: string
-        default: Lombiq/GitHub-Actions@issue/OSOE-487
+        default: Lombiq/GitHub-Actions@dev
 
 jobs:
   check-spelling:
@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-487
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
@@ -73,7 +73,7 @@ jobs:
           git commit -m 'stub commit -- includes submodules'
 
       - name: Check Spelling
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-487
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
@@ -82,6 +82,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-487
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
