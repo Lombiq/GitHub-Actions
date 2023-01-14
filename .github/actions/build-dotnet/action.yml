@@ -76,6 +76,14 @@ inputs:
     description: >
       Duration in days after which the artifact of the binary log (if any) will expire. See
       https://github.com/actions/upload-artifact#retention-period for more details.
+  warning-as-error:
+    required: false
+    default: "true"
+    description: >
+      Whether compiler warnings should be treated as errors during the build process. The default value is "true", the
+      compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set to
+      "false", the flag "-warnaserror-" will be used, allowing warnings to be generated without causing the build to
+      fail.   
 
 runs:
   using: "composite"
@@ -157,7 +165,8 @@ runs:
             Version = "${{ inputs.publish-version }}"
             Switches = $buildSwitches
             ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
-            CreateBinaryLog = $${{ inputs.create-binary-log }}
+            CreateBinaryLog = ${{ inputs.create-binary-log }}
+            WarningAsError = ${{ inputs.warning-as-error }}
         }
 
         $startTime = [DateTime]::Now

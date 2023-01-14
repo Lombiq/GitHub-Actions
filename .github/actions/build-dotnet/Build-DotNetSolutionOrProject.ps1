@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string] $Configuration,
     [string] $SolutionOrProject,
     [string] $Verbosity,
@@ -24,10 +24,10 @@ $buildSwitches = ConvertTo-Array @"
     --configuration:$Configuration
     --nologo
     --verbosity:$Verbosity
-    --warnaserror
+    --warnaserror$($WarningAsError ? '' : '-')
     --warnAsMessage:MSB3026
     --consoleLoggerParameters:NoSummary
-    -p:TreatWarningsAsErrors=true
+    -p:TreatWarningsAsErrors=$WarningAsError
     -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
