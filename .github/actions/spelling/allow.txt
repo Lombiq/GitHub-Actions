@@ -32,7 +32,6 @@ colorfield
 colorpicker
 commonjs
 configurator
-Configurator
 contentfiles
 contentitem
 contentitemid
@@ -59,11 +58,11 @@ dotnet
 dragleave
 dragover
 eastus
-EUS
 endcapture
 endgroup
 endzone
 Enums
+EUS
 eventname
 executesql
 extname
@@ -71,7 +70,6 @@ facebook
 Firefox
 flyout
 formattable
-Formattable
 frontend
 geckodriver
 Giraudel
