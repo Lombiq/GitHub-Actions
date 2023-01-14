@@ -153,6 +153,15 @@ on:
         description: >
           When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
           the same version of a given package is used in all projects.
+      warning-as-error:
+        required: false
+        type: string
+        default: "true"
+        description: >
+          Whether compiler warnings should be treated as errors during the build process. The default value is "true",
+          the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
+          to "false", the flag "-warnaserror-" will be used, allowing warnings to be generated without causing the build
+          to fail.
 
 jobs:
   build-and-test:
@@ -187,7 +196,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/GOV-1
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration}}
@@ -199,6 +208,7 @@ jobs:
           solution-or-project-path: ${{ inputs.build-solution-path }}
           create-binary-log: ${{ inputs.build-create-binary-log }}
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warning-as-error: ${{ inputs.warning-as-error }}
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
