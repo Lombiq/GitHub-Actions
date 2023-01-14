@@ -165,8 +165,8 @@ runs:
             Version = "${{ inputs.publish-version }}"
             Switches = $buildSwitches
             ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
-            CreateBinaryLog = ${{ inputs.create-binary-log }}
-            WarningAsError = ${{ inputs.warning-as-error }}
+            CreateBinaryLog = $${{ inputs.create-binary-log }}
+            WarningAsError = $${{ inputs.warning-as-error }}
         }
 
         $startTime = [DateTime]::Now
