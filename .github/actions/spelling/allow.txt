@@ -11,6 +11,7 @@ appsettings
 ASPNETCORE
 asynchronicity
 atata
+Authorizaton
 autocompletion
 autorun
 bacpac
