@@ -130,8 +130,8 @@ on:
         description: >
           Whether compiler warnings should be treated as errors during the build process. The default value is "true",
           the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
-          to "false", the flag "-warnaserror-" will be used, allowing warnings to be generated without causing the build
-          to fail.
+          to "false", the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the
+          build to fail.
 
 jobs:
   # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call

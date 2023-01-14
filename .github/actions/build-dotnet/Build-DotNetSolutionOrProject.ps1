@@ -24,7 +24,7 @@ $buildSwitches = ConvertTo-Array @"
     --configuration:$Configuration
     --nologo
     --verbosity:$Verbosity
-    --warnaserror$($WarningAsError ? '' : '-')
+    $($WarningAsError ? '--warnaserror' : '')
     --warnAsMessage:MSB3026
     --consoleLoggerParameters:NoSummary
     -p:TreatWarningsAsErrors=$WarningAsError
