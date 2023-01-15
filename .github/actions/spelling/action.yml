@@ -44,7 +44,8 @@ runs:
   using: "composite"
   steps:
     - name: Check Spelling
-      uses: check-spelling/check-spelling@v0.0.21
+      # v0.0.21
+      uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
       with:
         check_file_names: 1
         config: ${{ inputs.config }}
