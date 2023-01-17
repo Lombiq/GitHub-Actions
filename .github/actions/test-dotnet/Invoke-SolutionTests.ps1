@@ -65,7 +65,7 @@ foreach ($test in $tests)
         $test
     )
 
-    dotnet test $optOut @dotnetTestSwitches 2>&1 |
+    dotnet test @dotnetTestSwitches 2>&1 |
         Where-Object { $PSItem -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $PSItem -notlike '*ChromeDriver was started successfully*' }
 
     if ($?)
