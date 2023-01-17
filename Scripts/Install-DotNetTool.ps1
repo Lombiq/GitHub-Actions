@@ -1,25 +1,25 @@
 ﻿param (
-    [Parameter(Mandatory = $true, Position = 1, HelpMessage = "The name of the tool to install.")]
+    [Parameter(Mandatory = $true, Position = 1, HelpMessage = 'The name of the tool to install.')]
     [string]
     $Name,
 
-    [Parameter(Mandatory = $true, Position = 2, HelpMessage = "The version of the tool to install.")]
+    [Parameter(Mandatory = $true, Position = 2, HelpMessage = 'The version of the tool to install.')]
     [string]
     $Version,
 
-    [Parameter(HelpMessage = "When present, the tool will be installed globally, locally otherwise.")]
+    [Parameter(HelpMessage = 'When present, the tool will be installed globally, locally otherwise.')]
     [switch]
     $Global
 )
 
-$scopeString = ""
+$scopeString = ''
 if ($Global.IsPresent)
 {
-    $scopeString = "--global"
+    $scopeString = '--global'
 }
 
 $installedTool = dotnet tool list $scopeString | Select-Object -Skip 2 | ForEach-Object {
-    $segments = $PSItem.Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
+    $segments = $PSItem.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
     return New-Object -TypeName PSObject -Property @{
         PackageId = $segments[0]
         Version = $segments[1]
@@ -29,7 +29,7 @@ $installedTool = dotnet tool list $scopeString | Select-Object -Skip 2 | ForEach
 
 $doInstall = $true
 
-if ($null -ne $installedTool -and $installedTool -ne "")
+if ($null -ne $installedTool -and $installedTool -ne '')
 {
     if ($installedTool.Version -ne $Version)
     {

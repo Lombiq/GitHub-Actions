@@ -5,7 +5,7 @@
     $PackageVersion
 )
 
-$manifests = Get-ChildItem $WorkDir -File -Recurse -Filter "Manifest.cs" |
+$manifests = Get-ChildItem $WorkDir -File -Recurse -Filter 'Manifest.cs' |
     Select-String -List -Pattern '(OrchardCore.Modules.Manifest|OrchardCore.DisplayManagement.Manifest)' |
     Select-Object -ExpandProperty Path
 

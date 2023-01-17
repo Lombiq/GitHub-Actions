@@ -9,53 +9,53 @@
 )
 
 $context = [string]::IsNullOrEmpty($IssueComponent) ? $GitHub.repository : $IssueComponent
-$titleSuffix = $SuffixIssueTitles ? " in $context" : ""
+$titleSuffix = $SuffixIssueTitles ? " in $context" : ''
 Write-Output "Suffix: $titleSuffix"
 
 switch ($GitHub.event_name)
 {
-    "discussion"
+    'discussion'
     {
         $summary = "Respond to `"$($GitHub.event.discussion.title)`"$titleSuffix"
         $description = $DiscussionJiraIssueDescription
         $linkUrl = $GitHub.event.discussion.html_url
-        $linkTitle = "GitHub discussion"
+        $linkTitle = 'GitHub discussion'
     }
-    "issues"
+    'issues'
     {
         $summary = "$($GitHub.event.issue.title)$titleSuffix"
         $description = $IssueJiraIssueDescription
         $linkUrl = $GitHub.event.issue.html_url
-        $linkTitle = "GitHub issue"
+        $linkTitle = 'GitHub issue'
 
         foreach ($label in $GitHub.event.issue.labels)
         {
             $labelName = $label.name
 
-            if ($labelName -eq "bug")
+            if ($labelName -eq 'bug')
             {
-                $type = "Bug"
+                $type = 'Bug'
                 break
             }
-            elseif ($labelName -eq "enhancement")
+            elseif ($labelName -eq 'enhancement')
             {
-                $type = "New Feature"
+                $type = 'New Feature'
                 break
             }
         }
     }
-    "pull_request"
+    'pull_request'
     {
         $summary = "Review `"$($GitHub.event.pull_request.title)`"$titleSuffix"
         $description = $PullReqestJiraIssueDescription
         $linkUrl = $GitHub.event.pull_request.html_url
-        $linkTitle = "GitHub pull request"
+        $linkTitle = 'GitHub pull request'
     }
     default
     {
         $message = @(
             "Unknown event `"$($GitHub.event_name)`". Please only call this script for one of the following events:"
-            "discussion, issues, pull_request."
+            'discussion, issues, pull_request.'
         ) -join ' '
         Write-Error "::error::$message"
         exit 1
@@ -64,11 +64,11 @@ switch ($GitHub.event_name)
 
 if ($null -eq $type)
 {
-    $type = "Task"
+    $type = 'Task'
 }
 
-Set-GitHubOutput "summary" $summary
-Set-GitHubOutput "json-description" $($description | ConvertTo-Json)
-Set-GitHubOutput "type" $type
-Set-GitHubOutput "link-url" $linkUrl
-Set-GitHubOutput "link-title" $linkTitle
+Set-GitHubOutput 'summary' $summary
+Set-GitHubOutput 'json-description' $($description | ConvertTo-Json)
+Set-GitHubOutput 'type' $type
+Set-GitHubOutput 'link-url' $linkUrl
+Set-GitHubOutput 'link-title' $linkTitle

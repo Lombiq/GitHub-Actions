@@ -10,7 +10,7 @@ if ($matchCount -ne 1)
 {
     $errorMessage = @(
         "The solution or project path pattern `"$PathPattern`" matches $matchCount items, see below. Fix the pattern so"
-        "it matches exactly one file. Look for a workflow/action input named like solution-path or"
+        'it matches exactly one file. Look for a workflow/action input named like solution-path or'
         "solution-or-project-path.`n$($matchedItems | Select-Object $PSItem.Name)"
     ) -join ' '
 
@@ -18,7 +18,7 @@ if ($matchCount -ne 1)
     {
         $errorMessage = @(
             "The solution or project path pattern `"$PathPattern`" matches no items. Fix the pattern so it matches"
-            "exactly one file. Look for a workflow/action input named like solution-path or solution-or-project-path."
+            'exactly one file. Look for a workflow/action input named like solution-path or solution-or-project-path.'
         ) -join ' '
     }
 

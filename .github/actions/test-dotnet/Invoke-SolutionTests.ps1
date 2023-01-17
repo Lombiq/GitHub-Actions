@@ -11,39 +11,39 @@ param ($Solution, $Verbosity, $Filter, $Configuration)
 # default buffer width.
 
 $connectionStringSuffix = @(
-    ";MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;Encrypt=false;"
-    "TrustServerCertificate=true"
+    ';MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;Encrypt=false;'
+    'TrustServerCertificate=true'
 ) -join ''
-if ($Env:RUNNER_OS -eq "Windows")
+if ($Env:RUNNER_OS -eq 'Windows')
 {
-    $connectionStringStem = "Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True"
+    $connectionStringStem = 'Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
 }
 else
 {
-    $connectionStringStem = "Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!"
+    $connectionStringStem = 'Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!'
 
-    $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = "sql2019"
+    $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'sql2019'
 }
 
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionStringStem + $connectionStringSuffix
-$Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = "true"
+$Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
 # We assume that the solution was built in Release configuration. If the tests need to be built in Debug configuration,
 # as they should, we need to first build them, but not restore. Otherwise, the Release tests are already built, so we
 # don't need to build them here.
-$optOut = $Configuration -eq "Debug" ? "--no-restore" : "--no-build"
+$optOut = $Configuration -eq 'Debug' ? '--no-restore' : '--no-build'
 
 $tests = dotnet sln $Solution list |
     Select-Object -Skip 2 |
-    Select-String "\.Tests\." |
-    Select-String -NotMatch "Lombiq.Tests.UI.csproj" |
-    Select-String -NotMatch "Lombiq.Tests.csproj" |
+    Select-String '\.Tests\.' |
+    Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
+    Select-String -NotMatch 'Lombiq.Tests.csproj' |
     Where-Object {
         $result = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $PSItem 2>&1 | Out-String -Width 9999
-        -not [string]::IsNullOrEmpty($result) -and $result.Contains("The following Tests are available")
+        -not [string]::IsNullOrEmpty($result) -and $result.Contains('The following Tests are available')
     }
 
-Set-GitHubOutput "test-count" $tests.Length
+Set-GitHubOutput 'test-count' $tests.Length
 
 Write-Output "Starting to execute tests from $($tests.Length) projects."
 

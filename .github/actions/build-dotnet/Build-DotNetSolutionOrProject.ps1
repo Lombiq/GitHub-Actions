@@ -10,7 +10,7 @@
 
 function ConvertTo-Array([string] $rawInput)
 {
-    $rawInput.Replace("`r", "").Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
+    $rawInput.Replace("`r", '').Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
 Write-Output "Version number for the .NET build products: $Version"
@@ -41,14 +41,14 @@ $noErrors = $expectedErrorCodes.Count -eq 0
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
-    Write-Output "::group::Gulp Extensions found. It needs to be explicitly built before the solution."
+    Write-Output '::group::Gulp Extensions found. It needs to be explicitly built before the solution.'
 
     $startTime = [DateTime]::Now
     dotnet build src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj @buildSwitches
     $endTime = [DateTime]::Now
 
-    Write-Output ("Gulp Extensions build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
-    Write-Output "::endgroup::"
+    Write-Output ('Gulp Extensions build took {0:0.###} seconds.' -f ($endTime - $startTime).TotalSeconds)
+    Write-Output '::endgroup::'
 }
 
 # This prepares the solution or project with the Lombiq.Analyzers files. The output and exit code are discarded because
@@ -56,10 +56,10 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
 # the target will still run on the projects that have it.
 dotnet msbuild '-target:Restore;LombiqNetAnalyzers' $SolutionOrProject | Out-Null || bash -c 'true'
 
-Write-Output "Building solution or project with ``dotnet build $SolutionOrProject $($buildSwitches -join " ")``."
+Write-Output "Building solution or project with ``dotnet build $SolutionOrProject $($buildSwitches -join ' ')``."
 
-$errorLines = New-Object "System.Collections.Generic.List[string]"
-$errorCodes = New-Object "System.Collections.Generic.List[string]"
+$errorLines = New-Object 'System.Collections.Generic.List[string]'
+$errorCodes = New-Object 'System.Collections.Generic.List[string]'
 
 $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
 dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
@@ -68,7 +68,7 @@ dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
     ($null, $file, $line, $column, $message) = [regex]::Match($PSItem, $errorFormat, 'Compiled').Groups.Value
 
     $errorLines.Add($PSItem)
-    if ($message.Contains(":")) { $errorCodes.Add($message.Split(":")[0].Trim()) }
+    if ($message.Contains(':')) { $errorCodes.Add($message.Split(':')[0].Trim()) }
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
 
@@ -83,7 +83,7 @@ if ($expectedErrorCodes)
 {
     $errorCodes = $errorCodes | Sort-Object
     $fail = 0
-    $report = New-Object "System.Text.StringBuilder" "`n"
+    $report = New-Object 'System.Text.StringBuilder' "`n"
 
     if ($null -eq $errorCodes -or -not $errorCodes.Count)
     {
@@ -114,11 +114,11 @@ if ($expectedErrorCodes)
     if ($fail -gt 0)
     {
         Write-Warning $report.ToString() # We use warning so it doesn't stop prematurely.
-        Write-Output ("::error::Verification Mismatch " + ($errorLines -join " "))
+        Write-Output ('::error::Verification Mismatch ' + ($errorLines -join ' '))
         exit 1
     }
 
-    Write-Output "Verification complete, the solution or project only has the expected errors!"
+    Write-Output 'Verification complete, the solution or project only has the expected errors!'
     exit 0
 }
 

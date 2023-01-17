@@ -12,7 +12,7 @@ $jiraBrowseUrl = $JiraBaseUrl + '/browse/'
 $originalTitle = $Title
 $originalBody = $Body
 
-if ($Branch -NotLike "*issue*")
+if ($Branch -NotLike '*issue*')
 {
     Exit
 }
@@ -23,7 +23,7 @@ $issueLink = "[$issueKey]($jiraBrowseUrl$issuekey)"
 
 if ($Title -NotLike "*$issueKey*")
 {
-    $Title = $issueKey + ": " + $Title
+    $Title = $issueKey + ': ' + $Title
 }
 
 if (-Not $Body)
