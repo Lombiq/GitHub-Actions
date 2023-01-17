@@ -6,7 +6,8 @@ param (
     [string] $Version,
     [string] $Switches,
     [string] $ExpectedCodeAnalysisErrors,
-    [boolean] $CreateBinaryLog)
+    [boolean] $CreateBinaryLog,
+    [boolean] $WarningAsError)
 
 function ConvertTo-Array([string] $rawInput)
 {
