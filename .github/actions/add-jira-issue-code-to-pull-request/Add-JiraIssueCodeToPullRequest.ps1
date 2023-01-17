@@ -46,6 +46,5 @@ if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))
     $Body = $Body -replace '"','\"'
 
     # See https://cli.github.com/manual/gh_pr_edit
-    Write-Output "gh pr edit `"$PullRequestId`" --title `"$Title`" --body `"$Body`" --repo `"$GitHubRepository`""
     gh pr edit $PullRequestId --title $Title --body $Body --repo $GitHubRepository
 }
