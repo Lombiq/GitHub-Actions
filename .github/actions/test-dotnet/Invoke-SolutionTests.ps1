@@ -56,8 +56,6 @@ foreach ($test in $tests)
 
     $dotnetTestSwitches = @(
         '--configuration', $Configuration
-        '--no-restore',
-        '--no-build',
         '--nologo',
         '--logger', 'trx;LogFileName=test-results.trx'
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
@@ -67,7 +65,7 @@ foreach ($test in $tests)
         $test
     )
 
-    dotnet test @dotnetTestSwitches 2>&1 |
+    dotnet test $optOut @dotnetTestSwitches 2>&1 |
         Where-Object { $PSItem -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $PSItem -notlike '*ChromeDriver was started successfully*' }
 
     if ($?)
