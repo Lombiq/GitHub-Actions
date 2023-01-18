@@ -212,7 +212,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/NEST-394
         with:
           build-directory: ${{ inputs.build-directory }}
           solution-path: ${{ inputs.build-solution-path }}
