@@ -41,7 +41,7 @@ elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*")
 
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))
 {
-    # Escape the quote characters. This is necessary because Powershell mangles the quote characters when passing 
+    # Escape the quote characters. This is necessary because PowerShell mangles the quote characters when passing 
     # arguments into a native command such as the GitHub CLI. See https://github.com/cli/cli/issues/3425 for details.
     $Title = $Title -replace '"','\"'
     $Body = $Body -replace '"','\"'
