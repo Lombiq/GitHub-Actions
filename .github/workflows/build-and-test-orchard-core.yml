@@ -153,7 +153,7 @@ on:
         description: >
           When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
           the same version of a given package is used in all projects.
-      warning-as-error:
+      warnings-as-errors:
         required: false
         type: string
         default: "true"
@@ -208,7 +208,7 @@ jobs:
           solution-or-project-path: ${{ inputs.build-solution-path }}
           create-binary-log: ${{ inputs.build-create-binary-log }}
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
-          warning-as-error: ${{ inputs.warning-as-error }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
