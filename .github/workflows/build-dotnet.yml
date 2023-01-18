@@ -80,15 +80,6 @@ on:
         description: >
           When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
           the same version of a given package is used in all projects.
-      warning-as-error:
-        required: false
-        type: "string"
-        default: "true"
-        description: >
-          Whether compiler warnings should be treated as errors during the build process. The default value is "true",
-          the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
-          to "false", the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the
-          build to fail.
 
 jobs:
   # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call
@@ -136,7 +127,6 @@ jobs:
           enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
           enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
           cache-version: ${{ inputs.build-cache-version }}
-          warning-as-error: ${{ inputs.warning-as-error }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
