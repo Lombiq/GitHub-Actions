@@ -115,7 +115,7 @@ jobs:
           SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@@dev
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
       - name: Stop Web App Slot
         run: |
