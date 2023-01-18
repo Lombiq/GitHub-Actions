@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string] $Configuration,
     [string] $SolutionOrProject,
     [string] $Verbosity,
@@ -6,7 +6,8 @@
     [string] $Version,
     [string] $Switches,
     [string] $ExpectedCodeAnalysisErrors,
-    [boolean] $CreateBinaryLog)
+    [boolean] $CreateBinaryLog,
+    [boolean] $WarningsAsErrors)
 
 function ConvertTo-Array([string] $rawInput)
 {
@@ -24,10 +25,10 @@ $buildSwitches = ConvertTo-Array @"
     --configuration:$Configuration
     --nologo
     --verbosity:$Verbosity
-    --warnaserror
+    $($WarningsAsErrors ? '--warnaserror' : '')
     --warnAsMessage:MSB3026
     --consoleLoggerParameters:NoSummary
-    -p:TreatWarningsAsErrors=true
+    -p:TreatWarningsAsErrors=$WarningsAsErrors
     -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
