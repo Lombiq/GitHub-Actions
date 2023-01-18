@@ -119,7 +119,7 @@ jobs:
           directory: ${{ inputs.build-directory }}
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/GOV-1
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
           directory: ${{ inputs.build-directory}}
           verbosity: ${{ inputs.build-verbosity}}
