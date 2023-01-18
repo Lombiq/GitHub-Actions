@@ -123,6 +123,15 @@ on:
         description: >
           When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
           the same version of a given package is used in all projects.
+      warnings-as-errors:
+        required: false
+        type: string
+        default: "true"
+        description: >
+          Whether compiler warnings should be treated as errors during the build process. The default value is "true",
+          the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
+          to "false", the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the
+          build to fail.
 
 jobs:
   # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call
@@ -169,6 +178,7 @@ jobs:
           solution-or-project-path: ${{ inputs.build-solution-path }}
           create-binary-log: ${{ inputs.build-create-binary-log }}
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
 
       - name: Tests
         if: inputs.test-disable == 'false'

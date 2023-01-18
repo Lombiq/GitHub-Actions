@@ -1,11 +1,11 @@
 # We need to fetch the PR details from the API as opposed to just using the context because a label added after the
 # start of the run wouldn't be present in it.
 
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+[Diagnostics.CodeAnalysis.SuppressMessage(
     'PSReviewUnusedParameter',
     'Label1',
     Justification = 'False positive due to https://github.com/PowerShell/PSScriptAnalyzer/issues/1472.')]
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+[Diagnostics.CodeAnalysis.SuppressMessage(
     'PSReviewUnusedParameter',
     'Label2',
     Justification = 'False positive due to https://github.com/PowerShell/PSScriptAnalyzer/issues/1472.')]
