@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Add Jira Issue Code to Pull Request
+      #adding a comment
         if: github.event.pull_request == opened
         uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@issue/OSOE-505
         env:
