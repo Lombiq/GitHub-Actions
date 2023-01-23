@@ -55,6 +55,7 @@ foreach ($test in $tests)
     Write-Output "Starting to execute tests from the $test project."
 
     $dotnetTestSwitches = @(
+        $optOut,
         '--configuration', $Configuration
         '--nologo',
         '--logger', 'trx;LogFileName=test-results.trx'
@@ -65,9 +66,9 @@ foreach ($test in $tests)
         $test
     )
 
-    Write-Output "Starting testing with ``dotnet test $optOut $($dotnetTestSwitches -join " ")``."
+    Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join " ")``."
 
-    dotnet test $optOut @dotnetTestSwitches 2>&1 |
+    dotnet test @dotnetTestSwitches 2>&1 |
         Where-Object { $PSItem -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $PSItem -notlike '*ChromeDriver was started successfully*' }
 
     if ($?)
