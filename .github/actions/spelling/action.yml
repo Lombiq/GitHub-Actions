@@ -39,7 +39,7 @@ inputs:
   spell-check-this:
     description: Repository with default configuration to use, the default from Check Spelling is ''.
     required: false
-    default: Lombiq/GitHub-Actions@issue/OSOE-84-final
+    default: Lombiq/GitHub-Actions@dev
 
 runs:
   using: "composite"
