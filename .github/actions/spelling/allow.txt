@@ -50,7 +50,7 @@ datatable
 datatables
 deconstructed
 Demystifier
-Deployer
+deployer
 deserialized
 destructuring
 devblogs
