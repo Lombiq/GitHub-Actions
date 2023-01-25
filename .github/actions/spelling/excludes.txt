@@ -31,5 +31,7 @@
 ^LICENSE\.txt$
 ignore$
 pnpm-lock\.yaml$
+# For Lombiq.DataTables
+UnmanagedNodeModules/
 UploadingTestFileDOCX\.docx$
 UploadingTestFileXLSX\.xlsx$
