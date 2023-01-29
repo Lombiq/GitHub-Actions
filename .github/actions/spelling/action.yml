@@ -30,11 +30,12 @@ inputs:
       cspell:rust/rust.txt
       cspell:scala/scala.txt
       cspell:software-terms/src/software-terms.txt
+      cspell:node/node.txt
       cspell:typescript/typescript.txt
   config:
     description: Spelling configuration directory
     required: false
-    default: .github/actions/check-spelling
+    default: .github/actions/spelling
   spell-check-this:
     description: Repository with default configuration to use, the default from Check Spelling is ''.
     required: false
