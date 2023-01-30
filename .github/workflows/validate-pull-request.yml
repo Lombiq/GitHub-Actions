@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Add Jira Issue Code to Pull Request
-        if: github.event.pull_request.opened == true
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@dev
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
