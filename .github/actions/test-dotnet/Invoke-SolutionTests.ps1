@@ -68,7 +68,7 @@ foreach ($test in $tests)
         $test
     )
 
-    Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join " ")``."
+    Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join ' ')``."
 
     dotnet test @dotnetTestSwitches 2>&1 |
         Where-Object { $PSItem -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $PSItem -notlike '*ChromeDriver was started successfully*' }
