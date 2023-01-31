@@ -57,9 +57,8 @@ foreach ($test in $tests)
     Write-Output "Starting to execute tests from the $test project."
 
     $dotnetTestSwitches = @(
+        $optOut,
         '--configuration', $Configuration
-        '--no-restore',
-        '--no-build',
         '--nologo',
         '--logger', 'trx;LogFileName=test-results.trx'
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
@@ -68,6 +67,8 @@ foreach ($test in $tests)
         $Filter ? '--filter', $Filter : ''
         $test
     )
+
+    Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join " ")``."
 
     dotnet test @dotnetTestSwitches 2>&1 |
         Where-Object { $PSItem -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $PSItem -notlike '*ChromeDriver was started successfully*' }

@@ -8,6 +8,7 @@ apiclienttenant
 apikey
 apps
 appsettings
+argv
 ASPNETCORE
 asynchronicity
 atata
@@ -19,6 +20,7 @@ beforeunload
 bootstraptab
 browsersync
 Cdp
+chdir
 chromedriver
 cloudsmith
 cmdlet
@@ -37,6 +39,7 @@ contentitem
 contentitemid
 contenttype
 contextmenu
+copyfiles
 corepack
 createstate
 crontab
@@ -62,6 +65,7 @@ endcapture
 endgroup
 endzone
 Enums
+EOL
 EUS
 eventname
 executesql
@@ -111,7 +115,9 @@ JToken
 JValue
 langword
 linq
+lintrc
 listheader
+loglevel
 logtest
 lombiq
 lucene
@@ -129,12 +135,14 @@ mvc
 Namespaced
 NCrontab
 Newtonsoft
+npmrc
 paramref
 permalink
 plugin
 plugins
 Portainer
 prebuilt
+promisify
 readme
 Reappend
 refactoring
@@ -168,12 +176,16 @@ subfolders
 submenu
 Subresource
 superproject
+symlink
+symlinks
+symlinked
 taghelper
 taxonomyexpensetags
 taxonomyfield
 taxonomyincometags
 teamcity
 testuser
+textlint
 timespan
 Timestamped
 Timezones
