@@ -10,11 +10,11 @@ $expectedCodeAnalysisErrors = @'
 '@
 
 $switches = @{
-    Configuration = "Release"
-    SolutionOrProject = "../../../../../Lombiq.OSOCE.sln"
-    Verbosity = "quiet"
-    EnableCodeAnalysis = "true"
-    Version = "1.2.3"
+    Configuration = 'Release'
+    SolutionOrProject = '../../../../../Lombiq.OSOCE.sln'
+    Verbosity = 'quiet'
+    EnableCodeAnalysis = 'true'
+    Version = '1.2.3'
     Switches = $buildSwitches
     ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
     CreateBinaryLog = $true
