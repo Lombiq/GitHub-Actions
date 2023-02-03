@@ -1,17 +1,5 @@
 name: assign-issue-to-pr-author
-
-inputs:
-  ISSUE_QUERY: # query for the issue
-    description: The query used to search for the issue.
-    required: true
-  ASSIGNEE: # the PR author 
-    description: The username of the author to assign the issue to.
-    required: true
-
-outputs:
-  success:
-    description: Whether the issue was successfully assigned.
-    
+  
 runs:
   using: "composite"
   steps:
