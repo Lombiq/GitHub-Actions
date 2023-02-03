@@ -1,55 +1,17 @@
 name: assign-issue-to-pr-author
 
 inputs:
-  ISSUE_QUERY: 
-    required : true 
-    description : >
-      contains the Jira key extracted from the PR body
-  ASSIGNEE: 
-    required : true
-    description : >
-      contains the Author of the PR 
+  ISSUE_QUERY: # query for the issue
+    description: The query used to search for the issue.
+    required: true
+  ASSIGNEE: # the PR author 
+    description: The username of the author to assign the issue to.
+    required: true
 
+outputs:
+  success:
+    description: Whether the issue was successfully assigned.
 
 runs:
-  using: "composite"
-  steps:
-    - name: Assign issue to pull request author
-      uses: actions/github-script@0.9.1
-      env:
-        ISSUE_QUERY: "${{ inputs.ISSUE_QUERY }}"
-        ASSIGNEE: "${{ inputs.ASSIGNEE }}"
-      with:
-        script: |
-          const core = require('@actions/core');
-          const github = require('@actions/github');
-          
-          async function run() {
-            try {
-              // Get inputs
-              const issueQuery = core.getInput('ISSUE_QUERY');
-              const assignee = core.getInput('ASSIGNEE');
-          
-              // Get authenticated GitHub client
-              const client = new github.GitHub(process.env.GITHUB_TOKEN);
-          
-              // Search for the issue
-              const issues = await client.search.issues({ q: issueQuery });
-              const issue = issues.data.items[0];
-          
-              // Assign the issue to the PR author
-              await client.issues.addAssignees({
-                owner: issue.repository.owner.login,
-                repo: issue.repository.name,
-                issue_number: issue.number,
-                assignees: [assignee],
-              });
-          
-              // Set the success output
-              core.setOutput('success', 'true');
-            } catch (error) {
-              core.setFailed(error.message);
-            }
-          }
-          
-          run();
+  using: "node12"
+  main: "AssignIssueToPullRequestAuthor.js"
