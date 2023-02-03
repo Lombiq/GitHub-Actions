@@ -11,7 +11,17 @@ inputs:
 outputs:
   success:
     description: Whether the issue was successfully assigned.
-
+    
 runs:
-  using: "node12"
-  main: "AssignIssueToPullRequestAuthor.js"
+  using: "composite"
+  steps:
+    - name: Assign issue to Pull Request Author
+      shell: pwsh
+      run: |
+        $params = @{
+            IssueQuery = $Env:ISSUE_QUERY
+            Assignee = $Env:ASSIGNEE
+            GitHubRepository = $Env:GITHUB_REPOSITORY
+            PullRequestID = ${{ github.event.number }}
+        }
+        AssignIssueToPullRequestAuthor @params
