@@ -6,7 +6,7 @@ param(
 )
 
 $output = gh issue list --search $IssueQuery --repo $GitHubRepository
-$firstItem = ($output | Select-Object -First 1)
+$firstItem = ($output | Select-Object -First 1).number
 
 if ($firstItem) {
     gh api -X PATCH "/repos/$GitHubRepository/issues/$firstItem.number" -f "assignees=$Assignee"
