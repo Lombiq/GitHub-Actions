@@ -37,7 +37,7 @@ jobs:
         env:
           ISSUE_QUERY: "${{ env.JIRA_KEY }} in:title"
           ASSIGNEE: "${{ env.PR_AUTHOR }}"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Ensure Parent PR Exists
         if: github.event.pull_request != ''
