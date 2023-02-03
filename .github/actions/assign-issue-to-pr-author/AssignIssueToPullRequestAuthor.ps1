@@ -2,9 +2,14 @@ param(
     [string] $IssueQuery,
     [string] $Assignee,
     [string] $GitHubRepository,
-    [string] $PullRequestID,
+    [string] $PullRequestID
 )
 
 $output = gh issue search $IssueQuery --repo $GitHubRepository
 $firstItem = ($output | Select-Object -First 1)
-gh issue add-assignee --assignee $Assignee --repo $GitHubRepository --issue $firstItem.number
+
+if ($firstItem) {
+    gh issue add-assignee --assignee $Assignee --repo $GitHubRepository --issue $firstItem.number
+} else {
+    Write-Output "No issue was found with the query '$IssueQuery' in the repository '$GitHubRepository'"
+}
