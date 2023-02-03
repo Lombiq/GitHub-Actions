@@ -1,14 +1,9 @@
 name: Assign Issue to PR Author
 
 on:
-  workflow_call:
-    secrets:
-      CHECKOUT_TOKEN:
-        required: false
-        description: >
-          The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
-          are used.
-
+  pull_request:
+    types: [opened, edited, reopened]
+    
 jobs:
   assign-issue:
     runs-on: ubuntu-latest
@@ -19,14 +14,14 @@ jobs:
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
-      - name: Extract Jira key and PR author from pull request
-        run: |
-          JIRA_KEY="${{ github.event.pull_request.body }}"
-          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+    - name: Extract Jira key and PR author from pull request
+      run: |
+        JIRA_KEY="${{ github.event.pull_request.body }}"
+        PR_AUTHOR=${{ env.PULL_REQUEST_AUTHOR_LOGIN }}
 
-      - name: Assign issue to PR author
-        uses: Lombiq/GitHub-Actions/.github/actions/assign-issue-to-pr-author@issue/OSOE-545
-        env:
-          ISSUE_QUERY: "${{ env.JIRA_KEY }} in:title"
-          ASSIGNEE: "${{ env.PR_AUTHOR }}"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Assign issue to PR author
+      uses: Lombiq/GitHub-Actions/.github/actions/assign-issue-to-pr-author@issue/OSOE-545
+      env:
+        ISSUE_QUERY: "${{ env.JIRA_KEY }} in:title"
+        ASSIGNEE: "${{ env.PR_AUTHOR }}"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
