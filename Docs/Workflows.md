@@ -209,8 +209,6 @@ on:
 jobs:
   validate-pull-request:
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@dev
-  assign-issue-to-pull-request-author:
-    uses: Lombiq/GitHub-Actions/.github/workflows/assign-issue-to-pr-author.yml@issue/OSOE-545
 ```
 
 ## Jira issue creation for community activities workflow
