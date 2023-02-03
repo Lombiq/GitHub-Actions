@@ -19,14 +19,14 @@ jobs:
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
-    - name: Extract Jira key and PR author from pull request
-      run: |
-        JIRA_KEY="${{ github.event.pull_request.body }}"
-        PR_AUTHOR=${{ env.PULL_REQUEST_AUTHOR_LOGIN }}
+      - name: Extract Jira key and PR author from pull request
+        run: |
+          JIRA_KEY="${{ github.event.pull_request.body }}"
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
 
-    - name: Assign issue to PR author
-      uses: Lombiq/GitHub-Actions/.github/actions/assign-issue-to-pr-author@issue/OSOE-545
-      env:
-        ISSUE_QUERY: "${{ env.JIRA_KEY }} in:title"
-        ASSIGNEE: "${{ env.PR_AUTHOR }}"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Assign issue to PR author
+        uses: Lombiq/GitHub-Actions/.github/actions/assign-issue-to-pr-author@issue/OSOE-545
+        env:
+          ISSUE_QUERY: "${{ env.JIRA_KEY }} in:title"
+          ASSIGNEE: "${{ env.PR_AUTHOR }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
