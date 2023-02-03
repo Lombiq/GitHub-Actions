@@ -1,17 +1,15 @@
-name: Assign Issue to PR Author
-
 on:
   pull_request:
     types: [opened, edited, reopened]
     
 jobs:
-  assign-issue:
-    runs-on: ubuntu-latest
+ assign-issue:
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-        with:
+  steps:
+    - name: Checkout
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
     - name: Extract Jira key and PR author from pull request
@@ -24,4 +22,4 @@ jobs:
       env:
         ISSUE_QUERY: "${{ env.JIRA_KEY }} in:title"
         ASSIGNEE: "${{ env.PR_AUTHOR }}"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
