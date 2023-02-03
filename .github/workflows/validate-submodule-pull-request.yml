@@ -31,6 +31,9 @@ jobs:
         run: |
           JIRA_KEY="${{ github.event.pull_request.body }}"
           PR_AUTHOR=${{ env.PULL_REQUEST_AUTHOR_LOGIN }}
+      - name: Debug Jira Key
+        run: |
+          echo "Jira Key: ${JIRA_KEY}"
 
       - name: Assign issue to PR author
         uses: Lombiq/GitHub-Actions/.github/actions/assign-issue-to-pr-author@issue/OSOE-545

@@ -5,7 +5,7 @@ param(
     [string] $PullRequestID
 )
 
-$output = gh issue list $IssueQuery --repo $GitHubRepository
+$output = gh issue list --search $IssueQuery --repo $GitHubRepository
 $firstItem = ($output | Select-Object -First 1)
 
 if ($firstItem) {
