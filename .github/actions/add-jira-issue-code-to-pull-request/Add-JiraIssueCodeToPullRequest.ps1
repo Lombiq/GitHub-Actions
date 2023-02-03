@@ -7,12 +7,12 @@ param(
     [string] $PullRequestId
 )
 
-$jiraBrowseUrl = $JiraBaseUrl + '/browse/';
+$jiraBrowseUrl = $JiraBaseUrl + '/browse/'
 
 $originalTitle = $Title
 $originalBody = $Body
 
-if ($Branch -NotLike "*issue*")
+if ($Branch -NotLike '*issue*')
 {
     Exit
 }
@@ -23,7 +23,7 @@ $issueLink = "[$issueKey]($jiraBrowseUrl$issuekey)"
 
 if ($Title -NotLike "*$issueKey*")
 {
-    $Title = $issueKey + ": " + $Title
+    $Title = $issueKey + ': ' + $Title
 }
 
 if (-Not $Body)
@@ -41,10 +41,10 @@ elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*")
 
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))
 {
-    # Escape the quote characters. This is necessary because PowerShell mangles the quote characters when passing 
+    # Escape the quote characters. This is necessary because PowerShell mangles the quote characters when passing
     # arguments into a native command such as the GitHub CLI. See https://github.com/cli/cli/issues/3425 for details.
-    $Title = $Title -replace '"','\"'
-    $Body = $Body -replace '"','\"'
+    $Title = $Title -replace '"', '\"'
+    $Body = $Body -replace '"', '\"'
 
     # See https://cli.github.com/manual/gh_pr_edit
     gh pr edit $PullRequestId --title $Title --body $Body --repo $GitHubRepository
