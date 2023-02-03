@@ -30,7 +30,7 @@ jobs:
       - name: Extract Jira key and PR author from pull request
         run: |
           BODY="${{ github.event.pull_request.body }}"
-          JIRA_KEY = ($BODY -split '\(')[0].Trim('[]')
+          JIRA_KEY = $(echo $BODY | grep -oP '\[\K[^\]]+')
           PR_AUTHOR=${{ github.event.pull_request.user.login }}
       - name: Debug Jira Key
         run: |
