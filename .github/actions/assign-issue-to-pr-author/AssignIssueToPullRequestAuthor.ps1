@@ -9,7 +9,7 @@ $output = gh issue list --search $IssueQuery --repo $GitHubRepository
 $firstItem = ($output | Select-Object -First 1)
 
 if ($firstItem) {
-    gh issue add-assignee --assignee $Assignee --repo $GitHubRepository --issue $firstItem.number
+    gh api -X PATCH "/repos/$GitHubRepository/issues/$firstItem.number" -f "assignees=$Assignee"
 } else {
     Write-Output "No issue was found with the query '$IssueQuery' in the repository '$GitHubRepository'"
 }
