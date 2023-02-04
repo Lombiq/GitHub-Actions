@@ -12,11 +12,11 @@ runs:
     - name: Assign issue to Pull Request Author
       shell: pwsh
       env: 
-        JIRA_KEY: ${{ github.event.pull_request.body }}
+        PR_BODY: ${{ github.event.pull_request.body }}
         PR_AUTHOR: ${{ github.event.pull_request.user.login }}
       run: |
         $params = @{
-            Body = "${{ env.BODY }}"
+            Body = "${{ env.PR_BODY }}"
             Assignee = "${{ env.PR_AUTHOR }}"
             GitHubRepository = $Env:GITHUB_REPOSITORY
             PullRequestID = ${{ github.event.number }}
