@@ -6,8 +6,11 @@ runs:
     - name: Extract Jira key and PR author from pull request
       shell: pwsh
       run: |
-        JIRA_KEY=$(echo '${{ github.event.pull_request.body }}' | Select-String -Pattern '\[\K[^\]]+' -AllMatches | Select-Object -ExpandProperty Matches | Select-Object -ExpandProperty Value)
-        PR_AUTHOR=${{ github.event.pull_request.user.login }}
+        $inputString = '{{ github.event.pull_request.body }}'
+        $pattern = '\[(.*?)\]'
+        $matches = [System.Text.RegularExpressions.Regex]::Matches($inputString, $pattern)
+        $JIRA_KEY = $matches[0].Groups[1].Value
+        $PR_AUTHOR=${{ github.event.pull_request.user.login }}
    
     - name: Setup Scripts
       shell: pwsh
