@@ -13,7 +13,7 @@ $firstItem = ($output | Select-Object -First 1)
 Write-Output $firstItem
 $issueNumber = $firstItem -split "\t" | Select-Object -First 1
 if ($firstItem) {
-    gh api -X PATCH "/repos/$GitHubRepository/issues/$issueNumber" -f "assignees=$Assignee"
+    gh api -X PATCH "/repos/$GitHubRepository/issues/$issueNumber" -f "assignee=$Assignee"
 } else {
     Write-Output "No issue was found with the query '$IssueQuery' in the repository '$GitHubRepository'"
 }
