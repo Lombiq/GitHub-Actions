@@ -6,7 +6,7 @@ runs:
     - name: Extract Jira key and PR author from pull request
       shell: pwsh
       run: |
-        $inputString = '{{ github.event.pull_request.body }}'
+        $inputString = ${{ github.event.pull_request.body }}
         $pattern = '\[(.*?)\]'
         $matches = [System.Text.RegularExpressions.Regex]::Matches($inputString, $pattern)
         $JIRA_KEY = $matches[0].Groups[1].Value
