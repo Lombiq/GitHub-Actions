@@ -3,15 +3,6 @@ name: assign-issue-to-pr-author
 runs:
   using: "composite"
   steps:
-    - name: Extract Jira key and PR author from pull request
-      shell: pwsh
-      run: |
-        $inputString = ${{ github.event.pull_request.body }}
-        $pattern = '\[(.*?)\]'
-        $matches = [System.Text.RegularExpressions.Regex]::Matches($inputString, $pattern)
-        $JIRA_KEY = $matches[0].Groups[1].Value
-        $PR_AUTHOR=${{ github.event.pull_request.user.login }}
-   
     - name: Setup Scripts
       shell: pwsh
       run: |
@@ -20,6 +11,9 @@ runs:
 
     - name: Assign issue to Pull Request Author
       shell: pwsh
+      env: 
+        JIRA_KEY: (${github.event.pull_request.body} -match '[(.*?)]')[1]
+        PR_AUTHOR: ${{ github.event.pull_request.user.login }}
       run: |
         $params = @{
             IssueQuery = "${{ env.JIRA_KEY }} in:title"
