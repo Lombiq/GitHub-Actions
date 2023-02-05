@@ -19,6 +19,5 @@ runs:
             Body = "${{ env.PR_BODY }}"
             Assignee = "${{ env.PR_AUTHOR }}"
             GitHubRepository = $Env:GITHUB_REPOSITORY
-            PullRequestID = ${{ github.event.number }}
         }
         AssignIssueToPullRequestAuthor @params
