@@ -36,7 +36,7 @@ on:
       timeout-minutes:
         required: false
         type: number
-        default: 360
+        default: 15
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
       dotnet-pack-ignore-warning:
         required: false
