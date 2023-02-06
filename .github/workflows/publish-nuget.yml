@@ -70,12 +70,7 @@ on:
 jobs:
   publish-nuget:
     runs-on: ubuntu-22.04
-    # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
-    # https://github.com/actions/runner/issues/1555.
-    strategy:
-      matrix:
-        timeout-minutes: ${{ fromJSON(format('[ {0} ]', inputs.timeout-minutes)) }}
-    timeout-minutes: ${{ matrix.timeout-minutes }}
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
