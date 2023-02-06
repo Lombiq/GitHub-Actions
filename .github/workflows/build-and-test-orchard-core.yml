@@ -167,6 +167,9 @@ jobs:
   build-and-test:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
+    strategy:
+      matrix:
+        machine-type: ${{ fromJson(inputs.machine-types) }}
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
