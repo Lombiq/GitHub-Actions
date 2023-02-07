@@ -15,8 +15,10 @@ nuget restore $SolutionOrProject
 
 Write-Output ".NET version number: $Version"
 
-# -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
-# -p:NoWarn=MSB3884 is necessary not to fail the build on warnings emitted in such cases.
+# Notes on build switches that aren't self-explanatory:
+# - -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
+# - -warnAsMessage:MSB3026 is also to prevent random locks along the lines of "warning MSB3026: Could not copy dlls
+#   errors." from breaking the build (since we treat warnings as errors).
 
 $commonSwitches = ConvertTo-Array @"
     --verbosity:$Verbosity
