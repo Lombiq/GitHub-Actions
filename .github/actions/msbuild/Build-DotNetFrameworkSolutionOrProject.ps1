@@ -15,12 +15,16 @@ nuget restore $SolutionOrProject
 
 Write-Output ".NET version number: $Version"
 
+# -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
+# -p:NoWarn=MSB3884 is necessary not to fail the build on warnings emitted in such cases.
+
 $commonSwitches = ConvertTo-Array @"
     --verbosity:$Verbosity
     -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
+    -p:NoWarn=MSB3884
 "@
 
 if ($TreatWarningsAsErrors -eq 'true')
@@ -51,11 +55,11 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output '::endgroup::'
 }
 
-# -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
 
 $buildSwitches = $commonSwitches + (ConvertTo-Array @"
     -p:Configuration=Release
     -restore
+    -maxCpuCount
     $Switches
 "@)
 
@@ -63,7 +67,7 @@ Write-Output "Building solution or project with ``msbuild $SolutionOrProject $($
 
 # An empty -maxCpuCount will use all available cores, see:
 # https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference.
-msbuild $SolutionOrProject @buildSwitches -maxCpuCount
+msbuild $SolutionOrProject @buildSwitches
 
 # Without this, if the msbuild command fails with certain MSB error codes (not build errors), they still won't cause
 # this script to fail.
