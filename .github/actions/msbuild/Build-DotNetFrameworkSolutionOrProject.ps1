@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $TreatWarningsAsErrors,
@@ -61,7 +61,9 @@ $buildSwitches = $commonSwitches + (ConvertTo-Array @"
 
 Write-Output "Building solution or project with ``msbuild $SolutionOrProject $($buildSwitches -join ' ')``."
 
-msbuild $SolutionOrProject @buildSwitches
+# An empty -maxCpuCount will use all available cores, see:
+# https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference.
+msbuild $SolutionOrProject @buildSwitches -maxCpuCount
 
 # Without this, if the msbuild command fails with certain MSB error codes (not build errors), they still won't cause
 # this script to fail.
