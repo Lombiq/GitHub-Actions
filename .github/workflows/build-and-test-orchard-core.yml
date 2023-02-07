@@ -167,14 +167,10 @@ jobs:
   build-and-test:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
-    # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
-    # https://github.com/actions/runner/issues/1555.
     strategy:
       matrix:
         machine-type: ${{ fromJson(inputs.machine-types) }}
-        timeout-minutes:
-          - ${{ inputs.timeout-minutes }}
-    timeout-minutes: ${{ matrix.timeout-minutes }}
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
