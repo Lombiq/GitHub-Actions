@@ -40,6 +40,14 @@ inputs:
     description: Repository with default configuration to use, the default from Check Spelling is ''.
     required: false
     default: Lombiq/GitHub-Actions@dev
+  post-comment:
+    description: Check Spelling to post comment or not, the default value is 1
+    required: false
+    default: '1'
+  task:
+    description: Task from prior, the default from Check Spelling is ''
+    required: false
+    default: ''
 
 runs:
   using: "composite"
@@ -53,6 +61,7 @@ runs:
         dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
         experimental_apply_changes_via_bot: 0
         extra_dictionaries: ${{ inputs.extra-dictionaries }}
-        post_comment: 1
+        post_comment: ${{ inputs.post-comment }}
         spell_check_this: ${{ inputs.spell-check-this }}
         suppress_push_for_open_pull_request: 1
+        task: ${{ inputs.task }}

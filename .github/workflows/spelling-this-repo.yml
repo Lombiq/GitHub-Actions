@@ -1,6 +1,7 @@
 name: Spelling
 # This is the same workflow you'd find in our other submodules. Unlike the rest of the workflows in this repo, this one
 # is meant to actually run here, so don't call it from other repos.
+# Test spelling typo teh
 
 on:
   pull_request:
@@ -14,3 +15,15 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
     with:
       spell-check-this: Lombiq/GitHub-Actions@dev
+      check-spelling-post-comment: 0
+  spelling-followup:
+    name: Spelling (Follow-up)
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
+    with:
+      spell-check-this: Lombiq/GitHub-Actions@dev
+      outputs-followup: ${{ steps.check-spelling.outputs.followup }}
+      jobs-name: 'Check Spelling (Follow-up)'
+      jobs-needs: check-spelling
+      jobs-if: (success() || failure()) && needs.check-spelling.outputs.followup
+      check-spelling-post-comment: 1
+      task-followup: needs.check-spelling.outputs.followup

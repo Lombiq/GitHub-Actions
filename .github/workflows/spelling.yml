@@ -50,11 +50,40 @@ on:
         required: false
         type: string
         default: Lombiq/GitHub-Actions@dev
+      outputs-followup:
+        description: Check Spelling output value, the default value is ''
+        required: false
+        type: string
+        default: ''
+      jobs-name:
+        description: Name of check-spelling job, the default value is 'Check Spelling'
+        required: false
+        type: string
+        default: 'Check Spelling'
+      jobs-needs:
+        description: Prerequisite jobs that must previously succeed, the default value is ''
+        required: false
+        type: string
+        default: ''
+      jobs-if:
+        description: Determine if job needs to run, default is 'true'
+        required: false
+        type: boolean
+        default: true
+      check-spelling-post-comment:
+        description: Check Spelling post comment, the default value is 1
+        required: false
+        type: string
+        default: 1
 
 jobs:
   check-spelling:
-    name: Check Spelling
+    name: ${{ inputs.jobs-name}}
+    outputs:
+      followup: ${{ inputs.outputs-followup }}
     runs-on: ubuntu-22.04
+    needs: ${{ inputs.jobs-needs }}
+    if: ${{ inputs.jobs-if }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
@@ -79,6 +108,8 @@ jobs:
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
           config: ${{ inputs.config }}
           spell-check-this: ${{ inputs.spell-check-this }}
+          post-comment: ${{ inputs.check-spelling-post-comment }}
+          task: ${{ inputs.outputs-followup }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
