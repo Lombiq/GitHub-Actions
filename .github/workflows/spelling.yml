@@ -30,14 +30,7 @@ on:
         required: false
         type: string
         default: |
-          cspell:aws/aws.txt
-          cspell:csharp/csharp.txt
-          cspell:css/css.txt
-          cspell:dotnet/dotnet.txt
           cspell:filetypes/filetypes.txt
-          cspell:html/html.txt
-          cspell:node/node.txt
-          cspell:npm/npm.txt
           cspell:software-terms/src/software-terms.txt
       config:
         description: Spelling configuration directory
