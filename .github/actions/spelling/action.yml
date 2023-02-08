@@ -13,6 +13,7 @@ inputs:
     required: false
     default: >
       {
+        "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
         "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"
       }
   extra-dictionaries:
