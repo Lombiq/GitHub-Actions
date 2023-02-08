@@ -50,7 +50,9 @@ on:
         required: false
         type: number
         default: 21
-        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+        description: >
+          Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+          For short-running workflows this default number should be determined based on the executions of the given workflow.
 
 jobs:
   create-jira-issues-for-community-activities:
