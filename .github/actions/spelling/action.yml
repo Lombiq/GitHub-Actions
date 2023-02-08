@@ -22,6 +22,7 @@ inputs:
     default: |
       cspell:filetypes/filetypes.txt
       cspell:software-terms/src/software-terms.txt
+      lombiq-lgha:lombiq-common.txt
   config:
     description: Spelling configuration directory
     required: false
@@ -29,7 +30,7 @@ inputs:
   spell-check-this:
     description: Repository with default configuration to use, the default from Check Spelling is ''.
     required: false
-    default: Lombiq/GitHub-Actions@dev
+    default: Lombiq/GitHub-Actions@issue/OSOE-523
 
 runs:
   using: "composite"

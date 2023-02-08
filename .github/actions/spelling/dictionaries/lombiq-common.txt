@@ -1,0 +1,12 @@
+apikey
+apps
+cloudsmith
+corepack
+cspell
+dotnet
+hastlayer
+jira
+linting
+lombiq
+versioning
+workflows
