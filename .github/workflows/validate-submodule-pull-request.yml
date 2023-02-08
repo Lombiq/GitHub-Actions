@@ -28,6 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Assign issue to PR author
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: Lombiq/GitHub-Actions/.github/actions/assign-issue-to-pr-author@issue/OSOE-545
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

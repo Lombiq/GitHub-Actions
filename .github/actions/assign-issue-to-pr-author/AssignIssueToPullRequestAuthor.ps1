@@ -15,12 +15,7 @@ else
 
 $IssueQuery = "$Jira_Key in:title"
 $Output = gh issue list --search $IssueQuery --repo $GitHubRepository
-
-Write-Output $Output
-
 $FirstItem = ($Output | Select-Object -First 1)
-Write-Output $FirstItem
-
 $IssueNumber = $FirstItem -split '\t' | Select-Object -First 1
 
 if ($FirstItem)
