@@ -22,16 +22,12 @@ inputs:
       cspell:aws/aws.txt
       cspell:csharp/csharp.txt
       cspell:css/css.txt
-      cspell:django/django.txt
       cspell:dotnet/dotnet.txt
       cspell:filetypes/filetypes.txt
       cspell:html/html.txt
-      cspell:npm/npm.txt
-      cspell:rust/rust.txt
-      cspell:scala/scala.txt
-      cspell:software-terms/src/software-terms.txt
       cspell:node/node.txt
-      cspell:typescript/typescript.txt
+      cspell:npm/npm.txt
+      cspell:software-terms/src/software-terms.txt
   config:
     description: Spelling configuration directory
     required: false
