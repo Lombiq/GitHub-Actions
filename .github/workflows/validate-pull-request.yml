@@ -9,10 +9,16 @@ on:
         description: >
           Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
           it must NOT end with a slash.
-
+    inputs:
+      timeout-minutes:
+        required: false
+        type: number
+        default: 6
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
 jobs:
   validate-pull-request:
     runs-on: ubuntu-22.04
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Add Jira Issue Code to Pull Request
         if: github.event_name == 'pull_request' && github.event.action == 'opened' 

@@ -46,10 +46,16 @@ on:
           If set to "true", Jira issue titles will be suffixed with "in <issue-component>" if the issue-component
           parameter is specified, or the repository name. If set to "false", no suffix will be added to Jira issue
           titles.
+      timeout-minutes:
+        required: false
+        type: number
+        default: 21
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
 
 jobs:
   create-jira-issues-for-community-activities:
     runs-on: ubuntu-22.04
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Create Jira issues for community activities
         uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-community-activities@dev

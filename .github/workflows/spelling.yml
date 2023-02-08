@@ -50,11 +50,17 @@ on:
         required: false
         type: string
         default: Lombiq/GitHub-Actions@dev
+      timeout-minutes:
+        required: false
+        type: number
+        default: 3
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
 
 jobs:
   check-spelling:
     name: Check Spelling
     runs-on: ubuntu-22.04
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
