@@ -87,10 +87,10 @@ on:
       blob-container-include-list:
         required: false
         type: string
-        default: '@("media")'
+        default: '@("media", "dataprotection")'
         description: >
           PowerShell string array with the name of the included Blob Container(s), e.g. '@("media")' or '@("media",
-          "cool-container")'. The parameter must be a PowerShell string array. When a not empty PowerShell string array
+          "dataprotection)'. The parameter must be a PowerShell string array. When a not empty PowerShell string array
           is provided, "blob-container-exclude-list" is not taken into consideration.
       folder-exclude-list:
         required: false
