@@ -70,8 +70,8 @@ runs:
       id: merge-dictionary-lists
       shell: pwsh
       run: |
-        $defaultDictionaries = '${{ inputs.default-dictionaries }}'.Trim().Replace("`r`n", ' ')
-        $additionalDictionaries = '${{ inputs.additional-dictionaries }}'.Trim().Replace("`r`n", ' ')
+        $defaultDictionaries = '${{ inputs.default-dictionaries }}'.Replace("`r", ' ').Replace("`n", ' ').Trim().Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
+        $additionalDictionaries = '${{ inputs.additional-dictionaries }}'.Replace("`r", ' ').Replace("`n", ' ').Trim().Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
 
         Set-GitHubOutput -Key "merged-dictionary-list" -Value (($additionalDictionaries + $defaultDictionaries | Select-Object -Unique) -join ' ')
 
