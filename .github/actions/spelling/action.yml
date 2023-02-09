@@ -21,6 +21,7 @@ inputs:
     default: |
       cspell:filetypes/filetypes.txt
       cspell:software-terms/src/software-terms.txt
+      lombiq-lgha:lombiq-common.txt
   additional-dictionary-source-prefixes:
     description: >
       JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
@@ -66,19 +67,15 @@ runs:
 
         Set-GitHubOutput -Key "merged-prefixes" -Value (ConvertTo-Json $additionalPrefixes -Compress)
 
-    - name: Check merged dictionary source prefixes
-      shell: pwsh
-      run: Write-Warning '${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}'
-
-    # - name: Check Spelling
-    #   # v0.0.21
-    #   uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
-    #   with:
-    #     check_file_names: 1
-    #     config: ${{ inputs.config }}
-    #     dictionary_source_prefixes: ${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}
-    #     experimental_apply_changes_via_bot: 0
-    #     extra_dictionaries: ${{ inputs.extra-dictionaries }}
-    #     post_comment: 1
-    #     spell_check_this: ${{ inputs.spell-check-this }}
-    #     suppress_push_for_open_pull_request: 1
+    - name: Check Spelling
+      # v0.0.21
+      uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
+      with:
+        check_file_names: 1
+        config: ${{ inputs.config }}
+        dictionary_source_prefixes: ${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}
+        experimental_apply_changes_via_bot: 0
+        extra_dictionaries: ${{ inputs.default-dictionaries }}
+        post_comment: 1
+        spell_check_this: ${{ inputs.spell-check-this }}
+        suppress_push_for_open_pull_request: 1
