@@ -55,8 +55,8 @@ runs:
         $defaultPrefixesInput = '${{ inputs.default-dictionary-source-prefixes }}'
         $additionalPrefixesInput = '${{ inputs.additional-dictionary-source-prefixes }}'
 
-        $defaultPrefixes = $null -eq $defaultPrefixesInput ? @{} : (ConvertFrom-Json $defaultPrefixesInput -AsHashtable)
-        $additionalPrefixes = $null -eq $additionalPrefixesInput ? @{} : (ConvertFrom-Json $additionalPrefixesInput -AsHashtable)
+        $defaultPrefixes = [string]::IsNullOrWhiteSpace($defaultPrefixesInput) ? @{} : (ConvertFrom-Json $defaultPrefixesInput -AsHashtable)
+        $additionalPrefixes = [string]::IsNullOrWhiteSpace($additionalPrefixesInput) ? @{} : (ConvertFrom-Json $additionalPrefixesInput -AsHashtable)
 
         $defaultPrefixes.Keys |
           Where-Object { -not $additionalPrefixes.ContainsKey($PSItem) } |
@@ -71,8 +71,8 @@ runs:
         $defaultDictionariesInput = '${{ inputs.default-dictionaries }}'
         $additionalDictionariesInput = '${{ inputs.additional-dictionaries }}'
 
-        $defaultDictionaries = $null -eq $defaultDictionariesInput ? @() : $defaultDictionariesInput.Replace("`r", ' ').Replace("`n", ' ').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
-        $additionalDictionaries = $null -eq $additionalDictionariesInput ? @() : $additionalDictionariesInput.Replace("`r", ' ').Replace("`n", ' ').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
+        $defaultDictionaries = [string]::IsNullOrWhiteSpace($defaultDictionariesInput) ? @() : $defaultDictionariesInput.Replace("`r", ' ').Replace("`n", ' ').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
+        $additionalDictionaries = [string]::IsNullOrWhiteSpace($additionalDictionariesInput) ? @() : $additionalDictionariesInput.Replace("`r", ' ').Replace("`n", ' ').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
 
         Set-GitHubOutput -Key 'merged-dictionary-list' -Value (($additionalDictionaries + $defaultDictionaries | Select-Object -Unique) -join ' ')
 
