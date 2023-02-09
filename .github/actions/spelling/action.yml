@@ -21,7 +21,6 @@ inputs:
     default: |
       cspell:filetypes/filetypes.txt
       cspell:software-terms/src/software-terms.txt
-      lombiq-lgha:lombiq-common.txt
   additional-dictionary-source-prefixes:
     description: >
       JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
@@ -58,14 +57,23 @@ runs:
       id: merge-dictionary-source-prefixes
       shell: pwsh
       run: |
-        $additionalPrefixes = ConvertFrom-Json '${{ inputs.additional-dictionary-source-prefixes }}' -AsHashtable
         $defaultPrefixes = ConvertFrom-Json '${{ inputs.default-dictionary-source-prefixes }}' -AsHashtable
+        $additionalPrefixes = ConvertFrom-Json '${{ inputs.additional-dictionary-source-prefixes }}' -AsHashtable
 
         $defaultPrefixes.Keys |
           Where-Object { -not $additionalPrefixes.ContainsKey($PSItem) } |
           ForEach-Object { $additionalPrefixes[$PSItem] = $defaultPrefixes[$PSItem] }
 
         Set-GitHubOutput -Key "merged-prefixes" -Value (ConvertTo-Json $additionalPrefixes -Compress)
+
+    - name: Merge dictionary lists
+      id: merge-dictionary-lists
+      shell: pwsh
+      run: |
+        $defaultDictionaries = '${{ inputs.default-dictionaries }}'.Trim().Replace("`r`n", ' ')
+        $additionalDictionaries = '${{ inputs.additional-dictionaries }}'.Trim().Replace("`r`n", ' ')
+
+        Set-GitHubOutput -Key "merged-dictionary-list" -Value (($additionalDictionaries + $defaultDictionaries | Select-Object -Unique) -join ' ')
 
     - name: Check Spelling
       # v0.0.21
@@ -75,7 +83,7 @@ runs:
         config: ${{ inputs.config }}
         dictionary_source_prefixes: ${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}
         experimental_apply_changes_via_bot: 0
-        extra_dictionaries: ${{ inputs.default-dictionaries }}
+        extra_dictionaries: ${{ steps.merge-dictionary-lists.outputs.merged-dictionary-list }}
         post_comment: 1
         spell_check_this: ${{ inputs.spell-check-this }}
         suppress_push_for_open_pull_request: 1
