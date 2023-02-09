@@ -134,18 +134,18 @@ jobs:
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
 
-      - name: Replace Media
-        run: |
-          Set-AzureWebAppStorageContentFromStorage `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SourceSlotName ${{ inputs.source-slot-name }} `
-            -DestinationSlotName ${{ inputs.destination-slot-name }} `
-            -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-            -ContainerBlackList ${{ inputs.blob-container-exclude-list }} `
-            -ContainerWhiteList ${{ inputs.blob-container-include-list }} `
-            -FolderBlackList ${{ inputs.folder-exclude-list }} `
-            -FolderWhiteList ${{ inputs.folder-include-list }}
+      #- name: Replace Media
+      #  run: |
+      #    Set-AzureWebAppStorageContentFromStorage `
+      #      -ResourceGroupName ${{ inputs.resource-group-name }} `
+      #      -WebAppName ${{ inputs.app-name }} `
+      #      -SourceSlotName ${{ inputs.source-slot-name }} `
+      #      -DestinationSlotName ${{ inputs.destination-slot-name }} `
+      #      -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
+      #      -ContainerBlackList ${{ inputs.blob-container-exclude-list }} `
+      #      -ContainerWhiteList ${{ inputs.blob-container-include-list }} `
+      #      -FolderBlackList ${{ inputs.folder-exclude-list }} `
+      #      -FolderWhiteList ${{ inputs.folder-include-list }}
 
       - name: Replace Database
         run: |
