@@ -33,7 +33,7 @@ JValue
 langword
 linkedin
 LinkedIn
-Linq
+linq
 linting
 lombiq
 Lucene
@@ -41,19 +41,17 @@ mentoring
 Meziantou
 microsoft
 middlewares
-middlewares
-Moq
 Moq
 msbuild
 msedgedriver
-Mvc
+mvc
 MVVM
 NCrontab
 Newtonsoft
 NLog
 nologo
 NVARCHAR
-orcharcore
+orchardcore
 paramref
 pwsh
 ruleset
@@ -64,6 +62,7 @@ shortcodes
 Shouldly
 sitesettings
 sln
+smo
 sourced
 sqlcmd
 stylecop
@@ -74,7 +73,7 @@ taghelper
 teamcity
 timespan
 toolbars
-Trumbowyg
+trumbowyg
 typeparam
 typeparamref
 versioning
