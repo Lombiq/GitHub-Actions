@@ -15,25 +15,39 @@ on:
         required: false
         type: string
         default: "true"
-      # dictionary-source-prefixes:
-      #   description: >
-      #     JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
-      #     https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
-      #   required: false
-      #   type: string
-      #   default: >
-      #     {
-      #       "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
-      #       "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"
-      #     }
-      # extra-dictionaries:
-      #   description: Space delimited list of URLs (or `prefix:`+path) to additional word lists.
-      #   required: false
-      #   type: string
-      #   default: |
-      #     cspell:filetypes/filetypes.txt
-      #     cspell:software-terms/src/software-terms.txt
-      #     lombiq-lgha:lombiq-common.txt
+      default-dictionary-source-prefixes:
+        description: >
+          JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
+          https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
+        required: false
+        type: string
+        default: >
+          {
+            "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/",
+          }
+      default-dictionaries:
+        description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
+        required: false
+        type: string
+        default: |
+          cspell:filetypes/filetypes.txt
+          cspell:software-terms/src/software-terms.txt
+      additional-dictionary-source-prefixes:
+        description: >
+          JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
+          https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
+        required: false
+        type: string
+        default: >
+          {
+            "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
+          }
+      additional-dictionaries:
+        description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
+        required: false
+        type: string
+        default: |
+          lombiq-lgha:lombiq-common.txt
       config:
         description: Spelling configuration directory
         required: false
@@ -69,8 +83,10 @@ jobs:
       - name: Check Spelling
         uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-523
         with:
-          # dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
-          # extra-dictionaries: ${{ inputs.extra-dictionaries }}
+          default-dictionary-source-prefixes: ${{ inputs.default-dictionary-source-prefixes }}
+          default-dictionaries: ${{ inputs.default-dictionaries }}
+          additional-dictionary-source-prefixes: ${{ inputs.additional-dictionary-source-prefixes }}
+          additional-dictionaries: ${{ inputs.additional-dictionaries }}
           config: ${{ inputs.config }}
           spell-check-this: ${{ inputs.spell-check-this }}
 

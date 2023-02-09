@@ -64,16 +64,16 @@ runs:
           Where-Object { -not $additionalPrefixes.ContainsKey($PSItem) } |
           ForEach-Object { $additionalPrefixes[$PSItem] = $defaultPrefixes[$PSItem] }
 
-        Set-GitHubOutput -Key "merged-prefixes" -Value (ConvertTo-Json $additionalPrefixes -Compress)
+        Set-GitHubOutput -Key 'merged-prefixes' -Value (ConvertTo-Json $additionalPrefixes -Compress)
 
     - name: Merge dictionary lists
       id: merge-dictionary-lists
       shell: pwsh
       run: |
-        $defaultDictionaries = '${{ inputs.default-dictionaries }}'.Replace("`r", ' ').Replace("`n", ' ').Trim().Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
-        $additionalDictionaries = '${{ inputs.additional-dictionaries }}'.Replace("`r", ' ').Replace("`n", ' ').Trim().Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
+        $defaultDictionaries = '${{ inputs.default-dictionaries }}'.Replace("`r", ' ').Replace("`n", ' ').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
+        $additionalDictionaries = '${{ inputs.additional-dictionaries }}'.Replace("`r", ' ').Replace("`n", ' ').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
 
-        Set-GitHubOutput -Key "merged-dictionary-list" -Value (($additionalDictionaries + $defaultDictionaries | Select-Object -Unique) -join ' ')
+        Set-GitHubOutput -Key 'merged-dictionary-list' -Value (($additionalDictionaries + $defaultDictionaries | Select-Object -Unique) -join ' ')
 
     - name: Check Spelling
       # v0.0.21
