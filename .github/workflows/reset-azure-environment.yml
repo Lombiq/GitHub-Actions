@@ -161,6 +161,7 @@ jobs:
           }
           catch
           {
+              Write-Output "This is what happened"
               Write-Error $PSItem
           }
           
