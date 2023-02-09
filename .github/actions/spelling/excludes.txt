@@ -1,8 +1,8 @@
 \.bat$
 \.config$
 \.csproj$
-\.css$
 \.css\.map$
+\.css$
 \.DotSettings$
 \.editorconfig$
 \.eslintrc$
@@ -31,7 +31,3 @@
 ^LICENSE\.txt$
 ignore$
 pnpm-lock\.yaml$
-# For Lombiq.DataTables
-UnmanagedNodeModules/
-UploadingTestFileDOCX\.docx$
-UploadingTestFileXLSX\.xlsx$
