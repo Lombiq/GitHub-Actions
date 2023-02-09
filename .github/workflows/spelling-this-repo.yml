@@ -15,4 +15,4 @@ jobs:
     with:
       spell-check-this: Lombiq/GitHub-Actions@issue/OSOE-523
       additional-dictionaries: |
-        lombiq-lgha:lombiq-common.txt
+        lombiq-lgha:Lombiq.common.txt
