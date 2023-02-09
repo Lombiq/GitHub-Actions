@@ -23,6 +23,7 @@ on:
         type: string
         default: >
           {
+            "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
             "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/",
           }
       default-dictionaries:
@@ -38,16 +39,10 @@ on:
           https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
         required: false
         type: string
-        default: >
-          {
-            "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
-          }
       additional-dictionaries:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
         required: false
         type: string
-        default: |
-          lombiq-lgha:lombiq-common.txt
       config:
         description: Spelling configuration directory
         required: false

@@ -13,6 +13,7 @@ inputs:
     required: false
     default: >
       {
+        "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
         "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/",
       }
   default-dictionaries:
@@ -26,15 +27,9 @@ inputs:
       JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
       https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
     required: false
-    default: >
-      {
-        "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
-      }
   additional-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
-    default: |
-      lombiq-lgha:lombiq-common.txt
   config:
     description: Spelling configuration directory
     required: false
