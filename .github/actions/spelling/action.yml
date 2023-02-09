@@ -6,7 +6,22 @@ inputs:
   # When updating check-spelling to a new version, check the release notes or the "dictionary-source-prefixes" parameter
   # of "action.yaml" according to the commit of the release to find out the dictionary version tag and update the
   # default value here and in the spelling workflow.
-  dictionary-source-prefixes:
+  default-dictionary-source-prefixes:
+    description: >
+      JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
+      https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
+    required: false
+    default: >
+      {
+        "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/",
+      }
+  default-dictionaries:
+    description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
+    required: false
+    default: |
+      cspell:filetypes/filetypes.txt
+      cspell:software-terms/src/software-terms.txt
+  additional-dictionary-source-prefixes:
     description: >
       JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
       https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
@@ -14,14 +29,11 @@ inputs:
     default: >
       {
         "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
-        "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"
       }
-  extra-dictionaries:
+  additional-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
     default: |
-      cspell:filetypes/filetypes.txt
-      cspell:software-terms/src/software-terms.txt
       lombiq-lgha:lombiq-common.txt
   config:
     description: Spelling configuration directory
@@ -35,15 +47,36 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Check Spelling
-      # v0.0.21
-      uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
-      with:
-        check_file_names: 1
-        config: ${{ inputs.config }}
-        dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
-        experimental_apply_changes_via_bot: 0
-        extra_dictionaries: ${{ inputs.extra-dictionaries }}
-        post_comment: 1
-        spell_check_this: ${{ inputs.spell-check-this }}
-        suppress_push_for_open_pull_request: 1
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Merge dictionary source prefixes
+      id: merge-dictionary-source-prefixes
+      shell: pwsh
+      run: |
+        $additionalPrefixes = ConvertFrom-Json '${{ inputs.additional-dictionary-source-prefixes }}' -AsHashtable
+        $defaultPrefixes = ConvertFrom-Json '${{ inputs.default-dictionary-source-prefixes }}' -AsHashtable
+
+        $secondHash.Keys | Where-Object { -not $firstHash.ContainsKey($PSItem) } | ForEach-Object { $firstHash[$PSItem] = $secondHash[$PSItem] }
+
+        Set-GitHubOutput -Key "merged-prefixes" -Value (ConvertTo-Json $additionalPrefixes)
+
+    - name: Check merged dictionary source prefixes
+      shell: pwsh
+      run: Write-Warning '${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}'
+
+    # - name: Check Spelling
+    #   # v0.0.21
+    #   uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
+    #   with:
+    #     check_file_names: 1
+    #     config: ${{ inputs.config }}
+    #     dictionary_source_prefixes: ${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}
+    #     experimental_apply_changes_via_bot: 0
+    #     extra_dictionaries: ${{ inputs.extra-dictionaries }}
+    #     post_comment: 1
+    #     spell_check_this: ${{ inputs.spell-check-this }}
+    #     suppress_push_for_open_pull_request: 1
