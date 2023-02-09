@@ -1,3 +1,2 @@
 schoorstra
 sipke
-stroustrup
