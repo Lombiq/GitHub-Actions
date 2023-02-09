@@ -64,7 +64,7 @@ runs:
           Where-Object { -not $additionalPrefixes.ContainsKey($PSItem) } |
           ForEach-Object { $additionalPrefixes[$PSItem] = $defaultPrefixes[$PSItem] }
 
-        Set-GitHubOutput -Key "merged-prefixes" -Value (ConvertTo-Json $additionalPrefixes)
+        Set-GitHubOutput -Key "merged-prefixes" -Value (ConvertTo-Json $additionalPrefixes -Compress)
 
     - name: Check merged dictionary source prefixes
       shell: pwsh
