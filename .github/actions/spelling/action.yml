@@ -60,7 +60,9 @@ runs:
         $additionalPrefixes = ConvertFrom-Json '${{ inputs.additional-dictionary-source-prefixes }}' -AsHashtable
         $defaultPrefixes = ConvertFrom-Json '${{ inputs.default-dictionary-source-prefixes }}' -AsHashtable
 
-        $secondHash.Keys | Where-Object { -not $firstHash.ContainsKey($PSItem) } | ForEach-Object { $firstHash[$PSItem] = $secondHash[$PSItem] }
+        $defaultPrefixes.Keys |
+          Where-Object { -not $additionalPrefixes.ContainsKey($PSItem) } |
+          ForEach-Object { $additionalPrefixes[$PSItem] = $defaultPrefixes[$PSItem] }
 
         Set-GitHubOutput -Key "merged-prefixes" -Value (ConvertTo-Json $additionalPrefixes)
 
