@@ -27,9 +27,11 @@ inputs:
       JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
       https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
     required: false
+    default: ''
   additional-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
+    default: ''
   config:
     description: Spelling configuration directory
     required: false
