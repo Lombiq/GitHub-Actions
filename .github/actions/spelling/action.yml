@@ -42,13 +42,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-
     - name: Setup Scripts
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
-    
+
     - name: Merge "excludes" and "patterns"
       shell: pwsh
       run: |
@@ -77,11 +76,8 @@ runs:
       id: merge-dictionary-lists
       shell: pwsh
       run: |
-        $defaultDictionariesInput = '${{ inputs.default-dictionaries }}'
-        $additionalDictionariesInput = '${{ inputs.additional-dictionaries }}'
-
-        $defaultDictionaries = [string]::IsNullOrWhiteSpace($defaultDictionariesInput) ? @() : $defaultDictionariesInput.Replace("`r", ' ').Replace("`n", ' ').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
-        $additionalDictionaries = [string]::IsNullOrWhiteSpace($additionalDictionariesInput) ? @() : $additionalDictionariesInput.Replace("`r", ' ').Replace("`n", ' ').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
+        $defaultDictionaries = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.default-dictionaries }}'
+        $additionalDictionaries = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.additional-dictionaries }}'
 
         Set-GitHubOutput -Key 'merged-dictionary-list' -Value (($additionalDictionaries + $defaultDictionaries | Select-Object -Unique) -join ' ')
 
