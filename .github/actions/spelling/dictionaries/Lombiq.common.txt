@@ -5,6 +5,7 @@ appsettings
 atata
 bacpac
 Bcc
+browsersync
 btn
 CDNs
 Cloudflare
@@ -21,8 +22,10 @@ Firefox
 ftp
 gitmodules
 Graphi
+gulpfile
 hastlayer
 hca
+HHmmss
 iis
 Inbox
 inheritdoc
@@ -50,6 +53,7 @@ msbuild
 msedgedriver
 mvc
 MVVM
+nameof
 NCrontab
 Newtonsoft
 NLog
@@ -71,6 +75,7 @@ smo
 sourced
 sqlcmd
 stylecop
+stylelint
 stylelintrc
 subfolders
 superproject
@@ -89,4 +94,5 @@ wcag
 website
 websites
 workflows
+xhr
 xunit
