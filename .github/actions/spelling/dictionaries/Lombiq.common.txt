@@ -9,6 +9,7 @@ btn
 CDNs
 Cloudflare
 cloudsmith
+cmdlets
 cms
 contentfiles
 corepack
@@ -56,6 +57,7 @@ nologo
 NVARCHAR
 orchardcore
 paramref
+publishsettings
 pwsh
 ruleset
 screenshot
