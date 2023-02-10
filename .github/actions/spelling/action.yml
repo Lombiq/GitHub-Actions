@@ -79,7 +79,7 @@ runs:
         $defaultDictionaries = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.default-dictionaries }}'
         $additionalDictionaries = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.additional-dictionaries }}'
 
-        Set-GitHubOutput -Key 'merged-dictionary-list' -Value (($additionalDictionaries + $defaultDictionaries | Select-Object -Unique) -join ' ')
+        Set-GitHubOutput -Key 'merged-dictionary-list' -Value ((@($additionalDictionaries) + @($defaultDictionaries) | Select-Object -Unique) -join ' ')
 
     - name: Check Spelling
       # v0.0.21
