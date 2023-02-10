@@ -1,5 +1,4 @@
 param(
-    [parameter(Mandatory = $true)]
     [string] $Lines
 )
 
