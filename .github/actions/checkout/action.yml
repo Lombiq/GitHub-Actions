@@ -33,4 +33,4 @@ runs:
 
     - name: Test workspace path
       shell: pwsh
-      run: Write-Warning '$Env:GITHUB_WORKSPACE'
+      run: Write-Warning $Env:GITHUB_WORKSPACE
