@@ -103,6 +103,7 @@ typeparamref
 unconfigured
 userspace
 utc
+utf
 versionable
 versioning
 viewmodel
