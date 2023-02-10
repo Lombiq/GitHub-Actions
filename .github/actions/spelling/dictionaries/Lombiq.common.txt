@@ -3,6 +3,7 @@ apikey
 apps
 appsettings
 atata
+bacpac
 Bcc
 btn
 CDNs
@@ -16,10 +17,12 @@ darkmode
 dotnet
 EULA
 Firefox
+ftp
 gitmodules
 Graphi
 hastlayer
 hca
+iis
 Inbox
 inheritdoc
 Intelli
@@ -81,6 +84,7 @@ viewmodel
 walkthrough
 warnaserror
 wcag
+website
 websites
 workflows
 xunit
