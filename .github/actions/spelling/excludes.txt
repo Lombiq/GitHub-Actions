@@ -1,8 +1,8 @@
 \.bat$
 \.config$
 \.csproj$
-\.css\.map$
 \.css$
+\.css\.map$
 \.DotSettings$
 \.editorconfig$
 \.eslintrc$
