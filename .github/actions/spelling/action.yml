@@ -42,15 +42,20 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Test workspace path
-      shell: pwsh
-      run: Write-Warning $Env:GITHUB_WORKSPACE
 
     - name: Setup Scripts
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+    
+    - name: Merge "excludes" and "patterns"
+      shell: pwsh
+      run: |
+        $targetPath = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.config }}'
+
+        Merge-SpellCheckingDictionaryFile -Source (Join-Path '${{ github.action_path }}' 'excludes.txt') -Target (Join-Path $targetPath 'excludes.txt')
+        Merge-SpellCheckingDictionaryFile -Source (Join-Path '${{ github.action_path }}' 'patterns.txt') -Target (Join-Path $targetPath 'patterns.txt')
 
     - name: Merge dictionary source prefixes
       id: merge-dictionary-source-prefixes
