@@ -42,10 +42,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Test workspace path
-      shell: pwsh
-      run: Write-Warning '${{ env.GITHUB_WORKSPACE }}'
-
     - name: Setup Scripts
       shell: pwsh
       run: |

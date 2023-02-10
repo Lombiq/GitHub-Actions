@@ -30,3 +30,7 @@ runs:
       with:
         submodules: "recursive"
         token: ${{ env.CHECKOUT_TOKEN }}
+
+    - name: Test workspace path
+      shell: pwsh
+      run: Write-Warning '${{ env.GITHUB_WORKSPACE }}'
