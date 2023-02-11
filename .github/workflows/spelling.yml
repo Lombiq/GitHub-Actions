@@ -50,6 +50,11 @@ on:
         required: false
         type: string
         default: Lombiq/GitHub-Actions@dev
+      spell-check-action:
+        description: Repository with check spelling action to use, the default from Check Spelling is ''
+        required: false
+        type: string
+        default: Lombiq/GitHub-Actions/.github/actions/spelling@dev
 
 jobs:
   check-spelling:
@@ -76,7 +81,7 @@ jobs:
 
       - name: Check Spelling
         id: check-spelling-action
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        uses: ${{ inputs.spell-check-action }}
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
@@ -98,7 +103,7 @@ jobs:
     if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
     steps:
       - name: Comment (PR)
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        uses: ${{ inputs.spell-check-action }}
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}

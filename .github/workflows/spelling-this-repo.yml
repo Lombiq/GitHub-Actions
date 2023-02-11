@@ -15,3 +15,4 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@issue/OSOE-525
     with:
       spell-check-this: Lombiq/GitHub-Actions@issue/OSOE-525
+      spell-check-action: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-525
