@@ -15,15 +15,3 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
     with:
       spell-check-this: Lombiq/GitHub-Actions@dev
-      check-spelling-post-comment: 0
-  spelling-followup:
-    name: Spelling (Follow-up)
-    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
-    with:
-      spell-check-this: Lombiq/GitHub-Actions@dev
-      outputs-followup: ${{ steps.check-spelling.outputs.followup }}
-      jobs-name: 'Check Spelling (Follow-up)'
-      jobs-needs: check-spelling
-      jobs-if: (success() || failure()) && needs.check-spelling.outputs.followup
-      check-spelling-post-comment: 1
-      task-followup: needs.check-spelling.outputs.followup

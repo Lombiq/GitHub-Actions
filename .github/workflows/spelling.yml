@@ -50,40 +50,13 @@ on:
         required: false
         type: string
         default: Lombiq/GitHub-Actions@dev
-      outputs-followup:
-        description: Check Spelling output value, the default value is ''
-        required: false
-        type: string
-        default: ''
-      jobs-name:
-        description: Name of check-spelling job, the default value is 'Check Spelling'
-        required: false
-        type: string
-        default: 'Check Spelling'
-      jobs-needs:
-        description: Prerequisite jobs that must previously succeed, the default value is ''
-        required: false
-        type: string
-        default: ''
-      jobs-if:
-        description: Determine if job needs to run, default is 'true'
-        required: false
-        type: boolean
-        default: true
-      check-spelling-post-comment:
-        description: Check Spelling post comment, the default value is 1
-        required: false
-        type: string
-        default: 1
 
 jobs:
   check-spelling:
-    name: ${{ inputs.jobs-name}}
+    name: Check Spelling
     outputs:
-      followup: ${{ inputs.outputs-followup }}
+      followup: ${{ steps.check-spelling-action.outputs.followup }}
     runs-on: ubuntu-22.04
-    needs: ${{ inputs.jobs-needs }}
-    if: ${{ inputs.jobs-if }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
@@ -102,17 +75,34 @@ jobs:
           git commit -m 'stub commit -- includes submodules'
 
       - name: Check Spelling
+        id: check-spelling-action
         uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
           config: ${{ inputs.config }}
           spell-check-this: ${{ inputs.spell-check-this }}
-          post-comment: ${{ inputs.check-spelling-post-comment }}
-          task: ${{ inputs.outputs-followup }}
+          post-comment: 0
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  comment-pr:
+    name: Comment (PR)
+    runs-on: ubuntu-22.04
+    needs: check-spelling
+    permissions:
+      pull-requests: write
+    if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
+    steps:
+      - name: Comment (PR)
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        with:
+          dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
+          extra-dictionaries: ${{ inputs.extra-dictionaries }}
+          config: ${{ inputs.config }}
+          spell-check-this: ${{ inputs.spell-check-this }}
+          post-comment: 1
+          task: ${{ needs.check-spelling.outputs.followup }}
