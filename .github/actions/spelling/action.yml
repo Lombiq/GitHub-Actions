@@ -41,18 +41,23 @@ inputs:
     required: false
     default: Lombiq/GitHub-Actions@dev
   post-comment:
-    description: Check Spelling to post comment or not, the default value is 1
+    description: Flag for if check-spelling should post comment, the default is 1.
     required: false
     default: '1'
   task:
-    description: Task from prior, the default from Check Spelling is ''
+    description: Follow up task for check-spelling, the default is ''.
     required: false
     default: ''
+outputs:
+  followup:
+    description: Check Spelling output for followup.
+    value: ${{ steps.step-check-spelling.outputs.followup }}
 
 runs:
   using: "composite"
   steps:
     - name: Check Spelling
+      id: step-check-spelling
       # v0.0.21
       uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
       with:
