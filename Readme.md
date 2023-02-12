@@ -8,7 +8,7 @@ Reusable workflows and actions for GitHub Actions shared between Lombiq projects
 - Build and test .NET Framework and .NET Core applications in general
 - Publish packages to NuGet
 - Verify and validate pull requests
-- Check spelling tpyo fixed
+- Check spelling
 - Perform static code analysis and linting
 - And more!
 
