@@ -60,7 +60,14 @@ runs:
         ${{ inputs.publish-version }}
         '@.Trim()
 
-        if ($version -eq 'USE_GITHUB_REF_NAME') { $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v") }
+        if ($version -eq 'USE_GITHUB_REF_NAME') {
+            if (($version -match '^v?\d+(\.\d+){0,3}-(\w+\.)+\d+\.\w+-\d+$') -or ($version -match '^v?\d+(\.\d+){0,3}$')) {
+                $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
+            } else {
+                Write-Output "version number is not in a correct format."
+                exit 1
+            }
+        }
         if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
           $tags = git tag |
             ? { $_ -match '^v?\d+(\.\d+){0,3}$' } |
