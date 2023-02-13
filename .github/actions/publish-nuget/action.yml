@@ -61,7 +61,7 @@ runs:
         '@.Trim()
 
         if ($version -eq 'USE_GITHUB_REF_NAME') {
-            if (($version -match '^v?\d+(\.\d+){0,3}-(\w+\.)+\d+\.\w+-\d+$') -or ($version -match '^v?\d+(\.\d+){0,3}$')) {
+            if ($version -match '^v?(\d+\.\d+\.\d+)(-alpha\.\d+\.[a-z]{2,}-\d+)?$') {
                 $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
             } else {
                 Write-Output "Invalid version number! The correct format is vM.N.O or v.M.N.O-alpha.X.[issue-code]."
@@ -70,7 +70,7 @@ runs:
         }
         if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
           $tags = git tag |
-            ? { ($_ -match '^v?\d+(\.\d+){0,3}$') -or ($_ -match '^v?\d+(\.\d+){0,3}-(\w+\.)+\d+\.\w+-\d+$') } |
+            ? { ($_ -match '^v?(\d+\.\d+\.\d+)(-alpha\.\d+\.[a-z]{2,}-\d+)?$') } |
             % { [version]($_.TrimStart("v")) } |
             Sort-Object -Descending
           $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
