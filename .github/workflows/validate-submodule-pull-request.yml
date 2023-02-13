@@ -28,14 +28,14 @@ jobs:
     steps:
       - name: Add Jira Issue Code to Pull Request
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@issue/OSOE-562
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Ensure Parent PR Exists
         if: github.event.pull_request != ''
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@issue/OSOE-562
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
