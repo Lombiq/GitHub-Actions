@@ -57,13 +57,15 @@ on:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
         required: false
         type: string
-      config:
-        description: Spelling configuration directory
+      configuration-path:
+        description: Relative path to the spell-checking configuration folder.
         required: false
         type: string
         default: .github/actions/spelling
-      spell-check-this:
-        description: Repository with default configuration to use, the default from Check Spelling is ''
+      default-configuration-repository:
+        description: >
+          Repository with default configuration to use when the workspace repository doesn't have its own configuration. The
+          default from Check Spelling is ''.
         required: false
         type: string
         default: Lombiq/GitHub-Actions@issue/OSOE-523
@@ -92,14 +94,14 @@ jobs:
       - name: Check Spelling
         uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-523
         with:
+          spell-check-this: ${{ inputs.default-configuration-repository }}
+          config: ${{ inputs.configuration-path }}
           merge-file-excludes: ${{ inputs.merge-file-excludes }}
           merge-ignore-patterns: ${{ inputs.merge-ignore-patterns }}
           default-dictionary-source-prefixes: ${{ inputs.default-dictionary-source-prefixes }}
           default-dictionaries: ${{ inputs.default-dictionaries }}
           additional-dictionary-source-prefixes: ${{ inputs.additional-dictionary-source-prefixes }}
           additional-dictionaries: ${{ inputs.additional-dictionaries }}
-          config: ${{ inputs.config }}
-          spell-check-this: ${{ inputs.spell-check-this }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
