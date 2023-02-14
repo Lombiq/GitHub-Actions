@@ -67,6 +67,7 @@ middlewares
 Moq
 msbuild
 msedgedriver
+multisubmit
 mvc
 MVVM
 nameof
