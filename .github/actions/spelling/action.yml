@@ -42,14 +42,12 @@ inputs:
   additional-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
-  configuration-path:
-    description: Relative path to the spell-checking configuration folder.
+  config:
+    description: Spelling configuration directory
     required: false
     default: .github/actions/spelling
-  default-configuration-repository:
-    description: >
-      Repository with default configuration to use when the workspace repository doesn't have its own configuration. The
-      default from Check Spelling is ''.
+  spell-check-this:
+    description: Repository with default configuration to use, the default from Check Spelling is ''.
     required: false
     default: Lombiq/GitHub-Actions@issue/OSOE-523
 
@@ -113,11 +111,11 @@ runs:
       # v0.0.21
       uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
       with:
-        spell_check_this: ${{ inputs.default-configuration-repository }}
-        config: ${{ inputs.configuration-path }}
-        dictionary_source_prefixes: ${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}
-        extra_dictionaries: ${{ steps.merge-dictionary-lists.outputs.merged-dictionary-list }}
         check_file_names: 1
-        post_comment: 1
+        config: ${{ inputs.config }}
+        dictionary_source_prefixes: ${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}
         experimental_apply_changes_via_bot: 0
+        extra_dictionaries: ${{ steps.merge-dictionary-lists.outputs.merged-dictionary-list }}
+        post_comment: 1
+        spell_check_this: ${{ inputs.spell-check-this }}
         suppress_push_for_open_pull_request: 1
