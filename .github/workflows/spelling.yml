@@ -58,12 +58,14 @@ on:
         required: false
         type: string
       config:
-        description: Spelling configuration directory
+        description: Relative path to the spell-checking configuration folder.
         required: false
         type: string
         default: .github/actions/spelling
       spell-check-this:
-        description: Repository with default configuration to use, the default from Check Spelling is ''
+        description: >
+          Repository with default configuration to use when the workspace repository doesn't have its own configuration. The
+          default from Check Spelling is ''.
         required: false
         type: string
         default: Lombiq/GitHub-Actions@issue/OSOE-523
