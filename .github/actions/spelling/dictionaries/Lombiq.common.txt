@@ -1,9 +1,11 @@
-Antiforgery
+antiforgery
+antiforgerytoken
 apikey
 apps
 appsettings
 argb
 atata
+autoplay
 bacpac
 Bcc
 browsersync
@@ -15,6 +17,8 @@ cloudsmith
 cmdlets
 cms
 contentfiles
+contentitem
+contenttype
 corepack
 cref
 cspell
@@ -22,6 +26,7 @@ darkmode
 datatable
 DBs
 dotnet
+Elasticsearch
 EULA
 Firefox
 formattable
@@ -35,10 +40,10 @@ HHmmss
 hotfixes
 idx
 iis
+img
 Inbox
 inheritdoc
 Intelli
-img
 IXL
 JArray
 jira
@@ -53,7 +58,7 @@ linq
 linting
 loglevel
 lombiq
-Lucene
+lucene
 mediatheme
 mentoring
 Meziantou
@@ -85,6 +90,7 @@ shortcode
 shortcodes
 Shouldly
 sitesettings
+sku
 sln
 smo
 sourced
@@ -95,6 +101,7 @@ stylelintrc
 subfolders
 superproject
 taghelper
+taxonomyfield
 teamcity
 templated
 timespan
