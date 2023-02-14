@@ -2,4 +2,5 @@ endcapture
 endcomment
 endform
 endscriptblock
+endzone
 scriptblock

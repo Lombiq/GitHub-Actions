@@ -32,11 +32,13 @@ gulpfile
 hastlayer
 hca
 HHmmss
+hotfixes
 idx
 iis
 Inbox
 inheritdoc
 Intelli
+img
 IXL
 JArray
 jira
@@ -52,6 +54,7 @@ linting
 loglevel
 lombiq
 Lucene
+mediatheme
 mentoring
 Meziantou
 microsoft
