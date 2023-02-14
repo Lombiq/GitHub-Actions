@@ -113,8 +113,8 @@ runs:
       # v0.0.21
       uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
       with:
-        spell_check_this: ${{ inputs.default-configuration-repository }}
-        config: ${{ inputs.configuration-path }}
+        default-configuration-repository: ${{ inputs.default-configuration-repository }}
+        configuration-path: ${{ inputs.configuration-path }}
         dictionary_source_prefixes: ${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}
         extra_dictionaries: ${{ steps.merge-dictionary-lists.outputs.merged-dictionary-list }}
         check_file_names: 1
