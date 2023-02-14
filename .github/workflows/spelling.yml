@@ -57,12 +57,12 @@ on:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
         required: false
         type: string
-      config:
+      configuration-path:
         description: Relative path to the spell-checking configuration folder.
         required: false
         type: string
         default: .github/actions/spelling
-      spell-check-this:
+      default-configuration-repository:
         description: >
           Repository with default configuration to use when the workspace repository doesn't have its own configuration. The
           default from Check Spelling is ''.
@@ -100,8 +100,8 @@ jobs:
           default-dictionaries: ${{ inputs.default-dictionaries }}
           additional-dictionary-source-prefixes: ${{ inputs.additional-dictionary-source-prefixes }}
           additional-dictionaries: ${{ inputs.additional-dictionaries }}
-          config: ${{ inputs.config }}
-          spell-check-this: ${{ inputs.spell-check-this }}
+          configuration-path: ${{ inputs.configuration-path }}
+          default-configuration-repository: ${{ inputs.default-configuration-repository }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
