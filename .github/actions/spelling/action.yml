@@ -68,7 +68,7 @@ runs:
       run: |
         $mergeParameters = @{
           Source = Join-Path '${{ github.action_path }}' 'patterns.txt'
-          Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.config }}' 'patterns.txt'
+          Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'patterns.txt'
         }
 
         Merge-SpellCheckingDictionaryFile @mergeParameters
@@ -79,7 +79,7 @@ runs:
       run: |
         $mergeParameters = @{
           Source = Join-Path '${{ github.action_path }}' 'excludes.txt'
-          Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.config }}' 'excludes.txt'
+          Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'excludes.txt'
         }
 
         Merge-SpellCheckingDictionaryFile @mergeParameters
