@@ -94,8 +94,8 @@ jobs:
       - name: Check Spelling
         uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-523
         with:
-          spell-check-this: ${{ inputs.default-configuration-repository }}
-          config: ${{ inputs.configuration-path }}
+          default-configuration-repository: ${{ inputs.default-configuration-repository }}
+          configuration-path: ${{ inputs.configuration-path }}
           merge-file-excludes: ${{ inputs.merge-file-excludes }}
           merge-ignore-patterns: ${{ inputs.merge-ignore-patterns }}
           default-dictionary-source-prefixes: ${{ inputs.default-dictionary-source-prefixes }}
