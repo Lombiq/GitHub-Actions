@@ -55,8 +55,8 @@ on:
         type: string
         default: "USE_GITHUB_REF_NAME"
         description: >
-          The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment
-          variable is used which is suitable if the version is derived from a git tag.
+          The desired NuGet package version used for publishing. The correct input format is vM.N.O or vM.N.O-alpha.X.[issue-code].
+          If not specified, the GITHUB_REF_NAME environment variable is used which is suitable if the version is derived from a git tag.
       nuget-artifact-retention-days:
         required: false
         type: string
@@ -73,12 +73,12 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-536
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-536
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
@@ -96,6 +96,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-536
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
