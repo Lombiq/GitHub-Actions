@@ -29,6 +29,13 @@ on:
         required: false
         type: string
         default: "true"
+      merge-reject-patterns:
+        description: >
+          When set to "true", the "reject.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in the
+          workspace repository.
+        required: false
+        type: string
+        default: "true"
       default-dictionary-source-prefixes:
         description: >
           JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
@@ -96,6 +103,7 @@ jobs:
         with:
           merge-file-excludes: ${{ inputs.merge-file-excludes }}
           merge-ignore-patterns: ${{ inputs.merge-ignore-patterns }}
+          merge-reject-patterns: ${{ inputs.merge-reject-patterns }}
           default-dictionary-source-prefixes: ${{ inputs.default-dictionary-source-prefixes }}
           default-dictionaries: ${{ inputs.default-dictionaries }}
           additional-dictionary-source-prefixes: ${{ inputs.additional-dictionary-source-prefixes }}
