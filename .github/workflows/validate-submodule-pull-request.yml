@@ -27,6 +27,12 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Assign issue to PR author
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: Lombiq/GitHub-Actions/.github/actions/assign-issue-to-pr-author@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Ensure Parent PR Exists
         if: github.event.pull_request != ''
         uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
