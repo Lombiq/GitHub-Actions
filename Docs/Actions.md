@@ -1,4 +1,4 @@
-# Composite GitHub Actions actions informations and advices asdfasdflol
+# Composite GitHub Actions actions
 
 These actions can be invoked from a step in any other repository's workflow. They're utilized by [our reusable workflows](Workflows.md).
 
