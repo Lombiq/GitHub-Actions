@@ -1,3 +1,4 @@
+endblock
 endcapture
 endcomment
 endfor
