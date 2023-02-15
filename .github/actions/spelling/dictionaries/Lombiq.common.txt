@@ -96,6 +96,7 @@ sln
 smo
 sourced
 sqlcmd
+standalone
 stylecop
 stylelint
 stylelintrc
@@ -107,6 +108,7 @@ teamcity
 templated
 timespan
 timezones
+tls
 toolbars
 trumbowyg
 typeparam
