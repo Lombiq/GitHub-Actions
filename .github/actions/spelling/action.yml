@@ -9,15 +9,15 @@ inputs:
       workspace repository.
     required: false
     default: "true"
+  merge-forbidden-patterns:
+    description: >
+      When set to "true", the "line_forbidden.patterns" file's contents in Lombiq.GitHub.Actions will be merged into the
+      one in the workspace repository.
+    required: false
+    default: "true"
   merge-ignore-patterns:
     description: >
       When set to "true", the "patterns.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in the
-      workspace repository.
-    required: false
-    default: "true"
-  merge-reject-patterns:
-    description: >
-      When set to "true", the "reject.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in the
       workspace repository.
     required: false
     default: "true"
@@ -79,6 +79,17 @@ runs:
 
         Merge-SpellCheckingDictionaryFile @mergeParameters
 
+    - name: Merge "line_forbidden.patterns"
+      if: inputs.merge-forbidden-patterns == 'true'
+      shell: pwsh
+      run: |
+        $mergeParameters = @{
+          Source = Join-Path '${{ github.action_path }}' 'line_forbidden.patterns'
+          Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'line_forbidden.patterns'
+        }
+
+        Merge-SpellCheckingDictionaryFile @mergeParameters
+
     - name: Merge "patterns.txt"
       if: inputs.merge-ignore-patterns == 'true'
       shell: pwsh
@@ -86,17 +97,6 @@ runs:
         $mergeParameters = @{
           Source = Join-Path '${{ github.action_path }}' 'patterns.txt'
           Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'patterns.txt'
-        }
-
-        Merge-SpellCheckingDictionaryFile @mergeParameters
-
-    - name: Merge "reject.txt"
-      if: inputs.merge-reject-patterns == 'true'
-      shell: pwsh
-      run: |
-        $mergeParameters = @{
-          Source = Join-Path '${{ github.action_path }}' 'reject.txt'
-          Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'reject.txt'
         }
 
         Merge-SpellCheckingDictionaryFile @mergeParameters
