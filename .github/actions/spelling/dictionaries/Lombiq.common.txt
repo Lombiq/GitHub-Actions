@@ -28,6 +28,7 @@ DBs
 dotnet
 Elasticsearch
 EULA
+EUS
 Firefox
 formattable
 ftp
