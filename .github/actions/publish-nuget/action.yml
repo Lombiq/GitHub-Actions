@@ -62,7 +62,7 @@ runs:
 
         if ($version -eq 'USE_GITHUB_REF_NAME') {
             $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
-            if (!($version -match '^v?(\d+\.\d+\.\d+)(-alpha\.\d+\.[a-z]{2,}-\d+)?$')) {
+            if (!($version -match '^v?\d+\.\d+\.\d+(-alpha\.\d+\.[a-z]{2,}-\d+)?$')) {
                 Write-Output "Invalid version number! The correct format is vM.N.O or v.M.N.O-alpha.X.[issue-code]."
                 exit 1
             }
