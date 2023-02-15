@@ -1,4 +1,4 @@
-# Spell checking configuration advice
+# Spell checking configuration informations and advices
 
 ## Basics
 
