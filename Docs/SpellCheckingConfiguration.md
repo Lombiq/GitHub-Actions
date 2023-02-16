@@ -1,11 +1,14 @@
 # Spell checking configuration advice
 
-## Basics
+## Introduction
 
-Since this action is an extension of [check-spelling](https://github.com/check-spelling/check-spelling), make sure that you familiarize yourself with its concepts and configuration options first. Some of the most notable ones:
+Since our spell-checking [action](../.github/actions/spelling/action.yml) and [workflow](../.github/workflows/spelling.yml) are an extension of [check-spelling](https://github.com/check-spelling/check-spelling), make sure that you familiarize yourself with its concepts and configuration options first.
+
+## General tips
 
 - The spell checking process replaces matched words with a space character and built-in configuration files are checked first.
 - The order of entries within a configuration file matters.
+- Regex patterns are only processed per-line.
 
 ## Configuration files
 
@@ -16,7 +19,15 @@ Since this action is an extension of [check-spelling](https://github.com/check-s
 - _expect.txt_: Dictionary file of arbitrary strings that aren't words, but otherwise valid and aren't spelling mistakes.
 - _patterns.txt_: Technical strings that aren't made up of words or word stems but follow a certain structure or pattern can be skipped using Perl-styled regexes. Some technical strings are already covered in Lombiq's version, such as hex color codes, Git commit hashes, GUIDs, and more.
 
-You can provide these files in your own repository, but they must be placed under the path _.github/actions/spelling_. To ease maintaining dictionary files (and keep a consistent behavior), keep the entries sorted alphabetically.
+You can provide these files in your own repository and by default they must be placed under the path _.github/actions/spelling_ (configurable through the action/workflow). To ease maintaining dictionary files (and keep a consistent behavior), keep the entries sorted alphabetically.
+
+## Tips for external dictionaries
+
+When the spell checking process finishes with errors detected, the report commented automatically to the PR will give recommendations for external dictionaries that cover some of the unrecognized entries. These dictionaries can be added to your action/workflow configuration so they are included during spell-checking. Even if a dictionary covers a lot of unrecognized entries, it might not be suitable for your project and could leave you with a lot of false negative detections.
+
+- Before adding a dictionary, check if it's contextually relevant. For example, the Python and Typescript dictionaries seem to appear frequently in the recommendations for ASP.NET Core-based projects having mostly C# code, so be cautious if your project doesn't actually utilise that technology.
+- Also check if the contents of the dictionary make sense. Some recommended libraries seem to have a great number of entries that seem useless in light of how the spell checking process works now. That is likely due to those dictionary files being outdated and fundamental changes have been made to process since.
+- Try to avoid large dictionaries, like the one for C++, as it has over 30 thousand entries, because it casts a net way too large and contains a ton of entries that should've been excluded by other means (e.g., a pattern, ignoring a line or a while file).
 
 ## When not to add entries to dictionary files
 
@@ -24,8 +35,8 @@ Before adding an entry to one of the dictionary files, consider the following:
 
 1. The order of entries in the spelling dictionary prefixes parameter in your workflow call matters, so the most specific ones, like your own should come before more generic ones, like "cspell".
 2. When confronted with unrecognized words in a spell checking report, consider which of those are actually words that make sense to type, instead of just being remainders (because some parts of the original text were replaced with a space character due to matching an earlier entry) of another word or a technical string.
-3. Also look at the execution log to see where the unrecognized entry is coming from to find out what the original text was in the code. The additional context can help determining how to handle the unrecognized entry.
-4. Rare cases that we don't expect to show up overall more than 3 times and strings that are valid in a single situation should be ignored in-place without adding them to a dictionary file. Placing the `#spell-check-ignore-line` string somewhere in a line (for example in a comment at the end of a line of code) will exclude that line completely from spell checking. In Markdown, add an HTML comment at the end of the line: `<!-- #spell-check-ignore-line -->`.
+3. Also look at the execution log to see where the unrecognized entry is coming from to find out what the original text was in the code. The additional context can help determining how to handle it.
+4. Rare cases that we don't expect to show up overall more than 3 times and strings that are valid in a single situation should generally be ignored in-place without adding them to a dictionary file. Placing the `#spell-check-ignore-line` string somewhere in a line (for example in a comment at the end of a line of code) will exclude that line completely from spell checking. In Markdown, add an HTML comment at the end of the line: `<!-- #spell-check-ignore-line -->`.
 
 ## Helper scripts for local development
 

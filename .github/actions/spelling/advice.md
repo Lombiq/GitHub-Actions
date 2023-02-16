@@ -1,3 +1,3 @@
-# Spell checking configuration informations and advices
+# Spell checking configuration
 
-Check out [our recommendations for maintaining spell checking configuration in the this repository](../../../Docs/SpellCheckingConfiguration.md)!
+Please read [our recommendations for maintaining the spell checking configuration](../../../Docs/SpellCheckingConfiguration.md) carefully!
