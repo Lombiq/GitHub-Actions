@@ -36,17 +36,6 @@ on:
         required: false
         type: string
         default: "true"
-      default-dictionary-source-prefixes:
-        description: >
-          JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
-          https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
-        required: false
-        type: string
-        default: >
-          {
-            "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
-            "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/",
-          }
       default-dictionaries:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
         required: false
@@ -56,8 +45,8 @@ on:
           cspell:software-terms/src/software-terms.txt
       additional-dictionary-source-prefixes:
         description: >
-          JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
-          https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
+          JSON map of prefixes for additional dictionary URLs. "cspell" and "lombiq-lgha" are available by default, but
+          can be overridden.
         required: false
         type: string
       additional-dictionaries:
@@ -104,7 +93,6 @@ jobs:
           merge-file-excludes: ${{ inputs.merge-file-excludes }}
           merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}
           merge-ignore-patterns: ${{ inputs.merge-ignore-patterns }}
-          default-dictionary-source-prefixes: ${{ inputs.default-dictionary-source-prefixes }}
           default-dictionaries: ${{ inputs.default-dictionaries }}
           additional-dictionary-source-prefixes: ${{ inputs.additional-dictionary-source-prefixes }}
           additional-dictionaries: ${{ inputs.additional-dictionaries }}

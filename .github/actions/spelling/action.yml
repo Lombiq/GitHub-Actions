@@ -21,19 +21,6 @@ inputs:
       workspace repository.
     required: false
     default: "true"
-  # When updating check-spelling to a new version, check the release notes or the "dictionary-source-prefixes" parameter
-  # of "action.yaml" according to the commit of the release to find out the dictionary version tag and update the
-  # default value here and in the spelling workflow.
-  default-dictionary-source-prefixes:
-    description: >
-      JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
-      https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
-    required: false
-    default: >
-      {
-        "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/",
-        "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/",
-      }
   default-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
@@ -105,10 +92,12 @@ runs:
       id: merge-dictionary-source-prefixes
       shell: pwsh
       run: |
-        $defaultPrefixesInput = '${{ inputs.default-dictionary-source-prefixes }}'
-        $additionalPrefixesInput = '${{ inputs.additional-dictionary-source-prefixes }}'
+        $defaultPrefixes = @{
+          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/'
+          'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/'
+        }
 
-        $defaultPrefixes = [string]::IsNullOrWhiteSpace($defaultPrefixesInput) ? @{} : (ConvertFrom-Json $defaultPrefixesInput -AsHashtable)
+        $additionalPrefixesInput = '${{ inputs.additional-dictionary-source-prefixes }}'
         $additionalPrefixes = [string]::IsNullOrWhiteSpace($additionalPrefixesInput) ? @{} : (ConvertFrom-Json $additionalPrefixesInput -AsHashtable)
 
         $defaultPrefixes.Keys |
@@ -127,8 +116,9 @@ runs:
         Set-GitHubOutput -Key 'merged-dictionary-list' -Value ((@($additionalDictionaries) + @($defaultDictionaries) | Select-Object -Unique) -join ' ')
 
     - name: Check Spelling
-      # v0.0.21
-      uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
+      # When updating the check-spelling action to a new release, update the 'cspell' prefix in the 'Merge dictionary
+      # source prefixes' step with the dictionary version tag that belongs to the commit of the release.
+      uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce # v0.0.21
       with:
         check_file_names: 1
         config: ${{ inputs.configuration-path }}
