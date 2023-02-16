@@ -87,6 +87,7 @@ paramref
 Postgre
 publishsettings
 pwsh
+regexes
 ruleset
 screenshot
 screenshots

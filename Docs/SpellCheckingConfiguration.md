@@ -27,7 +27,7 @@ When the spell checking process finishes with errors detected, the report commen
 
 - Before adding a dictionary, check if it's contextually relevant. For example, the Python and Typescript dictionaries seem to appear frequently in the recommendations for ASP.NET Core-based projects having mostly C# code, so be cautious if your project doesn't actually utilise that technology.
 - Also check if the contents of the dictionary make sense. Some recommended libraries seem to have a great number of entries that seem useless in light of how the spell checking process works now. That is likely due to those dictionary files being outdated and fundamental changes have been made to process since.
-- Try to avoid large dictionaries, like the one for C++, as it has over 30 thousand entries, because it casts a net way too large and contains a ton of entries that should've been excluded by other means (e.g., a pattern, ignoring a line or a while file).
+- Try to avoid large dictionaries, like the one for C++, as it has over 30 thousand entries, because it casts a net way too large and contains a ton of entries that should have been excluded by other means (e.g., a pattern, ignoring a line or a while file).
 
 ## When not to add entries to dictionary files
 
