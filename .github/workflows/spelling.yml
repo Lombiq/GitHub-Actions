@@ -100,9 +100,5 @@ jobs:
       - name: Comment (PR)
         uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-525
         with:
-          dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
-          extra-dictionaries: ${{ inputs.extra-dictionaries }}
-          config: ${{ inputs.config }}
-          spell-check-this: ${{ inputs.spell-check-this }}
           post-comment: 1
           task: ${{ needs.check-spelling.outputs.followup }}
