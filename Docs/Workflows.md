@@ -60,7 +60,7 @@ jobs:
 
 ## Spelling workflow
 
-Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](SpellCheckingConfiguration.md) describing the configuration options and contribution guidelines. This documentation is also displayed automatically in every spell checking report of a pull request.
+Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](SpellCheckingConfiguration.md) describing the configuration options and contribution guidelines. This documentation is also linked automatically at the end of every spell checking report of a pull request.
 
 Example _check-spelling.yml_:
 
@@ -87,7 +87,7 @@ jobs:
       additional-dictionaries: |
         cspell:csharp/csharp.txt
         lombiq-lgha:Lombiq.common.txt
-        other-project:my-dictonary.txt
+        other-project:my-dictionary.txt
 ```
 
 ## NuGet publish workflow
