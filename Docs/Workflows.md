@@ -60,9 +60,7 @@ jobs:
 
 ## Spelling workflow
 
-Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](../.github/actions/spelling/advice.md) describing the configuration options and contribution guidelines. This documentation is also displayed automatically in every spell checking report of a pull request.
-
-You can use already existing configuration files by setting the `spell-check-this` parameter to another existing repository. This parameter is needed even if you want to update our dictionary in a custom branch of project consuming this workflow; changing just the workflow's branch from `dev` to your branch won't take any effect, you can leave it as it is.
+Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](SpellCheckingConfiguration.md) describing the configuration options and contribution guidelines. This documentation is also displayed automatically in every spell checking report of a pull request.
 
 Example _check-spelling.yml_:
 
@@ -80,19 +78,16 @@ jobs:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
     with:
-      # Add this parameter if you want to use dictionary files from Lombiq's or any other repository outside "cspell". The order of entries matters, so the most specific ones, like your own should come before more generic ones, like "cspell".
-      dictionary-source-prefixes: >
+      # Add this parameter to define further dictionary source prefixes. Dictionary files from these sources are processed before the default ones, and in the order their prefixes are listed here.
+      additional-dictionary-source-prefixes: >
         {
-          "lombiq": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/",
-          "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"
+          "other-project": "https://raw.githubusercontent.com/Other/Project/dev/.github/actions/spelling/",
         }
-      # Use this parameter to list the external dictionary files to use, but beware that check-spelling only accepts flat lists of words (so, for example patterns.txt can't be referenced like this). The order doesn't matter, but sorting it alphabetically makes it easier to maintain.
-      extra-dictionaries: |
+      # Use this parameter to list the external dictionary files to use, but beware that check-spelling only accepts flat lists of words (so, for example patterns.txt can't be referenced like this). The order doesn't matter, but sorting it alphabetically makes it easier to maintain. The "cspell" and "lombiq-lgha" prefixes are available by default - see the spelling action for their exact path.
+      additional-dictionaries: |
         cspell:csharp/csharp.txt
-        lombiq:allow.txt
-        lombiq:expect.txt
-      # This is only needed if you want to use any other dictionaries than the ones in this project.
-      spell-check-this: Lombiq/GitHub-Actions@your-custom-branch
+        lombiq-lgha:Lombiq.common.txt
+        other-project:my-dictonary.txt
 ```
 
 ## NuGet publish workflow
