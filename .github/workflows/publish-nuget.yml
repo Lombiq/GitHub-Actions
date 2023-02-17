@@ -55,8 +55,9 @@ on:
         type: string
         default: "USE_GITHUB_REF_NAME"
         description: >
-          The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment
-          variable is used which is suitable if the version is derived from a git tag.
+          The desired NuGet package version used for publishing. The correct format is "vM.N.O" or
+          "vM.N.O-alpha.X.<issue-code>". If not specified, the GITHUB_REF_NAME environment variable is used
+          which is suitable if the version is derived from a git tag.
       nuget-artifact-retention-days:
         required: false
         type: string
