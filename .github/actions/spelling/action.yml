@@ -63,6 +63,17 @@ runs:
       shell: pwsh
       run: |
         Set-GitHubOutput -Key 'configuration-path-exists' -Value (Test-Path (Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}'))
+    
+    - name: Copy spell-checking advice
+      if: ${{ steps.check-configuration-path.outputs.configuration-path-exists }} == 'true'
+      shell: pwsh
+      run: |
+        $targetPath = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'advice.md'
+
+        if (-not Test-Path $targetPath)
+        {
+          Copy-Item (Join-Path '${{ github.action_path }}' 'excludes.txt') $targetPath
+        }
 
     - name: Merge "excludes.txt"
       if: inputs.merge-file-excludes == 'true' && ${{ steps.check-configuration-path.outputs.configuration-path-exists }} == 'true'
