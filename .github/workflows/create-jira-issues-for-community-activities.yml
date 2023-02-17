@@ -49,7 +49,7 @@ on:
       timeout-minutes:
         required: false
         type: number
-        default: 21
+        default: 5
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
 
 jobs:
