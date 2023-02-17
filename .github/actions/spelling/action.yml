@@ -64,6 +64,11 @@ runs:
       run: |
         Set-GitHubOutput -Key 'configuration-path-exists' -Value (Test-Path (Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}'))
     
+    - name: Check "Check configuration path"
+      shell: pwsh
+      run: |
+        Write-Warning 'Configuration exists: ${{ steps.check-configuration-path.outputs.configuration-path-exists }}'
+    
     - name: Copy spell-checking advice
       if: ${{ steps.check-configuration-path.outputs.configuration-path-exists }} == 'true'
       shell: pwsh
