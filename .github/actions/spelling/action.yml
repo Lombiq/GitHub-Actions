@@ -70,7 +70,7 @@ runs:
       run: |
         $targetPath = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'advice.md'
 
-        if (-not Test-Path $targetPath)
+        if (-not (Test-Path $targetPath))
         {
           Copy-Item (Join-Path '${{ github.action_path }}' 'excludes.txt') $targetPath
         }
