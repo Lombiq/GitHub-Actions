@@ -64,24 +64,19 @@ runs:
       run: |
         Set-GitHubOutput -Key 'configuration-path-exists' -Value (Test-Path (Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}'))
     
-    - name: Check "Check configuration path"
-      shell: pwsh
-      run: |
-        Write-Warning 'Configuration exists: ${{ steps.check-configuration-path.outputs.configuration-path-exists }}'
-    
     - name: Copy spell-checking advice
-      if: ${{ steps.check-configuration-path.outputs.configuration-path-exists }} == 'true'
+      if: steps.check-configuration-path.outputs.configuration-path-exists == 'true'
       shell: pwsh
       run: |
         $targetPath = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'advice.md'
 
         if (-not (Test-Path $targetPath))
         {
-          Copy-Item (Join-Path '${{ github.action_path }}' 'excludes.txt') $targetPath
+          Copy-Item (Join-Path '${{ github.action_path }}' 'advice.md') $targetPath
         }
 
     - name: Merge "excludes.txt"
-      if: inputs.merge-file-excludes == 'true' && ${{ steps.check-configuration-path.outputs.configuration-path-exists }} == 'true'
+      if: inputs.merge-file-excludes == 'true' && steps.check-configuration-path.outputs.configuration-path-exists == 'true'
       shell: pwsh
       run: |
         $mergeParameters = @{
@@ -92,7 +87,7 @@ runs:
         Merge-SpellCheckingDictionaryFile @mergeParameters
 
     - name: Merge "line_forbidden.patterns"
-      if: inputs.merge-forbidden-patterns == 'true' && ${{ steps.check-configuration-path.outputs.configuration-path-exists }} == 'true'
+      if: inputs.merge-forbidden-patterns == 'true' && steps.check-configuration-path.outputs.configuration-path-exists == 'true'
       shell: pwsh
       run: |
         $mergeParameters = @{
@@ -103,7 +98,7 @@ runs:
         Merge-SpellCheckingDictionaryFile @mergeParameters
 
     - name: Merge "patterns.txt"
-      if: inputs.merge-ignore-patterns == 'true' && ${{ steps.check-configuration-path.outputs.configuration-path-exists }} == 'true'
+      if: inputs.merge-ignore-patterns == 'true' && steps.check-configuration-path.outputs.configuration-path-exists == 'true'
       shell: pwsh
       run: |
         $mergeParameters = @{
