@@ -119,6 +119,7 @@ trumbowyg
 typeparam
 typeparamref
 unconfigured
+uninstalling
 userspace
 utc
 utf
