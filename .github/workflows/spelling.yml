@@ -54,7 +54,7 @@ on:
         required: false
         type: number
         default: 3
-        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+        description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
   check-spelling:
@@ -63,7 +63,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-562
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
@@ -79,7 +79,7 @@ jobs:
           git commit -m 'stub commit -- includes submodules'
 
       - name: Check Spelling
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-562
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
@@ -88,6 +88,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-562
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

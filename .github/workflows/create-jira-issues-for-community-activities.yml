@@ -50,7 +50,7 @@ on:
         required: false
         type: number
         default: 5
-        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+        description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
   create-jira-issues-for-community-activities:
@@ -58,7 +58,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Create Jira issues for community activities
-        uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-community-activities@issue/OSOE-562
+        uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-community-activities@dev
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
