@@ -45,6 +45,18 @@ inputs:
       default from Check Spelling is ''.
     required: false
     default: Lombiq/GitHub-Actions@issue/OSOE-523
+  post-comment:
+    description: Flag for if check-spelling should post comment, the default is 1.
+    required: false
+    default: '1'
+  task:
+    description: Follow up task for check-spelling, the default is ''.
+    required: false
+    default: ''
+outputs:
+  followup:
+    description: Check Spelling output for followup.
+    value: ${{ steps.step-check-spelling.outputs.followup }}
 
 runs:
   using: "composite"
@@ -136,6 +148,7 @@ runs:
         Set-GitHubOutput -Key 'merged-dictionary-list' -Value ((@($additionalDictionaries) + @($defaultDictionaries) | Select-Object -Unique) -join ' ')
 
     - name: Check Spelling
+      id: step-check-spelling
       # When updating the check-spelling action to a new release, update the 'cspell' prefix in the 'Merge dictionary
       # source prefixes' step with the dictionary version tag that belongs to the commit of the release.
       uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce # v0.0.21
@@ -145,6 +158,7 @@ runs:
         dictionary_source_prefixes: ${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}
         experimental_apply_changes_via_bot: 0
         extra_dictionaries: ${{ steps.merge-dictionary-lists.outputs.merged-dictionary-list }}
-        post_comment: 1
+        post_comment: ${{ inputs.post-comment }}
         spell_check_this: ${{ inputs.default-configuration-repository }}
         suppress_push_for_open_pull_request: 1
+        task: ${{ inputs.task }}
