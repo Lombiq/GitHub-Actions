@@ -59,6 +59,8 @@ on:
 jobs:
   check-spelling:
     name: Check Spelling
+    outputs:
+      followup: ${{ steps.check-spelling-action.outputs.followup }}
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
@@ -79,15 +81,30 @@ jobs:
           git commit -m 'stub commit -- includes submodules'
 
       - name: Check Spelling
+        id: check-spelling-action
         uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
           dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
           extra-dictionaries: ${{ inputs.extra-dictionaries }}
           config: ${{ inputs.config }}
           spell-check-this: ${{ inputs.spell-check-this }}
+          post-comment: 0
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  comment-pr:
+    name: Comment (PR)
+    runs-on: ubuntu-22.04
+    needs: check-spelling
+    permissions:
+      pull-requests: write
+    if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
+    steps:
+      - name: Comment (PR)
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        with:
+          post-comment: 1
+          task: ${{ needs.check-spelling.outputs.followup }}
