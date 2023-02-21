@@ -138,3 +138,5 @@ wysiwyg
 xhr
 XSS
 xunit
+XXL
+XXXL
