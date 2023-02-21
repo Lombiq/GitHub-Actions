@@ -28,10 +28,9 @@ inputs:
       cspell:filetypes/filetypes.txt
       cspell:software-terms/src/software-terms.txt
       lombiq-lgha:dictionaries/Lombiq.common.txt
-  additional-dictionary-source-prefixes:
+  additional-configuration-source-prefixes:
     description: >
-      JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
-      https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
+      JSON map of prefixes for configuration file (for now, only dictionary) URLs.
     required: false
   additional-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
@@ -130,7 +129,7 @@ runs:
           'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/'
         }
 
-        $additionalPrefixesInput = '${{ inputs.additional-dictionary-source-prefixes }}'
+        $additionalPrefixesInput = '${{ inputs.additional-configuration-source-prefixes }}'
         $additionalPrefixes = [string]::IsNullOrWhiteSpace($additionalPrefixesInput) ? @{} : (ConvertFrom-Json $additionalPrefixesInput -AsHashtable)
 
         $defaultPrefixes.Keys |
@@ -151,7 +150,8 @@ runs:
     - name: Check Spelling
       id: step-check-spelling
       # When updating the check-spelling action to a new release, update the 'cspell' prefix in the 'Merge dictionary
-      # source prefixes' step with the dictionary version tag that belongs to the commit of the release.
+      # source prefixes' step with the dictionary version tag that belongs to the commit of the release. See
+      # https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
       uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce # v0.0.21
       with:
         check_file_names: 1

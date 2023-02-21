@@ -43,10 +43,11 @@ on:
         default: |
           cspell:filetypes/filetypes.txt
           cspell:software-terms/src/software-terms.txt
-      additional-dictionary-source-prefixes:
+          lombiq-lgha:dictionaries/Lombiq.common.txt
+      additional-configuration-source-prefixes:
         description: >
-          JSON map of prefixes for additional dictionary URLs. "cspell" and "lombiq-lgha" are available by default, but
-          can be overridden.
+          JSON map of prefixes for additional configuration file (for now, only dictionary) URLs. "cspell" and
+          "lombiq-lgha" are available by default, but can be overridden.
         required: false
         type: string
       additional-dictionaries:
@@ -103,7 +104,7 @@ jobs:
           merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}
           merge-ignore-patterns: ${{ inputs.merge-ignore-patterns }}
           default-dictionaries: ${{ inputs.default-dictionaries }}
-          additional-dictionary-source-prefixes: ${{ inputs.additional-dictionary-source-prefixes }}
+          additional-configuration-source-prefixes: ${{ inputs.additional-configuration-source-prefixes }}
           additional-dictionaries: ${{ inputs.additional-dictionaries }}
           configuration-path: ${{ inputs.configuration-path }}
           default-configuration-repository: ${{ inputs.default-configuration-repository }}
