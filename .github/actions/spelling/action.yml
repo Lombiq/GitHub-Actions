@@ -27,6 +27,7 @@ inputs:
     default: |
       cspell:filetypes/filetypes.txt
       cspell:software-terms/src/software-terms.txt
+      lombiq-lgha:dictionaries/Lombiq.common.txt
   additional-dictionary-source-prefixes:
     description: >
       JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
@@ -48,11 +49,11 @@ inputs:
   post-comment:
     description: Flag for if check-spelling should post comment, the default is 1.
     required: false
-    default: '1'
+    default: "1"
   task:
     description: Follow up task for check-spelling, the default is ''.
     required: false
-    default: ''
+    default: ""
 outputs:
   followup:
     description: Check Spelling output for followup.
@@ -66,7 +67,7 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
-    
+
     # If the configuration path doesn't exist in the workspace, then it means that the workspace repository doesn't have
     # its own spell-checking configuration. In that case we don't need to copy anything, because the configuration files
     # will be used implicitly according to the value of default-configuration-repository.
@@ -75,7 +76,7 @@ runs:
       shell: pwsh
       run: |
         Set-GitHubOutput -Key 'configuration-path-exists' -Value (Test-Path (Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}'))
-    
+
     - name: Copy spell-checking advice
       if: steps.check-configuration-path.outputs.configuration-path-exists == 'true'
       shell: pwsh
@@ -125,7 +126,7 @@ runs:
       shell: pwsh
       run: |
         $defaultPrefixes = @{
-          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/dictionaries/'
+          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-523/.github/actions/spelling/'
           'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/'
         }
 
