@@ -4,11 +4,13 @@
 
 Since our spell-checking [action](../.github/actions/spelling/action.yml) and [workflow](../.github/workflows/spelling.yml) are an extension of [check-spelling](https://github.com/check-spelling/check-spelling), make sure that you familiarize yourself with its concepts and configuration options first.
 
+When integrating spell checking to your project for the first time or working on resolving a greater number of unrecognized entries, take small, incremental steps and don't rush adding everything to a dictionary file. Some entries can signal that certain file types or specific files should be excluded and in some cases a useful ignore pattern can emerge too.
+
 ## General tips
 
 - The spell checking process replaces matched words with a space character and built-in configuration files are checked first.
 - The order of entries within a configuration file matters.
-- Regex patterns are only processed per-line.
+- Regex patterns are only processed per-line, i.e., they can only affect a single line at a time. 
 
 ## Configuration files
 
@@ -25,7 +27,8 @@ You can provide these files in your own repository and by default they must be p
 
 When the spell checking process finishes with errors detected, the report commented automatically to the PR will give recommendations for external dictionaries that cover some of the unrecognized entries. These dictionaries can be added to your action/workflow configuration so they are included during spell-checking. Even if a dictionary covers a lot of unrecognized entries, it might not be suitable for your project and could leave you with a lot of false negative detections.
 
-- Before adding a dictionary, check if it's contextually relevant. For example, the Python and Typescript dictionaries seem to appear frequently in the recommendations for ASP.NET Core-based projects having mostly C# code, so be cautious if your project doesn't actually utilise that technology.
+- Before adding a dictionary, check if it's contextually relevant. For example, the Typescript dictionary seems to appear frequently in the recommendations for ASP.NET Core-based projects having mostly C# code, so be cautious if your project doesn't actually utilise that technology.
+- Only add one dictionary at a time so that recommendations are re-evaluated correctly. This makes it easier to keep your configuration at the necessary minimum, since some dictionaries are overlapping.
 - Also check if the contents of the dictionary make sense. Some recommended libraries seem to have a great number of entries that seem useless in light of how the spell checking process works now. That is likely due to those dictionary files being outdated and fundamental changes have been made to process since.
 - Try to avoid large dictionaries, like the one for C++: It has over 30 thousand entries, because it casts a net way too large and contains a ton of entries that should have been excluded by other means (e.g., a pattern, ignoring a line or a while file).
 
