@@ -8,9 +8,10 @@ When integrating spell checking to your project for the first time or working on
 
 ## General tips
 
+- You can reduce your spell checking configuration by excluding submodules that are spell-checked on their own or as part of a larger parent project. The best example of this is having a submodule that is also a submodule of [Open Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions): Submitting a pull request in such a submodule requires you to open a parent-PR in OSOCE to make sure that spell checking is executed on the updated code before it gets merged.
 - The spell checking process replaces matched words with a space character and built-in configuration files are checked first.
 - The order of entries within a configuration file matters.
-- Regex patterns are only processed per-line, i.e., they can only affect a single line at a time. 
+- Regex patterns are only processed per-line, i.e., they can only affect a single line at a time.
 
 ## Configuration files
 
