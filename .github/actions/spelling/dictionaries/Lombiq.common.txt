@@ -84,6 +84,7 @@ npx
 NTFS
 NVARCHAR
 orchardcore
+osoce
 paramref
 Postgre
 publishsettings
