@@ -89,7 +89,7 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
     with:
       # Add this parameter to define further dictionary source prefixes, such as a repository with general-purpose dictionaries. Dictionary files from these sources are processed before the default ones, and in the order their prefixes are listed here.
-      additional-dictionary-source-prefixes: >
+      additional-configuration-source-prefixes: >
         {
           "other-project": "https://raw.githubusercontent.com/Other/Project/dev/.github/actions/spelling/",
         }

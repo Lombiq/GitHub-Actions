@@ -120,8 +120,8 @@ runs:
 
         Merge-SpellCheckingDictionaryFile @mergeParameters
 
-    - name: Merge dictionary source prefixes
-      id: merge-dictionary-source-prefixes
+    - name: Merge configuration source prefixes
+      id: merge-configuration-source-prefixes
       shell: pwsh
       run: |
         $defaultPrefixes = @{
@@ -156,7 +156,7 @@ runs:
       with:
         check_file_names: 1
         config: ${{ inputs.configuration-path }}
-        dictionary_source_prefixes: ${{ steps.merge-dictionary-source-prefixes.outputs.merged-prefixes }}
+        dictionary_source_prefixes: ${{ steps.merge-configuration-source-prefixes.outputs.merged-prefixes }}
         experimental_apply_changes_via_bot: 0
         extra_dictionaries: ${{ steps.merge-dictionary-lists.outputs.merged-dictionary-list }}
         post_comment: ${{ inputs.post-comment }}
