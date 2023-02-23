@@ -65,7 +65,7 @@ on:
           The default from Check Spelling is ''.
         required: false
         type: string
-        default: Lombiq/GitHub-Actions@issue/OSOE-523
+        default: Lombiq/GitHub-Actions@dev
       timeout-minutes:
         required: false
         type: number
@@ -81,7 +81,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-523
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
@@ -98,7 +98,7 @@ jobs:
 
       - name: Check Spelling
         id: check-spelling-action
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-523
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
           merge-file-excludes: ${{ inputs.merge-file-excludes }}
           merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}
@@ -112,7 +112,7 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-523
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   comment-pr:
