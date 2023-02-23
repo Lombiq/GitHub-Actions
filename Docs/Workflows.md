@@ -60,16 +60,16 @@ jobs:
 
 ## Spelling workflow
 
-Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](SpellCheckingConfiguration.md) describing the configuration options and contribution guidelines. This documentation is also linked automatically at the end of every spell checking report of a pull request.
+Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](SpellCheckingConfiguration.md) describing the configuration options and contribution guidelines. This documentation is also linked automatically at the end of every spell-checking report of a pull request.
 
-### How to integrate spell checking into a project
+### How to integrate spell-checking into a project
 
-1. Start by adding a job to an existing workflow or create one specific to spell checking with the minimum configuration.
+1. Start by adding a job to an existing workflow or create one specific to spell-checking with the minimum configuration.
 2. Push the changes and open a pull request to have the initial spell-checking report commented to it.
-3. Follow the [spell checking configuration tips](SpellCheckingConfiguration.md) to work through the list of unrecognized entries.
+3. Follow the [spell-checking configuration tips](SpellCheckingConfiguration.md) to work through the list of unrecognized entries.
 4. You will probably end up with a few configuration files and some external dictionaries applied, so your workflow might end up looking something like the complete example below.
 
-#### Minimum spell checking step configuration example
+#### Minimum spell-checking step configuration example
 
 ```yaml
   spelling:
@@ -77,7 +77,7 @@ Checks for spelling mistakes in a repository using the [Check Spelling](https://
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
 ```
 
-#### Complete spell checking workflow example
+#### Complete spell-checking workflow example
 
 ```yaml
 name: Spelling
