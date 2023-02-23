@@ -63,6 +63,7 @@ linting
 loglevel
 lombiq
 lucene
+mediafield
 mediatheme
 mentoring
 Meziantou
