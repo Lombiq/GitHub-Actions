@@ -67,7 +67,7 @@ Checks for spelling mistakes in a repository using the [Check Spelling](https://
 1. Start by adding a job to an existing workflow or create one specific to spell checking with the minimum configuration.
 2. Push the changes and open a pull request to have the initial spell-checking report commented to it.
 3. Follow the [spell checking configuration tips](SpellCheckingConfiguration.md) to work through the list of unrecognized entries.
-4. You will probably end up with a few configuration files and some external dictionaries applied, so your workflow might end up looking something like this.
+4. You will probably end up with a few configuration files and some external dictionaries applied, so your workflow might end up looking something like the complete example below.
 
 #### Minimum spell checking step configuration example
 

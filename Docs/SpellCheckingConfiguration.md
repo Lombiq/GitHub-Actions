@@ -8,7 +8,7 @@ When integrating spell checking to your project for the first time or working on
 
 ## General tips
 
-- You can reduce your spell checking configuration by excluding submodules that are spell-checked on their own or as part of a larger parent project. The best examples are [OrchardCore.Commerce](https://github.com/OrchardCMS/OrchardCore.Commerce) and having a submodule that is also a submodule of [Open Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions): Submitting a pull request in such a submodule requires you to open a parent-PR in OSOCE to make sure that spell checking is executed on the updated code before it gets merged.
+- You can reduce your spell checking configuration by excluding submodules that are spell-checked on their own or as part of a larger parent project. The best examples are [OrchardCore.Commerce](https://github.com/OrchardCMS/OrchardCore.Commerce) and having a submodule that is also a submodule of [Open Source Orchard Core Extensions (OSOCE)](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions): Submitting a pull request in such a submodule requires you to open a parent PR in OSOCE to make sure that spell checking is executed on the updated code before it gets merged.
 - The spell checking process replaces matched words with a space character and built-in configuration files are checked first.
 - The order of entries within a configuration file matters.
 - Regex patterns are only processed per-line, i.e., they can only affect a single line at a time.
@@ -49,7 +49,7 @@ When using custom dictionary files on top of external ones (such as the ones fro
 - _Merge-SpellCheckingDictionaryFile.ps1_: Use this to maintain your _excludes.txt_ file by adding the entries from another file, while still keeping your own. To just remove duplicates and sort the entries alphabetically in a single configuration file, pass in the same file for both parameters.
 - _Optimize-SpellCheckingDictionaryFile.ps1_: Use this to remove entries from your dictionary files that are already present in an external one you're referencing.
 
-## Working with a non-dev branch of Lombiq.GitHub.Actions
+## Working with a non-dev branch of `Lombiq.GitHub.Actions`
 
 When working on functional changes, updating dictionaries or the configuration of the spelling action/workflow, the following branch references (from `dev` to the new branch) have to be updated to be able correctly test the changes in a consumer project:
 
