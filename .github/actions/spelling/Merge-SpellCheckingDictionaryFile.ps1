@@ -11,17 +11,20 @@
 #>
 
 param(
-    [parameter(Mandatory = $true, HelpMessage = 'The path to a dictionary file whose entries you want to merge into ' +
-        'another dictionary file.')]
+    [parameter(
+        Mandatory = $true,
+        HelpMessage = 'The path to a dictionary file whose entries you want to merge into another dictionary file.')]
     [string] $Source,
 
-    [parameter(Mandatory = $true, HelpMessage = 'The path to the dictionary files to merge entries into.')]
+    [parameter(
+        Mandatory = $true,
+        HelpMessage = "The path to the dictionary file to merge entries into. Will be created if it doesn't exist.")]
     [string] $Target
 )
 
 $sourceDictionary = Get-Content -Path $Source
-$targetDictionary = Get-Content -Path $Target
+$targetDictionary = (Test-Path -Path $Target -PathType Leaf) ? (Get-Content -Path $Target) : @()
 
 $targetDictionary = $sourceDictionary + $targetDictionary | Sort-Object -Unique
 
-Set-Content -Path $Target -Value $targetDictionary
+Set-Content -Path $Target -Value $targetDictionary -Force
