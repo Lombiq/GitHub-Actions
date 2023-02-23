@@ -31,6 +31,7 @@ on:
         description: Version of the .NET SDK to set up.
       blame-hang-timeout:
         required: false
+        type: string
         default: ""
         description: >
           Run the tests in blame mode and collects a hang dump when a test exceeds the given timeout. See
