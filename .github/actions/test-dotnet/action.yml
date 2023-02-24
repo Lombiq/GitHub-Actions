@@ -119,7 +119,7 @@ runs:
     - name: Merge BlameHangDumps
       shell: pwsh
       if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != ''
-      run: Merge-BlameHangDumps -Directory "${{ inputs.build-directory }}"
+      run: Merge-BlameHangDumps -Directory "${{ inputs.build-directory }}" -Configuration "${{ inputs.test-configuration }}"
 
     - name: Upload BlameHangDumps
       uses: actions/upload-artifact@v3.1.1

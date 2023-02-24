@@ -1,12 +1,41 @@
-param ($Directory)
+param ($Directory, $Configuration)
 
-$directoryName = (Resolve-Path $Directory)
-$dumpDirectory = (New-Item -Type Directory -Path $directoryName -Name 'BlameHangDumps')
+$rootDirectory = (Resolve-Path $Directory)
+$blameHangDumpsName = 'BlameHangDumps'
+$dumpDirectory = (New-Item -Type Directory -Path $rootDirectory -Name $blameHangDumpsName)
+$testDirectoryPath = Join-Path $Directory 'test'
+$testDirectory = (Test-Path -Path $testDirectoryPath) ? (Resolve-Path $testDirectoryPath) : $rootDirectory
 
-Get-ChildItem $Directory -Recurse |
-    Where-Object { ($PSItem.Name -like 'Sequence_*.xml') -or ($PSItem.Name -like '*_hangdump.dmp') } |
+# Save dotnet --info output.
+dotnet --info *> (Join-Path -Path $dumpDirectory.FullName -ChildPath 'dotnet.info')
+
+function ItemFilter($Item, $Configuration)
+{
+    if ($Item.IsContainer)
+    {
+        return $False
+    }
+
+    $allow = (($PSItem.Name -like 'Sequence_*.xml') -or ($PSItem.Name -like '*_hangdump.dmp'))
+    if (!$allow -and $Configuration)
+    {
+        $allow = ($PSItem.FullName -like "*$(Join-Path 'bin' $Configuration)*" )
+    }
+
+    $allow
+}
+
+Get-ChildItem $testDirectory.Path -Recurse |
+    Where-Object { ItemFilter -Item $PSItem -Configuration $Configuration } |
     ForEach-Object {
-        $destinationDirectory = (Join-Path -Path $dumpDirectory.FullName -ChildPath ([System.IO.Path]::GetRelativePath($directoryName, $PSItem.Directory.FullName)))
+        # To avoid recursion in dump directory.
+        if ($PSItem.FullName.StartsWith($dumpDirectory.FullName) -or !$PSItem.Directory)
+        {
+            return
+        }
+
+        $relativePath = [System.IO.Path]::GetRelativePath($rootDirectory, $PSItem.Directory.FullName)
+        $destinationDirectory = (Join-Path -Path $dumpDirectory.FullName -ChildPath $relativePath)
         if (!(Test-Path -Path $destinationDirectory))
         {
             New-Item -Type Directory -Path $destinationDirectory
