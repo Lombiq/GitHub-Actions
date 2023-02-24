@@ -65,7 +65,7 @@ on:
           The default from Check Spelling is ''.
         required: false
         type: string
-        default: Lombiq/GitHub-Actions@dev
+        default: Lombiq/GitHub-Actions@issue/LMBQ-124
       timeout-minutes:
         required: false
         type: number
