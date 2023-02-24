@@ -9,7 +9,7 @@ $testDirectory = (Test-Path -Path $testDirectoryPath) ? (Resolve-Path $testDirec
 # Save dotnet --info output.
 dotnet --info *> (Join-Path -Path $dumpDirectory.FullName -ChildPath 'dotnet.info')
 
-function ItemFilter($Item, $Configuration)
+function ItemFilter($Item, $TestConfiguration)
 {
     if ($Item.IsContainer)
     {
@@ -17,9 +17,9 @@ function ItemFilter($Item, $Configuration)
     }
 
     $allow = (($PSItem.Name -like 'Sequence_*.xml') -or ($PSItem.Name -like '*_hangdump.dmp'))
-    if (!$allow -and $Configuration)
+    if (!$allow -and $TestConfiguration)
     {
-        $allow = ($PSItem.FullName -like "*$(Join-Path 'bin' $Configuration)*" )
+        $allow = ($PSItem.FullName -like "*$(Join-Path 'bin' $TestConfiguration)*" )
     }
 
     $allow
