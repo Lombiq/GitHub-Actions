@@ -125,7 +125,7 @@ runs:
       shell: pwsh
       run: |
         $defaultPrefixes = @{
-          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/'
+          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/LMBQ-124/.github/actions/spelling/'
           'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/'
         }
 
