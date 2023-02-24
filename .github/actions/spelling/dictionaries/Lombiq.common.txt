@@ -137,6 +137,8 @@ websites
 workaround
 workflows
 wysiwyg
+XDocument
+XElement
 xhr
 XSS
 xunit
