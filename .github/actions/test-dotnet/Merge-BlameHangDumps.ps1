@@ -27,7 +27,7 @@ function ItemFilter($Item, $TestConfiguration)
 }
 
 Get-ChildItem $testDirectory.Path -Recurse |
-    Where-Object { ItemFilter -Item $PSItem -Configuration $Configuration } |
+    Where-Object { ItemFilter -Item $PSItem -TestConfiguration $Configuration } |
     ForEach-Object {
         # To avoid recursion in dump directory.
         if ($PSItem.FullName.StartsWith($dumpDirectory.FullName) -or !$PSItem.Directory)
