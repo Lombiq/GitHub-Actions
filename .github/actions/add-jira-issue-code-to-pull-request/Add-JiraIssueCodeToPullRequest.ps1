@@ -54,7 +54,7 @@ if ($firstItem)
         $Body = $Body + "`n" + $fixsIssue
     }
 
-    gh issue edit [int]$issueNumber --add-assignee $Assignee
+    gh issue edit $issueNumber --add-assignee $Assignee
 }
 else
 {
