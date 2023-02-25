@@ -52,7 +52,7 @@ if (-Not $firstItem)
 $issueNumber = $firstItem -split '\t' | Select-Object -First 1
 $fixsIssue = "Fixes #$issueNumber"
 
-elseif ($Body -NotLike "*$fixsIssue*")
+if ($Body -NotLike "*$fixsIssue*")
 {
     $Body = $Body + "`n" + $fixsIssue
 }
