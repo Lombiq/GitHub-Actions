@@ -4,6 +4,7 @@ param(
     [string] $Branch,
     [string] $Title,
     [string] $Body,
+    [string] $Assignee,
     [string] $PullRequestId
 )
 

@@ -19,6 +19,7 @@ runs:
       env:
         PR_TITLE: ${{ github.event.pull_request.title }}
         PR_BODY: ${{ github.event.pull_request.body }}
+        PR_AUTHOR: ${{ github.event.pull_request.user.login }}
       run: |
         $params = @{
             JiraBaseUrl = $Env:JIRA_BASE_URL ? $Env:JIRA_BASE_URL : "https://lombiq.atlassian.net"
@@ -26,6 +27,7 @@ runs:
             Branch = $Env:GITHUB_HEAD_REF
             Title = $Env:PR_TITLE
             Body = $Env:PR_BODY
+            Assignee = "${{ env.PR_AUTHOR }}"
             PullRequestID = ${{ github.event.number }}
         }
         Add-JiraIssueCodeToPullRequest @params
