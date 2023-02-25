@@ -43,18 +43,21 @@ $issueQuery = "$issueKey in:title"
 $output = gh issue list --search $issueQuery --repo $GitHubRepository
 $firstItem = ($output | Select-Object -First 1)
 
-if (-Not $firstItem)
+if ($firstItem)
 {
-    Write-Output "No issue was found related to the Jira issue '$issueKey' in the repository '$GitHubRepository'"
-    Exit
+    $issueNumber = $firstItem -split '\t' | Select-Object -First 1
+    $fixsIssue = "Fixes #$issueNumber"
+
+    if ($Body -NotLike "*$fixsIssue*")
+    {
+        $Body = $Body + "`n" + $fixsIssue
+    }
+
+    gh issue edit [int]$issueNumber --add-assignee $Assignee
 }
-
-$issueNumber = $firstItem -split '\t' | Select-Object -First 1
-$fixsIssue = "Fixes #$issueNumber"
-
-if ($Body -NotLike "*$fixsIssue*")
+else
 {
-    $Body = $Body + "`n" + $fixsIssue
+    Write-Output "No issue was found with the query '$issueQuery' in the repository '$GitHubRepository'"
 }
 
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))
