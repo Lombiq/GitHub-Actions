@@ -35,7 +35,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add Fixes reference to Pull Request
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: Lombiq/GitHub-Actions/.github/actions/add-Fixes-reference-to-pull-request@issue/OSOE-503
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
