@@ -28,20 +28,14 @@ jobs:
     steps:
       - name: Add Jira Issue Code to Pull Request
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@issue/OSOE-503
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Assign issue to PR author
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        uses: Lombiq/GitHub-Actions/.github/actions/assign-issue-to-pr-author@dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Add Fixes reference to Pull Request
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        uses: Lombiq/GitHub-Actions/.github/actions/add-Fixes-reference-to-pull-request@issue/OSOE-503
+        uses: Lombiq/GitHub-Actions/.github/actions/assign-issue-to-pr-author@issue/OSOE-503
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

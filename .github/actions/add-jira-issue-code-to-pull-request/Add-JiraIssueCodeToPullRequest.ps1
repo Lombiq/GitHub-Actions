@@ -39,6 +39,24 @@ elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*")
     $Body = $Body.replace($issueKey, $issueLink)
 }
 
+$issueQuery = "$issueKey in:title"
+$output = gh issue list --search $issueQuery --repo $GitHubRepository
+$firstItem = ($output | Select-Object -First 1)
+
+if (-Not $firstItem)
+{
+    Write-Output "No issue was found related to the Jira issue '$issueKey' in the repository '$GitHubRepository'"
+    Exit
+}
+
+$issueNumber = $firstItem -split '\t' | Select-Object -First 1
+$fixsIssue = "Fixes #$issueNumber"
+
+elseif ($Body -NotLike "*$fixsIssue*")
+{
+    $Body = $Body + "`n" + $fixsIssue
+}
+
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))
 {
     # Escape the quote characters. This is necessary because PowerShell mangles the quote characters when passing
