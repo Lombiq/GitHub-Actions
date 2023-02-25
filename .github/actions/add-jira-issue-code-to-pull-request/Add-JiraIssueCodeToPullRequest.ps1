@@ -44,23 +44,6 @@ $issueQuery = "$issueKey in:title"
 $output = gh issue list --search $issueQuery --repo $GitHubRepository
 $firstItem = ($output | Select-Object -First 1)
 
-if ($firstItem)
-{
-    $issueNumber = $firstItem -split '\t' | Select-Object -First 1
-    $fixsIssue = "Fixes #$issueNumber"
-
-    if ($Body -NotLike "*$fixsIssue*")
-    {
-        $Body = $Body + "`n" + $fixsIssue
-    }
-
-    gh issue edit $issueNumber --add-assignee $Assignee
-}
-else
-{
-    Write-Output "No issue was found with the query '$issueQuery' in the repository '$GitHubRepository'"
-}
-
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))
 {
     # Escape the quote characters. This is necessary because PowerShell mangles the quote characters when passing
