@@ -54,7 +54,7 @@ if ($issueItem)
         $Body = $Body + "`n" + $fixsIssue
     }
 
-    if ($issueNumber) 
+    if ($issueNumber)
     {
         gh api -X PATCH "/repos/$GitHubRepository/issues/$IssueNumber" -f "assignee=$Assignee"
     }
