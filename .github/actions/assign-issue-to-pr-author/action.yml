@@ -21,3 +21,4 @@ runs:
             GitHubRepository = $Env:GITHUB_REPOSITORY
         }
         AssignIssueToPullRequestAuthor @params
+        

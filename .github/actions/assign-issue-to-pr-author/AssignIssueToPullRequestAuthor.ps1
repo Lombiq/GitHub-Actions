@@ -4,7 +4,7 @@ param(
     [string] $GitHubRepository
 )
 
-$Jira_Key = if ("$Body" -match '\[(.*?)\]')
+$jira_Key = if ("$Body" -match '\[(.*?)\]')
 {
     $Matches[1]
 }
@@ -13,16 +13,16 @@ else
     'No_Key_added'
 }
 
-$IssueQuery = "$Jira_Key in:title"
-$Output = gh issue list --search $IssueQuery --repo $GitHubRepository
-$FirstItem = ($Output | Select-Object -First 1)
-$IssueNumber = $FirstItem -split '\t' | Select-Object -First 1
+$issueQuery = "$jira_Key in:title"
+$output = gh issue list --search $issueQuery --repo $GitHubRepository
+$firstItem = ($output | Select-Object -First 1)
+$issueNumber = $firstItem -split '\t' | Select-Object -First 1
 
-if ($FirstItem)
+if ($firstItem)
 {
-    gh api -X PATCH "/repos/$GitHubRepository/issues/$IssueNumber" -f "assignee=$Assignee"
+    gh issue edit [int]$issueNumber --add-assignee $Assignee
 }
 else
 {
-    Write-Output "No issue was found with the query '$IssueQuery' in the repository '$GitHubRepository'"
+    Write-Output "No issue was found with the query '$issueQuery' in the repository '$GitHubRepository'"
 }
