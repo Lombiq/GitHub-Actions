@@ -56,7 +56,7 @@ if ($issueItem)
 
     if ($issueNumber) 
     {
-        gh issue edit $issueNumber --add-assignee $Assignee
+        gh api -X PATCH "/repos/$GitHubRepository/issues/$IssueNumber" -f "assignee=$Assignee"
     }
 }
 else
