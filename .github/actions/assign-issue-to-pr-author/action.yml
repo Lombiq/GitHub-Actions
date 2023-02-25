@@ -1,0 +1,24 @@
+name: assign-issue-to-pr-author
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Assign issue to Pull Request Author
+      shell: pwsh
+      env: 
+        PR_BODY: ${{ github.event.pull_request.body }}
+        PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+      run: |
+        $params = @{
+            Body = "${{ env.PR_BODY }}"
+            Assignee = "${{ env.PR_AUTHOR }}"
+            GitHubRepository = $Env:GITHUB_REPOSITORY
+        }
+        AssignIssueToPullRequestAuthor @params
+        

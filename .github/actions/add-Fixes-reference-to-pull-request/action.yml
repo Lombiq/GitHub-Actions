@@ -1,0 +1,23 @@
+name: assign-Fixes-reference-to-pull-request-body
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Add Fixes reference to Pull Request body
+      shell: pwsh
+      env: 
+        PR_BODY: ${{ github.event.pull_request.body }}
+      run: |
+        $params = @{
+            Body = "${{ env.PR_BODY }}"
+            GitHubRepository = $Env:GITHUB_REPOSITORY
+            PullRequestID = ${{ github.event.number }}
+        }
+        AddFixesToPullRequestBody @params
+        
