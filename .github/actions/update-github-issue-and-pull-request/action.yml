@@ -1,6 +1,5 @@
 name: Update Github Issue and Pull Request
-description: Prefixes the PR title with a Jira issue key, adds the Jira key and the issue key to the body if not present, and also 
-assign the issue to PR author.
+description: Prefixes the PR title with a Jira issue key, adds the Jira key and the issue key to the body if not present, and also assign the issue to PR author.
 
 runs:
   using: "composite"
