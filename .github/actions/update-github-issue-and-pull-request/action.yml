@@ -1,5 +1,6 @@
-name: Add Jira Issue Code to Pull Request
-description: Prefixes the PR title with a Jira issue key, and also adds the key to the body if not present.
+name: Update Github Issue and Pull Request
+description: Prefixes the PR title with a Jira issue key, adds the Jira key and the issue key to the body if not present, and also 
+assign the issue to PR author.
 
 runs:
   using: "composite"
@@ -30,4 +31,4 @@ runs:
             Assignee = "${{ env.PR_AUTHOR }}"
             PullRequestID = ${{ github.event.number }}
         }
-        Add-JiraIssueCodeToPullRequest @params
+        Update-GitHubIssueAndPullRequest @params

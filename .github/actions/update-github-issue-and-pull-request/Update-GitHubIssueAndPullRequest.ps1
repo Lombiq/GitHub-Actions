@@ -47,16 +47,16 @@ $issueItem = ($output | Select-Object -First 1)
 if ($issueItem)
 {
     $issueNumber = $issueItem -split '\t' | Select-Object -First 1
-    $fixsIssue = "Fixes #$issueNumber"
+    $fixesIssue = "Fixes #$issueNumber"
 
     if ($Body -NotLike "*$fixsIssue*")
     {
-        $Body = $Body + "`n" + $fixsIssue
+        $Body = "$Body`n$fixsIssue"
     }
 
     if ($issueNumber)
     {
-        gh api -X PATCH "/repos/$GitHubRepository/issues/$IssueNumber" -f "assignee=$Assignee"
+        gh api -X PATCH "/repos/$GitHubRepository/issues/$issueNumber" -f "assignee=$Assignee"
     }
 }
 else
