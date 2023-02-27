@@ -64,7 +64,7 @@ foreach ($test in $tests)
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
         '--logger', 'console;verbosity=detailed'
         '--verbosity', $Verbosity
-        $BlameHangTimeout ? '--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full' : ''
+        $BlameHangTimeout ? ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full') : ''
         $Filter ? '--filter', $Filter : ''
         $test
     )
