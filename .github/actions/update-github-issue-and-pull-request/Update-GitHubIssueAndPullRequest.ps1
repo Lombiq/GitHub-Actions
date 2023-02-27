@@ -49,9 +49,9 @@ if ($issueItem)
     $issueNumber = $issueItem -split '\t' | Select-Object -First 1
     $fixesIssue = "Fixes #$issueNumber"
 
-    if ($Body -NotLike "*$fixsIssue*")
+    if ($Body -NotLike "*$fixesIssue*")
     {
-        $Body = "$Body`n$fixsIssue"
+        $Body = "$Body`n$fixesIssue"
     }
 
     if ($issueNumber)
