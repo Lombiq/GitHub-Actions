@@ -29,6 +29,13 @@ on:
         type: string
         default: 6.0.x
         description: Version of the .NET SDK to set up.
+      blame-hang-timeout:
+        required: false
+        type: string
+        default: ""
+        description: >
+          Run the tests in blame mode and collects a hang dump when a test exceeds the given timeout. See
+          https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details on available values.
       build-directory:
         required: false
         type: string
@@ -180,6 +187,7 @@ jobs:
         if: inputs.test-disable == 'false'
         uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
         with:
+          blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
           solution-path: ${{ inputs.build-solution-path }}
           test-verbosity: ${{ inputs.build-verbosity }}
