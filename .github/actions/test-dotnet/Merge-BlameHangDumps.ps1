@@ -1,7 +1,7 @@
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'Configuration', Justification = 'The Configuration parameter is in use.')]
 param ($Directory, $Configuration)
 
-$rootDirectory = (Resolve-Path $Directory)
+$rootDirectory = Resolve-Path $Directory
 $blameHangDumpsName = 'BlameHangDumps'
 $dumpDirectory = New-Item -Type Directory -Path $rootDirectory -Name $blameHangDumpsName
 $testDirectoryPath = Join-Path $Directory 'test'
