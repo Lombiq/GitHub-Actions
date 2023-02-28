@@ -4,6 +4,7 @@ param(
     [string] $Branch,
     [string] $Title,
     [string] $Body,
+    [string] $Assignee,
     [string] $PullRequestId
 )
 
@@ -37,6 +38,30 @@ elseif ($Body -NotLike "*$issueKey*")
 elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*")
 {
     $Body = $Body.replace($issueKey, $issueLink)
+}
+
+$issueQuery = "$issueKey in:title"
+$output = gh issue list --search $issueQuery --repo $GitHubRepository
+$issueItem = ($output | Select-Object -First 1)
+
+if ($issueItem)
+{
+    $issueNumber = $issueItem -split '\t' | Select-Object -First 1
+    $fixesIssue = "Fixes #$issueNumber"
+
+    if ($Body -NotLike "*$fixesIssue*")
+    {
+        $Body = "$Body`n$fixesIssue"
+    }
+
+    if ($issueNumber)
+    {
+        gh api -X PATCH "/repos/$GitHubRepository/issues/$issueNumber" -f "assignee=$Assignee"
+    }
+}
+else
+{
+    Write-Output "No issue was found with the query '$issueQuery' in the repository '$GitHubRepository'"
 }
 
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))
