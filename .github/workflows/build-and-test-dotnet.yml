@@ -29,6 +29,13 @@ on:
         type: string
         default: 6.0.x
         description: Version of the .NET SDK to set up.
+      blame-hang-timeout:
+        required: false
+        type: string
+        default: ""
+        description: >
+          Run the tests in blame mode and collects a hang dump when a test exceeds the given timeout. See
+          https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details on available values.
       build-directory:
         required: false
         type: string
@@ -140,14 +147,10 @@ jobs:
   build-and-test:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
-    # Timeout-minutes is in the matrix only because the config can't be set directly from the inputs, see:
-    # https://github.com/actions/runner/issues/1555.
     strategy:
       matrix:
         machine-type: ${{ fromJson(inputs.machine-types) }}
-        timeout-minutes:
-          - ${{ inputs.timeout-minutes }}
-    timeout-minutes: ${{ matrix.timeout-minutes }}
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
@@ -184,6 +187,7 @@ jobs:
         if: inputs.test-disable == 'false'
         uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
         with:
+          blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
           solution-path: ${{ inputs.build-solution-path }}
           test-verbosity: ${{ inputs.build-verbosity }}

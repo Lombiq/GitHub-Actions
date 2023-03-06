@@ -38,10 +38,16 @@ on:
         required: false
         type: string
         default: merge
+      timeout-minutes:
+        required: false
+        type: number
+        default: 1
+        description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
   post-pull-request-checks-automation:
     runs-on: ubuntu-22.04
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Set Merge Token
         shell: pwsh

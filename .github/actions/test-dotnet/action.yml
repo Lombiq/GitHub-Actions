@@ -5,6 +5,12 @@ description: >
   artifacts.
 
 inputs:
+  blame-hang-timeout:
+    required: false
+    default: ""
+    description: >
+      Run the tests in blame mode and collects a hang dump when a test exceeds the given timeout. See
+      https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details on available values.
   build-directory:
     required: false
     default: .
@@ -84,6 +90,7 @@ runs:
           Verbosity = "${{ inputs.test-verbosity }}"
           Filter = "${{ inputs.test-filter }}"
           Configuration = "${{ inputs.test-configuration }}"
+          BlameHangTimeout = "${{ inputs.blame-hang-timeout }}"
         }
 
         Invoke-SolutionTests @switches
@@ -106,6 +113,21 @@ runs:
       with:
         name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/FailureDumps/
+        if-no-files-found: ignore
+        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
+
+    - name: Merge BlameHangDumps
+      shell: pwsh
+      if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != ''
+      run: Merge-BlameHangDumps -Directory "${{ inputs.build-directory }}" -Configuration "${{ inputs.test-configuration }}"
+
+    - name: Upload BlameHangDumps
+      uses: actions/upload-artifact@v3.1.1
+      # We don't need additional conditions, because of the "if-no-files-found" setting.
+      if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != ''
+      with:
+        name: ui-test-blame-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
+        path: ${{ inputs.build-directory }}/BlameHangDumps/
         if-no-files-found: ignore
         retention-days: ${{ inputs.ui-test-artifact-retention-days }}
 

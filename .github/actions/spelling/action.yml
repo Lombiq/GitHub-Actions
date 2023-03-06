@@ -3,56 +3,191 @@ name: Spelling
 description: Checks for spelling errors in files.
 
 inputs:
-  # When updating check-spelling to a new version, check the release notes or the "dictionary-source-prefixes" parameter
-  # of "action.yaml" according to the commit of the release to find out the dictionary version tag and update the
-  # default value here and in the spelling workflow.
-  dictionary-source-prefixes:
+  merge-file-excludes:
     description: >
-      JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
-      https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
+      When set to "true", the "excludes.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in the
+      workspace repository.
     required: false
-    default: >
-      {
-        "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"
-      }
-  extra-dictionaries:
+    default: "true"
+  merge-forbidden-patterns:
+    description: >
+      When set to "true", the "line_forbidden.patterns" file's contents in Lombiq.GitHub.Actions will be merged into the
+      one in the workspace repository.
+    required: false
+    default: "true"
+  merge-ignore-patterns:
+    description: >
+      When set to "true", the "patterns.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in the
+      workspace repository.
+    required: false
+    default: "true"
+  default-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
     default: |
-      cspell:aws/aws.txt
-      cspell:csharp/csharp.txt
-      cspell:css/css.txt
-      cspell:django/django.txt
-      cspell:dotnet/dotnet.txt
       cspell:filetypes/filetypes.txt
-      cspell:html/html.txt
-      cspell:npm/npm.txt
-      cspell:rust/rust.txt
-      cspell:scala/scala.txt
       cspell:software-terms/src/software-terms.txt
-      cspell:node/node.txt
-      cspell:typescript/typescript.txt
-  config:
-    description: Spelling configuration directory
+      lombiq-lgha:dictionaries/Lombiq.common.txt
+  additional-configuration-source-prefixes:
+    description: >
+      JSON map of prefixes for configuration file (for now, only dictionary) URLs.
+    required: false
+  additional-dictionaries:
+    description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
+    required: false
+  configuration-path:
+    description: Relative path to the spell-checking configuration folder.
     required: false
     default: .github/actions/spelling
-  spell-check-this:
-    description: Repository with default configuration to use, the default from Check Spelling is ''.
+  default-configuration-repository:
+    description: >
+      Repository with default configuration to use when the workspace repository doesn't have its own configuration. The
+      default from Check Spelling is ''.
     required: false
     default: Lombiq/GitHub-Actions@dev
+  post-comment:
+    description: Flag for if check-spelling should post comment, the default is 1.
+    required: false
+    default: "1"
+  task:
+    description: Follow up task for check-spelling, the default is ''.
+    required: false
+    default: ""
+outputs:
+  followup:
+    description: Check Spelling output for followup.
+    value: ${{ steps.step-check-spelling.outputs.followup }}
 
 runs:
   using: "composite"
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    # If the configuration path doesn't exist in the workspace, then it means that the workspace repository doesn't have
+    # its own spell-checking configuration. In that case we don't need to copy anything, because the configuration files
+    # will be used implicitly according to the value of default-configuration-repository.
+    - name: Check configuration path
+      id: check-configuration-path
+      shell: pwsh
+      run: |
+        Set-GitHubOutput -Key 'configuration-path-exists' -Value (Test-Path (Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}'))
+
+    - name: Copy spell-checking advice
+      if: steps.check-configuration-path.outputs.configuration-path-exists == 'true'
+      shell: pwsh
+      run: |
+        $targetPath = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'advice.md'
+
+        if (-not (Test-Path $targetPath))
+        {
+          Copy-Item (Join-Path '${{ github.action_path }}' 'advice.md') $targetPath
+        }
+
+    - name: Merge "excludes.txt"
+      if: inputs.merge-file-excludes == 'true' && steps.check-configuration-path.outputs.configuration-path-exists == 'true'
+      shell: pwsh
+      run: |
+        $mergeParameters = @{
+          Source = Join-Path '${{ github.action_path }}' 'excludes.txt'
+          Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'excludes.txt'
+        }
+
+        Merge-SpellCheckingDictionaryFile @mergeParameters
+
+    - name: Merge "line_forbidden.patterns"
+      if: inputs.merge-forbidden-patterns == 'true' && steps.check-configuration-path.outputs.configuration-path-exists == 'true'
+      shell: pwsh
+      run: |
+        $mergeParameters = @{
+          Source = Join-Path '${{ github.action_path }}' 'line_forbidden.patterns'
+          Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'line_forbidden.patterns'
+        }
+
+        Merge-SpellCheckingDictionaryFile @mergeParameters
+
+    - name: Merge "patterns.txt"
+      if: inputs.merge-ignore-patterns == 'true' && steps.check-configuration-path.outputs.configuration-path-exists == 'true'
+      shell: pwsh
+      run: |
+        $mergeParameters = @{
+          Source = Join-Path '${{ github.action_path }}' 'patterns.txt'
+          Target = Join-Path "$Env:GITHUB_WORKSPACE" '${{ inputs.configuration-path }}' 'patterns.txt'
+        }
+
+        Merge-SpellCheckingDictionaryFile @mergeParameters
+
+    - name: Merge configuration source prefixes
+      id: merge-configuration-source-prefixes
+      shell: pwsh
+      run: |
+        $defaultPrefixes = @{
+          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/'
+          'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/'
+        }
+
+        $additionalPrefixesInput = '${{ inputs.additional-configuration-source-prefixes }}'
+        $additionalPrefixes = [string]::IsNullOrWhiteSpace($additionalPrefixesInput) ? @{} : (ConvertFrom-Json $additionalPrefixesInput -AsHashtable)
+
+        $defaultPrefixes.Keys |
+          Where-Object { -not $additionalPrefixes.ContainsKey($PSItem) } |
+          ForEach-Object { $additionalPrefixes[$PSItem] = $defaultPrefixes[$PSItem] }
+
+        Set-GitHubOutput -Key 'merged-prefixes' -Value (ConvertTo-Json $additionalPrefixes -Compress)
+
+    - name: Merge dictionary lists
+      id: merge-dictionary-lists
+      shell: pwsh
+      run: |
+        $defaultDictionaries = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.default-dictionaries }}'
+        $additionalDictionaries = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.additional-dictionaries }}'
+
+        Set-GitHubOutput -Key 'merged-dictionary-list' -Value ((@($additionalDictionaries) + @($defaultDictionaries) | Select-Object -Unique) -join ' ')
+
     - name: Check Spelling
-      # v0.0.21
-      uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce
+      id: step-check-spelling
+      # When updating the check-spelling action to a new release, update the 'cspell' prefix in the 'Merge dictionary
+      # source prefixes' step with the dictionary version tag that belongs to the commit of the release. See
+      # https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
+      uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce # v0.0.21
       with:
         check_file_names: 1
-        config: ${{ inputs.config }}
-        dictionary_source_prefixes: ${{ inputs.dictionary-source-prefixes }}
+        config: ${{ inputs.configuration-path }}
+        dictionary_source_prefixes: ${{ steps.merge-configuration-source-prefixes.outputs.merged-prefixes }}
         experimental_apply_changes_via_bot: 0
-        extra_dictionaries: ${{ inputs.extra-dictionaries }}
-        post_comment: 1
-        spell_check_this: ${{ inputs.spell-check-this }}
+        extra_dictionaries: ${{ steps.merge-dictionary-lists.outputs.merged-dictionary-list }}
+        post_comment: ${{ inputs.post-comment }}
+        spell_check_this: ${{ inputs.default-configuration-repository }}
         suppress_push_for_open_pull_request: 1
+        task: ${{ inputs.task }}
+        check_extra_dictionaries: |
+          cspell:aws/aws.txt
+          cspell:companies/src/companies.txt
+          cspell:cryptocurrencies/cryptocurrencies.txt
+          cspell:csharp/csharp.txt
+          cspell:css/css.txt
+          cspell:docker/src/docker-words.txt
+          cspell:dotnet/dotnet.txt
+          cspell:filetypes/filetypes.txt
+          cspell:fonts/fonts.txt
+          cspell:fullstack/fullstack.txt
+          cspell:html/html.txt
+          cspell:lorem-ipsum/dictionary.txt
+          cspell:node/additional_words.txt
+          cspell:node/node.txt
+          cspell:npm/npm.txt
+          cspell:powershell/powershell.txt
+          cspell:public-licenses/src/generated/public-licenses.txt
+          cspell:software-terms/src/network-os.txt
+          cspell:software-terms/src/network-protocols.txt
+          cspell:software-terms/src/software-terms.txt
+          cspell:software-terms/src/software-tools.txt
+          cspell:sql/src/sql.txt
+          cspell:sql/src/tsql.txt
+          cspell:typescript/typescript.txt
+          lombiq-lgha:dictionaries/Liquid.txt
+          lombiq-lgha:dictionaries/Lombiq.common.txt
+          lombiq-lgha:dictionaries/Lombiq.people.txt

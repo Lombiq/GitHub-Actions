@@ -9,14 +9,21 @@ on:
         description: >
           Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
           it must NOT end with a slash.
+    inputs:
+      timeout-minutes:
+        required: false
+        type: number
+        default: 3
+        description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
   validate-pull-request:
     runs-on: ubuntu-22.04
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Add Jira Issue Code to Pull Request
+      - name: Update Github issue and Pull Request
         if: github.event_name == 'pull_request' && github.event.action == 'opened' 
-        uses: Lombiq/GitHub-Actions/.github/actions/add-jira-issue-code-to-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
