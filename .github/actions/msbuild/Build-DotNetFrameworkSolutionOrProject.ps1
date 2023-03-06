@@ -57,7 +57,8 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output '::endgroup::'
 }
 
-
+# An empty -maxCpuCount will use all available cores, see:
+# https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference.
 $buildSwitches = $commonSwitches + (ConvertTo-Array @"
     -p:Configuration=Release
     -restore
@@ -67,8 +68,6 @@ $buildSwitches = $commonSwitches + (ConvertTo-Array @"
 
 Write-Output "Building solution or project with ``msbuild $SolutionOrProject $($buildSwitches -join ' ')``."
 
-# An empty -maxCpuCount will use all available cores, see:
-# https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference.
 msbuild $SolutionOrProject @buildSwitches
 
 # Without this, if the msbuild command fails with certain MSB error codes (not build errors), they still won't cause
