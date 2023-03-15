@@ -10,7 +10,7 @@ on:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
         required: false
         type: string
-        default: "true"
+        default: "false"
       machine-type:
         required: false
         type: string
@@ -44,22 +44,32 @@ on:
         type: string
         description: Name of the resource group.
       database-connection-string-name:
-        required: true
+        required: false
         type: string
+        default: "OrchardCore__ConnectionString"
         description: >
-          The name of the database connection string, that's configured as one of the connection strings under the app.
+          The name of the root SQL Server database connection string configured as application settings in Azure, under both
+          the production and staging slots with slot-specific values. This is typically "OrchardCore__ConnectionString",
+          and points to the database containing Orchard shell settings, which may also contain the Default tenant's or
+          all tenants' databases. This connection string may use a contained user of the given database.
       master-database-connection-string-name:
-        required: true
+        required: false
         type: string
+        default: "OrchardCore__ConnectionString-master"
         description: >
-          The name of the master database connection string, that's configured as one of the connection strings under
-          the app. The master database is the primary configuration database in SQL Server. It contains information on
-          all the databases that exist on the server.
+          The name of the SQL Server database connection string for the master database, configured as application
+          settings in Azure, under both the production and staging slots with slot-specific values. This is typically
+          "OrchardCore__ConnectionString-master", and points to the SQL Server master database corresponding to the
+          database that the database-connection-string-name parameter points to. This elevated access is necessary to
+          recreate the staging database and scale it up if necessary.
       storage-connection-string-name:
-        required: true
+        required: false
         type: string
+        default: "OrchardCore__OrchardCore_Media_Azure__ConnectionString"
         description: >
-          The name of the storage connection string, that's configured as one of the connection strings under the app.
+          The name of the Azure storage account's blob storage connection string, configured as application settings in
+          Azure, under both the production and staging slots with slot-specific values. This is typically
+          "OrchardCore__OrchardCore_Media_Azure__ConnectionString".
       service-objective-name:
         required: false
         type: string
@@ -77,10 +87,10 @@ on:
       blob-container-include-list:
         required: false
         type: string
-        default: '@("media")'
+        default: '@("media", "dataprotection")'
         description: >
           PowerShell string array with the name of the included Blob Container(s), e.g. '@("media")' or '@("media",
-          "cool-container")'. The parameter must be a PowerShell string array. When a not empty PowerShell string array
+          "dataprotection)'. The parameter must be a PowerShell string array. When a not empty PowerShell string array
           is provided, "blob-container-exclude-list" is not taken into consideration.
       folder-exclude-list:
         required: false

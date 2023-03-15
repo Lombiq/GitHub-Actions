@@ -18,7 +18,7 @@ on:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
         required: false
         type: string
-        default: "true"
+        default: "false"
       machine-type:
         required: false
         type: string

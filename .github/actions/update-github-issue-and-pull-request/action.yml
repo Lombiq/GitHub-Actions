@@ -1,5 +1,5 @@
-name: Add Jira Issue Code to Pull Request
-description: Prefixes the PR title with a Jira issue key, and also adds the key to the body if not present.
+name: Update Github Issue and Pull Request
+description: Prefixes the PR title with a Jira issue key, adds the Jira key and the issue key to the body if not present, and also assign the issue to PR author.
 
 runs:
   using: "composite"
@@ -19,6 +19,7 @@ runs:
       env:
         PR_TITLE: ${{ github.event.pull_request.title }}
         PR_BODY: ${{ github.event.pull_request.body }}
+        PR_AUTHOR: ${{ github.event.pull_request.user.login }}
       run: |
         $params = @{
             JiraBaseUrl = $Env:JIRA_BASE_URL ? $Env:JIRA_BASE_URL : "https://lombiq.atlassian.net"
@@ -26,6 +27,7 @@ runs:
             Branch = $Env:GITHUB_HEAD_REF
             Title = $Env:PR_TITLE
             Body = $Env:PR_BODY
+            Assignee = "${{ env.PR_AUTHOR }}"
             PullRequestID = ${{ github.event.number }}
         }
-        Add-JiraIssueCodeToPullRequest @params
+        Update-GitHubIssueAndPullRequest @params

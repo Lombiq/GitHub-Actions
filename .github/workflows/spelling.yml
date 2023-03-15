@@ -15,46 +15,70 @@ on:
         required: false
         type: string
         default: "true"
-      dictionary-source-prefixes:
+      merge-file-excludes:
         description: >
-          JSON map of prefixes for dictionary URLs, "cspell" is necessary. See
-          https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
+          When set to "true", the "excludes.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in
+          the workspace repository.
         required: false
         type: string
-        default: >
-          {
-            "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/"
-          }
-      extra-dictionaries:
-        description: Space delimited list of URLs (or `prefix:`+path) to additional word lists.
+        default: "true"
+      merge-forbidden-patterns:
+        description: >
+          When set to "true", the "line_forbidden.patterns" file's contents in Lombiq.GitHub.Actions will be merged into
+          the one in the workspace repository.
+        required: false
+        type: string
+        default: "true"
+      merge-ignore-patterns:
+        description: >
+          When set to "true", the "patterns.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in
+          the workspace repository.
+        required: false
+        type: string
+        default: "true"
+      default-dictionaries:
+        description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
         required: false
         type: string
         default: |
           cspell:filetypes/filetypes.txt
-          cspell:django/django.txt
-          cspell:aws/aws.txt
-          cspell:html/html.txt
-          cspell:css/css.txt
-          cspell:csharp/csharp.txt
-          cspell:rust/rust.txt
-          cspell:npm/npm.txt
-          cspell:dotnet/dotnet.txt
-          cspell:scala/scala.txt
-      config:
-        description: Spelling configuration directory
+          cspell:software-terms/src/software-terms.txt
+          lombiq-lgha:dictionaries/Lombiq.common.txt
+      additional-configuration-source-prefixes:
+        description: >
+          JSON map of prefixes for additional configuration file (for now, only dictionary) URLs. "cspell" and
+          "lombiq-lgha" are available by default, but can be overridden.
+        required: false
+        type: string
+      additional-dictionaries:
+        description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
+        required: false
+        type: string
+      configuration-path:
+        description: Relative path to the spell-checking configuration folder.
         required: false
         type: string
         default: .github/actions/spelling
-      spell-check-this:
-        description: Repository with default configuration to use, the default from Check Spelling is ''
+      default-configuration-repository:
+        description: >
+          Repository with default configuration to use when the workspace repository doesn't have its own configuration.
+          The default from Check Spelling is ''.
         required: false
         type: string
         default: Lombiq/GitHub-Actions@dev
+      timeout-minutes:
+        required: false
+        type: number
+        default: 3
+        description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
   check-spelling:
     name: Check Spelling
+    outputs:
+      followup: ${{ steps.check-spelling-action.outputs.followup }}
     runs-on: ubuntu-22.04
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
@@ -73,15 +97,34 @@ jobs:
           git commit -m 'stub commit -- includes submodules'
 
       - name: Check Spelling
+        id: check-spelling-action
         uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
-          dictionary-source-prefixes: ${{ inputs.dictionary-source-prefixes }}
-          extra-dictionaries: ${{ inputs.extra-dictionaries }}
-          config: ${{ inputs.config }}
-          spell-check-this: ${{ inputs.spell-check-this }}
+          merge-file-excludes: ${{ inputs.merge-file-excludes }}
+          merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}
+          merge-ignore-patterns: ${{ inputs.merge-ignore-patterns }}
+          default-dictionaries: ${{ inputs.default-dictionaries }}
+          additional-configuration-source-prefixes: ${{ inputs.additional-configuration-source-prefixes }}
+          additional-dictionaries: ${{ inputs.additional-dictionaries }}
+          configuration-path: ${{ inputs.configuration-path }}
+          default-configuration-repository: ${{ inputs.default-configuration-repository }}
+          post-comment: 0
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  comment-pr:
+    name: Comment (PR)
+    runs-on: ubuntu-22.04
+    needs: check-spelling
+    permissions:
+      pull-requests: write
+    if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
+    steps:
+      - name: Comment (PR)
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        with:
+          post-comment: 1
+          task: ${{ needs.check-spelling.outputs.followup }}
