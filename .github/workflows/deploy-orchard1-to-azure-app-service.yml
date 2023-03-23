@@ -1,0 +1,160 @@
+name: Deploy Orchard 1 to Azure App Service
+
+on:
+  workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
+          are used.
+      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL:
+        required: true
+      AZURE_APP_SERVICE_PUBLISH_PROFILE:
+        required: true
+
+    inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "false"
+      timeout-minutes:
+        required: false
+        type: number
+        default: 360
+        description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      machine-type:
+        required: false
+        type: string
+        default: windows-2022
+        description: The machine type to run the workflow under, e.g. "windows-2022". Needs to be Windows.
+      build-directory:
+        required: false
+        type: string
+        default: .
+        description: Path to the directory where a solution file can be found.
+      solution-or-project-path:
+        required: false
+        type: string
+        default: "*.sln"
+        description: >
+          The path of the solution or project file to be built. If you have exactly one .sln file in the current
+          directory then this can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project
+          can be specified." error that is thrown when the `*.sln` wildcard results in multiple files. To build a
+          project file you must specify a path that ends with `.csproj`. An example: "./src/*Web/*.Web.csproj". The
+          value is given to PowerShell's `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with
+          spaces must be escaped separately.
+      build-verbosity:
+        required: false
+        type: string
+        default: quiet
+        description: Verbosity parameter for msbuild.
+      build-treat-warnings-as-errors:
+        required: false
+        type: string
+        default: "true"
+        description: Indicates whether warnings should be treated as errors during msbuild.
+      build-enable-code-analysis:
+        required: false
+        type: string
+        default: "false"
+        description: Indicates whether to enable static code analysis during dotnet build.
+      app-name:
+        required: true
+        type: string
+        description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
+      slot-name:
+        required: true
+        type: string
+        description: >
+          What you see at the top of the blade on the Azure Portal, when you open the slot, before the app name in
+          parenthesis.
+      resource-group-name:
+        required: true
+        type: string
+        description: Name of the resource group.
+      application-insights-resource-id:
+        required: true
+        type: string
+        description: >
+          ID of the Application Insights resource that the release annotation for the deployment should be added to.
+          This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
+
+jobs:
+  deploy:
+    runs-on: ${{ inputs.machine-type }}
+    name: Deploy to Azure App Service
+    defaults:
+      run:
+        shell: pwsh
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
+
+      - name: Enable Node corepack
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+      - name: Publish Precompiled App with Static Code Analysis
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+        with:
+          solution-or-project-path: Orchard.proj
+          verbosity: ${{ inputs.build-verbosity }}
+          treat-warnings-as-errors: ${{ inputs.build-treat-warnings-as-errors }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          msbuild-switches: |
+            /t:Precompiled
+            /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
+            /p:BuildVersionDisplay_BuildText="${{ github.sha }} (${{ github.ref_name }})"
+            /p:BuildVersionDisplay_BuildUrl="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+      - name: Login to Azure
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        env:
+          SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+
+      - name: Initialize PowerShell modules
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+
+      - name: Stop Web App Slot
+        run: |
+          Stop-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
+        with:
+          app-name: ${{ inputs.app-name }}
+          slot-name: ${{ inputs.slot-name }}
+          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+          package: build\Precompiled
+
+      - name: Add Azure Application Insights Release Annotation
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        with:
+          application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+
+      - name: Start Web App Slot
+        run: |
+          Start-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
+
+      - name: Test Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
+
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
