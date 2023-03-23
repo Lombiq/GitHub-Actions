@@ -16,6 +16,7 @@ nuget restore $SolutionOrProject
 Write-Output ".NET version number: $Version"
 
 $commonSwitches = ConvertTo-Array @"
+    -maxCpuCount
     --verbosity:$Verbosity
     -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
     -p:Retries=4
