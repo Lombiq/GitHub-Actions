@@ -53,13 +53,13 @@ on:
       build-treat-warnings-as-errors:
         required: false
         type: string
-        default: "true"
+        default: "false"
         description: Indicates whether warnings should be treated as errors during msbuild.
       build-enable-code-analysis:
         required: false
         type: string
         default: "false"
-        description: Indicates whether to enable static code analysis during dotnet build.
+        description: Indicates whether to enable static code analysis during msbuild.
       app-name:
         required: true
         type: string
@@ -98,7 +98,7 @@ jobs:
       - name: Enable Node corepack
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
-      - name: Publish Precompiled App with Static Code Analysis
+      - name: Publish Precompiled App
         uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
         with:
           solution-or-project-path: Orchard.proj
@@ -108,7 +108,7 @@ jobs:
           msbuild-switches: |
             /t:Precompiled
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
-            /p:BuildVersionDisplay_BuildText="${{ github.sha }} (${{ github.ref_name }})"
+            /p:BuildVersionDisplay_BuildText="${{ github.sha }} (${{ github.ref }})"
             /p:BuildVersionDisplay_BuildUrl="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       - name: Login to Azure
