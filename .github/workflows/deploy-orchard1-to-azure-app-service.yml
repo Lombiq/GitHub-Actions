@@ -32,7 +32,7 @@ on:
       build-directory:
         required: false
         type: string
-        default: .
+        default: src
         description: Path to the directory where a solution file can be found.
       solution-or-project-path:
         required: false
