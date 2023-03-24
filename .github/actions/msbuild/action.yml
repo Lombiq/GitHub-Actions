@@ -65,10 +65,10 @@ runs:
 
         $allSwitches = @{
             SolutionOrProject = (Get-ChildItem ${{ inputs.solution-or-project-path }}).FullName
-            Verbosity = "${{ inputs.verbosity }}"
-            TreatWarningsAsErrors = "${{ inputs.treat-warnings-as-errors }}"
-            EnableCodeAnalysis = "${{ inputs.enable-code-analysis }}"
-            Version = "${{ inputs.publish-version }}"
+            Verbosity = '${{ inputs.verbosity }}'
+            TreatWarningsAsErrors = '${{ inputs.treat-warnings-as-errors }}'
+            EnableCodeAnalysis = '${{ inputs.enable-code-analysis }}'
+            Version = '${{ inputs.publish-version }}'
             Switches = $givenSwitches
         }
 
