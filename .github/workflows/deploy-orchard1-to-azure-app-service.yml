@@ -182,7 +182,7 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Start StagingAfterDeploy Maintenance
-        if: inputs.maintenance-host-name != '' && secrets.MAINTENANCE_USER_NAME != '' && secrets.MAINTENANCE_PASSWORD != ''
+        if: inputs.maintenance-host-name != ''
         run: |
           $maintenanceParameters = @{
             HostName = '${{ inputs.maintenance-host-name }}'
