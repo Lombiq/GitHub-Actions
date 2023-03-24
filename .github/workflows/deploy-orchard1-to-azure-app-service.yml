@@ -12,6 +12,10 @@ on:
         required: true
       AZURE_APP_SERVICE_PUBLISH_PROFILE:
         required: true
+      MAINTENANCE_USER_NAME:
+        required: false
+      MAINTENANCE_PASSWORD:
+        required: false
 
     inputs:
       cancel-workflow-on-failure:
@@ -178,12 +182,12 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Start StagingAfterDeploy Maintenance
-        if: inputs.maintenance-host-name != '' && inputs.maintenance-user-name != '' && inputs.maintenance-password != ''
+        if: inputs.maintenance-host-name != '' && secrets.MAINTENANCE_USER_NAME != '' && secrets.MAINTENANCE_PASSWORD != ''
         run: |
           $maintenanceParameters = @{
             HostName = '${{ inputs.maintenance-host-name }}'
-            UserName = '${{ inputs.maintenance-user-name }}'
-            Password = '${{ inputs.maintenance-password }}'
+            UserName = '${{ secrets.MAINTENANCE_USER_NAME }}'
+            Password = '${{ secrets.MAINTENANCE_PASSWORD }}'
             BatchSize = '${{ inputs.maintenance-batch-size }}'
             MaintenanceName = 'StagingAfterDeploy'
           }
