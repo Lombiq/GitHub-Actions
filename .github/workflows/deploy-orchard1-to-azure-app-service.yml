@@ -81,6 +81,23 @@ on:
         description: >
           ID of the Application Insights resource that the release annotation for the deployment should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
+      maintenance-host-name:
+        required: false
+        type: string
+        description: TBD
+      maintenance-user-name:
+        required: false
+        type: string
+        description: TBD
+      maintenance-password:
+        required: false
+        type: string
+        description: TBD
+      maintenance-batch-size:
+        required: false
+        type: string
+        default: "0"
+        description: TBD
 
 jobs:
   deploy:
@@ -159,6 +176,18 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
+
+      - name: Start StagingAfterDeploy Maintenance
+        if: inputs.maintenance-host-name != '' && inputs.maintenance-user-name != '' && inputs.maintenance-password != ''
+        run: |
+          $maintenanceParameters = @{
+            HostName = '${{ inputs.maintenance-host-name }}'
+            UserName = '${{ inputs.maintenance-user-name }}'
+            Password = '${{ inputs.maintenance-password }}'
+            BatchSize = '${{ inputs.maintenance-batch-size }}'
+            MaintenanceName = 'StagingAfterDeploy'
+          }
+          Start-Maintenance @maintenanceParameters
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
