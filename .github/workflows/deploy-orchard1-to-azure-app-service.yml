@@ -89,14 +89,6 @@ on:
         required: false
         type: string
         description: TBD
-      maintenance-user-name:
-        required: false
-        type: string
-        description: TBD
-      maintenance-password:
-        required: false
-        type: string
-        description: TBD
       maintenance-batch-size:
         required: false
         type: string

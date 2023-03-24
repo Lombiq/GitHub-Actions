@@ -5,6 +5,10 @@ on:
     secrets:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
         required: true
+      MAINTENANCE_USER_NAME:
+        required: false
+      MAINTENANCE_PASSWORD:
+        required: false
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
@@ -109,6 +113,15 @@ on:
           PowerShell string array with the name of the included folder(s), e.g. '@("NotRecipeJournal")' or
           '@("NotRecipeJournal", "CoolFolder")'. The parameter must be a PowerShell string array. When a not empty
           PowerShell string array is provided, "folder-exclude-list" is not taken into consideration.
+      maintenance-host-name:
+        required: false
+        type: string
+        description: TBD
+      maintenance-batch-size:
+        required: false
+        type: string
+        default: "0"
+        description: TBD
 
 jobs:
   reset-azure-environment:
@@ -190,6 +203,18 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
+
+      - name: Start StagingAfterReplace Maintenance
+        if: inputs.maintenance-host-name != ''
+        run: |
+          $maintenanceParameters = @{
+            HostName = '${{ inputs.maintenance-host-name }}'
+            UserName = '${{ secrets.MAINTENANCE_USER_NAME }}'
+            Password = '${{ secrets.MAINTENANCE_PASSWORD }}'
+            BatchSize = '${{ inputs.maintenance-batch-size }}'
+            MaintenanceName = 'StagingAfterReplace'
+          }
+          Start-Maintenance @maintenanceParameters
 
       - name: Scale Database
         run: |
