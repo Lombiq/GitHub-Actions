@@ -135,8 +135,6 @@ jobs:
           msbuild-switches: |
             /t:Precompiled
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
-            /p:BuildVersionDisplay_BuildText="${{ github.sha }} (${{ github.ref }})"
-            /p:BuildVersionDisplay_BuildUrl="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
