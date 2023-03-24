@@ -157,15 +157,6 @@ jobs:
             -ConnectionStringName ${{ inputs.database-connection-string-name }} `
             -Force
 
-      - name: Scale Database
-        run: |
-          Set-AzureWebAppSqlDatabaseServiceObjective `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.destination-slot-name }} `
-            -ConnectionStringName ${{ inputs.master-database-connection-string-name }} `
-            -ServiceObjectiveName ${{ inputs.service-objective-name }}
-
       - name: Add Destination Contained User to Destination Database
         run: |
           Install-Module sqlserver -AllowClobber -Force
@@ -199,6 +190,15 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
+
+      - name: Scale Database
+        run: |
+          Set-AzureWebAppSqlDatabaseServiceObjective `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }} `
+            -ConnectionStringName ${{ inputs.master-database-connection-string-name }} `
+            -ServiceObjectiveName ${{ inputs.service-objective-name }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
