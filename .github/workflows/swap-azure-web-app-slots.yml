@@ -59,43 +59,43 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-    - name: Login to Azure
-      uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
-      env:
-        SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL }}
+      - name: Login to Azure
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        env:
+          SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL }}
 
-    - name: Initialize PowerShell modules
-      uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+      - name: Initialize PowerShell modules
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
-    - name: Test Source Web App Slot
-      run: |
-        Test-AzureWebApp `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.source-slot-name }}
+      - name: Test Source Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.source-slot-name }}
 
-    - name: Swap Web App Slots 
-      run: |
-        Switch-AzWebAppSlot `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -Name ${{ inputs.app-name }} `
-          -SourceSlotName ${{ inputs.source-slot-name }} `
-          -DestinationSlotName ${{ inputs.destination-slot-name }}
+      - name: Swap Web App Slots
+        run: |
+          Switch-AzWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -Name ${{ inputs.app-name }} `
+            -SourceSlotName ${{ inputs.source-slot-name }} `
+            -DestinationSlotName ${{ inputs.destination-slot-name }}
 
-    - name: Add Azure Application Insights Release Annotation
-      uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
-      with:
-        application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+      - name: Add Azure Application Insights Release Annotation
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        with:
+          application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
-    - name: Test Destination Web App Slot
-      run: |
-        Test-AzureWebApp `
-          -ResourceGroupName ${{ inputs.resource-group-name }} `
-          -WebAppName ${{ inputs.app-name }} `
-          -SlotName ${{ inputs.destination-slot-name }}
+      - name: Test Destination Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }}
 
-    - name: Cancel Workflow on Failure
-      if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
