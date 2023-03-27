@@ -89,7 +89,7 @@ jobs:
 
       - name: Swap Web App Slots
         run: |
-          Switch-AzureWebAppSlot `
+          Switch-AzureWebAppSlots `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SourceSlotName ${{ inputs.source-slot-name }} `
