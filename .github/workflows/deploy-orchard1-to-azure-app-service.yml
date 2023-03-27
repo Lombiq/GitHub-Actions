@@ -152,8 +152,8 @@ jobs:
           package: build\Precompiled
 
       - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         if: ${{ inputs.application-insights-resource-id != '' }}
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
