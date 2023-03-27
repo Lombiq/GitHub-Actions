@@ -5,6 +5,10 @@ on:
     secrets:
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL:
         required: true
+      MAINTENANCE_USER_NAME:
+        required: false
+      MAINTENANCE_PASSWORD:
+        required: false
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
@@ -49,6 +53,15 @@ on:
         description: >
           ID of the Application Insights resource that the release annotation for the swap should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
+      maintenance-host-name:
+        required: false
+        type: string
+        description: TBD
+      maintenance-batch-size:
+        required: false
+        type: string
+        default: "0"
+        description: TBD
 
 jobs:
   swap-azure-web-app-slots:
@@ -94,6 +107,18 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
+
+      - name: Start AfterDeploy Maintenance on the Destination Slot
+        if: inputs.maintenance-host-name != ''
+        run: |
+          $maintenanceParameters = @{
+            HostName = '${{ inputs.maintenance-host-name }}'
+            UserName = '${{ secrets.MAINTENANCE_USER_NAME }}'
+            Password = '${{ secrets.MAINTENANCE_PASSWORD }}'
+            BatchSize = '${{ inputs.maintenance-batch-size }}'
+            MaintenanceName = '${{ inputs.destination-slot-name }}AfterDeploy'
+          }
+          Start-Maintenance @maintenanceParameters
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
