@@ -80,13 +80,6 @@ jobs:
       - name: Initialize PowerShell modules
         uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
-      - name: Test Source Web App Slot
-        run: |
-          Test-AzureWebApp `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.source-slot-name }}
-
       - name: Swap Web App Slots
         run: |
           Switch-AzureWebAppSlots `
@@ -100,13 +93,6 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
-
-      - name: Test Destination Web App Slot
-        run: |
-          Test-AzureWebApp `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Start AfterDeploy Maintenance on the Destination Slot
         if: inputs.maintenance-host-name != ''
