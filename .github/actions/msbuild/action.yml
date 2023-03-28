@@ -60,8 +60,8 @@ runs:
       working-directory: ${{ inputs.directory }}
       run: |
         $givenSwitches = @'
-            -p:BuildVersionDisplay_BuildText='${{ github.head_ref }}: ${{ github.sha }}'
-            -p:BuildVersionDisplay_BuildUrl='https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+            -p:BuildVersionDisplay_BuildText="${{ github.head_ref }} (${{ github.sha }})"
+            -p:BuildVersionDisplay_BuildUrl="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             ${{ inputs.msbuild-switches }}
         '@
 
