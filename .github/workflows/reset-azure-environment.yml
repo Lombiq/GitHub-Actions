@@ -148,7 +148,6 @@ jobs:
             -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Replace Media
-        if: false
         run: |
           Set-AzureWebAppStorageContentFromStorage `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
