@@ -128,6 +128,16 @@ jobs:
             /t:Precompiled
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
+      - name: Compress Precompiled Folder
+        run: Compress-Archive -Path 'build\Precompiled' -CompressionLevel 'Fastest' -DestinationPath 'Precompiled.zip'
+
+      - name: Upload Precompiled App as Artifact
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: DotNest.Tenants-${{ github.sha }}
+          path: Precompiled.zip
+          retention-days: 1
+
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/LMBQ-105
         env:
