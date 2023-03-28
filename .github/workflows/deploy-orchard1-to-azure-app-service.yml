@@ -129,6 +129,7 @@ jobs:
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
       - name: Compress Precompiled Folder
+        if: false
         run: Compress-Archive -Path 'build\Precompiled' -CompressionLevel 'Fastest' -DestinationPath 'Precompiled.zip'
 
       - name: Upload Precompiled App as Artifact
@@ -160,7 +161,7 @@ jobs:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
           publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-          package: Precompiled.zip
+          package: build\Precompiled
 
       - name: Add Azure Application Insights Release Annotation
         if: ${{ inputs.application-insights-resource-id != '' }}
