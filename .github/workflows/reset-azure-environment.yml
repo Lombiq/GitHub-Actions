@@ -205,7 +205,7 @@ jobs:
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
 
-      - name: Start StagingAfterReplace Maintenance
+      - name: Start AfterReplace Maintenance on the Destination Slot
         if: inputs.maintenance-host-name != ''
         run: |
           $maintenanceParameters = @{
@@ -213,7 +213,7 @@ jobs:
             UserName = '${{ secrets.MAINTENANCE_USER_NAME }}'
             Password = '${{ secrets.MAINTENANCE_PASSWORD }}'
             BatchSize = '${{ inputs.maintenance-batch-size }}'
-            MaintenanceName = 'StagingAfterReplace'
+            MaintenanceName = '${{ inputs.destination-slot-name }}AfterReplace'
           }
           Start-Maintenance @maintenanceParameters
 
