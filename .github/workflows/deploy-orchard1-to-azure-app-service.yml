@@ -160,7 +160,7 @@ jobs:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
           publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-          package: build\Precompiled
+          package: Precompiled.zip
 
       - name: Add Azure Application Insights Release Annotation
         if: ${{ inputs.application-insights-resource-id != '' }}
