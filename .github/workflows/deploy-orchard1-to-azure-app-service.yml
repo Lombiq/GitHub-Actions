@@ -132,6 +132,7 @@ jobs:
         run: Compress-Archive -Path 'build\Precompiled' -CompressionLevel 'Fastest' -DestinationPath 'Precompiled.zip'
 
       - name: Upload Precompiled App as Artifact
+        if: false
         uses: actions/upload-artifact@v3.1.1
         with:
           name: DotNest.Tenants-${{ github.sha }}
