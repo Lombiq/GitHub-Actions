@@ -94,7 +94,7 @@ jobs:
         with:
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
-      - name: Start AfterDeploy Maintenance on the Destination Slot
+      - name: Start AfterSwap Maintenance on the Destination Slot
         if: inputs.maintenance-host-name != ''
         run: |
           $maintenanceParameters = @{
@@ -102,7 +102,7 @@ jobs:
             UserName = '${{ secrets.MAINTENANCE_USER_NAME }}'
             Password = '${{ secrets.MAINTENANCE_PASSWORD }}'
             BatchSize = '${{ inputs.maintenance-batch-size }}'
-            MaintenanceName = '${{ inputs.destination-slot-name }}AfterDeploy'
+            MaintenanceName = '${{ inputs.destination-slot-name }}AfterSwap'
           }
           Start-Maintenance @maintenanceParameters
 
