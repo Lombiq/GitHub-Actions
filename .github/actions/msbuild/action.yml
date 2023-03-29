@@ -58,6 +58,9 @@ runs:
     - name: Build and Static Code Analysis
       shell: pwsh
       working-directory: ${{ inputs.directory }}
+      # The BuildVersionDisplay parameters are added to automatically support displaying the branch name and commit hash
+      # as a link to the workflow run in the Orchard Dashboard of an Orchard 1 application that has the
+      # Lombiq.Hosting.Deployments module (https://github.com/Lombiq/Hosting-Deployments) enabled.
       run: |
         $givenSwitches = @'
             -p:BuildVersionDisplay_BuildText="${{ github.head_ref }} (${{ github.sha }})"
