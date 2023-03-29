@@ -30,8 +30,11 @@ runs:
         AI_RESOURCE_ID: ${{ inputs.application-insights-resource-id }}
       run: |
         $params = @{
-            ReleaseName = $Env:RELEASE_NAME ? $Env:RELEASE_NAME : 'Run #${{ github.run_number }}'
-            ReleaseProperties = @{ 'Workflow' = '${{ github.workflow }}'; 'Commit SHA' = '${{ github.sha }}' }
             ApplicationInsightsResourceId = $Env:AI_RESOURCE_ID
+            ReleaseName = $Env:RELEASE_NAME ? $Env:RELEASE_NAME : 'Run #${{ github.run_number }}'
+            ReleaseProperties = @{
+              'Workflow' = '${{ github.workflow }}'
+              'Commit SHA' = '${{ github.sha }}'
+            }
         }
         Add-ReleaseAnnotation @params
