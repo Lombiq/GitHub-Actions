@@ -27,10 +27,11 @@ runs:
       env:
         # Might contain user input so should go via an env var for security.
         RELEASE_NAME: ${{ inputs.release-name }}
+        AI_RESOURCE_ID: ${{ inputs.application-insights-resource-id }}
       run: |
         $params = @{
-            ApplicationInsightsResourceId = '${{ inputs.application-insights-resource-id }}'
             ReleaseName = $Env:RELEASE_NAME ? $Env:RELEASE_NAME : 'Run #${{ github.run_number }}'
             ReleaseProperties = @{ 'Workflow' = '${{ github.workflow }}'; 'Commit SHA' = '${{ github.sha }}' }
+            ApplicationInsightsResourceId = $Env:AI_RESOURCE_ID
         }
         Add-ReleaseAnnotation @params
