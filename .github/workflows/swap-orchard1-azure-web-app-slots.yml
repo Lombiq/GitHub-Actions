@@ -59,12 +59,14 @@ on:
       maintenance-host-name:
         required: false
         type: string
-        description: TBD
+        description: >
+          The hostname of the Orchard 1-based application that runs a maintenance based on the Multi Tenancy feature
+          (https://github.com/Lombiq/Hosting-Multi-Tenancy#writing-maintenance-providers).
       maintenance-batch-size:
         required: false
         type: string
         default: "0"
-        description: TBD
+        description: The batch size of the maintenance.
 
 jobs:
   swap-azure-web-app-slots:
