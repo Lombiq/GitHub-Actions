@@ -1,5 +1,8 @@
 name: Deploy Orchard 1 to Azure App Service
 
+concurrency:
+    group: AzureDeployApp
+
 on:
   workflow_call:
     secrets:

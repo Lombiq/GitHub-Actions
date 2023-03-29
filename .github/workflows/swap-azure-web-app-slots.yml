@@ -1,5 +1,8 @@
 name: Swap Azure Web App Slots
 
+concurrency:
+    group: AzureSwapAppSlots
+
 on:
   workflow_call:
     secrets:

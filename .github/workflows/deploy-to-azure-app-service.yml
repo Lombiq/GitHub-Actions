@@ -1,5 +1,8 @@
 name: Deploy to Azure App Service
 
+concurrency:
+    group: AzureDeployApp
+
 on:
   workflow_call:
     secrets:

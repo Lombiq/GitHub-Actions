@@ -1,5 +1,8 @@
 name: Reset Azure Environment
 
+concurrency:
+    group: AzureResetEnvironment
+
 on:
   workflow_call:
     secrets:
