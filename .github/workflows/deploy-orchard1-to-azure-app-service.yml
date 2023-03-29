@@ -160,6 +160,11 @@ jobs:
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
 
+      # Give the App Slot some time to actually stop, otherwise the deployment might go wrong and the app won't start,
+      # even though the deployment succeeds without warnings or errors.
+      - name: Wait for App Slot to Stop
+        run: Start-Sleep -Seconds 30
+
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
         with:
