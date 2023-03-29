@@ -172,6 +172,7 @@ jobs:
         if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/LMBQ-105
         with:
+          release-name: 'Deploy #${{ github.run_number }} (GitHub Actions)'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start Web App Slot

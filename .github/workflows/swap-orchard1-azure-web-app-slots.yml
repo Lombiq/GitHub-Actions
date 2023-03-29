@@ -97,6 +97,7 @@ jobs:
         if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
+          release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} (GitHub Actions)'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start AfterSwap Maintenance on the Destination Slot
