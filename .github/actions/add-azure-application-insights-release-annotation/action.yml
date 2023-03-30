@@ -33,10 +33,10 @@ runs:
             ApplicationInsightsResourceId = $Env:AI_RESOURCE_ID
             ReleaseName = $Env:RELEASE_NAME ? $Env:RELEASE_NAME : 'Run #${{ github.run_number }} (GitHub Actions)'
             ReleaseProperties = @{
-              'Workflow' = '${{ github.workflow }}'
               'Commit branch' = '${{ github.head_ref }}'
               'Commit SHA' = '${{ github.sha }}'
-              'Run URL' = 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+              'Workflow name' = '${{ github.workflow }}'
+              'Workflow run URL' = 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
             }
         }
         Add-ReleaseAnnotation @params
