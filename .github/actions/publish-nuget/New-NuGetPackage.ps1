@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Creates a NuGet package from each project in the sln file in the current directory.
 .DESCRIPTION
@@ -30,6 +30,12 @@ foreach ($project in $projects)
     else
     {
         dotnet pack $project @Arguments
+    }
+
+    if ($LASTEXITCODE -ne 0)
+    {
+        Write-Output "::error::dotnet pack failed for the project $($project.FullName)."
+        exit 1
     }
 
     Pop-Location
