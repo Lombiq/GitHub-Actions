@@ -34,7 +34,7 @@ foreach ($project in $projects)
 
     if ($LASTEXITCODE -ne 0)
     {
-        Write-Error "dotnet pack failed for the project $($project.FullName)."
+        Write-Output "::error::dotnet pack failed for the project $($project.FullName)."
         exit 1
     }
 
