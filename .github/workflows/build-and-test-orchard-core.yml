@@ -195,8 +195,11 @@ jobs:
         with:
           directory: ${{ inputs.build-directory }}
 
-      - name: Enable Node corepack
+      - name: Enable Node.js corepack
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+      - name: 
+        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@issue/OSOE-593
 
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev

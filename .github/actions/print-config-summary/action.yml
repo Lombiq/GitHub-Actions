@@ -1,0 +1,12 @@
+name: Print summary of important configuration
+description: Contains .NET, Node.js, and pnpm versions, among others
+
+runs:
+  using: "composite"
+  steps:
+    - name: Write configuration to summary
+      shell: pwsh
+      run: |
+        "dotnet: $(dotnet --version)" >> $GITHUB_STEP_SUMMARY
+        "node  : $(node -v)" >> $GITHUB_STEP_SUMMARY
+        "pnpm  : $(pnpm -v)" >> $GITHUB_STEP_SUMMARY
