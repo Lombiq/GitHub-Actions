@@ -33,7 +33,6 @@ $buildSwitches = ConvertTo-Array @"
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
-    -maxCpuCount
     $($CreateBinaryLog ? '-binaryLogger:build.binlog' : '')
     $Switches
 "@
