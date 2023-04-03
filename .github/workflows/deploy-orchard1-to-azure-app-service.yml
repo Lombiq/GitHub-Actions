@@ -1,7 +1,7 @@
 name: Deploy Orchard 1 to Azure App Service
 
 concurrency:
-    group: AzureDeployApp
+  group: AzureDeployApp
 
 on:
   workflow_call:
@@ -130,70 +130,69 @@ jobs:
           treat-warnings-as-errors: ${{ inputs.build-treat-warnings-as-errors }}
           enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
           msbuild-switches: |
-            -maxCpuCount
             /t:Precompiled
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
-      # - name: Login to Azure
-      #   uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/LMBQ-105
-      #   env:
-      #     SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+      - name: Login to Azure
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/LMBQ-105
+        env:
+          SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
 
-      # - name: Initialize PowerShell modules
-      #   uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+      - name: Initialize PowerShell modules
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
-      # - name: Stop Web App Slot
-      #   run: |
-      #     Stop-AzureWebAppSlot `
-      #       -ResourceGroupName ${{ inputs.resource-group-name }} `
-      #       -WebAppName ${{ inputs.app-name }} `
-      #       -SlotName ${{ inputs.slot-name }}
+      - name: Stop Web App Slot
+        run: |
+          Stop-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
 
-      # # Give the App Slot some time to actually stop, otherwise the deployment might go wrong and the app won't start,
-      # # even though the deployment succeeds without warnings or errors.
-      # - name: Wait for App Slot to Stop
-      #   run: Start-Sleep -Seconds 30
+      # Give the App Slot some time to actually stop, otherwise the deployment might go wrong and the app won't start,
+      # even though the deployment succeeds without warnings or errors.
+      - name: Wait for App Slot to Stop
+        run: Start-Sleep -Seconds 30
 
-      # - name: Deploy to Azure App Service
-      #   uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
-      #   with:
-      #     app-name: ${{ inputs.app-name }}
-      #     slot-name: ${{ inputs.slot-name }}
-      #     publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-      #     package: build\Precompiled
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
+        with:
+          app-name: ${{ inputs.app-name }}
+          slot-name: ${{ inputs.slot-name }}
+          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+          package: build\Precompiled
 
-      # - name: Add Azure Application Insights Release Annotation
-      #   if: ${{ inputs.application-insights-resource-id != '' }}
-      #   uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/LMBQ-105
-      #   with:
-      #     release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
-      #     application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+      - name: Add Azure Application Insights Release Annotation
+        if: ${{ inputs.application-insights-resource-id != '' }}
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/LMBQ-105
+        with:
+          release-name: "Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}"
+          application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
-      # - name: Start Web App Slot
-      #   run: |
-      #     Start-AzureWebAppSlot `
-      #       -ResourceGroupName ${{ inputs.resource-group-name }} `
-      #       -WebAppName ${{ inputs.app-name }} `
-      #       -SlotName ${{ inputs.slot-name }}
+      - name: Start Web App Slot
+        run: |
+          Start-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
 
-      # - name: Test Web App Slot
-      #   run: |
-      #     Test-AzureWebApp `
-      #       -ResourceGroupName ${{ inputs.resource-group-name }} `
-      #       -WebAppName ${{ inputs.app-name }} `
-      #       -SlotName ${{ inputs.slot-name }}
+      - name: Test Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
 
-      # - name: Start AfterDeploy Maintenance on the Destination Slot
-      #   if: inputs.maintenance-host-name != ''
-      #   run: |
-      #     $maintenanceParameters = @{
-      #       HostName = '${{ inputs.maintenance-host-name }}'
-      #       UserName = '${{ secrets.MAINTENANCE_USER_NAME }}'
-      #       Password = '${{ secrets.MAINTENANCE_PASSWORD }}'
-      #       BatchSize = '${{ inputs.maintenance-batch-size }}'
-      #       MaintenanceName = '${{ inputs.slot-name }}AfterDeploy'
-      #     }
-      #     Start-Maintenance @maintenanceParameters
+      - name: Start AfterDeploy Maintenance on the Destination Slot
+        if: inputs.maintenance-host-name != ''
+        run: |
+          $maintenanceParameters = @{
+            HostName = '${{ inputs.maintenance-host-name }}'
+            UserName = '${{ secrets.MAINTENANCE_USER_NAME }}'
+            Password = '${{ secrets.MAINTENANCE_PASSWORD }}'
+            BatchSize = '${{ inputs.maintenance-batch-size }}'
+            MaintenanceName = '${{ inputs.slot-name }}AfterDeploy'
+          }
+          Start-Maintenance @maintenanceParameters
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
