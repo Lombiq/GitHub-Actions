@@ -5,11 +5,8 @@ runs:
   using: "composite"
   steps:
     - name: Write configuration to summary
-      shell: bash
+      shell: pwsh
       run: |
-        echo "### dotnet" >> $GITHUB_STEP_SUMMARY
-        dotnet --version >> $GITHUB_STEP_SUMMARY
-        echo "### node" >> $GITHUB_STEP_SUMMARY
-        node -v >> $GITHUB_STEP_SUMMARY
-        echo "### pnpm" >> $GITHUB_STEP_SUMMARY
-        pnpm -v >> $GITHUB_STEP_SUMMARY
+        "### dotnet: $(dotnet --version)" >> $env:GITHUB_STEP_SUMMARY
+        "### node  : $(node -v)" >> $env:GITHUB_STEP_SUMMARY
+        "### pnpm  : $(pnpm -v)" >> $env:GITHUB_STEP_SUMMARY
