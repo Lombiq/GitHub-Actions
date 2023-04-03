@@ -130,6 +130,7 @@ jobs:
           treat-warnings-as-errors: ${{ inputs.build-treat-warnings-as-errors }}
           enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
           msbuild-switches: |
+            -maxCpuCount
             /t:Precompiled
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
