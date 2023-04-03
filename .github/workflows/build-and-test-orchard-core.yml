@@ -199,11 +199,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       - name: Print configuration summary
-        shell: pwsh
-        run: |
-          "dotnet: $(dotnet --version)" >> $GITHUB_STEP_SUMMARY
-          "node  : $(node -v)" >> $GITHUB_STEP_SUMMARY
-          "pnpm  : $(pnpm -v)" >> $GITHUB_STEP_SUMMARY
+        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@issue/OSOE-593
 
       #- name: Build and Static Code Analysis
       #  uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
