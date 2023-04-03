@@ -7,6 +7,11 @@ runs:
     - name: Write configuration to summary
       shell: pwsh
       run: |
-        "### dotnet: $(dotnet --version)" >> $env:GITHUB_STEP_SUMMARY
-        "### node  : $(node -v)" >> $env:GITHUB_STEP_SUMMARY
-        "### pnpm  : $(pnpm -v)" >> $env:GITHUB_STEP_SUMMARY
+        $toolVersions = @"
+          | Tool | Version |
+          | ---- | ------- |
+          | dotnet | $(dotnet --version) |
+          |  node  | $(node -v) |
+          |  pnpm  | $(pnpm -v) |
+        "@
+        $toolVersions >> $env:GITHUB_STEP_SUMMARY
