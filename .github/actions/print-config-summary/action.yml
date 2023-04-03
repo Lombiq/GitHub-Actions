@@ -5,6 +5,7 @@ runs:
   using: "composite"
   steps:
     - name: Write configuration to summary
+      shell: bash
       run: |
         echo "### dotnet" >> $GITHUB_STEP_SUMMARY
         dotnet --version >> $GITHUB_STEP_SUMMARY
