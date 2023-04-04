@@ -42,5 +42,7 @@ Get-ChildItem $testDirectory.Path -Recurse |
             New-Item -Type Directory -Path $destinationDirectory
         }
 
-        Copy-Item -Path $PSItem.FullName -Destination $destinationDirectory
+        $sanitizedName = $PSItem.Name.Replace(':', '_')
+        $destinationPath = Join-Path -Path $destinationDirectory -ChildPath $sanitizedName
+        Copy-Item -Path $PSItem.FullName -Destination $destinationPath
     }
