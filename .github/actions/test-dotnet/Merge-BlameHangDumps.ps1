@@ -4,8 +4,6 @@ param ($Directory, $Configuration)
 $rootDirectory = Resolve-Path $Directory
 $blameHangDumpsName = 'BlameHangDumps'
 $dumpDirectory = New-Item -Type Directory -Path $rootDirectory -Name $blameHangDumpsName
-$testDirectoryPath = Join-Path $Directory 'test'
-$testDirectory = (Test-Path -Path $testDirectoryPath) ? (Resolve-Path $testDirectoryPath) : $rootDirectory
 
 # Save dotnet --info output.
 dotnet --info *> (Join-Path -Path $dumpDirectory.FullName -ChildPath 'dotnet.info')
