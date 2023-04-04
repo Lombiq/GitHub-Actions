@@ -39,7 +39,7 @@ Get-ChildItem $testDirectory.Path -Recurse |
 
         # The artifact directory can contain directories, that have ":" in the name of them on Ubuntu. However, this
         # causes an error in "actions/upload-artifact@v3.1.1".
-        $destinationDirectory = (Join-Path -Path $dumpDirectory.FullName -ChildPath $relativePath) -replace ':', '_'
+        $destinationDirectory = (Join-Path -Path $dumpDirectory.FullName -ChildPath $relativePath) -replace 't', 'X'
         if (-not (Test-Path -Path $destinationDirectory))
         {
             New-Item -Type Directory -Path $destinationDirectory
