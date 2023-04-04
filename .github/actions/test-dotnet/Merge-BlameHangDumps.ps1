@@ -4,7 +4,7 @@ param ($Directory, $Configuration)
 $rootDirectory = Resolve-Path $Directory
 $blameHangDumpsName = 'BlameHangDumps'
 $dumpDirectory = New-Item -Type Directory -Path $rootDirectory -Name $blameHangDumpsName
-$testDirectoryPath = Join-Path $Directory 'test'
+$testDirectoryPath = Join-Path $Directory 'testTEST'
 $testDirectory = (Test-Path -Path $testDirectoryPath) ? (Resolve-Path $testDirectoryPath) : $rootDirectory
 
 # Save dotnet --info output.
@@ -39,7 +39,7 @@ Get-ChildItem $testDirectory.Path -Recurse |
 
         # The artifact directory can contain directories, that have ":" in the name of them on Ubuntu. However, this
         # causes an error in "actions/upload-artifact@v3.1.1".
-        $destinationDirectory = (Join-Path -Path $dumpDirectory.FullName -ChildPath $relativePath) -replace '(', 'X'
+        $destinationDirectory = (Join-Path -Path $dumpDirectory.FullName -ChildPath $relativePath) -replace ':', '_'
         if (-not (Test-Path -Path $destinationDirectory))
         {
             New-Item -Type Directory -Path $destinationDirectory
