@@ -42,7 +42,11 @@ Get-ChildItem $testDirectory.Path -Recurse |
             New-Item -Type Directory -Path $destinationDirectory
         }
 
-        $sanitizedName = $PSItem.Name.Replace(':', '_')
-        $destinationPath = Join-Path -Path $destinationDirectory -ChildPath $sanitizedName
-        Copy-Item -Path $PSItem.FullName -Destination $destinationPath
+        Get-ChildItem -Path $PSItem.FullName -Recurse | ForEach-Object {
+            if ($_.Name -like '*:*') {
+                $newName = $_.Name -replace ':', '_'
+                Rename-Item -Path $_.FullName -NewName $newName
+            }
+            Copy-Item -Path $_.FullName -Destination $destinationDirectory
+        }
     }
