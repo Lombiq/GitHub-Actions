@@ -42,13 +42,12 @@ Get-ChildItem $testDirectory.Path -Recurse |
             New-Item -Type Directory -Path $destinationDirectory
         }
 
-        Get-ChildItem -Path $PSItem.FullName -Recurse |
-            ForEach-Object {
-                if ($PSItem.Name -like '*:*')
-                {
-                    $newName = $PSItem.Name -replace ':', '_'
-                    Rename-Item -Path $PSItem.FullName -NewName $newName
-                }
-                Copy-Item -Path $PSItem.FullName -Destination $destinationDirectory
+        Get-ChildItem -Path $PSItem.FullName -Recurse | ForEach-Object {
+            if ($PSItem.Name -like '*:*')
+            {
+                $newName = $PSItem.Name -replace ':', '_'
+                Rename-Item -Path $PSItem.FullName -NewName $newName
             }
+            Copy-Item -Path $PSItem.FullName -Destination $destinationDirectory
+        }
     }
