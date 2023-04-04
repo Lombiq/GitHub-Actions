@@ -214,7 +214,7 @@ jobs:
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
 
       - name: Print configuration summary
-        if: always()
+        if: success() || failure()
         uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@issue/OSOE-593
 
       - name: Set up SQL Server
