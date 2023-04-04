@@ -9,9 +9,9 @@ runs:
       run: |
         $toolVersions = @"
           | Tool | Version |
-          | ---- | ------- |
+          | :--- | ------: |
           | dotnet | $(dotnet --version) |
-          |  node  | $(node -v) |
-          |  pnpm  | $(pnpm -v) |
+          | node | $(node -v) |
+          | pnpm | $(pnpm -v) |
         "@
         $toolVersions >> $env:GITHUB_STEP_SUMMARY
