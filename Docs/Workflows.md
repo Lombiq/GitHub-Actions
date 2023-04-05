@@ -201,6 +201,8 @@ jobs:
 
 If the app uses the [`Lombiq.Hosting.BuildVersionDisplay` module](https://github.com/Lombiq/Hosting-Build-Version-Display), then the workflow plays along with it: The module will display a link to the run.
 
+This workflow has an alternate version (_deploy-orchard1-to-azure-app-service.yml_) designed for Orchard 1-based applications.
+
 ## Validate Pull Request workflow
 
 Validates pull requests for various criteria:
@@ -268,7 +270,7 @@ jobs:
 
 ## Reset Azure Environment workflow
 
-This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Example _reset-azure-environment.yml_:
+This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Optionally, [release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) can be added to the corresponding Azure Application Insights resource. Example _reset-azure-environment.yml_:
 
 ```yaml
 name: Reset Azure Environment
@@ -316,6 +318,8 @@ jobs:
 ```
 
 To restrict who can run the swap workflow, we recommend putting it into its own repository. [GitHub environments](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) would be better, because they not only provide [a nice display of what's currently deployed where](https://docs.github.com/en/actions/deployment/managing-your-deployments/viewing-deployment-history), but allow secrets specific to environments like staging/production, and also can have required reviewers (i.e. not everyone is able to run a swap who has write access to the repository). However, this latter one is [only available under the Enterprise plan](https://github.com/orgs/community/discussions/26262). (Branch protection rules are not a suitable substitute.)
+
+This workflow has an alternate version (_swap-orchard1-azure-web-app-slots.yml_) designed for Orchard 1-based applications.
 
 ## Post Pull Request Checks Automation
 
