@@ -1,5 +1,8 @@
 name: Deploy to Azure App Service
 
+concurrency:
+  group: AzureDeployApp
+
 on:
   workflow_call:
     secrets:
@@ -197,8 +200,7 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Deploy to Azure App Service
-        # v2.2.4
-        uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644
+        uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
         with:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
@@ -208,6 +210,7 @@ jobs:
       - name: Add Azure Application Insights Release Annotation
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
+          release-name: "Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}"
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start Web App Slot
