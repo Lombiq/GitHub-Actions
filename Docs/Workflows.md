@@ -118,6 +118,7 @@ on:
 
 jobs:
   publish-nuget:
+    name: Publish to NuGet
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     secrets:
       apikey: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
@@ -132,6 +133,7 @@ It takes one non-optional secret parameter, `apikey`, the organization API key f
 ```yaml
 jobs:
   publish-nuget:
+    name: Publish to NuGet
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
@@ -161,6 +163,7 @@ on:
 
 jobs:
   validate-pull-request:
+    name: Validate Pull Request
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-submodule-pull-request.yml@dev
     with:
       repository: Lombiq/Hastlayer-SDK
@@ -219,6 +222,7 @@ on:
 
 jobs:
   validate-pull-request:
+    name: Validate Pull Request
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@dev
 ```
 
@@ -254,6 +258,7 @@ on:
 
 jobs:
   create-jira-issues-for-community-activities:
+    name: Create Jira issues for community activities
     uses: Lombiq/GitHub-Actions/.github/workflows/create-jira-issues-for-community-activities.yml@dev
     secrets:
       JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
