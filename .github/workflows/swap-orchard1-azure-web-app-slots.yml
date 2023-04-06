@@ -8,6 +8,10 @@ on:
     secrets:
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL:
         required: true
+      MAINTENANCE_USER_NAME:
+        required: false
+      MAINTENANCE_PASSWORD:
+        required: false
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
@@ -47,11 +51,22 @@ on:
         type: string
         description: Name of the resource group.
       application-insights-resource-id:
-        required: true
+        required: false
         type: string
         description: >
           ID of the Application Insights resource that the release annotation for the swap should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
+      maintenance-host-name:
+        required: false
+        type: string
+        description: >
+          The hostname of the Orchard 1-based application that runs a maintenance based on the Multi Tenancy feature
+          (https://github.com/Lombiq/Hosting-Multi-Tenancy#writing-maintenance-providers).
+      maintenance-batch-size:
+        required: false
+        type: string
+        default: "0"
+        description: The batch size of the maintenance.
 
 jobs:
   swap-azure-web-app-slots:
@@ -70,33 +85,32 @@ jobs:
       - name: Initialize PowerShell modules
         uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
-      - name: Test Source Web App Slot
-        run: |
-          Test-AzureWebApp `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.source-slot-name }}
-
       - name: Swap Web App Slots
         run: |
-          Switch-AzWebAppSlot `
+          Switch-AzureWebAppSlots `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -Name ${{ inputs.app-name }} `
+            -WebAppName ${{ inputs.app-name }} `
             -SourceSlotName ${{ inputs.source-slot-name }} `
             -DestinationSlotName ${{ inputs.destination-slot-name }}
 
       - name: Add Azure Application Insights Release Annotation
+        if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: "Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}"
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
-      - name: Test Destination Web App Slot
+      - name: Start AfterSwap Maintenance on the Destination Slot
+        if: inputs.maintenance-host-name != ''
         run: |
-          Test-AzureWebApp `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.destination-slot-name }}
+          $maintenanceParameters = @{
+            HostName = '${{ inputs.maintenance-host-name }}'
+            UserName = '${{ secrets.MAINTENANCE_USER_NAME }}'
+            Password = '${{ secrets.MAINTENANCE_PASSWORD }}'
+            BatchSize = '${{ inputs.maintenance-batch-size }}'
+            MaintenanceName = '${{ inputs.destination-slot-name }}AfterSwap'
+          }
+          Start-Maintenance @maintenanceParameters
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
