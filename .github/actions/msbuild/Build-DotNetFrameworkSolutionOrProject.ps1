@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $TreatWarningsAsErrors,
@@ -15,12 +15,18 @@ nuget restore $SolutionOrProject
 
 Write-Output ".NET version number: $Version"
 
+# Notes on build switches that aren't self-explanatory:
+# - -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
+# - -warnAsMessage:MSB3026 is also to prevent random locks along the lines of "warning MSB3026: Could not copy dlls
+#   errors." from breaking the build (since we treat warnings as errors).
+
 $commonSwitches = ConvertTo-Array @"
     --verbosity:$Verbosity
     -p:RunAnalyzersDuringBuild=$EnableCodeAnalysis
     -p:Retries=4
     -p:RetryDelayMilliseconds=1000
     -p:Version=$Version
+    -p:NoWarn=MSB3884
 "@
 
 if ($TreatWarningsAsErrors -eq 'true')
@@ -51,11 +57,12 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output '::endgroup::'
 }
 
-# -p:Retries and -p:RetryDelayMilliseconds are used to retry builds when they fail due to random locks.
-
+# An empty -maxCpuCount will use all available cores, see:
+# https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference.
 $buildSwitches = $commonSwitches + (ConvertTo-Array @"
     -p:Configuration=Release
     -restore
+    -maxCpuCount
     $Switches
 "@)
 
