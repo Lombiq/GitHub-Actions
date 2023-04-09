@@ -74,6 +74,11 @@ runs:
             Sort-Object -Descending
           $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
 
+          Write-Output "Tags: $(git tag)"
+          Write-Output "Version Tags: $(git tag | ? { $_ -match '^v?\d+\.\d+\.\d+$' })"
+          Write-Output "Versions: $($tags)"
+          Write-Output "Current Version: $current"
+
           $next = New-Object "System.Version" $current.Major, $current.Minor, ($current.Build + 1)
 
           $version = "$next-preview-$Env:GITHUB_RUN_NUMBER"
