@@ -68,16 +68,15 @@ runs:
             }
         }
         if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
-          $tags = git tag |
-            ? { $_ -match '^v?\d+\.\d+\.\d+$' } |
-            % { [version]($_.TrimStart("v")) } |
+          # We have to use the CLI to query the remote repository for tags, because `gh tag` only returns the current
+          # tag in the runner, which will never match in this scenario.
+          $tags = gh api "/repos/$Env:GITHUB_REPOSITORY/git/refs/tags" |
+            ConvertFrom-Json |
+            ForEach-Object { $PSItem.ref -replace '^refs/tags/v', '' } |
+            Where-Object { $PSItem -match '^\d+\.\d+\.\d+$' } |
+            ForEach-Object { [version]$PSItem } |
             Sort-Object -Descending
           $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
-
-          Write-Output "Tags: $(git tag)"
-          Write-Output "Version Tags: $(git tag | ? { $_ -match '^v?\d+\.\d+\.\d+$' })"
-          Write-Output "Versions: $($tags)"
-          Write-Output "Current Version: $current"
 
           $next = New-Object "System.Version" $current.Major, $current.Minor, ($current.Build + 1)
 
