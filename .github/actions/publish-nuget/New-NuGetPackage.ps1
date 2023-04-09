@@ -20,6 +20,20 @@ $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-I
 
 foreach ($project in $projects)
 {
+    $projectFile = [xml](Get-Content $project)
+    $isPackable = $projectFile.SelectSingleNode('//PropertyGroup/IsPackable').InnerText
+
+    # Silently skip project if the project file has <IsPackable>false</IsPackable>.
+    if ($isPackable -like '*false*') { continue }
+
+    # Warn and skip if the project doesn't specify a package license file.
+    if (-not $isPackable -and -not $projectFile.SelectSingleNode('//PropertyGroup/PackageLicenseFile').InnerText)
+    {
+        Write-Output ("::warning file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
+            "have a <PackageLicenseFile> property. You can avoid this check by including the <IsPackable> property.")
+        continue
+    }
+
     Push-Location $project.Directory
 
     $nuspecFile = (Get-ChildItem *.nuspec).Name
