@@ -93,6 +93,7 @@ jobs:
           publish-version: ${{ inputs.publish-version }}
           nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_PAT }}
           API_KEY: ${{ secrets.API_KEY }}
 
       - name: Cancel Workflow on Failure

@@ -48,8 +48,6 @@ runs:
     - name: Setup NuGet Version
       id: setup
       shell: pwsh
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_PAT }}
       run: |
         $source = @'
         ${{ inputs.source }}
