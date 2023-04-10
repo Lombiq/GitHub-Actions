@@ -30,7 +30,7 @@ foreach ($project in $projects)
     if (-not $isPackable -and -not $projectFile.SelectSingleNode('//PropertyGroup/PackageLicenseFile').InnerText)
     {
         Write-Output ("::warning file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
-            "have a <PackageLicenseFile> property. You can avoid this check by including the <IsPackable> property.")
+            'have a <PackageLicenseFile> property. You can avoid this check by including the <IsPackable> property.')
         continue
     }
 
