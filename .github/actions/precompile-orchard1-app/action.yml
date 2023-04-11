@@ -14,13 +14,10 @@ inputs:
     description: >
       The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules are
       used.
-  directory:
+  checkout-path:
     required: false
     default: .
-    description: >
-      The absolute path to Orchard.proj's parent folder if a repository is not checked out in this action by using the
-      repository-path parameter, e.g., 'D:/a/Lombiq/Open-Source-Orchard-Extensions'. If the repository is checked out in
-      this action, then define the relative path to Orchard.proj if it's not in the repository root.
+    description: The optional checkout path for the repository, relative to the workspace.
   verbosity:
     required: false
     default: quiet
@@ -57,6 +54,7 @@ runs:
         repository: ${{ inputs.repository }}
         submodules: recursive
         token: ${{ inputs.token }}
+        path: ${{ inputs.checkout-path }}
 
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
@@ -65,12 +63,12 @@ runs:
     # action instead to be able to call the Precompiled target.
     - name: Restore NuGet packages
       shell: pwsh
-      run: nuget restore ${{ inputs.directory }}/${{ inputs.solution-path }}
+      run: nuget restore ${{ inputs.checkout-path }}/${{ inputs.solution-path }}
 
     - name: Publish Precompiled app
       uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
       with:
-        directory: ${{ inputs.directory }}
+        directory: ${{ inputs.checkout-path }}
         verbosity: ${{ inputs.verbosity }}
         treat-warnings-as-errors: ${{ inputs.treat-warnings-as-errors }}
         enable-code-analysis: ${{ inputs.enable-code-analysis }}
