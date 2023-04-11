@@ -1,0 +1,81 @@
+name: Precompile Orchard 1 application
+description: Publishes an Orchard 1 application using the Precompiled build target through Orchard.proj.
+
+inputs:
+  repository:
+    required: false
+    default: ""
+    description: >
+      The GitHub path of the repository, e.g., 'Lombiq/Open-Source-Orchard-Extensions'. When provided, the repository
+      will be checked out.
+  token:
+    required: false
+    default: ${{ github.token }}
+    description: >
+      The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules are
+      used.
+  directory:
+    required: false
+    default: .
+    description: >
+      The absolute path to Orchard.proj's parent folder if a repository is not checked out in this action by using the
+      repository-path parameter, e.g., 'D:/a/Lombiq/Open-Source-Orchard-Extensions'. If the repository is checked out in
+      this action, then define the relative path to Orchard.proj if it's not in the repository root.
+  verbosity:
+    required: false
+    default: quiet
+    description: Verbosity parameter for msbuild.
+  treat-warnings-as-errors:
+    required: false
+    default: "true"
+    description: If set to "true", warnings produced during the build will be treated as errors and fail the build.
+  enable-code-analysis:
+    required: false
+    default: "true"
+    description: If set to "true", static code analysis is enabled during the build.
+  publish-version:
+    required: false
+    default: "1.${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}"
+    description: The value given to `msbuild`'s `-Version` switch.
+  msbuild-switches:
+    required: false
+    default: ""
+    description: >
+      Additional command line switches to be passed to `msbuild`. You must split these into multiple lines, even the
+      parameter value.
+  solution-path:
+    required: true
+    description: The path to the solution file, relative to Orchard.proj.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Clone repository
+      if: inputs.repository != ''
+      uses: actions/checkout@v3.1.0
+      with:
+        repository: ${{ inputs.repository }}
+        submodules: recursive
+        token: ${{ inputs.token }}
+
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+    # Calling nuget restore separately on the actual solution, because we're passing Orchard.proj to the msbuild
+    # action instead to be able to call the Precompiled target.
+    - name: Restore NuGet packages
+      run: nuget restore ${{ inputs.directory }}/${{ inputs.solution-or-project-path }}
+
+    - name: Publish Precompiled app
+      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+      with:
+        directory: ${{ inputs.directory }}
+        verbosity: ${{ inputs.verbosity }}
+        treat-warnings-as-errors: ${{ inputs.treat-warnings-as-errors }}
+        enable-code-analysis: ${{ inputs.enable-code-analysis }}
+        publish-version: ${{ inputs.publish-version }}
+        solution-or-project-path: Orchard.proj
+        msbuild-switches: |
+          /t:Precompiled
+          /p:Solution=${{ inputs.solution-or-project-path }}
+          ${{ inputs.msbuild-switches }}
