@@ -64,6 +64,7 @@ runs:
     # Calling nuget restore separately on the actual solution, because we're passing Orchard.proj to the msbuild
     # action instead to be able to call the Precompiled target.
     - name: Restore NuGet packages
+      shell: pwsh
       run: nuget restore ${{ inputs.directory }}/${{ inputs.solution-or-project-path }}
 
     - name: Publish Precompiled app
