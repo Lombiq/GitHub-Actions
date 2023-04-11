@@ -65,7 +65,7 @@ runs:
     # action instead to be able to call the Precompiled target.
     - name: Restore NuGet packages
       shell: pwsh
-      run: nuget restore ${{ inputs.directory }}/${{ inputs.solution-or-project-path }}
+      run: nuget restore ${{ inputs.directory }}/${{ inputs.solution-path }}
 
     - name: Publish Precompiled app
       uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
@@ -78,5 +78,5 @@ runs:
         solution-or-project-path: Orchard.proj
         msbuild-switches: |
           /t:Precompiled
-          /p:Solution=${{ inputs.solution-or-project-path }}
+          /p:Solution=${{ inputs.solution-path }}
           ${{ inputs.msbuild-switches }}
