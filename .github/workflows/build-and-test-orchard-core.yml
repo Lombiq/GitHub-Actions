@@ -195,7 +195,7 @@ jobs:
         with:
           directory: ${{ inputs.build-directory }}
 
-      - name: Enable Node corepack
+      - name: Enable Node.js corepack
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       - name: Build and Static Code Analysis
@@ -212,6 +212,10 @@ jobs:
           create-binary-log: ${{ inputs.build-create-binary-log }}
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Print configuration summary
+        if: success() || failure()
+        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
