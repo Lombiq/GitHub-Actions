@@ -18,6 +18,10 @@ inputs:
     required: false
     default: .
     description: The optional checkout path for the repository, relative to the workspace.
+  checkout-ref:
+    required: false
+    default: ""
+    description: The branch, tag or commit SHA to checkout.
   verbosity:
     required: false
     default: quiet
@@ -52,6 +56,7 @@ runs:
       uses: actions/checkout@v3.1.0
       with:
         repository: ${{ inputs.repository }}
+        ref: ${{ inputs.checkout-ref }}
         submodules: recursive
         token: ${{ inputs.token }}
         path: ${{ inputs.checkout-path }}
