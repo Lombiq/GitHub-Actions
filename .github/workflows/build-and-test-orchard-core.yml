@@ -11,11 +11,11 @@ on:
 
     inputs:
       cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        description: If "true", will cancel the current workflow run with all jobs if this workflow fails.
         required: false
         type: string
         default: "true"
-      # This needs to be stringified JSON because inputs don't support arrays, see
+      # This needs to be stringified JSON, because inputs don't support arrays, see
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
         required: false
@@ -68,15 +68,15 @@ on:
         type: string
         default: "false"
         description: >
-          If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
-          packages, but negligible or even slower if you only have a handful.
+          If "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet packages,
+          but negligible or even slower if you only have a handful.
       build-enable-npm-caching:
         required: false
         type: string
         default: "false"
         description: >
-          If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
-          but negligible or even slower if you only have a handful.
+          If "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages, but
+          negligible or even slower if you only have a handful.
       build-cache-version:
         required: false
         type: string
@@ -101,20 +101,25 @@ on:
         description: >
           Duration in days after which the artifact of the build's binary log (if any) will expire. See
           https://github.com/actions/upload-artifact#retention-period for more details.
+      print-config-summary:
+        required: false
+        type: string
+        default: "false"
+        description: If "true", prints an overview of the versions of several tools used during the workflow execution.
       set-up-sql-server:
         required: false
         type: string
         default: "false"
         description: >
-          If set to "true", SQL Server Express will be installed and started. This is necessary if the app's UI tests
-          connect to an MS SQL Server database.
+          If "true", SQL Server Express will be installed and started. This is necessary if the app's UI tests connect
+          to an MS SQL Server database.
       set-up-azurite:
         required: false
         type: string
         default: "false"
         description: >
-          If set to "true", the Azurite Azure Blob Storage emulator will be installed and started. This is necessary if
-          the app's UI tests connect to Azure Blob Storage for file storage.
+          If "true", the Azurite Azure Blob Storage emulator will be installed and started. This is necessary if the
+          app's UI tests connect to Azure Blob Storage for file storage.
       test-disable:
         required: false
         type: string
@@ -158,17 +163,16 @@ on:
         type: boolean
         default: true
         description: >
-          When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
-          the same version of a given package is used in all projects.
+          If "true", it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e. the same
+          version of a given package is used in all projects.
       warnings-as-errors:
         required: false
         type: string
         default: "true"
         description: >
-          Whether compiler warnings should be treated as errors during the build process. The default value is "true",
-          the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
-          to "false", the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the
-          build to fail.
+          If "true" (the default), compiler warnings will be treated as errors during the build process. The compiler
+          flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set to "false",
+          the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the build to fail.
 
 jobs:
   build-and-test:
@@ -214,7 +218,7 @@ jobs:
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
 
       - name: Print configuration summary
-        if: success() || failure()
+        if: inputs.print-config-summary == 'true' && (success() || failure())
         uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
 
       - name: Set up SQL Server
