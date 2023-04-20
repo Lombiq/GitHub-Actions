@@ -161,7 +161,7 @@ on:
       verify-dotnet-consolidation:
         required: false
         type: boolean
-        default: "true"
+        default: true
         description: >
           If "true", it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e. the same
           version of a given package is used in all projects.
