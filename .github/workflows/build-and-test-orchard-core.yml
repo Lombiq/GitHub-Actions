@@ -101,6 +101,11 @@ on:
         description: >
           Duration in days after which the artifact of the build's binary log (if any) will expire. See
           https://github.com/actions/upload-artifact#retention-period for more details.
+      print-config-summary:
+        required: false
+        type: string
+        default: "false"
+        description: If "true", prints an overview of the versions of several tools used during the workflow execution.
       set-up-sql-server:
         required: false
         type: string
@@ -214,7 +219,7 @@ jobs:
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
 
       - name: Print configuration summary
-        if: success() || failure()
+        if: inputs.print-config-summary == 'true' && (success() || failure())
         uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
 
       - name: Set up SQL Server
