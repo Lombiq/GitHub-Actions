@@ -202,7 +202,142 @@ jobs:
       - name: Enable Node.js corepack
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
-      - name: Build and Static Code Analysis
+      - name: Build and Static Code Analysis 1
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration}}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.build-solution-path }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Build and Static Code Analysis 2
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration}}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.build-solution-path }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Build and Static Code Analysis 3
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration}}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.build-solution-path }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Build and Static Code Analysis 4
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration}}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.build-solution-path }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Build and Static Code Analysis 5
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration}}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.build-solution-path }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Build and Static Code Analysis 6
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration}}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.build-solution-path }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Build and Static Code Analysis 7
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration}}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.build-solution-path }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Build and Static Code Analysis 8
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration}}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.build-solution-path }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Build and Static Code Analysis 9
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration}}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.build-solution-path }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
+          warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Build and Static Code Analysis 10
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
           directory: ${{ inputs.build-directory }}
@@ -220,29 +355,6 @@ jobs:
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
         uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
-
-      - name: Set up SQL Server
-        if: inputs.set-up-sql-server == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
-
-      - name: Set up Azurite
-        if: inputs.set-up-azurite == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
-        with:
-          location: ${{ inputs.build-directory}}
-
-      - name: Tests
-        if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
-        with:
-          blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
-          build-directory: ${{ inputs.build-directory }}
-          solution-path: ${{ inputs.build-solution-path }}
-          test-verbosity: ${{ inputs.build-verbosity }}
-          test-filter: ${{ inputs.test-filter }}
-          ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
-          ui-test-artifact-retention-days: ${{ inputs.ui-test-artifact-retention-days }}
-          xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
