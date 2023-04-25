@@ -181,6 +181,7 @@ jobs:
     strategy:
       matrix:
         machine-type: ${{ fromJson(inputs.machine-types) }}
+        run_index: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] # Runs the job 10 times
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
