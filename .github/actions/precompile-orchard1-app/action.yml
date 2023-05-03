@@ -64,8 +64,8 @@ runs:
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
-    # Calling nuget restore separately on the actual solution, because we're passing Orchard.proj to the msbuild
-    # action instead to be able to call the Precompiled target.
+    # Calling nuget restore separately on the actual solution, because we're passing Orchard.proj to the msbuild action
+    # instead to be able to call the Precompiled target on it.
     - name: Restore NuGet packages
       shell: pwsh
       run: nuget restore ${{ inputs.checkout-path }}/${{ inputs.solution-path }}
