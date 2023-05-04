@@ -16,6 +16,7 @@ In addition to the below short explanations, check out the inline documentation 
 - `install-dotnet-tool`: Installs a tool globally into the .NET CLI by its name and version number.
 - `msbuild`: Builds a .NET Framework project or solution in the given directory with optional static code analysis.
 - `publish-nuget`: Publishes the content of the current directory as a NuGet package.
+- `precompile-orchard1-app`: Publishes an Orchard 1 application using the Precompiled build target through Orchard.proj. Also provides optional parameters for checking out the repository at a specific ref and destination path.
 - `setup-azurite`: Sets up the [Azurite Azure Blob Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite) via NPM.
 - `setup-dotnet`: Sets up the .NET SDK.
 - `setup-sql-server`: Sets up SQL Server with Lombiq-recommended defaults.
