@@ -27,6 +27,7 @@ cspell
 darkmode
 datatable
 DBs
+Deconstruct
 dotnet
 Elasticsearch
 EULA
@@ -128,6 +129,7 @@ utf
 versionable
 versioning
 viewmodel
+vuedraggable
 vuejs
 walkthrough
 warnaserror
