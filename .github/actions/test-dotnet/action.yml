@@ -102,6 +102,7 @@ runs:
     # after retries.
     # The same is true for the next step as well.
     - name: Merge FailureDumps
+      id: merge-failure-dumps
       shell: pwsh
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
@@ -123,8 +124,7 @@ runs:
 
     - name: Upload BlameHangDumps
       uses: actions/upload-artifact@v3.1.1
-      # We don't need additional conditions, because of the "if-no-files-found" setting.
-      if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != ''
+      if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != '' && steps.merge-failure-dumps.outputs.dump-count != 0
       with:
         name: ui-test-blame-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/BlameHangDumps/
