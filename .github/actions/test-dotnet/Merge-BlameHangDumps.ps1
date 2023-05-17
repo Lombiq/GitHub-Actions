@@ -9,9 +9,11 @@ $testDirectory = (Test-Path -Path $testDirectoryPath) ? (Resolve-Path $testDirec
 $dumpCount = (Get-ChildItem -Filter '*_hangdump.dmp' -Recurse | Measure-Object).Count
 Set-GitHubOutput 'dump-count' $dumpCount
 
+Write-Output "dump-count = ($dumpCount)"
+
 if ($dumpCount -eq 0)
 {
-    # No dump files found. Nothing to do.
+    # No dump files were found. Nothing to do.
     Exit
 }
 

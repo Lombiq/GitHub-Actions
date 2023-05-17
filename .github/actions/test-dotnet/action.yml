@@ -102,7 +102,6 @@ runs:
     # after retries.
     # The same is true for the next step as well.
     - name: Merge FailureDumps
-      id: merge-failure-dumps
       shell: pwsh
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
@@ -118,13 +117,14 @@ runs:
         retention-days: ${{ inputs.ui-test-artifact-retention-days }}
 
     - name: Merge BlameHangDumps
+      id: merge-blame-hang-dumps
       shell: pwsh
       if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != ''
       run: Merge-BlameHangDumps -Directory "${{ inputs.build-directory }}" -Configuration "${{ inputs.test-configuration }}"
 
     - name: Upload BlameHangDumps
       uses: actions/upload-artifact@v3.1.1
-      if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != '' && steps.merge-failure-dumps.outputs.dump-count != 0
+      if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != '' && steps.merge-blame-hang-dumps.outputs.dump-count != 0
       with:
         name: ui-test-blame-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/BlameHangDumps/
