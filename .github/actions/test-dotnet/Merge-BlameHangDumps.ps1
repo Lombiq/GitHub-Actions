@@ -3,9 +3,19 @@ param ($Directory, $Configuration)
 
 $rootDirectory = Resolve-Path $Directory
 $blameHangDumpsName = 'BlameHangDumps'
-$dumpDirectory = New-Item -Type Directory -Path $rootDirectory -Name $blameHangDumpsName
 $testDirectoryPath = Join-Path $Directory 'test'
 $testDirectory = (Test-Path -Path $testDirectoryPath) ? (Resolve-Path $testDirectoryPath) : $rootDirectory
+
+$dumpCount = (Get-ChildItem -Filter '*_hangdump.dmp' -Recurse | Measure-Object).Count
+Set-GitHubOutput 'dump-count' $dumpCount
+
+if ($dumpCount -eq 0)
+{
+    # No dump files were found. Nothing to do.
+    Exit
+}
+
+$dumpDirectory = New-Item -Type Directory -Path $rootDirectory -Name $blameHangDumpsName
 
 # Save dotnet --info output.
 dotnet --info *> (Join-Path -Path $dumpDirectory.FullName -ChildPath 'dotnet.info')
@@ -45,5 +55,5 @@ Get-ChildItem $testDirectory.Path -Recurse |
             New-Item -Type Directory -Path $destinationDirectory
         }
 
-        Copy-Item -Path $PSItem.FullName -Destination $destinationDirectory
+        Move-Item -Path $PSItem.FullName -Destination $destinationDirectory
     }
