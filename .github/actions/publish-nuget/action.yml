@@ -148,7 +148,7 @@ runs:
       # * NoWarn on NU5104 to not have warnings for prerelease dependencies, see:
       #   https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5104.
       # * -p:WarnOnPackingNonPackableProject=True will cause a build warning (converted to error) if we try to pack a
-      #   non-packagable project.
+      #   non-packable project.
       # * -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg are needed to generate symbol packages:
       #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
       # * p:EnablePackageValidation=true is for package validation, see:
