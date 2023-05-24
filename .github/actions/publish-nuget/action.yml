@@ -63,7 +63,8 @@ runs:
         if ($version -eq 'USE_GITHUB_REF_NAME') {
             $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
             if (!($version -match '^\d+\.\d+\.\d+(-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?)?$')) {
-                Write-Output "::error::`"v$version`" is invalid. The correct format is `"vM.N.O`" or `"vM.N.O-[alpha|beta|preview|rc]` with an optional `.X.<issue-code>` suffix"."
+                Write-Output "::error::`v$version` is invalid. The correct format is `vM.N.O` or `vM.N.O-[alpha|beta|preview|rc]` with an optional `.X.<issue-code>` suffix."
+
                 exit 1
             }
         }
