@@ -84,7 +84,7 @@ jobs:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Publish to NuGet
-        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/HAST-175
+        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
         with:
           source: ${{ inputs.source }}
           verbosity: ${{ inputs.verbosity }}
