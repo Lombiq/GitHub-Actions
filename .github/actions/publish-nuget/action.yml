@@ -87,21 +87,6 @@ runs:
         Write-Output "Target Version: $version"
         Set-GitHubOutput "publish-version" $version
 
-    - name: Add Source Link package
-      shell: bash
-      run: bash add-package.sh Microsoft.SourceLink.GitHub
-
-    - name: Update package manifest version
-      shell: pwsh
-      run: Update-ManifestVersion './' '${{ steps.setup.outputs.publish-version }}'
-
-    - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
-
-    - name: Install dependencies
-      shell: pwsh
-      run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
-
     - name: Actions prior to dotnet pack
       if: hashFiles('Invoke-BeforePack.ps1')
       shell: pwsh
@@ -131,7 +116,6 @@ runs:
         New-NuGetPackage @(
             "--configuration:Release",
             "--warnaserror",
-            "--no-restore",
             "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
