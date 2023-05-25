@@ -59,12 +59,10 @@ runs:
         transition: ${{ steps.initialize-jira-issue-parameters.outputs.transition }}
 
     - name: Remove Label
-      # Fork PR runs won't have permissions to remove labels.
-      if: steps.initialize-jira-issue-parameters.outputs.can-transition == 'true' && github.event.pull_request.head.repo.fork == false
-      # v1.1.1
-      uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
+      if: steps.initialize-jira-issue-parameters.outputs.can-transition == 'true'
+      # v2.0.0
+      uses: buildsville/add-remove-label@eeae411a9be2e173f2420e1644514edbecc4e835
       with:
         token: ${{ env.GITHUB_TOKEN }}
-        labels: |
-          resolve-jira-issue-if-checks-succeed
-          done-jira-issue-if-checks-succeed
+        labels: resolve-jira-issue-if-checks-succeed, done-jira-issue-if-checks-succeed
+        type: remove

@@ -37,9 +37,9 @@ runs:
 
     - name: Remove Label
       if: steps.check-mergeability.outputs.contains-label == 'true'
-      # v1.1.1
-      uses: mondeja/remove-labels-gh-action@9c39e92024101ccb2473aeee441d4923adf58089
+      # v2.0.0
+      uses: buildsville/add-remove-label@eeae411a9be2e173f2420e1644514edbecc4e835
       with:
         token: ${{ env.GITHUB_TOKEN }}
-        labels: |
-          merge-if-checks-succeed
+        labels: merge-if-checks-succeed
+        type: remove
