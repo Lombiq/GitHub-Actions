@@ -16,19 +16,31 @@
 
 param([array] $Arguments)
 
+# Create a temporary project file with the GetPropertyValue target to be able to retrieve MSBuild properties in a way
+# that Directory.Build.props files also take effect.
+$tempProjectFileContent = @"
+<Project>
+    <Target Name="GetPropertyValue">
+        <Message Text="$$(PropertyName)" />
+    </Target>
+</Project>
+"@
+$tempProjectFilePath = [System.IO.Path]::GetTempFileName() + ".proj"
+$tempProjectFileContent | Out-File -FilePath $tempProjectFilePath -Encoding utf8
+
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
 {
-    $projectFile = [xml](Get-Content $project)
-    $isPackable = $projectFile.SelectSingleNode('//PropertyGroup/IsPackable').InnerText
+    $isPackableProperty = dotnet msbuild $tempProjectFilePath /nologo /v:quiet /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue /p:PropertyName=IsPackable /p:CustomAfterMicrosoftCommonTargets=$project
+    $isPackable = [string]::IsNullOrEmpty($isPackableProperty) -or $isPackableProperty -eq "true"
 
     # Silently skip project if the project file has <IsPackable>false</IsPackable>.
     if ($isPackable -like '*false*') { continue }
 
     # Warn and skip if the project doesn't specify a package license file.
-    if (-not $isPackable -and -not $projectFile.SelectSingleNode('//PropertyGroup/PackageLicenseFile').InnerText)
-    {
+    $packageLicenseFileProperty = dotnet msbuild $tempProjectFilePath /nologo /v:quiet /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue /p:PropertyName=PackageLicenseFile /p:CustomAfterMicrosoftCommonTargets=$project
+    if (-not $isPackable -and [string]::IsNullOrEmpty($packageLicenseFileProperty)) {
         Write-Output ("::warning file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
             'have a <PackageLicenseFile> property. You can avoid this check by including the <IsPackable> property.')
         continue
@@ -54,3 +66,6 @@ foreach ($project in $projects)
 
     Pop-Location
 }
+
+# Delete the temporary project file.
+Remove-Item -Path $tempProjectFilePath
