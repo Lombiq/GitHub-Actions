@@ -87,6 +87,13 @@ runs:
         Write-Output "Target Version: $version"
         Set-GitHubOutput "publish-version" $version
 
+    - name: Enable Node corepack
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+    - name: Install dependencies
+      shell: pwsh
+      run: dotnet restore -p:NuGetBuild=true --verbosity ${{ inputs.verbosity }}
+
     - name: Actions prior to dotnet pack
       if: hashFiles('Invoke-BeforePack.ps1')
       shell: pwsh
@@ -116,6 +123,7 @@ runs:
         New-NuGetPackage @(
             "--configuration:Release",
             "--warnaserror",
+            "--no-restore",
             "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
             "-p:NuGetBuild=true",
