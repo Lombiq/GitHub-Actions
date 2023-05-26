@@ -70,7 +70,7 @@ on:
 
 jobs:
   publish-nuget:
-    runs-on: gitrunners-ubuntu-2204-x64-4vcpu
+    runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
