@@ -37,6 +37,8 @@ foreach ($project in $projects)
     $isPackableProperty = dotnet msbuild $tempProjectFilePath /nologo /v:quiet /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue /p:PropertyName=IsPackable /p:CustomAfterMicrosoftCommonTargets=$project
     $isPackable = [string]::IsNullOrEmpty($isPackableProperty) -or $isPackableProperty -eq "true"
 
+    Write-Output "Packable property: $isPackableProperty"
+    Write-Output "Packable? $isPackable"
     # Silently skip project if the project file has <IsPackable>false</IsPackable>.
     if (-not $isPackable)
     {
