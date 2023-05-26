@@ -176,7 +176,7 @@ runs:
             "-p:GenerateDocumentationFile=True",
             "-p:NoWarn=$($noWarn -join '%3B')",
             "-p:TreatWarningsAsErrors=true",
-            "-p:WarnOnPackingNonPackableProject=False",
+            "-p:WarnOnPackingNonPackableProject=True",
             "-p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true",
