@@ -11,8 +11,8 @@ $solutionFile = Get-ChildItem -Path . -Filter *.sln -Recurse | Select-Object -Fi
 if ($null -eq $solutionFile)
 {
     # Solution file not found. Looking for project files.
-    Write-Output "Solution file not found. Looking for project files."
-    $projectFiles = Get-ChildItem -Path . -Recurse | Where-Object { $PSItem.Extension -eq ".csproj" -or $PSItem.Extension -eq ".fsproj" }
+    Write-Output 'Solution file not found. Looking for project files.'
+    $projectFiles = Get-ChildItem -Path . -Recurse | Where-Object { $PSItem.Extension -eq '.csproj' -or $PSItem.Extension -eq '.fsproj' }
 }
 else
 {
@@ -31,15 +31,15 @@ foreach ($projectFile in $projectFiles)
 
     # Define the xmlns to access the elements in the csproj.
     $namespaceManager = New-Object Xml.XmlNamespaceManager $projectXml.NameTable
-    $namespaceManager.AddNamespace("ns", $projectXml.DocumentElement.NamespaceURI)
+    $namespaceManager.AddNamespace('ns', $projectXml.DocumentElement.NamespaceURI)
 
     # Create a new ItemGroup.
-    $itemGroup = $projectXml.CreateElement("ItemGroup", $projectXml.DocumentElement.NamespaceURI)
+    $itemGroup = $projectXml.CreateElement('ItemGroup', $projectXml.DocumentElement.NamespaceURI)
 
     # Create a new PackageReference.
-    $packageNode = $projectXml.CreateElement("PackageReference", $projectXml.DocumentElement.NamespaceURI)
-    $packageNode.SetAttribute("Include", "Microsoft.SourceLink.GitHub")
-    $packageNode.SetAttribute("Version", $latestVersion)
+    $packageNode = $projectXml.CreateElement('PackageReference', $projectXml.DocumentElement.NamespaceURI)
+    $packageNode.SetAttribute('Include', 'Microsoft.SourceLink.GitHub')
+    $packageNode.SetAttribute('Version', $latestVersion)
 
     # Add the package to the ItemGroup.
     $itemGroup.AppendChild($packageNode)
