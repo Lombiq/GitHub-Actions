@@ -39,7 +39,7 @@ function Get-ProjectProperty
 "@
 
         # Insert the new target XML string just before the closing </Project> tag.
-        $updatedProjectFileContent = $projectFileContent -replace "</Project>", "$newTarget`r`n</Project>"
+        $updatedProjectFileContent = $projectFileContent -replace '</Project>', "$newTarget`r`n</Project>"
 
         # Write the updated content back to the project file.
         Set-Content $ProjectFilePath $updatedProjectFileContent -ErrorAction Stop
@@ -49,7 +49,7 @@ function Get-ProjectProperty
         # Restore the file content.
         Set-Content $ProjectFilePath $projectFileContent -ErrorAction Stop
 
-        Write-Output ([string]::IsNullOrEmpty($buildOutput) ? "" : $buildOutput.Trim())
+        Write-Output ([string]::IsNullOrEmpty($buildOutput) ? '' : $buildOutput.Trim())
     }
     catch
     {
@@ -63,8 +63,8 @@ foreach ($project in $projects)
 {
     Write-Output "Packing $($project.Name)..."
 
-    $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName "IsPackable"
-    $isPackable = [string]::IsNullOrEmpty($isPackableProperty) -or $isPackableProperty -eq "true"
+    $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
+    $isPackable = [string]::IsNullOrEmpty($isPackableProperty) -or $isPackableProperty -eq 'true'
 
     # Silently skip project if the project file has <IsPackable>false</IsPackable>.
     if (-not $isPackable)
@@ -74,7 +74,7 @@ foreach ($project in $projects)
     }
 
     # Warn and skip if the project doesn't specify a package license file.
-    $packageLicenseFileProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName "PackageLicenseFile"
+    $packageLicenseFileProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'PackageLicenseFile'
     if ([string]::IsNullOrEmpty($packageLicenseFileProperty))
     {
         Write-Output ("::warning file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
