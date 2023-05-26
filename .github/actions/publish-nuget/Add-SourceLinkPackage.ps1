@@ -12,26 +12,26 @@ if ($null -eq $solutionFile)
 {
     # Solution file not found. Looking for project files.
     Write-Output "Solution file not found. Looking for project files."
-    $projects = Get-ChildItem -Path . -Recurse | Where-Object { $_.Extension -eq ".csproj" -or $_.Extension -eq ".fsproj" }
+    $projectFiles = Get-ChildItem -Path . -Recurse | Where-Object { $PSItem.Extension -eq ".csproj" -or $PSItem.Extension -eq ".fsproj" }
 }
 else
 {
     # Solution file found. Extracting project files.
     Write-Output "Solution file found: $($solutionFile.FullName). Extracting project files."
     $projectPaths = dotnet sln $($solutionFile.FullName) list
-    $projects = $projectPaths | ForEach-Object { Get-Item $_ }
+    $projectFiles = $projectPaths | ForEach-Object { Get-Item -Path $PSItem }
 }
 
-foreach ($project in $projects)
+foreach ($projectFile in $projectFiles)
 {
-    Write-Output "Processing project: $($project.FullName)"
+    Write-Output "Processing project: $($projectFile.FullName)"
 
     # Load the project file as XML.
-    $projectXml = [xml](Get-Content $project.FullName)
+    $projectXml = [xml](Get-Content -Path $projectFile.FullName)
 
     # Define the xmlns to access the elements in the csproj.
-    $ns = New-Object Xml.XmlNamespaceManager $projectXml.NameTable
-    $ns.AddNamespace("ns", $projectXml.DocumentElement.NamespaceURI)
+    $namespaceManager = New-Object Xml.XmlNamespaceManager $projectXml.NameTable
+    $namespaceManager.AddNamespace("ns", $projectXml.DocumentElement.NamespaceURI)
 
     # Create a new ItemGroup.
     $itemGroup = $projectXml.CreateElement("ItemGroup", $projectXml.DocumentElement.NamespaceURI)
@@ -48,5 +48,5 @@ foreach ($project in $projects)
     $projectXml.Project.AppendChild($itemGroup)
 
     # Save the changes back to the .csproj file.
-    $projectXml.Save($project.FullName)
+    $projectXml.Save($projectFile.FullName)
 }
