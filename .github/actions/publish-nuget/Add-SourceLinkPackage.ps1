@@ -1,5 +1,8 @@
+# Register NuGet.org as a package source since GitHub runners don't have it by default.
+Register-PackageSource -Name NuGet.org -Location https://api.nuget.org/v3/index.json -ProviderName NuGet
+
 # Get the latest version of the package.
-$latestPackage = Find-Package -Name Microsoft.SourceLink.GitHub -ProviderName NuGet | Sort-Object Version -Descending | Select-Object -First 1
+$latestPackage = Find-Package -Name Microsoft.SourceLink.GitHub -Source NuGet.org | Sort-Object Version -Descending | Select-Object -First 1
 $latestVersion = $latestPackage.Version
 
 # Find solution file.
