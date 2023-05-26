@@ -36,7 +36,11 @@ foreach ($project in $projects)
     $isPackable = [string]::IsNullOrEmpty($isPackableProperty) -or $isPackableProperty -eq "true"
 
     # Silently skip project if the project file has <IsPackable>false</IsPackable>.
-    if ($isPackable -like '*false*') { continue }
+    if (-not $isPackable)
+    {
+        Write-Output "Skipping $($project.Name) because it has <IsPackable>false</IsPackable>."
+        continue
+    }
 
     # Warn and skip if the project doesn't specify a package license file.
     $packageLicenseFileProperty = dotnet msbuild $tempProjectFilePath /nologo /v:quiet /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue /p:PropertyName=PackageLicenseFile /p:CustomAfterMicrosoftCommonTargets=$project
