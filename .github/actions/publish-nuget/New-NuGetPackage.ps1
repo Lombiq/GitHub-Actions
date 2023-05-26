@@ -32,6 +32,8 @@ $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-I
 
 foreach ($project in $projects)
 {
+    Write-Output "Packing $($project.Name)..."
+
     $isPackableProperty = dotnet msbuild $tempProjectFilePath /nologo /v:quiet /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue /p:PropertyName=IsPackable /p:CustomAfterMicrosoftCommonTargets=$project
     $isPackable = [string]::IsNullOrEmpty($isPackableProperty) -or $isPackableProperty -eq "true"
 
