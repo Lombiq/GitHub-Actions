@@ -88,7 +88,7 @@ runs:
         Set-GitHubOutput "publish-version" $version
 
     - name: Add Source Link package
-      shell: bash
+      shell: pwsh
       run: Add-SourceLinkPackage
 
     - name: Update package manifest version
