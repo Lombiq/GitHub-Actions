@@ -115,6 +115,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   comment-pr:
     name: Comment (PR)
     runs-on: ubuntu-22.04
