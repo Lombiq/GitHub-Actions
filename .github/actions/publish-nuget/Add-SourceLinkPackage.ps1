@@ -1,5 +1,5 @@
 # Get the latest version of the package.
-$latestPackage = Find-Package -Name Microsoft.SourceLink.GitHub | Sort-Object Version -Descending | Select-Object -First 1
+$latestPackage = Find-Package -Name Microsoft.SourceLink.GitHub -ProviderName NuGet | Sort-Object Version -Descending | Select-Object -First 1
 $latestVersion = $latestPackage.Version
 
 # Find solution file.
