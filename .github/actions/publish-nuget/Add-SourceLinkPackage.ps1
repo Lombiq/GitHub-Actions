@@ -18,9 +18,8 @@ else
 {
     # Solution file found. Extracting project files.
     Write-Output "Solution file found: $($solutionFile.FullName). Extracting project files."
-    $solutionDirectory = Split-Path -Path $solutionFile.FullName
-    $projectPaths = dotnet sln $($solutionFile.FullName) list
-    $projectFiles = $projectPaths | ForEach-Object { Get-Item -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem) }
+    $projectPaths = dotnet sln $($solutionFile.FullName) list | Select-Object -Skip 2
+    $projectFiles = $projectPaths | ForEach-Object { Get-Item -Path $PSItem }
 }
 
 foreach ($projectFile in $projectFiles)
