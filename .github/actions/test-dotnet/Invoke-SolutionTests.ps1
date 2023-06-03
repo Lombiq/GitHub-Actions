@@ -47,6 +47,73 @@ Set-GitHubOutput 'test-count' $tests.Length
 
 Write-Output "Starting to execute tests from $($tests.Length) projects."
 
+function StartProcessAndWaitForExit($FileName, $Arguments, $TimeoutSec = 5)
+{
+    $process = [System.Diagnostics.Process]@{
+        StartInfo = @{
+            FileName = $FileName
+            Arguments = $Arguments
+            RedirectStandardOutput = $true
+            RedirectStandardError = $true
+            UseShellExecute = $false
+            WorkingDirectory = Get-Location
+        }
+    }
+
+    $output = New-Object System.Text.StringBuilder
+    $eventArgs = @{
+        Output = $output
+        Process = $process
+    }
+
+    $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventArgs -Action {
+        $Event.MessageData.Output.AppendLine($Event.SourceEventArgs.Data)
+        Write-Host $Event.SourceEventArgs.Data
+    }
+
+    $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventArgs -Action {
+        $Event.MessageData.Output.AppendLine($Event.SourceEventArgs.Data)
+        Write-Host $Event.SourceEventArgs.Data
+    }
+
+    $process.Start() | Out-Null
+    $process.BeginOutputReadLine()
+    $process.BeginErrorReadLine()
+    Wait-Process -Id $process.Id -TimeoutSec $TimeoutSec
+
+    if ($process.HasExited)
+    {
+        $exitCode = $process.ExitCode
+    }
+    else
+    {
+        Write-Output "The process $($process.Id) didn't exit in $TimeoutSec seconds."
+
+        Write-Output "Collecting a dump of the process $($process.Id)."
+        dotnet-dump collect -p $process.Id --type Full -o "./dotnet-test-hang-dump-$($process.Id).dmp"
+
+        Write-Output "Killing the process $($process.Id)."
+        Stop-Process -Force -Id $process.Id
+        if ($output.ToString() -Like '*Test Run Successful.*')
+        {
+            Write-Output "The process $($process.Id) was killed but the tests were successful."
+            $exitCode = 0
+        }
+        else
+        {
+            $exitCode = -1
+        }
+    }
+
+    Unregister-Event $stdoutEvent.Id
+    Unregister-Event $stderrEvent.Id
+
+    return @{
+        Output = $output.ToString()
+        ExitCode = $exitCode
+    }
+}
+
 foreach ($test in $tests)
 {
     # This could benefit from grouping, above the level of the potential groups created by the tests (the Lombiq UI
@@ -71,10 +138,9 @@ foreach ($test in $tests)
 
     Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join ' ')``."
 
-    dotnet test @dotnetTestSwitches 2>&1 |
-        Where-Object { $PSItem -notlike '*Connection refused [[]::ffff:127.0.0.1[]]*' -and $PSItem -notlike '*ChromeDriver was started successfully*' }
+    $processResult = StartProcessAndWaitForExit 'dotnet' "test $($dotnetTestSwitches -join ' ')" 300
 
-    if ($?)
+    if ($processResult.ExitCode -eq 0)
     {
         Write-Output "Test successful: $test"
         continue
