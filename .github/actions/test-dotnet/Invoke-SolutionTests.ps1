@@ -51,8 +51,8 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $TimeoutSec = 5)
 {
     $process = [System.Diagnostics.Process]@{
         StartInfo = @{
-            FileName = $FileName
-            Arguments = $Arguments
+            FileName = 'pwsh'
+            Arguments = "-c `"$FileName $Arguments 2>&1`""
             RedirectStandardOutput = $true
             RedirectStandardError = $true
             UseShellExecute = $false
