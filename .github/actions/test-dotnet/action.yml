@@ -143,6 +143,15 @@ runs:
         if-no-files-found: ignore
         retention-days: ${{ inputs.ui-test-artifact-retention-days }}
 
+    - name: Upload DotnetTestHangDumps
+      uses: actions/upload-artifact@v3.1.1
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0 && steps.run-tests.outputs.dotnet-test-hang-dump != 0
+      with:
+        name: dotnet-test-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
+        path: ${{ inputs.build-directory }}/DotnetTestHangDumps/
+        if-no-files-found: ignore
+        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
+
     - name: Test Report
       # v10
       uses: phoenix-actions/test-reporting@93ce19fa5882ebe3969ebdb9ee1024b3d29e776f

@@ -44,6 +44,7 @@ $tests = dotnet sln $Solution list |
     }
 
 Set-GitHubOutput 'test-count' $tests.Length
+Set-GitHubOutput 'dotnet-test-hang-dump' 0
 
 Write-Output "Starting to execute tests from $($tests.Length) projects."
 
@@ -87,16 +88,19 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     }
     else
     {
-        Write-Output "The process $($process.Id) didn't exit in $Timeout seconds."
+        Write-Output "::warning::The process $($process.Id) didn't exit in $Timeout seconds."
 
-        Write-Output "Collecting a dump of the process $($process.Id)."
-        dotnet-dump collect -p $process.Id --type Full -o "./dotnet-test-hang-dump-$($process.Id).dmp"
+        Write-Output "::warning::Collecting a dump of the process $($process.Id)."
+        $dumpRootPath = './DotnetTestHangDumps'
+        New-Item -ItemType "directory" -Path $dumpRootPath -Force | Out-Null
+        dotnet-dump collect -p $process.Id --type Full -o "$dumpRootPath/dotnet-test-hang-dump-$($process.Id).dmp"
+        Set-GitHubOutput 'dotnet-test-hang-dump' 1
 
-        Write-Output "Killing the process $($process.Id)."
+        Write-Output "::warning::Killing the process $($process.Id)."
         Stop-Process -Force -Id $process.Id
         if ($output.ToString() -Like '*Test Run Successful.*')
         {
-            Write-Output "The process $($process.Id) was killed but the tests were successful."
+            Write-Output "::warning::The process $($process.Id) was killed but the tests were successful."
             $exitCode = 0
         }
         else
