@@ -62,18 +62,20 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     }
 
     $output = New-Object System.Text.StringBuilder
-    $eventArgs = @{
+    $eventHandlerArgs = @{
         Output = $output
         Process = $process
     }
 
-    $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventArgs -Action {
+    $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
         $Event.MessageData.Output.AppendLine($Event.SourceEventArgs.Data)
+        [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost', '', Justification='Only Write-Host is available here.')]
         Write-Host $Event.SourceEventArgs.Data
     }
 
-    $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventArgs -Action {
+    $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {
         $Event.MessageData.Output.AppendLine($Event.SourceEventArgs.Data)
+        [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost', '', Justification='Only Write-Host is available here.')]
         Write-Host $Event.SourceEventArgs.Data
     }
 
@@ -92,7 +94,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
         Write-Output "::warning::Collecting a dump of the process $($process.Id)."
         $dumpRootPath = './DotnetTestHangDumps'
-        New-Item -ItemType "directory" -Path $dumpRootPath -Force | Out-Null
+        New-Item -ItemType 'directory' -Path $dumpRootPath -Force | Out-Null
         dotnet-dump collect -p $process.Id --type Full -o "$dumpRootPath/dotnet-test-hang-dump-$($process.Id).dmp"
         Set-GitHubOutput 'dotnet-test-hang-dump' 1
 
@@ -142,7 +144,7 @@ foreach ($test in $tests)
 
     Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join ' ')``."
 
-    $processResult = StartProcessAndWaitForExit 'dotnet' "test $($dotnetTestSwitches -join ' ')" $TestProcessTimeout
+    $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
     if ($processResult.ExitCode -eq 0)
     {
         Write-Output "Test successful: $test"
