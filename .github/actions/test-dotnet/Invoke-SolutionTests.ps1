@@ -1,4 +1,4 @@
-param ($Solution, $Verbosity, $Filter, $Configuration, $BlameHangTimeout)
+param ($Solution, $Verbosity, $Filter, $Configuration, $BlameHangTimeout, $TestProcessTimeout)
 
 # Note that this script will only find tests if they were previously build in Release mode.
 
@@ -47,7 +47,7 @@ Set-GitHubOutput 'test-count' $tests.Length
 
 Write-Output "Starting to execute tests from $($tests.Length) projects."
 
-function StartProcessAndWaitForExit($FileName, $Arguments, $TimeoutSec = 5)
+function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 {
     $process = [System.Diagnostics.Process]@{
         StartInfo = @{
@@ -79,15 +79,15 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $TimeoutSec = 5)
     $process.Start() | Out-Null
     $process.BeginOutputReadLine()
     $process.BeginErrorReadLine()
-    Wait-Process -Id $process.Id -TimeoutSec $TimeoutSec
 
+    $process.WaitForExit($Timeout)
     if ($process.HasExited)
     {
         $exitCode = $process.ExitCode
     }
     else
     {
-        Write-Output "The process $($process.Id) didn't exit in $TimeoutSec seconds."
+        Write-Output "The process $($process.Id) didn't exit in $Timeout seconds."
 
         Write-Output "Collecting a dump of the process $($process.Id)."
         dotnet-dump collect -p $process.Id --type Full -o "./dotnet-test-hang-dump-$($process.Id).dmp"
@@ -138,8 +138,7 @@ foreach ($test in $tests)
 
     Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join ' ')``."
 
-    $processResult = StartProcessAndWaitForExit 'dotnet' "test $($dotnetTestSwitches -join ' ')" 300
-
+    $processResult = StartProcessAndWaitForExit 'dotnet' "test $($dotnetTestSwitches -join ' ')" $TestProcessTimeout
     if ($processResult.ExitCode -eq 0)
     {
         Write-Output "Test successful: $test"

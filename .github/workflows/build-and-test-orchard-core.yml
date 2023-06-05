@@ -101,6 +101,11 @@ on:
         description: >
           Duration in days after which the artifact of the build's binary log (if any) will expire. See
           https://github.com/actions/upload-artifact#retention-period for more details.
+      dotnet-test-process-timeout:
+        required: false
+        type: number
+        default: -1
+        description: Run the dotnet test process with the given timeout in milliseconds.
       print-config-summary:
         required: false
         type: string
@@ -233,10 +238,11 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-464-executing-dotnet-test-with-process-timeout
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
+          dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
           solution-path: ${{ inputs.build-solution-path }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
