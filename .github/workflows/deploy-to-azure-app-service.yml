@@ -30,7 +30,7 @@ on:
       dotnet-version:
         required: false
         type: string
-        default: 6.0.x
+        default: 7.0.x
         description: Version of the .NET SDK to set up.
       build-directory:
         required: false

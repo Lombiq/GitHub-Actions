@@ -4,7 +4,7 @@ description: Sets up the .NET SDK.
 inputs:
   dotnet-version:
     required: false
-    default: 6.0.x
+    default: 7.0.x
     description: Version of the .NET SDK to set up.
 
 runs:
@@ -15,8 +15,8 @@ runs:
       run: |
         # This ceremony is needed to make the env vars available in subsequent steps too, see:
         # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable.
-        # Note that in PowerShell, somehow an echo is not needed. Be sure not to put spaces around the equal signs when
-        # writing to $Env:GITHUB_ENV.
+        # Note that in PowerShell, echo is not needed. Make sure not to put spaces around the equal signs when writing
+        # to $Env:GITHUB_ENV.
         "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true" >> $Env:GITHUB_ENV
         $Env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
 
@@ -26,7 +26,15 @@ runs:
     # setup-dotnet won't install a version if it is already preinstalled on the VM. Note that it checks the latest
     # released .NET version for wildcard versions. So, e.g. with 6.0.x specified it'll still install 6.0.402 if the VM
     # only has 6.0.401. See: https://github.com/actions/setup-dotnet/issues/356.
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v3.0.2
+    - name: Set up .NET SDK
+      uses: actions/setup-dotnet@v3.2.0
+      id: setup-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
+        dotnet-quality: ga
+
+    - name: Save .NET SDK Version Into Environment Variable
+      shell: pwsh
+      run: |
+        "DOTNET_SDK_TO_USE=${{ steps.setup-dotnet.outputs.dotnet-version }}" >> $Env:GITHUB_ENV
+        $Env:DOTNET_SDK_TO_USE = "${{ steps.setup-dotnet.outputs.dotnet-version }}"
