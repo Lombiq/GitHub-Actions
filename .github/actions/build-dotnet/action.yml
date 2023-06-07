@@ -141,7 +141,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        echo '{ "sdk": { "version": "$Env:DOTNET_SDK_TO_USE" } }' > ./global.json
+        "{ ""sdk"": { ""version"": ""$Env:DOTNET_SDK_TO_USE"" } }" > ./global.json
 
     - name: Build and Static Code Analysis
       id: build
