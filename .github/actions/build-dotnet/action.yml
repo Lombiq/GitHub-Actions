@@ -137,7 +137,8 @@ runs:
         key: ${{ steps.detect-cache-configuration.outputs.key }}
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
-    - name: Create temporary global.json with desired .NET SDK version
+    - name: Create Temporary global.json with Desired .NET SDK Version
+      # We do this to force `dotnet build` to use that exact version and avoid breaking builds by silent upgrades.
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
