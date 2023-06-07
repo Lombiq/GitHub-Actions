@@ -159,7 +159,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        Write-Output "Using .NET SDK from ./global.json:`n$(Get-Content .\global.json)"
+        Write-Output "Using .NET SDK from ./global.json:`n$(Get-Content .\global.json -Raw)"
 
         Initialize-ArtifactNameSuffix '${{ inputs.directory }}'
 
