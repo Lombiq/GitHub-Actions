@@ -33,7 +33,7 @@ runs:
         dotnet-version: ${{ inputs.dotnet-version }}
         dotnet-quality: ga
 
-    - name: Save .NET SDK version into Environment Variable
+    - name: Save .NET SDK Version Into Environment Variable
       shell: pwsh
       run: |
         "DOTNET_SDK_TO_USE=${{ steps.setup-dotnet.outputs.dotnet-version }}" >> $Env:GITHUB_ENV
