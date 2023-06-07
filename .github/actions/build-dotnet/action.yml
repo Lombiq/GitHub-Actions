@@ -144,7 +144,7 @@ runs:
       run: |
         $globalJsonExists = Test-Path -Path .\global.json -PathType Leaf
         # Read from file or use empty object.
-        $globalJsonContent = if ($globalJsonExists) { Get-Content .\global.json -Raw } else { '{}' }
+        $globalJsonContent = $globalJsonExists ? (Get-Content .\global.json -Raw) : '{}'
         $globalJsonObject = $globalJsonContent | ConvertFrom-Json
         # Only set the sdk property if it does not exist yet.
         if (-not (Get-Member -InputObject $globalJsonObject -Name 'sdk' -MemberType NoteProperty)) {
