@@ -26,13 +26,15 @@ runs:
     # setup-dotnet won't install a version if it is already preinstalled on the VM. Note that it checks the latest
     # released .NET version for wildcard versions. So, e.g. with 6.0.x specified it'll still install 6.0.402 if the VM
     # only has 6.0.401. See: https://github.com/actions/setup-dotnet/issues/284#issuecomment-1276250960.
-    - name: Set up .NET
+    - name: Set up .NET SDK
       uses: actions/setup-dotnet@v3.2.0
       id: setup-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         dotnet-quality: ga
-    - name: Create temporary global.json
+
+    - name: Save .NET SDK version into Environment Variable
       shell: pwsh
       run: |
-        echo '{ "sdk": { "version": "${{ steps.setup-dotnet.outputs.dotnet-version }}" } }' > ./global.json
+        "DOTNET_SDK_TO_USE=${{ steps.setup-dotnet.outputs.dotnet-version }}" >> $Env:GITHUB_ENV
+        $Env:DOTNET_SDK_TO_USE = "${{ steps.setup-dotnet.outputs.dotnet-version }}"

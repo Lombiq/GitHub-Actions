@@ -137,6 +137,12 @@ runs:
         key: ${{ steps.detect-cache-configuration.outputs.key }}
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
+    - name: Create temporary global.json with desired .NET SDK version
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        echo '{ "sdk": { "version": "$Env:DOTNET_SDK_TO_USE" } }' > ./global.json
+
     - name: Build and Static Code Analysis
       id: build
       shell: pwsh
