@@ -148,9 +148,7 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        Write-Output ("Start checking global.json...")
-        Get-ChildItem .\global.json && Get-Content .\global.json
-        Write-Output ("Done checking global.json.")
+        Write-Output ("Using .NET SDK from ./global.json: $(Get-Content .\global.json)")
 
         Initialize-ArtifactNameSuffix '${{ inputs.directory }}'
 
