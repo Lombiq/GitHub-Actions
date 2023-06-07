@@ -142,7 +142,10 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        "{ ""sdk"": { ""version"": ""$Env:DOTNET_SDK_TO_USE"" } }" > ./global.json
+        if (-not (Test-Path -Path .\global.json -PathType Leaf))
+        {
+          "{ ""sdk"": { ""version"": ""$Env:DOTNET_SDK_TO_USE"" } }" > .\global.json
+        }
 
     - name: Build and Static Code Analysis
       id: build
