@@ -39,8 +39,16 @@ $tests = dotnet sln $Solution list |
     Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
     Select-String -NotMatch 'Lombiq.Tests.csproj' |
     Where-Object {
-        $result = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $PSItem 2>&1 | Out-String -Width 9999
-        -not [string]::IsNullOrEmpty($result) -and $result.Contains('The following Tests are available')
+        # Without Out-String, Contains() below won't work for some reason.
+        $output = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $PSItem  2>&1 | Out-String -Width 9999
+
+        if ($LASTEXITCODE -ne 0)
+        {
+            $errorMessage = "dotnet test failed for the project $PSItem with the following output:`n$output"
+            throw $errorMessage
+        }
+
+        -not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available')
     }
 
 Set-GitHubOutput 'test-count' $tests.Length
