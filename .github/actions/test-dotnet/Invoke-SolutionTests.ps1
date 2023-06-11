@@ -28,10 +28,6 @@ else
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionStringStem + $connectionStringSuffix
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
-# We assume that the solution was built in Release configuration. If indeed, then we # don't need to build them again
-# here.
-$optOut = $Configuration -eq 'Release' ? '--no-build' : ''
-
 $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($Solution)
 
 Write-Output "Running tests for the $Solution solution."
@@ -45,13 +41,11 @@ $tests = dotnet sln $Solution list |
         # While the test projects are run individually, passing in the solution name via the conventional MSBuild #
         # property allows build customization.
         $switches = @(
-            $optOut
             "--configuration:$Configuration"
             '--list-tests'
             "--verbosity:$Verbosity"
             "-p:SolutionName=""$solutionName"""
         )
-        # Note that this will also build the test project unless --no-build was specificed in $optOut.
         # Without Out-String, Contains() below won't work for some reason.
         $output = dotnet test @switches $PSItem 2>&1 | Out-String -Width 9999
 
@@ -78,7 +72,6 @@ foreach ($test in $tests)
     Write-Output "Starting to execute tests from the $test project."
 
     $dotnetTestSwitches = @(
-        $optOut,
         '--configuration', $Configuration
         '--nologo',
         '--logger', 'trx;LogFileName=test-results.trx'
