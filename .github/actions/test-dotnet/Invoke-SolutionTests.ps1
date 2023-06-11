@@ -33,14 +33,20 @@ $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 # don't need to build them here.
 $optOut = $Configuration -eq 'Debug' ? '--no-restore' : '--no-build'
 
+$solutionName = [System.IO.Path]::GetFileNameWithoutExtension($Solution)
+
+Write-Output "Running tests for the $Solution solution."
+
 $tests = dotnet sln $Solution list |
     Select-Object -Skip 2 |
     Select-String '\.Tests\.' |
     Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
     Select-String -NotMatch 'Lombiq.Tests.csproj' |
     Where-Object {
+        # While the test projects are run individually, passing in the solution name via the conventional MSBuild
+        # property allows build customization.
         # Without Out-String, Contains() below won't work for some reason.
-        $output = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $PSItem  2>&1 | Out-String -Width 9999
+        $output = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity -p:SolutionName=\"$solutionName\" $PSItem  2>&1 | Out-String -Width 9999
 
         if ($LASTEXITCODE -ne 0)
         {
