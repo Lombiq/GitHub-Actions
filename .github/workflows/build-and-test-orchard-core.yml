@@ -219,7 +219,7 @@ jobs:
 
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
-        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@issue/OSOE-548
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
