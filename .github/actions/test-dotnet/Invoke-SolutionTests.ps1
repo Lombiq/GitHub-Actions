@@ -60,7 +60,7 @@ $tests = dotnet sln $Solution list |
 
 Set-GitHubOutput 'test-count' $tests.Length
 
-Write-Output "Starting to execute tests from $($tests.Length) projects."
+Write-Output "Starting to execute tests from $($tests.Length) project(s)."
 
 foreach ($test in $tests)
 {
