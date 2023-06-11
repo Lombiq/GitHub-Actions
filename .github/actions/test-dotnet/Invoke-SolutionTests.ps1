@@ -28,10 +28,9 @@ else
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionStringStem + $connectionStringSuffix
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
-# We assume that the solution was built in Release configuration. If the tests need to be built in Debug configuration,
-# as they should, we need to first build them, but not restore. Otherwise, the Release tests are already built, so we
-# don't need to build them here.
-$optOut = $Configuration -eq 'Debug' ? '--no-restore' : '--no-build'
+# We assume that the solution was built in Release configuration. If indeed, then we # don't need to build them again
+# here.
+$optOut = $Configuration -eq 'Release' ? '--no-build' : ''
 
 $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($Solution)
 
@@ -52,6 +51,7 @@ $tests = dotnet sln $Solution list |
             "--verbosity:$Verbosity"
             "-p:SolutionName=""$solutionName"""
         )
+        # Note that this will also build the test project unless --no-build was specificed in $optOut.
         # Without Out-String, Contains() below won't work for some reason.
         $output = dotnet test @switches $PSItem 2>&1 | Out-String -Width 9999
 
