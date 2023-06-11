@@ -43,10 +43,17 @@ $tests = dotnet sln $Solution list |
     Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
     Select-String -NotMatch 'Lombiq.Tests.csproj' |
     Where-Object {
-        # While the test projects are run individually, passing in the solution name via the conventional MSBuild
+        # While the test projects are run individually, passing in the solution name via the conventional MSBuild #
         # property allows build customization.
+        $switches = @(
+            $optOut
+            "--configuration:$Configuration"
+            "--list-tests"
+            "--verbosity:$Verbosity"
+            "-p:SolutionName=""$solutionName"""
+        )
         # Without Out-String, Contains() below won't work for some reason.
-        $output = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity -p:SolutionName=\"$solutionName\" $PSItem  2>&1 | Out-String -Width 9999
+        $output = dotnet test @switches $PSItem 2>&1 | Out-String -Width 9999
 
         if ($LASTEXITCODE -ne 0)
         {
