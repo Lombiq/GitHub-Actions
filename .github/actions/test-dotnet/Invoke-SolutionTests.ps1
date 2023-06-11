@@ -48,7 +48,7 @@ $tests = dotnet sln $Solution list |
         $switches = @(
             $optOut
             "--configuration:$Configuration"
-            "--list-tests"
+            '--list-tests'
             "--verbosity:$Verbosity"
             "-p:SolutionName=""$solutionName"""
         )
