@@ -41,13 +41,15 @@ function Get-ProjectProperty
         # Insert the new target XML string just before the closing </Project> tag.
         $updatedProjectFileContent = $projectFileContent -replace '</Project>', "$newTarget`r`n</Project>"
 
-        # Write the updated content back to the project file.
-        Set-Content $ProjectFilePath $updatedProjectFileContent -ErrorAction Stop
+        # Write the updated content to a new temporary project file.
+        $extension = (Get-Item $ProjectFilePath).Extension
+        $temporaryProjectFilePath = $ProjectFilePath -replace "\$extension`$", ".GetProperty$extension"
+        Set-Content $temporaryProjectFilePath $updatedProjectFileContent -ErrorAction Stop
 
-        $buildOutput = dotnet msbuild $ProjectFilePath /nologo /v:minimal /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue
+        $buildOutput = dotnet msbuild $temporaryProjectFilePath /nologo /v:minimal /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue
 
-        # Restore the file content.
-        Set-Content $ProjectFilePath $projectFileContent -ErrorAction Stop
+        # Removing the temporary file.
+        Remove-Item $temporaryProjectFilePath
 
         Write-Output ([string]::IsNullOrEmpty($buildOutput) ? '' : $buildOutput.Trim().Split("---Get-ProjectProperty---")[1])
     }
