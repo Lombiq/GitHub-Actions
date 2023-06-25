@@ -52,7 +52,7 @@ $tests = dotnet sln $Solution list |
 
         if ($LASTEXITCODE -ne 0)
         {
-            Write-Error "::error::dotnet test failed for the project $PSItem with the following output:`n$output"                    
+            Write-Error "::error::dotnet test failed for the project $PSItem with the following output:`n$output"
             exit 1
         }
 
