@@ -34,7 +34,7 @@ function Get-ProjectProperty
 
         $newTarget = @"
   <Target Name="GetPropertyValue">
-    <Message Importance="High" Text="`$($PropertyName)" />
+    <Message Importance="High" Text="---Get-ProjectProperty---`$($PropertyName)---Get-ProjectProperty---" />
   </Target>
 "@
 
@@ -49,7 +49,7 @@ function Get-ProjectProperty
         # Restore the file content.
         Set-Content $ProjectFilePath $projectFileContent -ErrorAction Stop
 
-        Write-Output ([string]::IsNullOrEmpty($buildOutput) ? '' : $buildOutput.Trim())
+        Write-Output ([string]::IsNullOrEmpty($buildOutput) ? '' : $buildOutput.Trim().Split("---Get-ProjectProperty---")[1])
     }
     catch
     {
