@@ -55,7 +55,7 @@ function Get-ProjectProperty
     }
     catch
     {
-        Write-Error "Failed to add the GetPropertyValue target: $($_.Exception.Message)."
+        Write-Error "::error::Failed to add the GetPropertyValue target: $($_.Exception.Message)."
     }
 }
 
