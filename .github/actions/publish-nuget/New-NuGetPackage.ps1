@@ -51,7 +51,7 @@ function Get-ProjectProperty
         # Removing the temporary file.
         Remove-Item $temporaryProjectFilePath
 
-        Write-Output ([string]::IsNullOrEmpty($buildOutput) ? '' : $buildOutput.Trim().Split("---Get-ProjectProperty---")[1])
+        return [string]::IsNullOrEmpty($buildOutput) ? '' : $buildOutput.Trim().Split("---Get-ProjectProperty---")[1]
     }
     catch
     {
