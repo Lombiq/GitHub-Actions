@@ -38,7 +38,7 @@ $tests = dotnet sln $Solution list |
     Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
     Select-String -NotMatch 'Lombiq.Tests.csproj' |
     Where-Object {
-        # While the test projects are run individually, passing in the solution name via the conventional MSBuild #
+        # While the test projects are run individually, passing in the solution name via the conventional MSBuild
         # property allows build customization.
         $switches = @(
             "--configuration:$Configuration"
