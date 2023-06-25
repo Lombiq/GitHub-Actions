@@ -46,6 +46,7 @@ $tests = dotnet sln $Solution list |
             "--verbosity:$Verbosity"
             "-p:SolutionName=""$solutionName"""
         )
+
         # Without Out-String, Contains() below won't work for some reason.
         $output = dotnet test @switches $PSItem 2>&1 | Out-String -Width 9999
 
