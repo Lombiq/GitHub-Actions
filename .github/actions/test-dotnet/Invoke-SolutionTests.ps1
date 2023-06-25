@@ -52,8 +52,8 @@ $tests = dotnet sln $Solution list |
 
         if ($LASTEXITCODE -ne 0)
         {
-            $errorMessage = "dotnet test failed for the project $PSItem with the following output:`n$output"
-            throw $errorMessage
+            Write-Error "::error::dotnet test failed for the project $PSItem with the following output:`n$output"                    
+            exit 1
         }
 
         -not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available')
