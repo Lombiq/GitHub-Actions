@@ -21,11 +21,6 @@ on:
         default: "windows-2022"
         description: >
           The machine type to run the workflow under, e.g. "windows-2022". Needs to be Windows.
-      dotnet-version:
-        required: false
-        type: string
-        default: 7.0.x
-        description: Version of the .NET SDK to set up.
       build-directory:
         required: false
         type: string
@@ -91,8 +86,6 @@ jobs:
       # This is necessary for building Gulp Extensions and test-dotnet.
       - name: Set up .NET
         uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
-        with:
-          dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
