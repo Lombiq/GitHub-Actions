@@ -1,0 +1,68 @@
+name: Validate GHA References
+
+on:
+  workflow_call:
+    inputs:
+      path-patterns:
+        required: false
+        type: string
+        default: ".github"
+        description: A comma separated list of path patterns (relative to repository root) in which to check for GHA files
+      include-patterns:
+        required: false
+        type: string
+        default: "*.yml,*.yaml"
+        description: A comma separated list of include patterns to select GHA files for checking
+      repo-patterns:
+        required: false
+        type: string
+        default: ${{ github.repository }}
+        description: A comma separated list of repository patterns to consider when evaluating reusable workflow and action references
+      expected-ref:
+        required: false
+        type: string
+        default: ${{ github.ref_name }}
+        description: The expected reference value to be used by the reusable workflows and actions 
+jobs:
+  check-workflows:
+    name: Check Workflows/Actions
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Repository
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+
+      - name: Find Ref Mismatches
+        shell: pwsh
+        run: |
+          $repoPatterns = "${{ inputs.repo-patterns }}".Split(",")
+          for($i = 0; $i -lt $repoPatterns.Count; $i++)  { $repoPatterns[$i] = "uses:\s*" + $repoPatterns[$i]; }          
+
+          $mismatches = Get-ChildItem -Path ${{ inputs.path-patterns }} -Include ${{ inputs.include-patterns }} -Force -Recurse | 
+          Select-String -Pattern $repoPatterns | 
+          Select-String -Pattern '@${{ inputs.expected-ref }}$' -NotMatch
+          
+          if ($mismatches.Count -gt 0)
+          {
+            "Please update the following lines to match the expected GitHub Actions reference: '${{ inputs.expected-ref }}'" >> $env:GITHUB_STEP_SUMMARY
+
+            for($i = 0; $i -lt $mismatches.Count; $i++) 
+            {
+              $filename = $mismatches[$i].RelativePath($pwd)
+              $linenumber = $mismatches[$i].LineNumber
+              $title = $mismatches[$i].Line
+
+              # The below statement won't work becuase actions/toolkit will not link to files that are not part of the commit
+              # see: https://github.com/actions/toolkit/issues/470
+              # Write-Output "::error file=$filename,line=$linenumber,title=$title::GHA Ref does not match '${{ inputs.expected-ref }}'" 
+
+              # as a workaround, link directly
+              "- <a href='https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/$filename#L$linenumber'>$filename#L$linenumber</a>" >> $env:GITHUB_STEP_SUMMARY
+
+              # beware the backtick character is the powershell escape character
+              "``````yaml" >> $env:GITHUB_STEP_SUMMARY
+              "$title" >> $env:GITHUB_STEP_SUMMARY
+              "``````" >> $env:GITHUB_STEP_SUMMARY
+            }
+
+            exit 1
+          }

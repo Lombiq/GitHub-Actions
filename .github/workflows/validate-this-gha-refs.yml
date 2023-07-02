@@ -1,0 +1,10 @@
+name: Validate GHA Refs
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  validate-gha-references:
+    name: Validate GHA Refs
+    uses: Lombiq/GitHub-Actions/.github/workflows/validate-gha-refs.yml@main
