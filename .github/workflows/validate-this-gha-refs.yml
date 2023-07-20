@@ -3,8 +3,14 @@ on:
   push:
     branches:
       - dev
+      - issue/OSOE-517
 
 jobs:
-  validate-gha-references:
-    name: Validate GHA Refs
-    uses: Lombiq/GitHub-Actions/.github/workflows/validate-gha-refs.yml@main
+  validate-gha-refs:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Repository
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        
+      - name: Verify Called GHA Refs Match Expected Value
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
