@@ -13,4 +13,4 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         
       - name: Verify Called GHA Refs Match Expected Value
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
