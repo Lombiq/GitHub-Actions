@@ -1,4 +1,5 @@
 name: Swap Azure Web App Slots
+# Default values are removed (required: false, type: string)
 
 concurrency:
   group: AzureSwapAppSlots
@@ -9,63 +10,44 @@ on:
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL:
         required: true
       MAINTENANCE_USER_NAME:
-        required: false
       MAINTENANCE_PASSWORD:
-        required: false
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
-        required: false
-        type: string
-        default: "false"
+        default: 'false'
       machine-type:
-        required: false
-        type: string
         default: ubuntu-22.04
         description: The name of the type of machine to run the workflow under.
       timeout-minutes:
-        required: false
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
       app-name:
         required: true
-        type: string
         description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
       source-slot-name:
-        required: false
-        type: string
         default: Staging
         description: >
           The slot name of the web app you want to swap the destination slot (of the same web app) with. What you see at
           the top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
       destination-slot-name:
-        required: false
-        type: string
         default: Production
         description: >
           The slot name of the web app you want to swap with the source slot (of the same web app). What you see at the
           top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
       resource-group-name:
         required: true
-        type: string
         description: Name of the resource group.
       application-insights-resource-id:
-        required: false
-        type: string
         description: >
           ID of the Application Insights resource that the release annotation for the swap should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
       maintenance-host-name:
-        required: false
-        type: string
         description: >
           The hostname of the Orchard 1-based application that runs a maintenance based on the Multi Tenancy feature
           (https://github.com/Lombiq/Hosting-Multi-Tenancy#writing-maintenance-providers).
       maintenance-batch-size:
-        required: false
-        type: string
-        default: "0"
+        default: '0'
         description: The batch size of the maintenance.
 
 jobs:
