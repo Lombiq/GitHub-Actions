@@ -5,18 +5,14 @@ on:
     # We can't access org secrets here so they need to be passed in.
     secrets:
       JIRA_BASE_URL:
-        required: false
         description: >
           Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
           it must NOT end with a slash.
     inputs:
       repository:
-        type: string
-        required: false
         default: Lombiq/Open-Source-Orchard-Core-Extensions
         description: The parent repository's full name in "{owner}/{repository}" format.
       timeout-minutes:
-        required: false
         type: number
         default: 3
         description: Configuration for the timeout-minutes parameter of the workflow.
