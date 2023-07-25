@@ -62,7 +62,7 @@ on:
         default: S0
         description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
       blob-container-exclude-list:
-        default: "@()"
+        default: '@()'
         description: >
           PowerShell string array with the name of the excluded Blob Container(s), e.g. '@("not-media")' or
           '@("not-media", "bad-container")'. The parameter must be a PowerShell string array. When a not empty
@@ -82,7 +82,7 @@ on:
           PowerShell string array is provided for "folder-include-list", then "folder-exclude-list" is not taken into
           consideration.
       folder-include-list:
-        default: "@()"
+        default: '@()'
         description: >
           PowerShell string array with the name of the included folder(s), e.g. '@("NotRecipeJournal")' or
           '@("NotRecipeJournal", "CoolFolder")'. The parameter must be a PowerShell string array. When a not empty
