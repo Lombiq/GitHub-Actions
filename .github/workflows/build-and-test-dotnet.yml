@@ -1,10 +1,10 @@
 name: Build and Test .NET solution
-# Default values are removed (required: false, type: string)
 
 on:
   workflow_call:
     secrets:
       CHECKOUT_TOKEN:
+        required: false
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
@@ -12,90 +12,128 @@ on:
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
-        default: 'true'
+        required: false
+        type: string
+        default: "true"
       # This needs to be stringified JSON because inputs don't support arrays, see
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
+        required: false
+        type: string
         default: "['ubuntu-22.04']"
         description: >
           Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
           "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
       dotnet-version:
+        required: false
+        type: string
         default: 7.0.x
         description: Version of the .NET SDK to set up.
       blame-hang-timeout:
-        default: ''
+        required: false
+        type: string
+        default: ""
         description: >
           Run the tests in blame mode and collects a hang dump when a test exceeds the given timeout. See
           https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details on available values.
       build-directory:
+        required: false
+        type: string
         default: .
         description: Path to the directory where a solution file can be found.
       build-configuration:
+        required: false
+        type: string
         default: Release
         description: Configuration parameter for dotnet build (e.g. Debug, Release).
       build-solution-path:
-        default: '*.sln'
+        required: false
+        type: string
+        default: "*.sln"
         description: >
           The path of the solution or project file to be built. If there's exactly one .sln file in the build directory
           then this can be omitted. For further information, see the documentation of the build-dotnet action.
       build-verbosity:
+        required: false
+        type: string
         default: quiet
         description: Verbosity parameter for dotnet build.
       build-enable-code-analysis:
-        default: 'true'
+        required: false
+        type: string
+        default: "true"
         description: Indicates whether to enable static code analysis during dotnet build.
       build-enable-nuget-caching:
-        default: 'false'
+        required: false
+        type: string
+        default: "false"
         description: >
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
           packages, but negligible or even slower if you only have a handful.
       build-enable-npm-caching:
-        default: 'false'
+        required: false
+        type: string
+        default: "false"
         description: >
           If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
           but negligible or even slower if you only have a handful.
       build-cache-version:
-        default: '0'
+        required: false
+        type: string
+        default: "0"
         description: >
           Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
           only current way to force "clear" the cache
           (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
           (https://github.com/actions/cache/issues/2) is resolved.
       build-create-binary-log:
-        default: 'false'
+        required: false
+        type: string
+        default: "false"
         description: >
           Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
           https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
       build-binary-log-artifact-retention-days:
-        default: '14'
+        required: false
+        type: string
+        default: "14"
         description: >
           Duration in days after which the artifact of the build's binary log (if any) will expire. See
           https://github.com/actions/upload-artifact#retention-period for more details.
       test-disable:
-        default: 'false'
+        required: false
+        type: string
+        default: "false"
         description: Disables test execution completely if set to "true".
       test-filter:
+        required: false
+        type: string
         description: >
           Filter expression for dotnet test. See:
           https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
       xunit-max-parallel-threads:
-        default: '0'
+        required: false
+        type: string
+        default: "0"
         description: >
           Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
           https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
       timeout-minutes:
+        required: false
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
       verify-dotnet-consolidation:
+        required: false
         type: boolean
         default: true
         description: >
           When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
           the same version of a given package is used in all projects.
       warnings-as-errors:
-        default: 'true'
+        required: false
+        type: string
+        default: "true"
         description: >
           Whether compiler warnings should be treated as errors during the build process. The default value is "true",
           the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set

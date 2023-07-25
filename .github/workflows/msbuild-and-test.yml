@@ -1,10 +1,10 @@
 name: Build and Test .NET Solution with MSBuild
-# Default values are removed (required: false, type: string)
 
 on:
   workflow_call:
     secrets:
       CHECKOUT_TOKEN:
+        required: false
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
@@ -12,16 +12,24 @@ on:
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
-        default: 'true'
+        required: false
+        type: string
+        default: "true"
       machine-type:
-        default: 'windows-2022'
+        required: false
+        type: string
+        default: "windows-2022"
         description: >
           The machine type to run the workflow under, e.g. "windows-2022". Needs to be Windows.
       build-directory:
+        required: false
+        type: string
         default: .
         description: Path to the directory where a solution file can be found.
       solution-or-project-path:
-        default: '*.sln'
+        required: false
+        type: string
+        default: "*.sln"
         description: >
           The path of the solution or project file to be built. If you have exactly one .sln file in the current
           directory then this can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project
@@ -30,22 +38,33 @@ on:
           value is given to PowerShell's `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with
           spaces must be escaped separately.
       build-verbosity:
+        required: false
+        type: string
         default: quiet
         description: Verbosity parameter for msbuild.
       build-treat-warnings-as-errors:
-        default: 'true'
+        required: false
+        type: string
+        default: "true"
         description: Indicates whether warnings should be treated as errors during msbuild.
       build-enable-code-analysis:
-        default: 'true'
+        required: false
+        type: string
+        default: "true"
         description: Indicates whether to enable static code analysis during msbuild.
       test-disable:
-        default: 'false'
+        required: false
+        type: string
+        default: "false"
         description: Disables test execution completely if set to "true".
       test-filter:
+        required: false
+        type: string
         description: >
           Filter expression for dotnet test. See:
           https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
       timeout-minutes:
+        required: false
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
