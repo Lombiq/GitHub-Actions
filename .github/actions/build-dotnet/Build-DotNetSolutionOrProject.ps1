@@ -40,6 +40,8 @@ $buildSwitches = ConvertTo-Array @"
 [array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | ForEach-Object { $PSItem.Split(':')[0] } | Sort-Object
 $noErrors = $expectedErrorCodes.Count -eq 0
 
+Write-Output "Pre GE build"
+
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
     Write-Output '::group::Gulp Extensions found. It needs to be explicitly built before the solution.'
@@ -51,6 +53,8 @@ if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj
     Write-Output ('Gulp Extensions build took {0:0.###} seconds.' -f ($endTime - $startTime).TotalSeconds)
     Write-Output '::endgroup::'
 }
+
+Write-Output "Pre dotnet msbuild"
 
 # This prepares the solution or project with the Lombiq.Analyzers files. The output and exit code are discarded because
 # they will be in error if there is a project without the LombiqNetAnalyzers target. Then there is nothing to do, and
