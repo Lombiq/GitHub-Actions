@@ -215,6 +215,7 @@ Validates pull requests for various criteria:
 
 ```yaml
 name: Validate Pull Request
+
 on:
   push:
   pull_request:
