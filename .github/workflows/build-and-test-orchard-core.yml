@@ -203,7 +203,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@3ec399ad6021511d828e99f4ca879caf23a137e5
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/GOV-19
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration}}
