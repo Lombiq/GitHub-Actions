@@ -1,4 +1,5 @@
 name: Reset Azure Environment
+# Default values are removed (required: false, type: string)
 
 concurrency:
   group: AzureResetEnvironment
@@ -9,60 +10,42 @@ on:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
         required: true
       MAINTENANCE_USER_NAME:
-        required: false
       MAINTENANCE_PASSWORD:
-        required: false
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
-        required: false
-        type: string
-        default: "false"
+        default: 'false'
       machine-type:
-        required: false
-        type: string
         default: ubuntu-22.04
         description: The name of the type of machine to run the workflow under.
       timeout-minutes:
-        required: false
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
       app-name:
-        required: true
-        type: string
         description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
       destination-slot-name:
-        required: false
-        type: string
         default: Staging
         description: >
           The slot name of the web app you want to reset. What you see at the top of the blade on the Azure Portal, when
           you open the slot, before the app name in parenthesis.
       source-slot-name:
-        required: false
-        type: string
         default: Production
         description: >
           The slot name of the web app you want to reset the destination web app with. What you see at the top of the
           blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
       resource-group-name:
         required: true
-        type: string
         description: Name of the resource group.
       database-connection-string-name:
-        required: false
-        type: string
-        default: "OrchardCore__ConnectionString"
+        default: 'OrchardCore__ConnectionString'
         description: >
           The name of the root SQL Server database connection string configured as application settings in Azure, under both
           the production and staging slots with slot-specific values. This is typically "OrchardCore__ConnectionString",
           and points to the database containing Orchard shell settings, which may also contain the Default tenant's or
           all tenants' databases. This connection string may use a contained user of the given database.
       master-database-connection-string-name:
-        required: false
-        type: string
-        default: "OrchardCore__ConnectionString-master"
+        default: 'OrchardCore__ConnectionString-master'
         description: >
           The name of the SQL Server database connection string for the master database, configured as application
           settings in Azure, under both the production and staging slots with slot-specific values. This is typically
@@ -70,38 +53,28 @@ on:
           database that the database-connection-string-name parameter points to. This elevated access is necessary to
           recreate the staging database and scale it up if necessary.
       storage-connection-string-name:
-        required: false
-        type: string
-        default: "OrchardCore__OrchardCore_Media_Azure__ConnectionString"
+        default: 'OrchardCore__OrchardCore_Media_Azure__ConnectionString'
         description: >
           The name of the Azure storage account's blob storage connection string, configured as application settings in
           Azure, under both the production and staging slots with slot-specific values. This is typically
           "OrchardCore__OrchardCore_Media_Azure__ConnectionString".
       service-objective-name:
-        required: false
-        type: string
         default: S0
         description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
       blob-container-exclude-list:
-        required: false
-        type: string
-        default: "@()"
+        default: '@()'
         description: >
           PowerShell string array with the name of the excluded Blob Container(s), e.g. '@("not-media")' or
           '@("not-media", "bad-container")'. The parameter must be a PowerShell string array. When a not empty
           PowerShell string array is provided for "blob-container-include-list", then "blob-container-exclude-list" is
           not taken into consideration.
       blob-container-include-list:
-        required: false
-        type: string
         default: '@("media", "dataprotection")'
         description: >
           PowerShell string array with the name of the included Blob Container(s), e.g. '@("media")' or '@("media",
           "dataprotection)'. The parameter must be a PowerShell string array. When a not empty PowerShell string array
           is provided, "blob-container-exclude-list" is not taken into consideration.
       folder-exclude-list:
-        required: false
-        type: string
         default: '@("RecipeJournal", "`$`$`$ORCHARD`$`$`$.`$`$`$")'
         description: >
           PowerShell string array with the name of the excluded folder(s), e.g. '@("RecipeJournal")' or
@@ -109,29 +82,21 @@ on:
           PowerShell string array is provided for "folder-include-list", then "folder-exclude-list" is not taken into
           consideration.
       folder-include-list:
-        required: false
-        type: string
-        default: "@()"
+        default: '@()'
         description: >
           PowerShell string array with the name of the included folder(s), e.g. '@("NotRecipeJournal")' or
           '@("NotRecipeJournal", "CoolFolder")'. The parameter must be a PowerShell string array. When a not empty
           PowerShell string array is provided, "folder-exclude-list" is not taken into consideration.
       application-insights-resource-id:
-        required: false
-        type: string
         description: >
           ID of the Application Insights resource that the release annotation for the reset should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
       maintenance-host-name:
-        required: false
-        type: string
         description: >
           The hostname of the Orchard 1-based application that runs a maintenance based on the Multi Tenancy feature
           (https://github.com/Lombiq/Hosting-Multi-Tenancy#writing-maintenance-providers).
       maintenance-batch-size:
-        required: false
-        type: string
-        default: "0"
+        default: '0'
         description: The batch size of the maintenance.
 
 jobs:
