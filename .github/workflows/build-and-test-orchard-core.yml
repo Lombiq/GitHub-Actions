@@ -12,10 +12,12 @@ on:
     inputs:
       cancel-workflow-on-failure:
         description: If "true", will cancel the current workflow run with all jobs if this workflow fails.
+        type: string
         default: 'true'
       # This needs to be stringified JSON, because inputs don't support arrays, see
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
+        type: string
         default: "['ubuntu-22.04']"
         description: >
           Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
