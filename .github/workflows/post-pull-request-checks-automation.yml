@@ -68,7 +68,6 @@ jobs:
           LATEST_RUN_NUMBER=$(gh run list --limit 1 | awk '{print $26}')
           echo "latest_run_number=$LATEST_RUN_NUMBER"
           echo "github.run_number=${{ github.run_id }}"
-          echo "output=${{ outputs.latest-run-number }}"
           echo "latest_run_number=$LATEST_RUN_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Set Merge Token
