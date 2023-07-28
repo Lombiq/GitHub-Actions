@@ -1,5 +1,4 @@
 name: Post Pull Request Checks Automation
-# Default values are removed (required: false, type: string)
 
 on:
   workflow_call:
@@ -35,6 +34,7 @@ on:
           The merge strategy to be used for the auto-merge-pull-request action. See the API documentation for
           "merge_method" for applicable values:
           https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#merge-a-pull-request
+        type: string
         default: merge
       timeout-minutes:
         type: number

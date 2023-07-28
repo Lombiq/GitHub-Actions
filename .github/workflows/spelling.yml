@@ -1,5 +1,4 @@
 name: Spelling
-# Default values are removed (required: false, type: string)
 
 on:
   workflow_call:
@@ -12,24 +11,29 @@ on:
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        type: string
         default: 'true'
       merge-file-excludes:
         description: >
           When set to "true", the "excludes.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in
           the workspace repository.
+        type: string
         default: 'true'
       merge-forbidden-patterns:
         description: >
           When set to "true", the "line_forbidden.patterns" file's contents in Lombiq.GitHub.Actions will be merged into
           the one in the workspace repository.
+        type: string
         default: 'true'
       merge-ignore-patterns:
         description: >
           When set to "true", the "patterns.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in
           the workspace repository.
+        type: string
         default: 'true'
       default-dictionaries:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
+        type: string
         default: |
           cspell:filetypes/filetypes.txt
           cspell:software-terms/src/software-terms.txt
@@ -38,15 +42,19 @@ on:
         description: >
           JSON map of prefixes for additional configuration file (for now, only dictionary) URLs. "cspell" and
           "lombiq-lgha" are available by default, but can be overridden.
+        type: string
       additional-dictionaries:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
+        type: string
       configuration-path:
         description: Relative path to the spell-checking configuration folder.
+        type: string
         default: .github/actions/spelling
       default-configuration-repository:
         description: >
           Repository with default configuration to use when the workspace repository doesn't have its own configuration.
           The default from Check Spelling is ''.
+        type: string
         default: Lombiq/GitHub-Actions@dev
       timeout-minutes:
         type: number

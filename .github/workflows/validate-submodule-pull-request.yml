@@ -10,6 +10,7 @@ on:
           it must NOT end with a slash.
     inputs:
       repository:
+        type: string
         default: Lombiq/Open-Source-Orchard-Core-Extensions
         description: The parent repository's full name in "{owner}/{repository}" format.
       timeout-minutes:

@@ -1,5 +1,4 @@
 name: Create Jira issues for community activities
-# Default values are removed (required: false, type: string)
 
 on:
   workflow_call:
@@ -33,8 +32,10 @@ on:
           (not Markdown). See the documentation for details.
     inputs:
       issue-component:
+        type: string
         description: Optional component of the Jira issues being created.
       suffix-issue-titles:
+        type: string
         default: 'true'
         description: >
           If set to "true", Jira issue titles will be suffixed with "in <issue-component>" if the issue-component
