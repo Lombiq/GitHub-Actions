@@ -45,27 +45,20 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
-  get_latest_workflow:
-    name: Get the latest workflow run number
-    runs-on: ubuntu-latest
-    outputs:
-      latest_run_number: ${{ steps.get_latest_workflow_run_number.outputs.latest_run_number }}
-    steps:
-      - name: Get the latest workflow run number
-        id: get_latest_workflow_run_number
-        run: |
-          LATEST_RUN_NUMBER=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                             -H "Accept: application/vnd.github.v3+json" \
-                             "https://api.github.com/repos/${{ github.repository }}/actions/runs?event=push" \
-                             | jq '.workflow_runs[0].run_number')
-          echo "::set-output name=latest_run_number::$LATEST_RUN_NUMBER"
-
   post-pull-request-checks-automation:
+    outputs:
+      latest-run-number: ${{ steps.get-latest-workflow-run-number.outputs.latest_run_number }}
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     if: |
-      !(github.run_number == needs.get_latest_workflow.outputs.latest_run_number)
+      github.run_number == steps.get-latest-workflow-run-number.outputs.latest_run_number
     steps:
+      - name: Get Latest Workflow Run Number
+        id: get-latest-workflow-run-number
+        run: |
+          LATEST_RUN_NUMBER=$(gh api repos/${{ github.repository }}/actions/runs?event=push | jq '.workflow_runs[0].run_number')
+          echo "::set-output name=latest_run_number::$LATEST_RUN_NUMBER"
+
       - name: Set Merge Token
         shell: pwsh
         env:
