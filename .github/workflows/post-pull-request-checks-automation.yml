@@ -62,7 +62,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST_RUN_NUMBER=$(gh run view --json id --jq '.id')
+          LATEST_RUN_NUMBER=$(gh run list)
           echo "latest_run_number=$LATEST_RUN_NUMBER"
           echo "github.run_number=${{ github.run_id }}"
           echo "latest_run_number=$LATEST_RUN_NUMBER" >> $GITHUB_OUTPUT
