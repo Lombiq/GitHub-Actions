@@ -54,7 +54,6 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     needs: get-latest-workflow-run-number
-    inputs:
     if: |
       (inputs.run-only-latest-workflow == 'false') || (github.run_number == needs.get-latest-workflow-run-number.outputs.latest_run_number)
     steps:
