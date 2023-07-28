@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     if: |
-      env.RUN_ONLY_LATEST_WORKFLOW == 'false' || github.run_number == needs.get_latest_workflow.outputs.latest_run_number
+      !(github.run_number == needs.get_latest_workflow.outputs.latest_run_number)
     steps:
       - name: Set Merge Token
         shell: pwsh
