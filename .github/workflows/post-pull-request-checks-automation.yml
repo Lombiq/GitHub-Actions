@@ -65,7 +65,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST_RUN_NUMBER=$(gh run list --limit 1 | awk '{print $24}' | tail -n 1)
+          LATEST_RUN_NUMBER=$(gh run list --limit 1)
           echo "latest_run_number=$LATEST_RUN_NUMBER"
           echo "latest_run_number=$LATEST_RUN_NUMBER" >> $GITHUB_OUTPUT
 
