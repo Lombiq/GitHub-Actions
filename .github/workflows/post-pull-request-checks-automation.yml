@@ -59,7 +59,7 @@ jobs:
         id: get-latest-workflow-run-number
         run: |
           LATEST_RUN_NUMBER=$(gh api repos/${{ github.repository }}/actions/runs?event=push | jq '.workflow_runs[0].run_number')
-          Set-GitHubOutput -name "latest_run_number" -value "$LATEST_RUN_NUMBER"
+          echo "latest_run_number=$LATEST_RUN_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Set Merge Token
         shell: pwsh
