@@ -51,8 +51,12 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     needs: get-latest-workflow-run-number
+    inputs:
+      run-only-latest-workflow:
+        description: 'Run only if the current workflow is the most recent workflow.'
+        default: 'true'
     if: |
-      github.run_number == needs.get-latest-workflow-run-number.outputs.latest_run_number
+      (inputs.run-for-latest == 'true') || (github.run_number == needs.get-latest-workflow-run-number.outputs.latest_run_number)
     steps:
       - name: Get Latest Workflow Run Number
         id: get-latest-workflow-run-number
