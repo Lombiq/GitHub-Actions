@@ -54,9 +54,6 @@ jobs:
       latest-run-number: ${{ steps.get-latest-workflow-run-number.outputs.latest_run_number }}
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
-    needs: get-latest-workflow-run-number
-    if: |
-      (inputs.run-only-latest-workflow == 'false') || (github.run_number == needs.get-latest-workflow-run-number.outputs.latest_run_number)
     steps:
       - name: Get Latest Workflow Run Number
         id: get-latest-workflow-run-number
@@ -71,6 +68,8 @@ jobs:
         run: |
           $mergeToken = $Env:MERGE_TOKEN ? $Env:MERGE_TOKEN : "${{ secrets.GITHUB_TOKEN }}"
           "MERGE_TOKEN=$mergeToken" >> $Env:GITHUB_ENV
+        if: |
+          (inputs.run-only-latest-workflow == 'false') || (github.run_number == steps.get-latest-workflow-run-number.outputs.latest_run_number)
 
       - name: Automatically Merge Pull Request
         uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@dev
@@ -78,6 +77,8 @@ jobs:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
         with:
           merge-method: ${{ inputs.merge-method }}
+        if: |
+          (inputs.run-only-latest-workflow == 'false') || (github.run_number == steps.get-latest-workflow-run-number.outputs.latest_run_number)
 
       - name: Automatically Resolve or Done Jira issue
         uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@dev
@@ -86,6 +87,8 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        if: |
+          (inputs.run-only-latest-workflow == 'false') || (github.run_number == steps.get-latest-workflow-run-number.outputs.latest_run_number)
 
       - name: Remove Label
         # v2.0.0
@@ -94,3 +97,5 @@ jobs:
           token: ${{ env.MERGE_TOKEN }}
           labels: merge-and-resolve-jira-issue-if-checks-succeed
           type: remove
+        if: |
+          (inputs.run-only-latest-workflow == 'false') || (github.run_number == steps.get-latest-workflow-run-number.outputs.latest_run_number)
