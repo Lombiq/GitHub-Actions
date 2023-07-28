@@ -1,8 +1,5 @@
 name: Post Pull Request Checks Automation
 
-env:
-  RUN_ONLY_LATEST_WORKFLOW: 'true'
-
 on:
   workflow_call:
     secrets:
