@@ -55,6 +55,11 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Get Latest Workflow Run Number
         id: get-latest-workflow-run-number
         env:
