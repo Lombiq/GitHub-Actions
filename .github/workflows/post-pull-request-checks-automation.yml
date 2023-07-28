@@ -50,8 +50,9 @@ jobs:
       latest-run-number: ${{ steps.get-latest-workflow-run-number.outputs.latest_run_number }}
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
+    needs: get-latest-workflow-run-number
     if: |
-      github.run_number == steps.get-latest-workflow-run-number.outputs.latest_run_number
+      github.run_number == needs.get-latest-workflow-run-number.outputs.latest_run_number
     steps:
       - name: Get Latest Workflow Run Number
         id: get-latest-workflow-run-number
