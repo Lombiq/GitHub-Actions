@@ -43,6 +43,9 @@ on:
         type: number
         default: 1
         description: Configuration for the timeout-minutes parameter of the workflow.
+      run-only-latest-workflow:
+        description: 'Run only if the current workflow is the most recent workflow.'
+        default: 'true'
 
 jobs:
   post-pull-request-checks-automation:
@@ -52,9 +55,6 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     needs: get-latest-workflow-run-number
     inputs:
-      run-only-latest-workflow:
-        description: 'Run only if the current workflow is the most recent workflow.'
-        default: 'true'
     if: |
       (inputs.run-only-latest-workflow == 'true') || (github.run_number == needs.get-latest-workflow-run-number.outputs.latest_run_number)
     steps:
