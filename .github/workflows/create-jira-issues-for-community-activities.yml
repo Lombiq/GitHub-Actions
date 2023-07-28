@@ -19,35 +19,29 @@ on:
         required: true
         description: The project key in JIRA, i.e. the prefix of issue keys (the "KEY" part of KEY-123).
       DISCUSSION_JIRA_ISSUE_DESCRIPTION:
-        required: false
         description: >
           Template for the Jira issues to be created for GitHub discussions, using the internal markup format of Jira
           (not Markdown). See the documentation for details.
       ISSUE_JIRA_ISSUE_DESCRIPTION:
-        required: false
         description: >
           Template for the Jira issues to be created for GitHub issues, using the internal markup format of Jira (not
           Markdown). See the documentation for details.
       PULL_REQUEST_JIRA_ISSUE_DESCRIPTION:
-        required: false
         description: >
           Template for the Jira issues to be created for GitHub pull requests, using the internal markup format of Jira
           (not Markdown). See the documentation for details.
     inputs:
       issue-component:
-        required: false
         type: string
         description: Optional component of the Jira issues being created.
       suffix-issue-titles:
-        required: false
         type: string
-        default: "true"
+        default: 'true'
         description: >
           If set to "true", Jira issue titles will be suffixed with "in <issue-component>" if the issue-component
           parameter is specified, or the repository name. If set to "false", no suffix will be added to Jira issue
           titles.
       timeout-minutes:
-        required: false
         type: number
         default: 5
         description: Configuration for the timeout-minutes parameter of the workflow.

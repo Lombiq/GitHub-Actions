@@ -11,16 +11,13 @@ on:
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
-        required: false
         type: string
-        default: "false"
+        default: 'false'
       machine-type:
-        required: false
         type: string
         default: ubuntu-22.04
         description: The name of the type of machine to run the workflow under.
       timeout-minutes:
-        required: false
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
@@ -29,14 +26,12 @@ on:
         type: string
         description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
       source-slot-name:
-        required: false
         type: string
         default: Staging
         description: >
           The slot name of the web app you want to swap the destination slot (of the same web app) with. What you see at
           the top of the blade on the Azure Portal, when you open the slot, before the app name in parenthesis.
       destination-slot-name:
-        required: false
         type: string
         default: Production
         description: >
