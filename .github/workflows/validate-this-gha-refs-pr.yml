@@ -1,0 +1,42 @@
+name: Validate GHA Refs - Pull Request
+on:
+  pull_request:
+  
+jobs:
+  validate-gha-refs-pr:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Git Diff
+        id: git-diff
+        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-files-from-git-diff@issue/OSOE-517
+        with:
+          left-commit: ${{ github.event.pull_request.base.sha }}
+          right-commit: ${{ github.sha }}
+
+      - name: Get Changed GHA Items
+        id: changed-items
+        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-gha-items@issue/OSOE-517
+        with:
+          file-include-list: '${{ steps.git-diff.outputs.changed-files }}'
+
+      - name: Prefix with Owner/Repo Name
+        id: add-prefix
+        shell: pwsh
+        run: |
+          $prefix = "${{ github.repository }}"
+          $files = ${{ steps.changed-items.outputs.changed-items }}
+          $files = $files.ForEach({ Join-Path -Path $prefix -ChildPath $PSItem })
+          $output = "prefixed-files=@(" + $($files | Join-String -DoubleQuote -Separator ',') + ")"
+          Write-Output "output=$output"
+          $output >> $env:GITHUB_OUTPUT
+
+      - name: Verify Changed Workflow Files Match
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
+        with:
+          called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'
+          expected-ref: ${{ github.head_ref }}

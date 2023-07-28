@@ -1,6 +1,6 @@
 name: Verify GitHub Actions References
 description: >
-  Checks if any called GitHub Actions or Workflows reference an unexpected version. 
+  Checks if any called GitHub Actions or Workflows reference an unexpected version.
 
 inputs:
   path-include-list:
@@ -33,7 +33,7 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
 
-    - name: Check Called GHA Refs
+    - name: Check References
       id: check-references
       shell: pwsh
       run: |
@@ -43,6 +43,6 @@ runs:
             CalledRepoBaseIncludeList = ${{ inputs.called-repo-base-include-list }}
             ExpectedRef = "${{ inputs.expected-ref }}"
             GitHubRepository = "${{ github.repository }}"
-            GitHubRefName = "${{ github.ref_name }}"
+            GitHubRefName = "${{ inputs.expected-ref }}"
         }
         Check-Called-GHA-Refs @params

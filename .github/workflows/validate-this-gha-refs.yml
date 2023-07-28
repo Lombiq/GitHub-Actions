@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-        
-      - name: Verify Called GHA Refs Match Expected Value
+
+      - name: Verify GHA Workflows/Actions Match Expected Refs
         uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517

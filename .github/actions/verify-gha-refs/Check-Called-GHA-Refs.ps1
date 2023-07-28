@@ -7,6 +7,10 @@ param(
     [String] $GitHubRefName
 )
 
+if ($CalledRepoBaseIncludeList.Count -eq 0) {
+    exit 0 # Nothing to check because array is empty.
+}
+
 $CalledRepoBaseIncludeList = $CalledRepoBaseIncludeList.ForEach({ "uses:\s*" + $_ })
 
 $mismatchRefs = Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse | 
@@ -15,7 +19,7 @@ Select-String -Pattern $ExpectedRef -NotMatch
 
 if ($mismatchRefs.Count -gt 0)
 {
-    "These called worflows and actions do not match expected ref '$ExpectedRef'." >> $env:GITHUB_STEP_SUMMARY
+        "These called worflows and actions do not match expected ref '$ExpectedRef'." >> $env:GITHUB_STEP_SUMMARY
 
     foreach ($mismatch in $mismatchRefs) 
     {
