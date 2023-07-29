@@ -62,9 +62,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST_RUN_NUMBER=$(gh run list --limit 1 | jq -r .[0].id)
+          LATEST_RUN_NUMBER=$(gh run list --limit 1 | grep -o '"id": [0-9]*' | awk '{print $2}')
           echo "latest_run_number=$LATEST_RUN_NUMBER"
           echo "github.run_number=${{ github.run_id }}"
+          echo "See the real output=${{ latest-run-number }}"
           echo "latest_run_number=$LATEST_RUN_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Set Merge Token
