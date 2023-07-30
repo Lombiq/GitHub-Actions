@@ -58,8 +58,6 @@ jobs:
       - name: Get Latest Workflow Run Number
         shell: pwsh
         id: get-latest-workflow-run-number
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $latestRunNumber=$(gh run list --limit 1 --json databaseId | jq -r '.[0].databaseId')
           Set-GitHubOutput -Key 'latest-run-number' -Value $latestRunNumber
