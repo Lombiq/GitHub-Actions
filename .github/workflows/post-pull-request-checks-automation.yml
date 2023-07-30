@@ -43,7 +43,7 @@ on:
       run-only-latest-workflow:
         type: string
         description: Run only if the current workflow is the most recent workflow.
-        default: false
+        default: true
 
 jobs:
   post-pull-request-checks-automation:
@@ -56,12 +56,13 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Latest Workflow Run Number
+        shell: pwsh
         id: get-latest-workflow-run-number
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           LATEST_RUN_NUMBER=$(gh run list --limit 1 --json databaseId | jq -r '.[0].databaseId')
-          echo "latest_run_number=$LATEST_RUN_NUMBER" >> $GITHUB_OUTPUT
+          Set-GitHubOutput 'latest-run-number' $LATEST_RUN_NUMBER
 
       - name: Set Merge Token
         shell: pwsh
@@ -71,7 +72,7 @@ jobs:
           $mergeToken = $Env:MERGE_TOKEN ? $Env:MERGE_TOKEN : "${{ secrets.GITHUB_TOKEN }}"
           "MERGE_TOKEN=$mergeToken" >> $Env:GITHUB_ENV
         if: |
-          (inputs.run-only-latest-workflow == 'false') || (github.run_id == steps.get-latest-workflow-run-number.outputs.latest_run_number)
+          (inputs.run-only-latest-workflow == 'false') || (github.run_id == steps.get-latest-workflow-run-number.outputs.latest-run-number)
 
       - name: Automatically Merge Pull Request
         uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@dev
@@ -80,7 +81,7 @@ jobs:
         with:
           merge-method: ${{ inputs.merge-method }}
         if: |
-          (inputs.run-only-latest-workflow == 'false') || (github.run_id == steps.get-latest-workflow-run-number.outputs.latest_run_number)
+          (inputs.run-only-latest-workflow == 'false') || (github.run_id == steps.get-latest-workflow-run-number.outputs.latest-run-number)
 
       - name: Automatically Resolve or Done Jira issue
         uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@dev
@@ -90,7 +91,7 @@ jobs:
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
         if: |
-          (inputs.run-only-latest-workflow == 'false') || (github.run_id == steps.get-latest-workflow-run-number.outputs.latest_run_number)
+          (inputs.run-only-latest-workflow == 'false') || (github.run_id == steps.get-latest-workflow-run-number.outputs.latest-run-number)
 
       - name: Remove Label
         # v2.0.0
