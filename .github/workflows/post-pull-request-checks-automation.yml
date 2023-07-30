@@ -47,8 +47,6 @@ on:
 
 jobs:
   post-pull-request-checks-automation:
-    outputs:
-      latest-run-number: ${{ steps.get-latest-workflow-run-number.outputs.latest_run_number }}
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
