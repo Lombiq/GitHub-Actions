@@ -17,7 +17,11 @@ These can be invoked from any other repository's build.
 
 [Check out a demo](https://www.youtube.com/watch?v=bhMnX0TsybM) on our YouTube channel, and the Orchard Harvest 2023 conference talk about automated QA in Orchard Core [here](https://youtu.be/CHdhwD2NHBU).
 
-We at [Lombiq](https://lombiq.com/) also used these workflows for the new [Lombiq website](https://lombiq.com/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://lombiq.com/blog/how-we-renewed-and-migrated-lombiq-com-from-orchard-1-to-orchard-core)). They also make [DotNest, the Orchard SaaS](https://dotnest.com/) better.
+We at [Lombiq](https://lombiq.com/) also used this module for the following projects:
+
+- The new [Lombiq website](https://lombiq.com/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://lombiq.com/blog/how-we-renewed-and-migrated-lombiq-com-from-orchard-1-to-orchard-core)).
+- The new client portal for [Willis Towers Watson](https://www.wtwco.com/) ([see case study](https://lombiq.com/blog/lombiqs-journey-with-willis-towers-watsons-client-portal)).
+- They also make [DotNest, the Orchard SaaS](https://dotnest.com/) better.
 
 ## Documentation
 
