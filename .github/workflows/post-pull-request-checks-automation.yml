@@ -42,7 +42,7 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow.
       run-only-latest-workflow:
         type: string
-        description: 'Run only if the current workflow is the most recent workflow.'
+        description: Run only if the current workflow is the most recent workflow.
         default: 'true'
 
 jobs:
