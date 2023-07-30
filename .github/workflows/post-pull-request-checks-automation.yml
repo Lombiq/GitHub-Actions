@@ -62,7 +62,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $latestRunNumber=$(gh run list --limit 1 --json databaseId | jq -r '.[0].databaseId')
-          Set-GitHubOutput -Key 'latest-run-number' -Value $LATEST_RUN_NUMBER
+          Set-GitHubOutput -Key 'latest-run-number' -Value $latestRunNumber
 
       - name: Set Merge Token
         shell: pwsh
