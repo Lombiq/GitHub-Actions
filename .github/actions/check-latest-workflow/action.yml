@@ -28,4 +28,4 @@ runs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         $latestWorkflowRunNumber=$(gh run list --limit 1 --json databaseId | jq -r '.[0].databaseId')
-        Set-GitHubOutput -Key 'latest-workflow-run-id' -Value $latestWorkflowRunNumber
+        Set-GitHubOutput -Key 'should-run' -Value ($latestWorkflowRunNumber -eq ${{ inputs.current-workflow-id }})
