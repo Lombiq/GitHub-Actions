@@ -43,7 +43,7 @@ on:
       run-only-latest-workflow:
         type: string
         description: Run only if the current workflow is the most recent workflow.
-        default: false
+        default: true
 
 jobs:
   post-pull-request-checks-automation:
