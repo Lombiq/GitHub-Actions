@@ -1,6 +1,12 @@
 name: Check current workflow is the latest workflow
 description: Checks whether the current workflow is the most recent workflow.
 
+inputs:
+  current-workflow-id:
+    description: The current workflow run's database id.
+    required: "true"
+    default: ''
+
 outputs:
   latest-workflow-run-id:
     description: The latest workflow run's database id.

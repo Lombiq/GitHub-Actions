@@ -55,6 +55,8 @@ jobs:
         id: get-latest-workflow-run-number
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          current-workflow-id: ${{ github.run_id }}
 
       - name: Set Merge Token
         shell: pwsh
