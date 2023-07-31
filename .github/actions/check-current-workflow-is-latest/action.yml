@@ -8,7 +8,7 @@ inputs:
     default: ""
 
 outputs:
-  latest-workflow-run-id:
+  should-run:
     description: The latest workflow run's database id.
     value: ${{ steps.check-current-workflow-equals-latest.outputs.should-run }}
 
