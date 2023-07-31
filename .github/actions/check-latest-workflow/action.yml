@@ -5,7 +5,7 @@ inputs:
   current-workflow-id:
     description: The current workflow run's database id.
     required: "true"
-    default: ''
+    default: ""
 
 outputs:
   latest-workflow-run-id:
