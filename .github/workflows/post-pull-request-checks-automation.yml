@@ -57,6 +57,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           current-workflow-id: ${{ github.run_id }}
+        run: |
+          echo "Result=${{ steps.check-steps-should-run.outputs.should-run }}"
 
       - name: Set Merge Token
         shell: pwsh
