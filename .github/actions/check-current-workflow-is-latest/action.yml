@@ -1,0 +1,30 @@
+name: Check current workflow is the latest workflow
+description: Checks whether the current workflow is the most recent workflow.
+
+inputs:
+  current-workflow-id:
+    description: The current workflow run's database id.
+    required: true
+    default: ""
+
+outputs:
+  latest-workflow-run-id:
+    description: The latest workflow run's database id.
+    value: ${{ steps.check-current-workflow-equals-latest.outputs.should-run }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+      
+    - name: Check Current Workflow Equals Latest
+      id: check-current-workflow-equals-latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        $latestWorkflowRunNumber=$(gh run list --limit 1 --json databaseId | jq -r '.[0].databaseId')
+        Set-GitHubOutput -Key 'should-run' -Value ($latestWorkflowRunNumber -eq ${{ inputs.current-workflow-id }})

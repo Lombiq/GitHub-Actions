@@ -10,7 +10,7 @@ inputs:
 outputs:
   latest-workflow-run-id:
     description: The latest workflow run's database id.
-    value: ${{ steps.get-latest-workflow-run-id.outputs.should-run }}
+    value: ${{ steps.check-current-workflow-equals-latest.outputs.should-run }}
 
 runs:
   using: "composite"
