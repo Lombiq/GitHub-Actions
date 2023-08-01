@@ -67,6 +67,7 @@ foreach ($project in $projects)
 
     $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
     $isPackable = $isPackableProperty -notlike '*false*'
+    $isRequired = "$isPackableProperty".Trim() -like 'true'
 
     # Silently skip project if the project file has <IsPackable>false</IsPackable>.
     if (-not $isPackable)
@@ -75,13 +76,17 @@ foreach ($project in $projects)
         continue
     }
 
-    # Warn and skip if the project doesn't specify a package license file.
-    $packageLicenseFileProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'PackageLicenseFile'
+    # Warn and skip (or throw if required) if the project doesn't specify a package license file.
+    $packageLicenseFileProperty = Get-ProjectProperty -ProjectFilePath $project -PropertyName 'PackageLicenseFile'
     if ([string]::IsNullOrEmpty($packageLicenseFileProperty))
     {
-        Write-Output ("::warning file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
+        
+        $messageType = $isRequired ? "error" : "warning"
+        Write-Output ("::$messageType file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
             'have a <PackageLicenseFile> property. You can avoid this check by including the " +
             "<IsPackable>false</IsPackable> property.')
+
+        if ($isRequired) { exit 1 }
         continue
     }
 
