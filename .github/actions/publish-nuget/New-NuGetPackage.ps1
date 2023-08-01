@@ -86,6 +86,9 @@ foreach ($project in $projects)
             "have a <PackageLicenseFile> property. You can avoid this check by including the " +
             "<IsPackable>false</IsPackable> property.")
 
+        Write-Output "isPackableProperty: '$isPackableProperty'"
+        Write-Output (Get-Content $project)
+
         if ($isRequired) { exit 1 }
         continue
     }
