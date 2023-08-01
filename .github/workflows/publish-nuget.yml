@@ -74,7 +74,7 @@ jobs:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Publish to NuGet
-        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/OSOE-664
         with:
           source: ${{ inputs.source }}
           verbosity: ${{ inputs.verbosity }}
