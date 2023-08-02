@@ -80,7 +80,7 @@ foreach ($project in $projects)
     $packageLicenseFileProperty = Get-ProjectProperty -ProjectFilePath $project -PropertyName 'PackageLicenseFile'
     if ([string]::IsNullOrEmpty($packageLicenseFileProperty))
     {
-        $messageType = $isRequired ? "error" : "warning"
+        $messageType = $isRequired ? 'error' : 'warning'
         Write-Output ("::$messageType file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
             'have a <PackageLicenseFile> property. You can avoid this check by including the ' +
             '<IsPackable>false</IsPackable> property.')
