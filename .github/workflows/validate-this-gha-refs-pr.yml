@@ -36,6 +36,7 @@ jobs:
           $output >> $env:GITHUB_OUTPUT
 
       - name: Verify Changed Workflow Files Match
+        if: steps.add-prefix.outputs.prefixed-files != '@()'
         uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
         with:
           called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'

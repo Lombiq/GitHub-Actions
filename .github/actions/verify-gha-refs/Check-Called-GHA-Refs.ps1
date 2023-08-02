@@ -8,6 +8,7 @@ param(
 )
 
 if ($CalledRepoBaseIncludeList.Count -eq 0) {
+    Write-Output "::warning file=Check-Called-GHA-refs.ps1,line10::CalledRepoBaseIncludeList is empty which is unexpected. If this was intentional, you can ignore this warning."
     exit 0 # Nothing to check because array is empty.
 }
 
