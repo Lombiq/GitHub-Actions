@@ -18,7 +18,7 @@ $workflows = $FileIncludeList | Where-Object -FilterScript {
          (Get-Item $PSitem).Extension -eq ".yaml")
 }
 
-# Combine actions are workflows.
+# Combine actions and workflows.
 $items = $actions + $workflows
 
 $output = "changed-items=@(" + $($items | Join-String -DoubleQuote -Separator ',') + ")"

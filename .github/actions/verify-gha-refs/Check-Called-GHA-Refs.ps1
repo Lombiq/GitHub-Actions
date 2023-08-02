@@ -19,7 +19,7 @@ Select-String -Pattern $ExpectedRef -NotMatch
 
 if ($mismatchRefs.Count -gt 0)
 {
-        "These called worflows and actions do not match expected ref '$ExpectedRef'." >> $env:GITHUB_STEP_SUMMARY
+        "These called workflows and actions do not match expected ref '$ExpectedRef'." >> $env:GITHUB_STEP_SUMMARY
 
     foreach ($mismatch in $mismatchRefs) 
     {
