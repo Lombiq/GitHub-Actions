@@ -47,7 +47,6 @@ function Get-ProjectProperty
         Set-Content $temporaryProjectFilePath $updatedProjectFileContent -ErrorAction Stop
 
         $buildOutput = dotnet msbuild $temporaryProjectFilePath /nologo /v:minimal /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue
-        Write-Output "BUILD OUTPUT: '$buildOutput'"
 
         # Removing the temporary file.
         Remove-Item $temporaryProjectFilePath
@@ -86,9 +85,6 @@ foreach ($project in $projects)
         Write-Output ("::$messageType file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
             "have a <PackageLicenseFile> property. You can avoid this check by including the " +
             "<IsPackable>false</IsPackable> property.")
-
-        Write-Output "isPackableProperty: '$isPackableProperty'"
-        Write-Output (Get-Content $project)
 
         if ($isRequired) { exit 1 }
         continue
