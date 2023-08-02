@@ -47,6 +47,7 @@ function Get-ProjectProperty
         Set-Content $temporaryProjectFilePath $updatedProjectFileContent -ErrorAction Stop
 
         $buildOutput = dotnet msbuild $temporaryProjectFilePath /nologo /v:minimal /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue
+        Write-Output "BUILD OUTPUT: '$buildOutput'"
 
         # Removing the temporary file.
         Remove-Item $temporaryProjectFilePath
