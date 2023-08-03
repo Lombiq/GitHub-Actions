@@ -47,6 +47,8 @@ function Get-ProjectProperty
         Set-Content $temporaryProjectFilePath $updatedProjectFileContent -ErrorAction Stop
 
         $buildOutput = dotnet msbuild $temporaryProjectFilePath /nologo /v:minimal /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue
+        # Adding this seems to have magically fixed the problem where the main project is inexplicably skipped. See the
+        # issue https://github.com/Lombiq/GitHub-Actions/issues/250 for more details.
         Write-Output "BUILD OUTPUT: '$buildOutput'"
 
         # Removing the temporary file.
