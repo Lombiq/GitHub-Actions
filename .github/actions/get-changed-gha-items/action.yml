@@ -1,6 +1,6 @@
 name: Get Changed GHA Items From File List
 description: >
-  Get PowerShell array of GitHub item names derived from list of changed file names.
+  Get PowerShell array of GitHub Action item names derived from list of changed file names.
 
 inputs:
   file-include-list:

@@ -13,13 +13,13 @@ inputs:
     required: false
     default: '@("*.yml","*.yaml")'
     description: >
-      PowerShell string array of file name patterns to include when evaluating GHA files, e.g. '@("*.yml")' or '@("*.yml", "*.yaml")'. The 
+      PowerShell string array of file name patterns to include when evaluating GHA files, e.g. '@("*.yml")' or '@("*.yml", "*.yaml")'. The
       parameter must be a PowerShell string array.
   called-repo-base-include-list:
     required: false
     default: '@("${{ github.repository }}")'
     description: >
-      PowerShell string array of repository base URLs to include when evaluating called GHA Workflows and Actions, e.g '@("Lombiq/GitHub-Actions")' or 
+      PowerShell string array of repository base URLs to include when evaluating called GHA Workflows and Actions, e.g '@("Lombiq/GitHub-Actions")' or
       '@("Lombiq/GitHub-Actions", "Lombiq/Open-Source-Orchard-Core-Extensions")'. The parameter must be a PowerShell string array.
   expected-ref:
     required: false
@@ -45,4 +45,4 @@ runs:
             GitHubRepository = "${{ github.repository }}"
             GitHubRefName = "${{ inputs.expected-ref }}"
         }
-        Check-Called-GHA-Refs @params
+        Check-Called-GHA-refs @params

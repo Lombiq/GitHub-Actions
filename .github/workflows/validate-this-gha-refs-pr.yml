@@ -3,7 +3,26 @@ on:
   pull_request:
   
 jobs:
+  check-pr-reviews:
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: read
+    outputs:
+      approved-count: ${{ steps.check-pr-reviews.outputs.approved-count }}
+      request-changes-count: ${{ steps.check-pr-reviews.outputs.request-changes-count }}
+      comment-count: ${{ steps.check-pr-reviews.outputs.comment-count }}
+      last-review-approved: ${{ steps.check-pr-reviews.outputs.last-review-approved }}
+    steps:
+      - name: Check PR Reviews
+        id: check-pr-reviews
+        uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-reviews@issue/OSOE-517
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   validate-gha-refs-pr:
+    needs: check-pr-reviews
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
@@ -11,20 +30,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Git Diff
+      - name: Get Pull Request File Changes
         id: git-diff
         uses: Lombiq/GitHub-Actions/.github/actions/get-changed-files-from-git-diff@issue/OSOE-517
         with:
           left-commit: ${{ github.event.pull_request.base.sha }}
           right-commit: ${{ github.sha }}
 
-      - name: Get Changed GHA Items
+      - name: Get GHA Item Changes from File Changes
         id: changed-items
         uses: Lombiq/GitHub-Actions/.github/actions/get-changed-gha-items@issue/OSOE-517
         with:
           file-include-list: '${{ steps.git-diff.outputs.changed-files }}'
 
-      - name: Prefix with Owner/Repo Name
+      - name: Prefix File Names with Owner/Repo Name
         id: add-prefix
         shell: pwsh
         run: |
@@ -35,9 +54,23 @@ jobs:
           Write-Output "output=$output"
           $output >> $env:GITHUB_OUTPUT
 
-      - name: Verify Changed Workflow Files Match
+      - name: Determine Expected Ref for GHA Files
+        id: determine-ref
+        shell: pwsh
+        run: |
+          $headRef = "${{ github.head_ref }}"
+          $baseRef = "${{ github.base_ref }}"
+          $lastReviewApproved = "${{ needs.check-pr-reviews.outputs.last-review-approved }}"
+
+          # Ternary operator syntax available starting in PowerShell 7.0.
+          $expectedRef = ($lastReviewApproved -eq 'True') ? $baseRef : $headRef
+
+          $output = "expected-ref=$expectedRef"
+          $output >> $env:GITHUB_OUTPUT
+
+      - name: Verify Called GHA Items Match Expected Ref
         if: steps.add-prefix.outputs.prefixed-files != '@()'
         uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
         with:
           called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'
-          expected-ref: ${{ github.head_ref }}
+          expected-ref: ${{ steps.determine-ref.outputs.expected-ref }}

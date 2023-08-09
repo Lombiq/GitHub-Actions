@@ -29,7 +29,7 @@ runs:
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
-        
+
     - name: Git Diff
       id: git-diff
       shell: pwsh

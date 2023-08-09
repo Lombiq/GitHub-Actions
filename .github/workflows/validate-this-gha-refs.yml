@@ -4,13 +4,22 @@ on:
     branches:
       - dev
       - issue/OSOE-517
+  pull_request_review:
+    types: [submitted]
 
 jobs:
   validate-gha-refs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
+        if: github.event_name == 'push'
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
       - name: Verify GHA Workflows/Actions Match Expected Refs
         uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
+
+      - name: Verify GHA Workflows/Actions Match Expected Refs (Approved PR)
+        if: github.event_name == 'pull_request_review' && github.event.review.state == 'approved'
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
+        with:
+          expected-ref: ${{ github.event.pull_request.base.ref }}
