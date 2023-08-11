@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - dev
-      - issue/OSOE-517
   pull_request_review:
     types: [submitted]
 
@@ -15,7 +14,8 @@ jobs:
         if: github.event_name == 'push'
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
-      - name: Verify GHA Workflows/Actions Match Expected Refs
+      - name: Verify GHA Workflows/Actions Match Expected Refs (Push)
+        if: github.event_name == 'push'
         uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
 
       - name: Verify GHA Workflows/Actions Match Expected Refs (Approved PR)
