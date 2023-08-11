@@ -45,4 +45,4 @@ runs:
             GitHubRepository = "${{ github.repository }}"
             GitHubRefName = "${{ inputs.expected-ref }}"
         }
-        Check-Called-GHA-refs @params
+        Check-Called-GHA-Refs @params
