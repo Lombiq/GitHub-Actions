@@ -1,19 +1,9 @@
 name: Check Pull Request Reviews
 description: >
-  Checks current pull request reviews to count approved, changes requested and commented review. Also
-  determines if latest review is an approved review. Intentionally not documented in Actions.md since it's
+  Checks current pull request reviews to determine if latest review is approved. Intentionally not documented in Actions.md since it's
   only meant for internal use.
 
 outputs:
-  approved-count:
-    description: "A number value counting all APPROVED reviews."
-    value: ${{ steps.check-reviews.outputs.approved-count }}
-  request-changes-count:
-    description: "A number value counting all REQUEST_CHANGES reviews."
-    value: ${{ steps.check-reviews.outputs.request-changes-count }}
-  comment-count:
-    description: "A number value counting all COMMENT reviews."
-    value: ${{ steps.check-reviews.outputs.comment-count }}
   last-review-approved:
     description: "A boolean value indicating if last review is APPROVED."
     value: ${{ steps.check-reviews.outputs.last-review-approved }}

@@ -10,9 +10,6 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
-      approved-count: ${{ steps.check-pr-reviews.outputs.approved-count }}
-      request-changes-count: ${{ steps.check-pr-reviews.outputs.request-changes-count }}
-      comment-count: ${{ steps.check-pr-reviews.outputs.comment-count }}
       last-review-approved: ${{ steps.check-pr-reviews.outputs.last-review-approved }}
     steps:
       - name: Check PR Reviews
