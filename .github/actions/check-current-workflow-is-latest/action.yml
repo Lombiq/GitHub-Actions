@@ -26,5 +26,4 @@ runs:
       shell: pwsh
       id: check-current-workflow-equals-latest
       run: |
-        $prNumber = $(gh pr view)
-        echo "TEST=$prNumber"
+        echo ${{ gh pr view }}
