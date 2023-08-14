@@ -1,5 +1,6 @@
-name: Check current workflow is the latest workflow
-description: Checks whether the current workflow is the most recent workflow.
+# Intentionally not documented in Actions.md since it's only meant for internal use
+name: Check Current Workflow Is The Latest Workflow
+description: Checks whether the current workflow is the most recent workflow for the pull request.
 
 inputs:
   current-workflow-id:
@@ -25,6 +26,10 @@ runs:
       shell: pwsh
       id: check-current-workflow-equals-latest
       run: |
-        $latestWorkflowRunNumber = $(gh run list --limit 1 --json databaseId | jq -r '.[0].databaseId')
+        $prNumber = $(gh pr view --json number -q ".number")
+        echo "TEST=$prNumber"
+        $testVar = $(gh run list --pr $prNumber --limit 1)
+        echo "TEST2=$testVar"
+        $latestWorkflowRunNumber = $(gh run list --pr $prNumber --limit 1 --json databaseId | ConvertFrom-Json)[0].databaseId
         $currentEqualsLatest = ($latestWorkflowRunNumber -eq ${{ inputs.current-workflow-id }})
         Set-GitHubOutput 'should-run' $currentEqualsLatest
