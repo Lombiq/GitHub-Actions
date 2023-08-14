@@ -28,4 +28,3 @@ runs:
       run: |
         $prNumber = $(gh pr view)
         echo "TEST=$prNumber"
-        
