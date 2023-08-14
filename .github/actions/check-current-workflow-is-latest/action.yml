@@ -26,5 +26,7 @@ runs:
       shell: pwsh
       id: check-current-workflow-equals-latest
       run: |
-        $currentPr = $(gh run list)
-        echo "TEST=$currentPr"
+        $latestWorkflowRunNumber = $(gh run list --limit 1 --json databaseId | jq -r '.[0].databaseId')
+        echo "TEST=$latestWorkflowRunNumber"
+        $currentEqualsLatest = ($latestWorkflowRunNumber -eq ${{ inputs.current-workflow-id }})
+        Set-GitHubOutput 'should-run' $currentEqualsLatest
