@@ -1,6 +1,7 @@
-# Intentionally not documented in Actions.md since it's only meant for internal use
 name: Check Current Workflow Is The Latest Workflow
-description: Checks whether the current workflow is the most recent workflow for the pull request.
+description: >
+  Checks whether the current workflow is the most recent workflow for the pull request.
+  Intentionally not documented in Actions.md since it's only meant for internal use.
 
 inputs:
   current-workflow-id:
