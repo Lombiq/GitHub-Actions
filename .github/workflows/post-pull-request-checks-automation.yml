@@ -93,7 +93,6 @@ jobs:
       - name: Remove Label
         if: steps.check-steps-should-run.outputs.should-run == 'true'
         # v2.0.0
-        # test
         uses: buildsville/add-remove-label@eeae411a9be2e173f2420e1644514edbecc4e835
         with:
           token: ${{ env.MERGE_TOKEN }}
