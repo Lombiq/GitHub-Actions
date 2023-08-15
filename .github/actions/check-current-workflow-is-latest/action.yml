@@ -10,7 +10,7 @@ inputs:
 
 outputs:
   should-run:
-    description: The latest workflow run's database id.
+    description: Whether subsequent jobs should run.
     value: ${{ steps.check-current-workflow-equals-latest.outputs.should-run }}
 
 runs:
@@ -19,7 +19,6 @@ runs:
     - name: Setup Scripts
       shell: pwsh
       run: |
-        "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
       
     - name: Check Current Workflow Equals Latest
