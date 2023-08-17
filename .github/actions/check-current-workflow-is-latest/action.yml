@@ -10,9 +10,9 @@ inputs:
     default: ""
 
 outputs:
-  should-run:
-    description: Whether subsequent jobs should run.
-    value: ${{ steps.check-current-workflow-equals-latest.outputs.should-run }}
+  is-latest:
+    description: A boolean value indicating whether the current workflow is the most recent one.
+    value: ${{ steps.check-current-workflow-equals-latest.outputs.is-latest }}
 
 runs:
   using: "composite"
@@ -28,4 +28,4 @@ runs:
       run: |
         $latestWorkflowRunDatabaseId = $(gh run list --branch ${{ github.head_ref }} --limit 1 --json databaseId | ConvertFrom-Json)[0].databaseId
         $currentEqualsLatest = ($latestWorkflowRunDatabaseId -eq ${{ inputs.current-workflow-id }})
-        Set-GitHubOutput 'should-run' $currentEqualsLatest
+        Set-GitHubOutput 'is-latest' $currentEqualsLatest
