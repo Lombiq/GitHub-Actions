@@ -27,8 +27,7 @@ runs:
       id: check-current-workflow-equals-latest
       run: |
         $repo = ${{ github.repository }}
-        echo "REPO = $repo"
-        $testVar = $(gh run list)
+        $testVar = $(gh run list --repo $repo)
         echo "TEST VAR=$testVar"
         $latestWorkflowRunDatabaseId = $(gh run list --branch ${{ github.head_ref }} --limit 1 --json databaseId | ConvertFrom-Json)[0].databaseId
         echo "THIS VAR SHOULD HAVE VALUE=$latestWorkflowRunDatabaseId"
