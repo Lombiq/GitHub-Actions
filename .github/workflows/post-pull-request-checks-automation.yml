@@ -51,11 +51,6 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-655
-        with:
-          token: ${{ secrets.CHECKOUT_TOKEN }}
-
       - name: Check Further Steps Should Run
         if: inputs.run-only-latest-workflow == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/check-current-workflow-is-latest@issue/OSOE-655
