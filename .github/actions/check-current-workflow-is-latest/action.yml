@@ -28,4 +28,7 @@ runs:
       run: |
         $latestWorkflowRunDatabaseId = $(gh run list --repo ${{ github.repository }} --branch ${{ github.head_ref }} --limit 1 --json databaseId | ConvertFrom-Json)[0].databaseId
         $currentEqualsLatest = ($latestWorkflowRunDatabaseId -eq ${{ inputs.current-workflow-id }})
+        echo "EQUALS LATEST = $currentEqualsLatest"
+        echo "VALUE1 = $latestWorkflowRunDatabaseId"
+        echo "VALUE2 = ${{ inputs.current-workflow-id }}"
         Set-GitHubOutput 'is-latest' $currentEqualsLatest
