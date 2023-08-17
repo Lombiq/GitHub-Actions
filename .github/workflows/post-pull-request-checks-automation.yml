@@ -53,6 +53,8 @@ jobs:
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-655
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Check Further Steps Should Run
         if: inputs.run-only-latest-workflow == 'true'
