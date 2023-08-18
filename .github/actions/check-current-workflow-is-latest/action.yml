@@ -30,7 +30,7 @@ runs:
           repo      = '${{ github.repository }}'
           branch    = '${{ github.head_ref }}'
           workflow  = '${{ github.workflow }}'
-          limit     = '1'
+          limit     = 1
           json      = 'databaseId'
         }
         $latestWorkflowRun = $(gh run list @listArguments)
