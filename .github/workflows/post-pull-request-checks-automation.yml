@@ -53,7 +53,7 @@ jobs:
     steps:
       - name: Check Further Steps Should Run
         if: inputs.run-only-latest-workflow == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/check-current-workflow-is-latest@issue/OSOE-655
+        uses: Lombiq/GitHub-Actions/.github/actions/check-current-workflow-is-latest@dev
         id: check-steps-should-run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
