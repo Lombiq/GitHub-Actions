@@ -18,6 +18,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      shell: pwsh
+      run: Write-Output $Env:GITHUB_CONTEXT
+
     - name: Setup Scripts
       shell: pwsh
       run: |
@@ -38,6 +43,8 @@ runs:
         {
             $output = (Confirm-PullRequestTitle "$Env:PR_TITLE") -or $Env:GITHUB_HEAD_REF -Like "*issue*"
         }
+
+        Write-Output "is-issue-pr is here: $output"
 
         Set-GitHubOutput "is-issue-pr" $output
 
