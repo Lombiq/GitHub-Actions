@@ -18,11 +18,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      shell: pwsh
-      run: Write-Output $Env:GITHUB_CONTEXT
-
     - name: Setup Scripts
       shell: pwsh
       run: |
@@ -34,17 +29,16 @@ runs:
     - name: Check for Jira Issue-Related Pull Request
       id: issue-related-pr
       env:
-        PR_TITLE: ${{ github.event.pull_request_target.title }}
+        # Even though the trigger is pull_request_target, the event is pull_request.
+        PR_TITLE: ${{ github.event.pull_request.title }}
       shell: pwsh
       run: |
         $output = "False"
 
-        if ("${{ github.event.pull_request_target }}" -ne "")
+        if ("${{ github.event.pull_request }}" -ne "")
         {
             $output = (Confirm-PullRequestTitle "$Env:PR_TITLE") -or $Env:GITHUB_HEAD_REF -Like "*issue*"
         }
-
-        Write-Output "is-issue-pr is here: $output"
 
         Set-GitHubOutput "is-issue-pr" $output
 
