@@ -34,7 +34,7 @@ runs:
       run: |
         $output = "False"
 
-        if ("${{ github.event.pull_request_target }}" -neq "")
+        if ("${{ github.event.pull_request_target }}" -ne "")
         {
             $output = (Confirm-PullRequestTitle "$Env:PR_TITLE") -or $Env:GITHUB_HEAD_REF -Like "*issue*"
         }
