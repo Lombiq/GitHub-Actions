@@ -29,10 +29,16 @@ runs:
     - name: Check for Jira Issue-Related Pull Request
       id: issue-related-pr
       env:
-        PR_TITLE: ${{ github.event.pull_request.title }}
+        PR_TITLE: ${{ github.event.pull_request_target.title }}
       shell: pwsh
       run: |
-        $output = "${{ github.event.pull_request }}" -eq "" ? "False" : (Confirm-PullRequestTitle "$Env:PR_TITLE") -or $Env:GITHUB_HEAD_REF -Like "*issue*"
+        $output = "False"
+
+        if ("${{ github.event.pull_request_target }}" -neq "")
+        {
+            $output = (Confirm-PullRequestTitle "$Env:PR_TITLE") -or $Env:GITHUB_HEAD_REF -Like "*issue*"
+        }
+
         Set-GitHubOutput "is-issue-pr" $output
 
     - name: Login to Jira
