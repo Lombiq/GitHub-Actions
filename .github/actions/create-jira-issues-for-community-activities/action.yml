@@ -29,7 +29,8 @@ runs:
     - name: Check for Jira Issue-Related Pull Request
       id: issue-related-pr
       env:
-        # Even though the trigger is pull_request_target, the event payload is pull_request (see https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target).
+        # Even though the trigger is pull_request_target, the event payload is pull_request (see
+        # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target).
         PR_TITLE: ${{ github.event.pull_request.title }}
       shell: pwsh
       run: |
