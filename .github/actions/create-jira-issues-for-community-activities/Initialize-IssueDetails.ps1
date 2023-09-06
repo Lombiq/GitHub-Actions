@@ -1,4 +1,4 @@
-﻿param
+param
 (
     $GitHub,
     $IssueComponent,
@@ -44,7 +44,7 @@ switch ($GitHub.event_name)
             }
         }
     }
-    'pull_request'
+    'pull_request_target'
     {
         $summary = "Review `"$($GitHub.event.pull_request.title)`"$titleSuffix"
         $description = $PullReqestJiraIssueDescription
