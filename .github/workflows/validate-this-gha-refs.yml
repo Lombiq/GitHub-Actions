@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Check PR Reviews
         id: check-pr-reviews
-        uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-reviews@issue/OSOE-517
+        uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-reviews@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -42,7 +42,7 @@ jobs:
       - name: Get Pull Request File Changes
         id: git-diff
         if: github.event_name == 'pull_request'
-        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-files-from-git-diff@issue/OSOE-517
+        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-files-from-git-diff@dev
         with:
           left-commit: ${{ github.event.pull_request.base.sha }}
           right-commit: ${{ github.sha }}
@@ -50,7 +50,7 @@ jobs:
       - name: Get GHA Item Changes from File Changes
         id: changed-items
         if: github.event_name == 'pull_request'
-        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-gha-items@issue/OSOE-517
+        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-gha-items@dev
         with:
           file-include-list: '${{ steps.git-diff.outputs.changed-files }}'
 
@@ -83,17 +83,17 @@ jobs:
 
       - name: Verify GHA Items Match Expected Ref (Pull)
         if: github.event_name == 'pull_request' && steps.add-prefix.outputs.prefixed-files != '@()'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
         with:
           called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'
           expected-ref: ${{ steps.determine-ref.outputs.expected-ref }}
 
       - name: Verify GHA Items Match Expected Ref (Approved PR)
         if: github.event_name == 'pull_request_review' && github.event.review.state == 'approved'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
         with:
           expected-ref: ${{ github.event.pull_request.base.ref }}
 
       - name: Verify GHA Items Match Expected Ref (Push)
         if: github.event_name == 'push'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-517
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
