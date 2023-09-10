@@ -244,7 +244,7 @@ h1. Checklist
 * [Issue completion checklist|https://example.com/checklist]
 ```
 
-All three templates are optional and if not provided, defaults will be used.
+All three templates are optional and if not provided, defaults will be used. Note that it's important to use the `pull_request_target` trigger instead of `pull_request` because the latter doesn't trigger for pull requests from forks, defeating the whole purpose of this workflow.
 
 ```yaml
 name: Create Jira issues for community activities
@@ -254,7 +254,7 @@ on:
     types: [created]
   issues:
     types: [opened]
-  pull_request:
+  pull_request_target:
     types: [opened]
 
 jobs:
