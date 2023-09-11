@@ -69,7 +69,7 @@ foreach ($project in $projects)
     Write-Output "Packing $($project.Name)..."
 
     $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
-    $isPackable = $isPackableProperty -notlike '*false*'
+    $isPackable = $isPackableProperty -NotLike '*false*'
     $isRequired = "$isPackableProperty".Trim() -like 'true'
 
     # Silently skip project if the project file has <IsPackable>false</IsPackable>.
