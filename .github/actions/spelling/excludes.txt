@@ -19,7 +19,6 @@
 \.otf$
 \.pdf$
 \.png$
-\.ps1$
 \.psm1$
 \.ruleset$
 \.sln$
