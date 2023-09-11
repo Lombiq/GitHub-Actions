@@ -2,7 +2,7 @@ name: Validate Pull Request
 
 on:
   workflow_call:
-    # We can't access org secrets here so they need to be passed in.
+    # We can't access org secrets here so they must be passed in.
     secrets:
       JIRA_BASE_URL:
         description: >

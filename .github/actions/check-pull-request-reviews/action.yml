@@ -1,0 +1,28 @@
+name: Check Pull Request Reviews
+description: >
+  Checks current pull request reviews to determine if latest review is approved. Intentionally not documented in Actions.md since it's
+  only meant for internal use.
+
+outputs:
+  last-review-approved:
+    description: "A boolean value indicating if last review is APPROVED."
+    value: ${{ steps.check-reviews.outputs.last-review-approved }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Check Reviews
+      id: check-reviews
+      shell: pwsh
+      run: |
+        $parameters = @{
+            Repository = '${{ github.repository }}'
+            PullRequestNumber = '${{ github.event.pull_request.number }}'
+        }
+        Test-PullRequestReviews @parameters
