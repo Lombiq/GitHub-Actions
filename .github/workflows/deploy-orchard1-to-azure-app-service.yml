@@ -3,6 +3,10 @@ name: Deploy Orchard 1 to Azure App Service
 concurrency:
   group: AzureDeployApp
 
+permissions:
+  id-token: write
+  contents: read
+
 on:
   workflow_call:
     secrets:
@@ -10,7 +14,11 @@ on:
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
-      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL:
+      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID:
+        required: true
+      AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID:
+        required: true
+      AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID:
         required: true
       AZURE_APP_SERVICE_PUBLISH_PROFILE:
         required: true

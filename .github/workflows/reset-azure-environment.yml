@@ -3,10 +3,18 @@ name: Reset Azure Environment
 concurrency:
   group: AzureResetEnvironment
 
+permissions:
+  id-token: write
+  contents: read
+
 on:
   workflow_call:
     secrets:
-      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
+      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL_ID:
+        required: true
+      AZURE_APP_SERVICE_RESET_AZURE_TENANT_ID:
+        required: true
+      AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID:
         required: true
       MAINTENANCE_USER_NAME:
       MAINTENANCE_PASSWORD:
