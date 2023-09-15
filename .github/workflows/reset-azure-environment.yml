@@ -128,7 +128,7 @@ jobs:
   reset-azure-environment:
     runs-on: ${{ inputs.machine-type }}
     name: Reset Azure Environment
-    environment: Staging
+    environment: ${{ inputs.destination-slot-name }}
     defaults:
       run:
         shell: pwsh

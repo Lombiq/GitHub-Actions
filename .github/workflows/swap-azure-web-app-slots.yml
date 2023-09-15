@@ -60,7 +60,7 @@ jobs:
   swap-azure-web-app-slots:
     runs-on: ${{ inputs.machine-type }}
     name: Swap Azure Web App Slots
-    environment: Production
+    environment: ${{ inputs.destination-slot-name }}
     defaults:
       run:
         shell: pwsh

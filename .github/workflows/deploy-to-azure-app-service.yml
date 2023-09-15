@@ -121,7 +121,7 @@ jobs:
   deploy:
     runs-on: ${{ inputs.machine-type }}
     name: Deploy to Azure App Service
-    environment: Staging
+    environment: ${{ inputs.slot-name }}
     defaults:
       run:
         shell: pwsh
