@@ -126,9 +126,11 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-688
         env:
-          SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
         uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
