@@ -128,28 +128,33 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
+        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
+        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Enable Node corepack
+        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
       # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
       # take advantage of the dotnet CLI tolerating the usage of the equal sign.
       - name: Set up runtime option
+        if: false
         id: set-up-runtime-option
-        if: ${{ inputs.runtime != '' }}
+        # if: ${{ inputs.runtime != '' }}
         run: |
           "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
 
       - name: Build and Static Code Analysis
+        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
           directory: ${{ inputs.build-directory }}
@@ -168,6 +173,7 @@ jobs:
             -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       - name: Publish
+        if: false
         run: |
           dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
             --no-build `
@@ -196,6 +202,7 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Deploy to Azure App Service
+        if: false
         uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
         with:
           app-name: ${{ inputs.app-name }}
@@ -204,6 +211,7 @@ jobs:
           package: ${{ inputs.build-directory }}/Published
 
       - name: Add Azure Application Insights Release Annotation
+        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: "Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}"

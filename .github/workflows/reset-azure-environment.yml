@@ -152,6 +152,7 @@ jobs:
             -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Replace Media
+        if: false
         run: |
           Set-AzureWebAppStorageContentFromStorage `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -165,6 +166,7 @@ jobs:
             -FolderWhiteList ${{ inputs.folder-include-list }}
 
       - name: Replace Database
+        if: false
         run: |
           Copy-AzureWebAppSqlDatabase `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -175,6 +177,7 @@ jobs:
             -Force
 
       - name: Add Destination Contained User to Destination Database
+        if: false
         run: |
           Install-Module sqlserver -AllowClobber -Force
           Add-AzureWebAppSqlDatabaseContainedUser `
@@ -185,6 +188,7 @@ jobs:
             -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
       - name: Remove Source Contained User from Destination Database
+        if: false
         run: |
           Remove-AzureWebAppSqlDatabaseContainedUser `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -195,7 +199,8 @@ jobs:
             -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
       - name: Add Azure Application Insights Release Annotation
-        if: ${{ inputs.application-insights-resource-id != '' }}
+        if: false
+        # if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: "Reset #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}"
@@ -216,7 +221,8 @@ jobs:
             -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Start AfterReplace Maintenance on the Destination Slot
-        if: inputs.maintenance-host-name != ''
+        if: false
+        # if: inputs.maintenance-host-name != ''
         run: |
           $maintenanceParameters = @{
             HostName = '${{ inputs.maintenance-host-name }}'
@@ -228,6 +234,7 @@ jobs:
           Start-Maintenance @maintenanceParameters
 
       - name: Scale Database
+        if: false
         run: |
           Set-AzureWebAppSqlDatabaseServiceObjective `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
