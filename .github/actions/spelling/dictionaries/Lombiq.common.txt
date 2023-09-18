@@ -32,6 +32,7 @@ dotnet
 Elasticsearch
 EULA
 EUS
+expando
 Firefox
 formattable
 ftp

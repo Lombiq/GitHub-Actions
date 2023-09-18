@@ -5,7 +5,6 @@ on:
     secrets:
       # We can't access org secrets here so they need to be passed in.
       MERGE_TOKEN:
-        required: false
         description: >
           An authentication token, like a personal access token (PAT), that provides write access to the repository and
           can be used to merge the pull request. This is necessary because when a pull request is merged while being
@@ -35,21 +34,34 @@ on:
           The merge strategy to be used for the auto-merge-pull-request action. See the API documentation for
           "merge_method" for applicable values:
           https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#merge-a-pull-request
-        required: false
         type: string
         default: merge
       timeout-minutes:
-        required: false
         type: number
         default: 1
         description: Configuration for the timeout-minutes parameter of the workflow.
+      run-only-latest-workflow:
+        type: string
+        description: Run only if the current workflow is the most recent workflow.
+        default: true
 
 jobs:
   post-pull-request-checks-automation:
+    name: Post Pull Request Checks Automation
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Check Further Steps Should Run
+        if: inputs.run-only-latest-workflow == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/check-current-workflow-is-latest@dev
+        id: check-steps-should-run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          current-workflow-id: ${{ github.run_id }}
+
       - name: Set Merge Token
+        if: steps.check-steps-should-run.outputs.is-latest != 'false'
         shell: pwsh
         env:
           MERGE_TOKEN: ${{ secrets.MERGE_TOKEN }}
@@ -58,6 +70,7 @@ jobs:
           "MERGE_TOKEN=$mergeToken" >> $Env:GITHUB_ENV
 
       - name: Automatically Merge Pull Request
+        if: steps.check-steps-should-run.outputs.is-latest != 'false'
         uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@dev
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
@@ -65,6 +78,7 @@ jobs:
           merge-method: ${{ inputs.merge-method }}
 
       - name: Automatically Resolve or Done Jira issue
+        if: steps.check-steps-should-run.outputs.is-latest != 'false'
         uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@dev
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
@@ -73,6 +87,7 @@ jobs:
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
 
       - name: Remove Label
+        if: steps.check-steps-should-run.outputs.is-latest != 'false'
         # v2.0.0
         uses: buildsville/add-remove-label@eeae411a9be2e173f2420e1644514edbecc4e835
         with:

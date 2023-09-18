@@ -137,11 +137,30 @@ runs:
         key: ${{ steps.detect-cache-configuration.outputs.key }}
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
+    - name: Write Desired .NET SDK Version to global.json
+      # We do this to force `dotnet build` to use that exact version and avoid breaking builds by silent upgrades.
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        $globalJsonExists = Test-Path -Path .\global.json -PathType Leaf
+        # Read from file or use empty object.
+        $globalJsonContent = $globalJsonExists ? (Get-Content .\global.json -Raw) : '{}'
+        $globalJsonObject = $globalJsonContent | ConvertFrom-Json
+        # Only set the sdk property if it does not exist yet.
+        if (-not (Get-Member -InputObject $globalJsonObject -Name 'sdk' -MemberType NoteProperty)) {
+          $sdkValue = "{ ""version"": ""$Env:DOTNET_SDK_TO_USE"" }" | ConvertFrom-Json
+          Add-Member -InputObject $globalJsonObject -MemberType NoteProperty -Name 'sdk' -Value $sdkValue
+        }
+        # Write back to file.
+        $globalJsonObject | ConvertTo-Json | Set-Content .\global.json
+
     - name: Build and Static Code Analysis
       id: build
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        Write-Output "Using .NET SDK from ./global.json:`n$(Get-Content .\global.json -Raw)"
+
         Initialize-ArtifactNameSuffix '${{ inputs.directory }}'
 
         $buildSwitches = @'

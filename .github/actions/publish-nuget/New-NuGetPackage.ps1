@@ -16,21 +16,82 @@
 
 param([array] $Arguments)
 
+<#
+.SYNOPSIS
+    Updates the given project file with a GetPropertyValue target to retrieve MSBuild properties in a way that
+    Directory.Build.props files also take effect, then retrieves the property.
+#>
+function Get-ProjectProperty
+{
+    param (
+        [string] $ProjectFilePath,
+        [string] $PropertyName
+    )
+
+    try
+    {
+        $projectFileContent = Get-Content $ProjectFilePath -ErrorAction Stop
+
+        $newTarget = @"
+  <Target Name="GetPropertyValue">
+    <Message Importance="High" Text="---Get-ProjectProperty---`$($PropertyName)---Get-ProjectProperty---" />
+  </Target>
+"@
+
+        # Insert the new target XML string just before the closing </Project> tag.
+        $updatedProjectFileContent = $projectFileContent -replace '</Project>', "$newTarget`r`n</Project>"
+
+        # Write the updated content to a new temporary project file.
+        $extension = (Get-Item $ProjectFilePath).Extension
+        $temporaryProjectFilePath = $ProjectFilePath -replace "\$extension`$", ".GetProperty$extension"
+        Set-Content $temporaryProjectFilePath $updatedProjectFileContent -ErrorAction Stop
+
+        $buildOutput = dotnet msbuild $temporaryProjectFilePath /nologo /v:minimal /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue
+        # Adding this seems to have magically fixed the problem where the main project is inexplicably skipped. See the
+        # issue https://github.com/Lombiq/GitHub-Actions/issues/250 for more details.
+        Write-Output "BUILD OUTPUT: '$buildOutput'"
+
+        # Removing the temporary file.
+        Remove-Item $temporaryProjectFilePath
+
+        return [string]::IsNullOrEmpty($buildOutput) ? '' : $buildOutput.Trim().Split('---Get-ProjectProperty---')[1]
+    }
+    catch
+    {
+        Write-Error "::error::Failed to add the GetPropertyValue target: $($_.Exception.Message)."
+    }
+}
+
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
 {
-    $projectFile = [xml](Get-Content $project)
-    $isPackable = $projectFile.SelectSingleNode('//PropertyGroup/IsPackable').InnerText
+    Write-Output "Packing $($project.Name)..."
+
+    $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
+    $isPackable = $isPackableProperty -NotLike '*false*'
+    $isRequired = "$isPackableProperty".Trim() -like 'true'
 
     # Silently skip project if the project file has <IsPackable>false</IsPackable>.
-    if ($isPackable -like '*false*') { continue }
-
-    # Warn and skip if the project doesn't specify a package license file.
-    if (-not $isPackable -and -not $projectFile.SelectSingleNode('//PropertyGroup/PackageLicenseFile').InnerText)
+    if (-not $isPackable)
     {
-        Write-Output ("::warning file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
-            'have a <PackageLicenseFile> property. You can avoid this check by including the <IsPackable> property.')
+        Write-Output "Skipping $($project.Name) because it has <IsPackable>false</IsPackable>."
+        continue
+    }
+
+    # Warn and skip (or throw if required) if the project doesn't specify a package license file.
+    $packageLicenseFileProperty = Get-ProjectProperty -ProjectFilePath $project -PropertyName 'PackageLicenseFile'
+    if ([string]::IsNullOrEmpty($packageLicenseFileProperty))
+    {
+        $messageType = $isRequired ? 'error' : 'warning'
+        Write-Output ("::$messageType file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
+            'have a <PackageLicenseFile> property. You can avoid this check by including the ' +
+            '<IsPackable>false</IsPackable> property.')
+
+        Write-Output "isPackableProperty: '$isPackableProperty'"
+        Write-Output (Get-Content $project)
+
+        if ($isRequired) { exit 1 }
         continue
     }
 

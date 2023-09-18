@@ -7,7 +7,6 @@ on:
   workflow_call:
     secrets:
       CHECKOUT_TOKEN:
-        required: false
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
@@ -19,52 +18,43 @@ on:
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
-        required: false
         type: string
-        default: "false"
+        default: 'false'
       machine-type:
-        required: false
         type: string
         default: ubuntu-22.04
         description: The name of the type of machine to run the workflow under.
       dotnet-version:
-        required: false
         type: string
-        default: 6.0.x
+        default: 7.0.x
         description: Version of the .NET SDK to set up.
       build-directory:
-        required: false
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
       build-verbosity:
-        required: false
         type: string
         default: quiet
         description: Verbosity parameter for dotnet build.
       build-enable-code-analysis:
-        required: false
         type: string
-        default: "false"
+        default: 'false'
         description: Indicates whether to enable static code analysis during dotnet build.
       build-enable-nuget-caching:
-        required: false
         type: string
-        default: "false"
+        default: 'false'
         description: >
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
           packages, but negligible or even slower if you only have a handful.
       build-enable-npm-caching:
-        required: false
         type: string
-        default: "false"
+        default: 'false'
         description: >
           If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
           but negligible or even slower if you only have a handful.
       build-cache-version:
-        required: false
         type: string
-        default: "0"
+        default: '0'
         description: >
           Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
           easiest current way to force "clear" the cache
@@ -72,7 +62,6 @@ on:
           (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
           API.
       timeout-minutes:
-        required: false
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
@@ -91,22 +80,19 @@ on:
         type: string
         description: Name of the resource group.
       web-project-path:
-        required: false
         type: string
-        default: "./src/*Web/*.Web.csproj"
+        default: './src/*Web/*.Web.csproj'
         description: >
           The path of the web project file to be processed. The value is given to PowerShell's `Get-ChildItem` cmdlet
           as-is, so grepping is still possible but a name with spaces must be escaped separately.
       runtime:
-        required: false
         type: string
         description: >
           Publishes the application for a given runtime. If you use this option, set "self-contained" to the desired
           value also. "self-contained" is "false" by default.
       self-contained:
-        required: false
         type: string
-        default: "false"
+        default: 'false'
         description: >
           Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the target
           machine.
@@ -117,9 +103,8 @@ on:
           ID of the Application Insights resource that the release annotation for the deployment should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
       ready-to-run:
-        required: false
         type: string
-        default: "false"
+        default: 'false'
         description: >
           Compiles application assemblies as ReadyToRun (R2R) format. R2R is a form of ahead-of-time (AOT) compilation.
           If ready to run is set to `true` the `runtime` input is needed.

@@ -11,6 +11,7 @@ runs:
           | Tool | Version |
           | :--- | ------: |
           | dotnet | $(dotnet --version) |
+          | dotnetSdks | $(dotnet --list-sdks) |
           | node | $(node -v) |
           | pnpm | $(pnpm -v) |
         "@
