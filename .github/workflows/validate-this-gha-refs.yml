@@ -83,18 +83,18 @@ jobs:
 
       - name: Verify GitHub Actions Items Match Expected Ref (Pull)
         if: github.event_name == 'pull_request' && steps.add-prefix.outputs.prefixed-files != '@()'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@test/OSOE-517
         with:
           called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'
           expected-ref: ${{ steps.determine-ref.outputs.expected-ref }}
 
       - name: Verify GitHub Actions Items Match Expected Ref (Approved PR)
         if: github.event_name == 'pull_request_review' && github.event.review.state == 'approved' && steps.add-prefix.outputs.prefixed-files != '@()'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@test/OSOE-517
         with:
           called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'
           expected-ref: ${{ github.event.pull_request.base.ref }}
 
       - name: Verify GitHub Actions Items Match Expected Ref (Push)
         if: github.event_name == 'push'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@test/OSOE-517
