@@ -175,7 +175,7 @@ Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/
 
 ## Deploy to Azure App Service workflow
 
-This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _deploy-to-azure-app-service.yml_:
+This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). Requires [the repository to have an environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) with a name that matches the `slot-name` parameter. The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _deploy-to-azure-app-service.yml_:
 
 ```yaml
 name: Deploy to Azure App Service
@@ -198,7 +198,9 @@ jobs:
       ready-to-run: true
       application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
     secrets:
-      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
+      AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID }}
+      AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID }}
       AZURE_APP_SERVICE_PUBLISH_PROFILE: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
 ```
 
@@ -276,7 +278,7 @@ jobs:
 
 ## Reset Azure Environment workflow
 
-This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Optionally, [release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) can be added to the corresponding Azure Application Insights resource. Example _reset-azure-environment.yml_:
+This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Requires [the repository to have an environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) with a name that matches the `destination-slot-name` parameter. Optionally, [release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) can be added to the corresponding Azure Application Insights resource. Example _reset-azure-environment.yml_:
 
 ```yaml
 name: Reset Azure Environment
@@ -292,16 +294,20 @@ jobs:
       timeout-minutes: 60
       app-name: AppName
       resource-group-name: ResourceGroupName
+      source-slot-name: Production
+      destination-slot-name: Staging
       database-connection-string-name: Database__ConnectionString
       master-database-connection-string-name: Database__ConnectionString-master
       storage-connection-string-name: Storage_ConnectionString
     secrets:
-      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_RESET_ENVIRONMENT_SERVICE_PRINCIPAL }}
+      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL_ID }}
+      AZURE_APP_SERVICE_RESET_AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_AZURE_TENANT_ID }}
+      AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID }}
 ```
 
 ## Swap Azure Web App Slots workflow
 
-This workflow swaps two Azure Web App Slots associated with an Azure Web App. [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _swap-azure-web-app-slots.yml_:
+This workflow swaps two Azure Web App Slots associated with an Azure Web App. Requires [the repository to have an environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) with a name that matches the `destination-slot-name` parameter. [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _swap-azure-web-app-slots.yml_:
 
 ```yaml
 name: Swap Azure Web App Slots
@@ -317,13 +323,17 @@ jobs:
       timeout-minutes: 10
       app-name: AppName
       resource-group-name: ResourceGroupName
+      source-slot-name: Staging
+      destination-slot-name: Production
       application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
     secrets:
-      AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SWAP_WEB_APP_SLOTS_SERVICE_PRINCIPAL }}
+      AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
+      AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}
+      AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID }}
 
 ```
 
-To restrict who can run the swap workflow, we recommend putting it into its own repository. [GitHub environments](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) would be better, because they not only provide [a nice display of what's currently deployed where](https://docs.github.com/en/actions/deployment/managing-your-deployments/viewing-deployment-history), but allow secrets specific to environments like staging/production, and also can have required reviewers (i.e. not everyone is able to run a swap who has write access to the repository). However, this latter one is [only available under the Enterprise plan](https://github.com/orgs/community/discussions/26262). (Branch protection rules are not a suitable substitute.)
+To restrict who can edit or run the Swap workflow, we recommend putting into a separate repository independent of your application code. If you're [on the Enterprise plan, you can add required reviewers](https://github.com/orgs/community/discussions/26262) instead, so that not everyone is able to run a swap who has write access to the repository.
 
 This workflow has an alternate version (_swap-orchard1-azure-web-app-slots.yml_) designed for Orchard 1-based applications.
 

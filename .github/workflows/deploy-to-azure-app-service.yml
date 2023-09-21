@@ -14,12 +14,16 @@ on:
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
+
+      # These secrets are used for Azure authentication through Service Principal Federated Credentials with the
+      # azure/login (https://github.com/azure/login) action, which is proxied by our login-to-azure action below.
       AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID:
         required: true
       AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID:
         required: true
       AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID:
         required: true
+
       AZURE_APP_SERVICE_PUBLISH_PROFILE:
         required: true
 

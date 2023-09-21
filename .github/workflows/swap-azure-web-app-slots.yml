@@ -10,12 +10,15 @@ permissions:
 on:
   workflow_call:
     secrets:
+      # These secrets are used for Azure authentication through Service Principal Federated Credentials with the
+      # azure/login (https://github.com/azure/login) action, which is proxied by our login-to-azure action below.
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID:
         required: true
       AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID:
         required: true
       AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID:
         required: true
+
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
