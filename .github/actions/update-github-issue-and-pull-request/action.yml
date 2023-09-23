@@ -9,6 +9,12 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+  
+    - name: Check Issues Are Disabled
+      id: check-issues-are-disabled
+      run: | 
+        $message = $(gh issue list)
+        echo $message
 
     - name: Add Jira Issue Code to Pull Request
       # If this is run for a PR opened from a fork (not from a branch in the given repo) then "Resource not accessible
