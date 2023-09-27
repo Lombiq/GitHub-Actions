@@ -13,17 +13,17 @@ on:
       # These secrets are for OpenID Connect-based authentication with Azure services through the azure/login action
       # (proxied by our login-to-azure action below). Check out its documentation on how these secrets are used:
       # https://github.com/azure/login.
-      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID:
+      AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID:
         required: true
         description: >
           The Application (client) ID of the Azure Service Principal or Managed Credential, which will be
           mapped to the client-id parameter when calling azure/login.
-      AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID:
+      AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID:
         required: true
         description: >
           The Tenant (Directory) ID of the Microsoft Entra ID tenant, which will be mapped to the tenant-id parameter
           when calling azure/login.
-      AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID:
+      AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID:
         required: true
         description: >
           The ID of the Azure Subscription the resources are under, which will be mapped to the
