@@ -19,8 +19,9 @@ runs:
         $repo = ${{ github.repository }}
         echo $repo
         $message = "the ${{ github.repository }} has disabled issues"
-        if [[ "$issueResponse" == "$message" ]]; then
+        if("$issueResponse" == "$message") {
           echo "YES"
+        }
 
     - name: Add Jira Issue Code to Pull Request
       # If this is run for a PR opened from a fork (not from a branch in the given repo) then "Resource not accessible
