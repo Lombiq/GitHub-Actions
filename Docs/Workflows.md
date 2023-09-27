@@ -191,6 +191,7 @@ jobs:
       timeout-minutes: 60
       app-name: AppName
       resource-group-name: ResourceGroupName
+      # This is also the default slot name but here's how you can configure it.
       slot-name: Staging
       url: https://www.myapp.com
       runtime: win-x86
@@ -324,6 +325,7 @@ jobs:
       timeout-minutes: 10
       app-name: AppName
       resource-group-name: ResourceGroupName
+      # These are also the default slot names but here's how you can configure them.
       source-slot-name: Staging
       destination-slot-name: Production
       application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
