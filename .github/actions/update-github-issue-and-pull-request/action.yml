@@ -16,7 +16,6 @@ runs:
       run: | 
         $issueResponse = $(gh issue list --repo '${{ github.repository }}')
         echo $message
-        $repo = ${{ github.repository }}
         $message = "the ${{ github.repository }} has disabled issues"
         echo "$message"
 
