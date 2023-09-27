@@ -258,13 +258,6 @@ jobs:
             -ConnectionStringName ${{ inputs.master-database-connection-string-name }} `
             -ServiceObjectiveName ${{ inputs.service-objective-name }}
 
-      - name: Stop Web App Slot (should fail)
-        run: |
-          Stop-AzureWebAppSlot `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.destination-slot-name }}
-
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
