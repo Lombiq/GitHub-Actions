@@ -294,6 +294,7 @@ jobs:
       timeout-minutes: 60
       app-name: AppName
       resource-group-name: ResourceGroupName
+      # These are also the default slot names but here's how you can configure them.
       source-slot-name: Production
       destination-slot-name: Staging
       database-connection-string-name: Database__ConnectionString
