@@ -149,7 +149,6 @@ jobs:
             /t:Precompiled
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
-      # Also calling logout-from-azure later on.
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-688
         env:
@@ -215,9 +214,6 @@ jobs:
             MaintenanceName = '${{ inputs.slot-name }}AfterDeploy'
           }
           Start-Maintenance @maintenanceParameters
-
-      - name: Logout from Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/logout-from-azure@issue/OSOE-688
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

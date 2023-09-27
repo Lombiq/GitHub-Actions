@@ -3,8 +3,7 @@ description: >
   Logs in to Azure using OpenID Connect by impersonating a Service Principal or Managed Credential. After a successful
   login, the action will set up the necessary credentials and environment variables for the service to be able to access
   Azure resources. The service can then use these credentials to make API calls to Azure services. Intentionally not
-  documented in Actions.md since it's only meant for internal use. It is a good practice to destroy the authentication
-  session when you no longer need to access Azure resources, see the logout-from-azure action for that.
+  documented in Actions.md since it's only meant for internal use.
 
 inputs:
   enable-az-ps-session:
