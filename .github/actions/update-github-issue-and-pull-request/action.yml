@@ -11,6 +11,7 @@ runs:
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
   
     - name: Check Issues Are Disabled
+      shell: pwsh
       id: check-issues-are-disabled
       run: | 
         $message = $(gh issue list)
