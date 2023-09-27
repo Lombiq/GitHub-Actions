@@ -20,6 +20,9 @@ runs:
       id: repository-has-disabled-issues
       run: | 
         $issueResponse = $(gh issue list --repo '${{ github.repository }}')
+        echo $issueResponse
         $message = "the '${{ github.repository }}' repository has disabled issues"
+        echo $message
         $shouldSkip = ($issueResponse -eq $message)
+        echo $shouldSkip
         Set-GitHubOutput 'issues-disabled' "$shouldSkip"
