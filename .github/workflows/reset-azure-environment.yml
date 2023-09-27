@@ -262,6 +262,13 @@ jobs:
       - name: Logout from Azure
         uses: Lombiq/GitHub-Actions/.github/actions/logout-from-azure@issue/OSOE-688
 
+      - name: Stop Web App Slot (should fail)
+        run: |
+          Stop-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }}
+
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
