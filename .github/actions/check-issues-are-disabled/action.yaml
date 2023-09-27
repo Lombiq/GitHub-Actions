@@ -4,7 +4,7 @@ description: Checks whether the current repository has disabled the issues featu
 outputs:
   issues-disabled:
     description: Whether the issues are disabled or not.
-    value: ${{ steps.check-issues-are-disabled.}}
+    value: ${{ steps.check-issues-are-disabled }}
 
 runs:
   using: "composite"
