@@ -1,0 +1,17 @@
+name: Logout from Azure
+description: >
+  Destroys the Azure authentication session for security hardening, which is recommended when running on
+  non-GitHub-hosted runners. See https://github.com/azure/login#az-logout-and-security-hardening for more information.
+  Intentionally not documented in Actions.md since it's only meant for internal use.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Logout from Azure
+      # v1.0.8
+      uses: azure/CLI@b0e31ae20280d899279f14c36e877b4c6916e2d3
+      with:
+        inlineScript: |
+          az logout
+          az cache purge
+          az account clear

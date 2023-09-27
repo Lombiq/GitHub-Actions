@@ -149,6 +149,7 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      # Also calling logout-from-azure later on.
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-688
         env:
@@ -257,6 +258,9 @@ jobs:
             -SlotName ${{ inputs.destination-slot-name }} `
             -ConnectionStringName ${{ inputs.master-database-connection-string-name }} `
             -ServiceObjectiveName ${{ inputs.service-objective-name }}
+
+      - name: Logout from Azure
+        uses: Lombiq/GitHub-Actions/.github/actions/logout-from-azure@issue/OSOE-688
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

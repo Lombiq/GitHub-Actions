@@ -200,6 +200,7 @@ jobs:
             -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
             ${{ steps.set-up-runtime-option.outputs.runtime-option }}
 
+      # Also calling logout-from-azure later on.
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-688
         env:
@@ -246,6 +247,9 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
+
+      - name: Logout from Azure
+        uses: Lombiq/GitHub-Actions/.github/actions/logout-from-azure@issue/OSOE-688
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

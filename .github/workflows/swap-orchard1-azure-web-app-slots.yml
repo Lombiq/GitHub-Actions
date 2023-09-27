@@ -91,6 +91,7 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      # Also calling logout-from-azure later on.
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-688
         env:
@@ -131,6 +132,9 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
+
+      - name: Logout from Azure
+        uses: Lombiq/GitHub-Actions/.github/actions/logout-from-azure@issue/OSOE-688
 
       - name: Start AfterSwap Maintenance on the Destination Slot
         if: false
