@@ -27,7 +27,7 @@ jobs:
 
       - name: Update Github issue and Pull Request
         if: github.event_name == 'pull_request' || steps.check-issues-are-disabled.issues-disabled == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@issue/OSOE-689
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
