@@ -19,9 +19,9 @@ runs:
         $message = "the '${{ github.repository }}' repository has disabled issues"
         echo "$message"
         if($issueResponse -like "*$message*") {
-          Write-Output "::set-output name=should-skip::true"
+          Set-GitHubOutput 'should-skip' true
         } else {
-          Write-Output "::set-output name=should-skip::false"
+          Set-GitHubOutput 'should-skip' false
         }
 
     - name: Add Jira Issue Code to Pull Request
