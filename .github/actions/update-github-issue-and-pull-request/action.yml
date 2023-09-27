@@ -9,20 +9,6 @@ runs:
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
-  
-    - name: Check Issues Are Disabled
-      shell: pwsh
-      id: check-issues-are-disabled
-      run: | 
-        $issueResponse = $(gh issue list --repo '${{ github.repository }}')
-        echo $issueResponse
-        $message = "the '${{ github.repository }}' repository has disabled issues"
-        echo "$message"
-        if($issueResponse -like "*$message*") {
-          Set-GitHubOutput 'should-skip' true
-        } else {
-          Set-GitHubOutput 'should-skip' false
-        }
 
     - name: Add Jira Issue Code to Pull Request
       # If this is run for a PR opened from a fork (not from a branch in the given repo) then "Resource not accessible

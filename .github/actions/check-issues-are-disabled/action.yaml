@@ -1,0 +1,28 @@
+name: Check Issues Are Disabled
+description: Checks whether the current repository has disabled the issues feature.
+
+outputs:
+  issues-disabled:
+    description: Whether the issues are disabled or not.
+    value: ${{ steps.check-issues-are-disabled.}}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+  
+    - name: Check Issues Are Disabled
+      shell: pwsh
+      id: check-issues-are-disabled
+      run: | 
+        $issueResponse = $(gh issue list --repo '${{ github.repository }}')
+        $message = "the '${{ github.repository }}' repository has disabled issues"
+        if($issueResponse -like "*$message*") {
+          Set-GitHubOutput 'issues-disabled' true
+        } else {
+          Set-GitHubOutput 'issues-disabled' false
+        }

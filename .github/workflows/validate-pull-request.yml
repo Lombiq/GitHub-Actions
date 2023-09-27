@@ -19,9 +19,13 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Check issues are Disabled
+        id: issues-are-disabled
+        uses: Lombiq/GitHub-Actions/.github/actions/check-issues-are-disabled@issue/OSOE-689
+
       - name: Update Github issue and Pull Request
-        if: github.event_name == 'pull_request'
-        uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@issue/OSOE-689
+        if: github.event_name == 'pull_request' || steps.issues-are-disabled.issues-disabled == 'false'
+        uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
