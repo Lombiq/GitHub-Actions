@@ -16,8 +16,8 @@ on:
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID:
         required: true
         description: >
-          The Application (client) ID of the Azure Service Principal or Managed Credential, which will be
-          mapped to the client-id parameter when calling azure/login.
+          The Application (client) ID of the Azure Service Principal or Managed Credential, which will be mapped to the
+          client-id parameter when calling azure/login.
       AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID:
         required: true
         description: >
@@ -26,9 +26,9 @@ on:
       AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID:
         required: true
         description: >
-          The ID of the Azure Subscription the resources are under, which will be mapped to the
-          subscription-id parameter when calling azure/login. You can look this up e.g. in the Azure Portal under any
-          resource or the subscription itself.
+          The ID of the Azure Subscription the resources are under, which will be mapped to the subscription-id
+          parameter when calling azure/login. You can look this up e.g. in the Azure Portal under any resource or the
+          subscription itself.
 
     inputs:
       cancel-workflow-on-failure:
