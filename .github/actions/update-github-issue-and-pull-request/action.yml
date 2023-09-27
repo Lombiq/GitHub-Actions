@@ -16,7 +16,7 @@ runs:
       run: | 
         $issueResponse = $(gh issue list --repo '${{ github.repository }}')
         echo $message
-        $message = "the ${{ github.repository }} has disabled issues"
+        $message = "the '${{ github.repository }}' repository has disabled issues"
         echo "$message"
 
     - name: Add Jira Issue Code to Pull Request
