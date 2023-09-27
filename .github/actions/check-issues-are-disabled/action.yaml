@@ -18,8 +18,11 @@ runs:
     - name: Check Issues Are Disabled In Current Repository
       shell: pwsh
       id: repository-has-disabled-issues
-      run: | 
+      run: |
+        $sample =  "the 'Lombiq/Open-Source-Orchard-Core-Extensions' repository has disabled issues"
+        echo $sample
         $issueResponse = $(gh issue list --repo '${{ github.repository }}')
         $message = "the '${{ github.repository }}' repository has disabled issues"
-        $shouldSkip = ("$issueResponse" -match "$message")
+        $shouldSkip = ("$sample" -match "$message")
+        echo $shouldSkip
         Set-GitHubOutput 'issues-disabled' $shouldSkip
