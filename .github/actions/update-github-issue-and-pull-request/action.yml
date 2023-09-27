@@ -14,7 +14,7 @@ runs:
       shell: pwsh
       id: check-issues-are-disabled
       run: | 
-        $message = $(gh issue list)
+        $message = $(gh issue list --repo '${{ github.repository }}')
         echo $message
 
     - name: Add Jira Issue Code to Pull Request
