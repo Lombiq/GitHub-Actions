@@ -122,23 +122,19 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Enable Node corepack
-        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       # Calling nuget restore separately on the actual solution, because we're passing Orchard.proj to the msbuild
       # action instead to be able to call the Precompiled target.
       - name: Restore NuGet packages
-        if: false
         run: nuget restore ${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
       - name: Publish Precompiled App
-        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
         with:
           solution-or-project-path: Orchard.proj
@@ -172,7 +168,6 @@ jobs:
         run: Start-Sleep -Seconds 30
 
       - name: Deploy to Azure App Service
-        if: false
         uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
         with:
           app-name: ${{ inputs.app-name }}
@@ -181,8 +176,7 @@ jobs:
           package: build\Precompiled
 
       - name: Add Azure Application Insights Release Annotation
-        if: false
-        # if: ${{ inputs.application-insights-resource-id != '' }}
+        if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: "Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}"
@@ -203,8 +197,7 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Start AfterDeploy Maintenance on the Destination Slot
-        if: false
-        # if: inputs.maintenance-host-name != ''
+        if: inputs.maintenance-host-name != ''
         run: |
           $maintenanceParameters = @{
             HostName = '${{ inputs.maintenance-host-name }}'

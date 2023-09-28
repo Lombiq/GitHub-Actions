@@ -98,7 +98,6 @@ jobs:
             -SlotName ${{ inputs.source-slot-name }}
 
       - name: Swap Web App Slots
-        if: false
         run: |
           Switch-AzWebAppSlot `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -107,7 +106,6 @@ jobs:
             -DestinationSlotName ${{ inputs.destination-slot-name }}
 
       - name: Add Azure Application Insights Release Annotation
-        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: "Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}"
