@@ -152,7 +152,7 @@ runs:
       # When updating the check-spelling action to a new release, update the 'cspell' prefix in the 'Merge dictionary
       # source prefixes' step with the dictionary version tag that belongs to the commit of the release. See
       # https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
-      uses: check-spelling/check-spelling@9c26eaca92f861ea539de0daf947a25a0e6a9ea7 # v0.0.22.alpha2 prerelease
+      uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # v0.0.22
       with:
         check_file_names: 1
         config: ${{ inputs.configuration-path }}
