@@ -19,14 +19,17 @@ on:
         required: true
         description: The project key in JIRA, i.e. the prefix of issue keys (the "KEY" part of KEY-123).
       DISCUSSION_JIRA_ISSUE_DESCRIPTION:
+        required: false
         description: >
           Template for the Jira issues to be created for GitHub discussions, using the internal markup format of Jira
           (not Markdown). See the documentation for details.
       ISSUE_JIRA_ISSUE_DESCRIPTION:
+        required: false
         description: >
           Template for the Jira issues to be created for GitHub issues, using the internal markup format of Jira (not
           Markdown). See the documentation for details.
       PULL_REQUEST_JIRA_ISSUE_DESCRIPTION:
+        required: false
         description: >
           Template for the Jira issues to be created for GitHub pull requests, using the internal markup format of Jira
           (not Markdown). See the documentation for details.
