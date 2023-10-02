@@ -151,7 +151,8 @@ runs:
       id: step-check-spelling
       # When updating the check-spelling action to a new release, update the 'cspell' prefix in the "Merge configuration
       # source prefixes" step with the dictionary version tag that belongs to the commit of the release. See
-      # https://github.com/check-spelling/check-spelling/blob/v0.0.22/action.yml#L67 for current version.
+      # https://github.com/check-spelling/check-spelling/blob/v0.0.22/action.yml#L67 for current version. These
+      # dictionaries are under https://github.com/check-spelling/cspell-dicts/tree/main/dictionaries.
       uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # v0.0.22
       with:
         check_file_names: 1
