@@ -126,7 +126,7 @@ runs:
       run: |
         $defaultPrefixes = @{
           'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/'
-          'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/'
+          'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20230509/dictionaries/'
         }
 
         $additionalPrefixesInput = '${{ inputs.additional-configuration-source-prefixes }}'
@@ -149,9 +149,9 @@ runs:
 
     - name: Check Spelling
       id: step-check-spelling
-      # When updating the check-spelling action to a new release, update the 'cspell' prefix in the 'Merge dictionary
-      # source prefixes' step with the dictionary version tag that belongs to the commit of the release. See
-      # https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
+      # When updating the check-spelling action to a new release, update the 'cspell' prefix in the "Merge configuration
+      # source prefixes" step with the dictionary version tag that belongs to the commit of the release. See
+      # https://github.com/check-spelling/check-spelling/blob/v0.0.22/action.yml#L67 for current version.
       uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # v0.0.22
       with:
         check_file_names: 1
