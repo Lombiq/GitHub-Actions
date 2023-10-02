@@ -12,3 +12,11 @@ jobs:
   spelling:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@issue/OSOE-636
+
+  dump-github-context:
+    runs-on: ubuntu-latest
+    steps:
+    - env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      shell: pwsh
+      run: Write-Output $Env:GITHUB_CONTEXT
