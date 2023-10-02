@@ -126,8 +126,7 @@ runs:
       shell: pwsh
       run: |
         $defaultPrefixes = @{
-          # Replace "dev" with your branch, e.g. "issue/OSOE-123" if you change the dictionaries.
-          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-636/.github/actions/spelling/'
+          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/${{ github.head_ref }}/.github/actions/spelling/'
           'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20230509/dictionaries/'
         }
 
