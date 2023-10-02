@@ -168,18 +168,20 @@ runs:
           cspell:companies/src/companies.txt
           cspell:cryptocurrencies/cryptocurrencies.txt
           cspell:csharp/csharp.txt
-          cspell:css/css.txt
+          cspell:css/dict/css.txt
           cspell:docker/src/docker-words.txt
-          cspell:dotnet/dotnet.txt
+          cspell:dotnet/dict/dotnet.txt
           cspell:filetypes/filetypes.txt
           cspell:fonts/fonts.txt
-          cspell:fullstack/fullstack.txt
-          cspell:html/html.txt
+          cspell:fullstack/dict/fullstack.txt
+          cspell:html-symbol-entities/entities.txt
+          cspell:html/dict/html.txt
+          cspell:html/src/svg.tx
           cspell:lorem-ipsum/dictionary.txt
           cspell:node/additional_words.txt
           cspell:node/node.txt
-          cspell:npm/npm.txt
-          cspell:powershell/powershell.txt
+          cspell:npm/dict/npm.txt
+          cspell:powershell/dict/powershell.txt
           cspell:public-licenses/src/generated/public-licenses.txt
           cspell:software-terms/src/network-os.txt
           cspell:software-terms/src/network-protocols.txt
@@ -187,7 +189,7 @@ runs:
           cspell:software-terms/src/software-tools.txt
           cspell:sql/src/sql.txt
           cspell:sql/src/tsql.txt
-          cspell:typescript/typescript.txt
+          cspell:typescript/dict/typescript.txt
           lombiq-lgha:dictionaries/Liquid.txt
           lombiq-lgha:dictionaries/Lombiq.common.txt
           lombiq-lgha:dictionaries/Lombiq.people.txt
