@@ -36,6 +36,7 @@ expando
 Firefox
 formattable
 ftp
+GitHub
 gitmodules
 Graphi
 gulpfile
