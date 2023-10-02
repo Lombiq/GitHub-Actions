@@ -183,10 +183,9 @@ runs:
           cspell:npm/dict/npm.txt
           cspell:powershell/dict/powershell.txt
           cspell:public-licenses/src/generated/public-licenses.txt
-          cspell:software-terms/src/network-os.txt
-          cspell:software-terms/src/network-protocols.txt
-          cspell:software-terms/src/software-terms.txt
-          cspell:software-terms/src/software-tools.txt
+          cspell:software-terms/dict/networkingTerms.txt
+          cspell:software-terms/dict/softwareTerms.txt
+          cspell:software-terms/dict/webServices.txt
           cspell:sql/src/sql.txt
           cspell:sql/src/tsql.txt
           cspell:typescript/dict/typescript.txt
