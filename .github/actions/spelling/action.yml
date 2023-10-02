@@ -26,7 +26,7 @@ inputs:
     required: false
     default: |
       cspell:filetypes/filetypes.txt
-      cspell:software-terms/src/software-terms.txt
+      cspell:software-terms/dict/softwareTerms.txt
       lombiq-lgha:dictionaries/Lombiq.common.txt
   additional-configuration-source-prefixes:
     description: >
