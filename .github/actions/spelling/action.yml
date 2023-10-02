@@ -28,8 +28,6 @@ inputs:
       cspell:filetypes/filetypes.txt
       cspell:software-terms/src/software-terms.txt
       lombiq-lgha:dictionaries/Lombiq.common.txt
-      cspell:software-terms/src/software-tools.txt
-      cspell:npm/dict/npm.txt
   additional-configuration-source-prefixes:
     description: >
       JSON map of prefixes for configuration file (for now, only dictionary) URLs.
