@@ -176,7 +176,7 @@ runs:
           cspell:fullstack/dict/fullstack.txt
           cspell:html-symbol-entities/entities.txt
           cspell:html/dict/html.txt
-          cspell:html/src/svg.tx
+          cspell:html/src/svg.txt
           cspell:lorem-ipsum/dictionary.txt
           cspell:node/additional_words.txt
           cspell:node/node.txt
