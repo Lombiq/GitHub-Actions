@@ -179,7 +179,7 @@ runs:
           cspell:html/src/svg.txt
           cspell:lorem-ipsum/dictionary.txt
           cspell:node/additional_words.txt
-          cspell:node/node.txt
+          cspell:node/dict/node.txt
           cspell:npm/dict/npm.txt
           cspell:powershell/dict/powershell.txt
           cspell:public-licenses/src/generated/public-licenses.txt
