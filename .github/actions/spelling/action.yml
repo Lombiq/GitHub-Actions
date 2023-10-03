@@ -152,8 +152,7 @@ runs:
       id: step-check-spelling
       # When updating the check-spelling action to a new release, update the 'cspell' prefix in the "Merge configuration
       # source prefixes" step with the dictionary version tag that belongs to the commit of the release. See
-      # https://github.com/check-spelling/check-spelling/blob/v0.0.22/action.yml#L67 for current version. These
-      # dictionaries are under https://github.com/check-spelling/cspell-dicts/tree/main/dictionaries.
+      # https://github.com/check-spelling/check-spelling/blob/v0.0.22/action.yml#L67 for current version.
       # Also update check_extra_dictionaries below as necessary.
       uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # v0.0.22
       with:
@@ -169,9 +168,10 @@ runs:
         # While extra_dictionaries adds dictionaries that'll be used for spell-checking, the dictionaries under
         # check_extra_dictionaries will only be used to provide hints for unrecognized words. You'll see this under the
         # check-spelling report (PR comment and workflow run summary) along the lines of "Available dictionaries could
-        # cover words not in the dictionary". The values here are some of the default dictionaries and ours. When
-        # updating the check-spelling action to a new release, consider updating this list too with new entries from
-        # https://github.com/check-spelling/check-spelling/blob/main/action.yml.
+        # cover words not in the dictionary". The values here are some of the default dictionaries and ours. The default
+        # dictionaries are under https://github.com/check-spelling/cspell-dicts/tree/main/dictionaries.
+        # When updating the check-spelling action to a new release, consider updating this list too with new entries
+        # from https://github.com/check-spelling/check-spelling/blob/main/action.yml.
         check_extra_dictionaries: |
           cspell:aws/aws.txt
           cspell:companies/src/companies.txt
