@@ -9,7 +9,7 @@ on:
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
 
-    # If updating defaults here also update them in the `spelling` action.
+    # When updating defaults here also update them in the `spelling` action.
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
