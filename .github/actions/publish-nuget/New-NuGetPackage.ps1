@@ -47,6 +47,9 @@ function Get-ProjectProperty
         Set-Content $temporaryProjectFilePath $updatedProjectFileContent -ErrorAction Stop
 
         $buildOutput = dotnet msbuild $temporaryProjectFilePath /nologo /v:minimal /p:DesignTimeBuild=true /p:BuildProjectReferences=false /t:GetPropertyValue
+        # Adding this seems to have magically fixed the problem where the main project is inexplicably skipped. See the
+        # issue https://github.com/Lombiq/GitHub-Actions/issues/250 for more details.
+        Write-Output "BUILD OUTPUT: '$buildOutput'"
 
         # Removing the temporary file.
         Remove-Item $temporaryProjectFilePath
@@ -66,7 +69,8 @@ foreach ($project in $projects)
     Write-Output "Packing $($project.Name)..."
 
     $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
-    $isPackable = [string]::IsNullOrEmpty($isPackableProperty) -or $isPackableProperty -notlike '*false*'
+    $isPackable = $isPackableProperty -NotLike '*false*'
+    $isRequired = "$isPackableProperty".Trim() -like 'true'
 
     # Silently skip project if the project file has <IsPackable>false</IsPackable>.
     if (-not $isPackable)
@@ -75,13 +79,19 @@ foreach ($project in $projects)
         continue
     }
 
-    # Warn and skip if the project doesn't specify a package license file.
-    $packageLicenseFileProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'PackageLicenseFile'
+    # Warn and skip (or throw if required) if the project doesn't specify a package license file.
+    $packageLicenseFileProperty = Get-ProjectProperty -ProjectFilePath $project -PropertyName 'PackageLicenseFile'
     if ([string]::IsNullOrEmpty($packageLicenseFileProperty))
     {
-        Write-Output ("::warning file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
-            'have a <PackageLicenseFile> property. You can avoid this check by including the " +
-            "<IsPackable>false</IsPackable> property.')
+        $messageType = $isRequired ? 'error' : 'warning'
+        Write-Output ("::$messageType file=$($project.FullName)::Packing was skipped because $($project.Name) doesn't " +
+            'have a <PackageLicenseFile> property. You can avoid this check by including the ' +
+            '<IsPackable>false</IsPackable> property.')
+
+        Write-Output "isPackableProperty: '$isPackableProperty'"
+        Write-Output (Get-Content $project)
+
+        if ($isRequired) { exit 1 }
         continue
     }
 

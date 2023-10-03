@@ -2,6 +2,7 @@
 name: Spelling
 description: Checks for spelling errors in files.
 
+# When updating defaults here also update them in the `spelling` workflow.
 inputs:
   merge-file-excludes:
     description: >
@@ -26,7 +27,7 @@ inputs:
     required: false
     default: |
       cspell:filetypes/filetypes.txt
-      cspell:software-terms/src/software-terms.txt
+      cspell:software-terms/dict/softwareTerms.txt
       lombiq-lgha:dictionaries/Lombiq.common.txt
   additional-configuration-source-prefixes:
     description: >
@@ -125,8 +126,8 @@ runs:
       shell: pwsh
       run: |
         $defaultPrefixes = @{
-          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/'
-          'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20220816/dictionaries/'
+          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/${{ github.head_ref }}/.github/actions/spelling/'
+          'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20230509/dictionaries/'
         }
 
         $additionalPrefixesInput = '${{ inputs.additional-configuration-source-prefixes }}'
@@ -149,10 +150,11 @@ runs:
 
     - name: Check Spelling
       id: step-check-spelling
-      # When updating the check-spelling action to a new release, update the 'cspell' prefix in the 'Merge dictionary
-      # source prefixes' step with the dictionary version tag that belongs to the commit of the release. See
-      # https://github.com/check-spelling/check-spelling/blob/v0.0.21/action.yml#L67 for current version.
-      uses: check-spelling/check-spelling@d7cd2973c513e84354f9d6cf50a6417a628a78ce # v0.0.21
+      # When updating the check-spelling action to a new release, update the 'cspell' prefix in the "Merge configuration
+      # source prefixes" step with the dictionary version tag that belongs to the commit of the release. See
+      # https://github.com/check-spelling/check-spelling/blob/v0.0.22/action.yml#L67 for current version.
+      # Also update check_extra_dictionaries below as necessary.
+      uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # v0.0.22
       with:
         check_file_names: 1
         config: ${{ inputs.configuration-path }}
@@ -163,31 +165,40 @@ runs:
         spell_check_this: ${{ inputs.default-configuration-repository }}
         suppress_push_for_open_pull_request: 1
         task: ${{ inputs.task }}
+        # While extra_dictionaries adds dictionaries that'll be used for spell-checking, the dictionaries under
+        # check_extra_dictionaries will only be used to provide hints for unrecognized words. You'll see this under the
+        # check-spelling report (PR comment and workflow run summary) along the lines of "Available dictionaries could
+        # cover words not in the dictionary". The values here are some of the default dictionaries and ours. The default
+        # dictionaries are under https://github.com/check-spelling/cspell-dicts/tree/main/dictionaries.
+        # When updating the check-spelling action to a new release, consider updating this list too with new entries
+        # from https://github.com/check-spelling/check-spelling/blob/main/action.yml.
         check_extra_dictionaries: |
           cspell:aws/aws.txt
           cspell:companies/src/companies.txt
           cspell:cryptocurrencies/cryptocurrencies.txt
           cspell:csharp/csharp.txt
-          cspell:css/css.txt
+          cspell:css/dict/css.txt
           cspell:docker/src/docker-words.txt
-          cspell:dotnet/dotnet.txt
+          cspell:dotnet/dict/dotnet.txt
           cspell:filetypes/filetypes.txt
           cspell:fonts/fonts.txt
-          cspell:fullstack/fullstack.txt
-          cspell:html/html.txt
+          cspell:fullstack/dict/fullstack.txt
+          cspell:html-symbol-entities/entities.txt
+          cspell:html/dict/html.txt
+          cspell:html/src/svg.txt
           cspell:lorem-ipsum/dictionary.txt
           cspell:node/additional_words.txt
-          cspell:node/node.txt
-          cspell:npm/npm.txt
-          cspell:powershell/powershell.txt
+          cspell:node/dict/node.txt
+          cspell:npm/dict/npm.txt
+          cspell:powershell/dict/powershell.txt
+          cspell:public-licenses/src/additional-licenses.txt
           cspell:public-licenses/src/generated/public-licenses.txt
-          cspell:software-terms/src/network-os.txt
-          cspell:software-terms/src/network-protocols.txt
-          cspell:software-terms/src/software-terms.txt
-          cspell:software-terms/src/software-tools.txt
+          cspell:software-terms/dict/networkingTerms.txt
+          cspell:software-terms/dict/softwareTerms.txt
+          cspell:software-terms/dict/webServices.txt
           cspell:sql/src/sql.txt
           cspell:sql/src/tsql.txt
-          cspell:typescript/typescript.txt
+          cspell:typescript/dict/typescript.txt
           lombiq-lgha:dictionaries/Liquid.txt
           lombiq-lgha:dictionaries/Lombiq.common.txt
           lombiq-lgha:dictionaries/Lombiq.people.txt

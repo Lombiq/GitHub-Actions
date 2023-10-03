@@ -35,25 +35,23 @@ on:
           (not Markdown). See the documentation for details.
     inputs:
       issue-component:
-        required: false
         type: string
         description: Optional component of the Jira issues being created.
       suffix-issue-titles:
-        required: false
         type: string
-        default: "true"
+        default: 'true'
         description: >
           If set to "true", Jira issue titles will be suffixed with "in <issue-component>" if the issue-component
           parameter is specified, or the repository name. If set to "false", no suffix will be added to Jira issue
           titles.
       timeout-minutes:
-        required: false
         type: number
         default: 5
         description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
   create-jira-issues-for-community-activities:
+    name: Create Jira issues for community activities
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:

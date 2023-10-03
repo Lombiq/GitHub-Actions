@@ -32,9 +32,11 @@ dotnet
 Elasticsearch
 EULA
 EUS
+expando
 Firefox
 formattable
 ftp
+github
 gitmodules
 Graphi
 gulpfile

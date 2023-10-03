@@ -9,65 +9,56 @@ on:
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
 
+    # When updating defaults here also update them in the `spelling` action.
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
-        required: false
         type: string
-        default: "true"
+        default: 'true'
       merge-file-excludes:
         description: >
           When set to "true", the "excludes.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in
           the workspace repository.
-        required: false
         type: string
-        default: "true"
+        default: 'true'
       merge-forbidden-patterns:
         description: >
           When set to "true", the "line_forbidden.patterns" file's contents in Lombiq.GitHub.Actions will be merged into
           the one in the workspace repository.
-        required: false
         type: string
-        default: "true"
+        default: 'true'
       merge-ignore-patterns:
         description: >
           When set to "true", the "patterns.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in
           the workspace repository.
-        required: false
         type: string
-        default: "true"
+        default: 'true'
       default-dictionaries:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
-        required: false
         type: string
         default: |
           cspell:filetypes/filetypes.txt
-          cspell:software-terms/src/software-terms.txt
+          cspell:software-terms/dict/softwareTerms.txt
           lombiq-lgha:dictionaries/Lombiq.common.txt
       additional-configuration-source-prefixes:
         description: >
           JSON map of prefixes for additional configuration file (for now, only dictionary) URLs. "cspell" and
           "lombiq-lgha" are available by default, but can be overridden.
-        required: false
         type: string
       additional-dictionaries:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
-        required: false
         type: string
       configuration-path:
         description: Relative path to the spell-checking configuration folder.
-        required: false
         type: string
         default: .github/actions/spelling
       default-configuration-repository:
         description: >
           Repository with default configuration to use when the workspace repository doesn't have its own configuration.
           The default from Check Spelling is ''.
-        required: false
         type: string
         default: Lombiq/GitHub-Actions@dev
       timeout-minutes:
-        required: false
         type: number
         default: 3
         description: Configuration for the timeout-minutes parameter of the workflow.
@@ -98,7 +89,7 @@ jobs:
 
       - name: Check Spelling
         id: check-spelling-action
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-636
         with:
           merge-file-excludes: ${{ inputs.merge-file-excludes }}
           merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}
@@ -125,7 +116,7 @@ jobs:
     if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
     steps:
       - name: Comment (PR)
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-636
         with:
           post-comment: 1
           task: ${{ needs.check-spelling.outputs.followup }}

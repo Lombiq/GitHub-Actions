@@ -1,9 +1,9 @@
 name: Login to Azure
 description: >
-  Logs in to Azure using a service principal. After a successful login, the action will set up the necessary credentials
-  and environment variables for the service to be able to access Azure resources. The service can then use these
-  credentials to make API calls to Azure services. Intentionally not documented in Actions.md since it's only meant for
-  internal use.
+  Logs in to Azure using OpenID Connect by impersonating a Service Principal or Managed Credential. After a successful
+  login, the action will set up the necessary credentials and environment variables for the service to be able to access
+  Azure resources. The service can then use these credentials to make API calls to Azure services. Intentionally not
+  documented in Actions.md since it's only meant for internal use.
 
 inputs:
   enable-az-ps-session:
@@ -18,5 +18,7 @@ runs:
       # v1.4.6
       uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
       with:
-        creds: ${{ env.SERVICE_PRINCIPAL }}
+        client-id: ${{ env.AZURE_CLIENT_ID }}
+        tenant-id: ${{ env.AZURE_TENANT_ID }}
+        subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
         enable-AzPSSession: ${{ inputs.enable-az-ps-session }}
