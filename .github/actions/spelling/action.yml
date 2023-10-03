@@ -191,6 +191,7 @@ runs:
           cspell:node/dict/node.txt
           cspell:npm/dict/npm.txt
           cspell:powershell/dict/powershell.txt
+          cspell:public-licenses/src/additional-licenses.txt
           cspell:public-licenses/src/generated/public-licenses.txt
           cspell:software-terms/dict/networkingTerms.txt
           cspell:software-terms/dict/softwareTerms.txt
