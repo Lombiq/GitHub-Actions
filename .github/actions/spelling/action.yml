@@ -165,6 +165,10 @@ runs:
         spell_check_this: ${{ inputs.default-configuration-repository }}
         suppress_push_for_open_pull_request: 1
         task: ${{ inputs.task }}
+        # While extra_dictionaries adds dictionaries that'll be used for spell-checking, the dictionaries under
+        # check_extra_dictionaries will only be used to provide hints for unrecognized words. You'll see this under the
+        # check-spelling report (PR comment and workflow run summary) along the lines of "Available dictionaries could
+        # cover words not in the dictionary".
         check_extra_dictionaries: |
           cspell:aws/aws.txt
           cspell:companies/src/companies.txt
