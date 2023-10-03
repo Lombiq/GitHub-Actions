@@ -93,7 +93,7 @@ jobs:
           build-directory: ${{ inputs.build-directory }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
-          test-configuration: "Debug"
+          test-configuration: "Release"
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
