@@ -88,7 +88,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/CARE-374
         with:
           directory: ${{ inputs.build-directory }}
           solution-or-project-path: ${{ inputs.solution-or-project-path }}
@@ -98,7 +98,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/CARE-374
         with:
           build-directory: ${{ inputs.build-directory }}
           test-verbosity: ${{ inputs.build-verbosity }}
