@@ -2,7 +2,7 @@
 name: Spelling
 description: Checks for spelling errors in files.
 
-# If updating defaults here also update them in the `spelling` workflow.
+# When updating defaults here also update them in the `spelling` workflow.
 inputs:
   merge-file-excludes:
     description: >
