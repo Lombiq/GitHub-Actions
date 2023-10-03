@@ -168,10 +168,11 @@ runs:
         # While extra_dictionaries adds dictionaries that'll be used for spell-checking, the dictionaries under
         # check_extra_dictionaries will only be used to provide hints for unrecognized words. You'll see this under the
         # check-spelling report (PR comment and workflow run summary) along the lines of "Available dictionaries could
-        # cover words not in the dictionary". The values here are some of the default dictionaries and ours. The default
-        # dictionaries are under https://github.com/check-spelling/cspell-dicts/tree/main/dictionaries.
-        # When updating the check-spelling action to a new release, consider updating this list too with new entries
-        # from https://github.com/check-spelling/check-spelling/blob/main/action.yml.
+        # cover words not in the dictionary". The values here are some of the default dictionaries that we think can
+        # most possibly be useful and ours. The default dictionaries are under
+        # https://github.com/check-spelling/cspell-dicts/tree/main/dictionaries. When updating the check-spelling action
+        # to a new release, consider updating this list too with new entries from
+        # https://github.com/check-spelling/check-spelling/blob/main/action.yml.
         check_extra_dictionaries: |
           cspell:aws/aws.txt
           cspell:companies/src/companies.txt
