@@ -5,6 +5,7 @@ on:
     secrets:
       # We can't access org secrets here so they need to be passed in.
       MERGE_TOKEN:
+        required: false
         description: >
           An authentication token, like a personal access token (PAT), that provides write access to the repository and
           can be used to merge the pull request. This is necessary because when a pull request is merged while being
