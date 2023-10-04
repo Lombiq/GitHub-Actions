@@ -84,6 +84,7 @@ runs:
         }
 
         Write-Output "Current Version: $current"
+        Set-GitHubOutput "current-version" $current
         Write-Output "Target Version: $version"
         Set-GitHubOutput "publish-version" $version
 
@@ -179,5 +180,6 @@ runs:
             "-p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true",
-            "-p:EnablePackageValidation=true"
+            "-p:EnablePackageValidation=true",
+            "-p:PackageValidationBaselineVersion=${{ steps.setup.outputs.current-version }}"
         )
