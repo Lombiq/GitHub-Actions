@@ -3,7 +3,7 @@ description: Checks whether the current repository has disabled the issues featu
 
 outputs:
   issues-disabled:
-    description: Whether the issues are disabled or not.
+    description: Returns a boolean value indicating whether the issues feature is disabled.
     value: ${{ steps.repository-has-disabled-issues.outputs.issues-disabled }}
 
 runs:
