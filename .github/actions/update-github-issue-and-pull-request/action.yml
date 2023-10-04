@@ -14,7 +14,7 @@ runs:
       # If this is run for a PR opened from a fork (not from a branch in the given repo) then "Resource not accessible
       # by integration" errors can happen. Thus, not running it for forks during the pull_request event (but it can
       # run during push, for example). See https://github.com/Lombiq/GitHub-Actions/issues/72 for details.
-      if: github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false || steps.check-issues-are-disabled.should-skip == false
+      if: github.event.pull_request == '' || github.event.pull_request.head.repo.fork == false
       shell: pwsh
       env:
         PR_TITLE: ${{ github.event.pull_request.title }}
