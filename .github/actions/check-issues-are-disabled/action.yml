@@ -20,6 +20,5 @@ runs:
       id: repository-has-disabled-issues
       run: |
         $issueResponse = $(gh issue list --repo '${{ github.repository }}')
-        $message = "the '${{ github.repository }}' repository has disabled issues"
-        $issuesAreDisabled = ("$issueResponse" -match "$message")
+        $issuesAreDisabled = "$issueResponse" -eq $null
         Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
