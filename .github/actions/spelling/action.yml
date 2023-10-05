@@ -121,12 +121,16 @@ runs:
 
         Merge-SpellCheckingDictionaryFile @mergeParameters
 
+    # The branch name in the 'lombiq-lgha' prefix needs to be wired in to 'dev' (since that's the default branch of this
+    # repository) and updated manually when working in a different branch, because the referenced branch name (when
+    # called from a workflow) of this action is not exposed by GitHub, only the branch name of the workflow that
+    # triggered the run, see https://docs.github.com/en/actions/learn-github-actions/contexts.
     - name: Merge configuration source prefixes
       id: merge-configuration-source-prefixes
       shell: pwsh
       run: |
         $defaultPrefixes = @{
-          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/${{ github.head_ref }}/.github/actions/spelling/'
+          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/'
           'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20230509/dictionaries/'
         }
 
