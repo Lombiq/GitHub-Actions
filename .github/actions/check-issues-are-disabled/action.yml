@@ -21,6 +21,7 @@ runs:
       run: |
         try {
           $issueResponse = $(gh issue list --repo '${{ github.repository }}')
+          Write-Host $issueResponse
           $issuesAreDisabled = "$issueResponse" -eq $null
           Write-Host "Boolean result: $issuesAreDisabled"
           Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
