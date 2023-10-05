@@ -107,7 +107,7 @@ foreach ($project in $projects)
         cd TempProject
         Write-Output $project.BaseName
         Write-Output "dotnet add .\TempProject.csproj package " + $project.BaseName + " --version $PackageValidationBaselineVersion"
-        dotnet add .\TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
         dotnet restore
         cd ..
         Remove-Item -Recurse -Force TempProject
