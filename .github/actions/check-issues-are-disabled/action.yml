@@ -27,7 +27,7 @@ runs:
           Write-Host "Error while using gh cli"
         }
         
-        Write-Host "Issue Response: $issueResponse"
+        Write-Host "${{ github }}"
         $issuesAreDisabled = "$issueResponse" -eq $null
         Write-Host "Boolean result: $issuesAreDisabled"
         Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
