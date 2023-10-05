@@ -102,8 +102,11 @@ foreach ($project in $projects)
     Write-Output "LastMajorVersion: $PackageValidationBaselineVersion"
     if ($EnablePackageValidation -eq 'True')
     {
+        Write-Output "dotnet new classlib -n TempProject"
         dotnet new classlib -n TempProject
         cd TempProject
+        Write-Output $project.BaseName
+        Write-Output "dotnet add .\TempProject.csproj package " + $project.BaseName + " --version $PackageValidationBaselineVersion"
         dotnet add .\TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
         dotnet restore
         cd ..
