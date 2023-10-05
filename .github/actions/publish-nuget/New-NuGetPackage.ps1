@@ -62,10 +62,6 @@ function Get-ProjectProperty
     }
 }
 
-Write-Output "PackParameters: '$PackParameters'"
-Write-Output "EnablePackageValidation: '$EnablePackageValidation'"
-Write-Output "PackageValidationBaselineVersion: '$PackageValidationBaselineVersion'"
-
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
@@ -104,7 +100,7 @@ foreach ($project in $projects)
     # Download baseline version nuget packages
     Write-Output "PackageValidationBaselineVersion: $EnablePackageValidation"
     Write-Output "LastMajorVersion: $PackageValidationBaselineVersion"
-    if ($EnablePackageValidation -eq 'true')
+    if ($EnablePackageValidation -eq 'True')
     {
         dotnet new classlib -n TempProject
         cd TempProject

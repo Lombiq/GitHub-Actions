@@ -184,6 +184,5 @@ runs:
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true"
           )}
-        Write-Output "Parameters:"
-        Write-Output @parameters
+
         New-NuGetPackage @parameters
