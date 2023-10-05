@@ -14,7 +14,7 @@
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
 #>
 
-param([array] $PackParameters, [string] $EnablePackageValidation, [string] $PackageValidationBaselineVersion)
+param([array] $PackParameters, $EnablePackageValidation, $PackageValidationBaselineVersion)
 
 <#
 .SYNOPSIS
@@ -61,6 +61,10 @@ function Get-ProjectProperty
         Write-Error "::error::Failed to add the GetPropertyValue target: $($_.Exception.Message)."
     }
 }
+
+Write-Output "PackParameters: '$PackParameters'"
+Write-Output "EnablePackageValidation: '$EnablePackageValidation'"
+Write-Output "PackageValidationBaselineVersion: '$PackageValidationBaselineVersion'"
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
