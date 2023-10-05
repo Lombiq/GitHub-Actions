@@ -19,6 +19,6 @@ runs:
       shell: pwsh
       id: repository-has-disabled-issues
       run: |
-        $issuesAreDisabled = (gh issue list --repo '${{ github.repository }}' | ConvertTo-Json) -eq $null
+        $issuesAreDisabled = (gh issue list | ConvertTo-Json) -eq $null
         Write-Host "Boolean result: $issuesAreDisabled"
         Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
