@@ -20,5 +20,8 @@ runs:
       id: repository-has-disabled-issues
       run: |
         $issueResponse = $(gh issue list --repo '${{ github.repository }}')
+        Write-Host "Issue Response: $issueResponse"
+        Write-Host $issueResponse.GetType()
         $issuesAreDisabled = "$issueResponse" -eq $null
+        Write-Host "Boolean result: $issuesAreDisabled"
         Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
