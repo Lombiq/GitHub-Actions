@@ -21,7 +21,7 @@ runs:
       run: |
         $issueResponse = $null
         
-        Write-Host "${{ github }}"
+        Write-Host "(${{ github }} | ConvertTo-Json)"
         $issuesAreDisabled = "$issueResponse" -eq $null
         Write-Host "Boolean result: $issuesAreDisabled"
         Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
