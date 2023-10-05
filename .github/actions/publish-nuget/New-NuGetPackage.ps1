@@ -14,7 +14,7 @@
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
 #>
 
-param([array] $Arguments)
+param([array] $PackParameters, [string] $EnablePackageValidation, [string] $PackageValidationBaselineVersion)
 
 <#
 .SYNOPSIS
@@ -97,14 +97,28 @@ foreach ($project in $projects)
 
     Push-Location $project.Directory
 
+    # Download baseline version nuget packages
+    Write-Output "PackageValidationBaselineVersion: $EnablePackageValidation"
+    Write-Output "LastMajorVersion: $PackageValidationBaselineVersion"
+    if ($EnablePackageValidation -eq 'true')
+    {
+        dotnet new classlib -n TempProject
+        cd TempProject
+        dotnet add .\TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+        dotnet restore
+        cd ..
+        Remove-Item -Recurse -Force TempProject
+    }
+
+
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
-        dotnet pack $project -p:NuspecFile="$nuspecFile" @Arguments
+        dotnet pack $project -p:NuspecFile="$nuspecFile" @PackParameters -p:EnablePackageValidation=$EnablePackageValidation -p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion
     }
     else
     {
-        dotnet pack $project @Arguments
+        dotnet pack $project @PackParameters -p:EnablePackageValidation=$EnablePackageValidation -p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion
     }
 
     if ($LASTEXITCODE -ne 0)
