@@ -19,10 +19,11 @@ runs:
       shell: pwsh
       id: repository-has-disabled-issues
       run: |
-        $issueResponse = $null
-        
-        Write-Host "(${{ github }} | ConvertTo-Json)"
-        $issuesAreDisabled = "$issueResponse" -eq $null
-        Write-Host "Boolean result: $issuesAreDisabled"
-        Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
-        Write-Host "Post GithubOutput"
+        try {
+          $issueResponse = $(gh issue list --repo '${{ github.repository }}')
+          $issuesAreDisabled = "$issueResponse" -eq $null
+          Write-Host "Boolean result: $issuesAreDisabled"
+          Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
+        } catch {
+          Write-Host "Error while using gh cli"
+        }
