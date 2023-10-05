@@ -24,3 +24,4 @@ runs:
         $issuesAreDisabled = "$issueResponse" -eq $null
         Write-Host "Boolean result: $issuesAreDisabled"
         Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
+        Write-Host "Post GithubOutput"
