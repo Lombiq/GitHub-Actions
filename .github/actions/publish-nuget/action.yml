@@ -164,6 +164,8 @@ runs:
         '@.Split() | ? { $_ }
 
         $parameters = @{
+          EnablePackageValidation=$true
+          PackageValidationBaselineVersion='${{ steps.setup.outputs.current-version }}'
           PackParameters = @(
             "--configuration:Release",
             "--warnaserror",
@@ -181,10 +183,7 @@ runs:
             "-p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
             "-p:SymbolPackageFormat=snupkg",
             "-p:NoDefaultExcludes=true"
-          )
-          EnablePackageValidation=true
-          PackageValidationBaselineVersion=${{ steps.setup.outputs.current-version }}
-          }
+          )}
         Write-Output "Parameters:"
         Write-Output @parameters
         New-NuGetPackage @parameters
