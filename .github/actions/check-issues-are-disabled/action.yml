@@ -9,11 +9,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-        with:
-          token: ${{ secrets.CHECKOUT_TOKEN }}
-          
     - name: Setup Scripts
       shell: pwsh
       run: |
@@ -24,6 +19,6 @@ runs:
       shell: pwsh
       id: repository-has-disabled-issues
       run: |
-        $issuesAreDisabled = (gh issue list | ConvertTo-Json) -eq $null
+        $issuesAreDisabled = (gh workflow list --repo '${{ github.repository }}' | ConvertTo-Json) -eq $null
         Write-Host "Boolean result: $issuesAreDisabled"
         Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
