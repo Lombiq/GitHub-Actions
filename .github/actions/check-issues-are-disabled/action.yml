@@ -9,6 +9,11 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
+          
     - name: Setup Scripts
       shell: pwsh
       run: |
