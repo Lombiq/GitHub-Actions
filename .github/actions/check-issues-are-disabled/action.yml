@@ -21,12 +21,6 @@ runs:
       run: |
         $issueResponse = $null
         
-        try {
-          $issueResponse = $(gh issue list --repo '${{ github.repository }}')
-        } catch {
-          Write-Host "Error while using gh cli"
-        }
-        
         Write-Host "${{ github }}"
         $issuesAreDisabled = "$issueResponse" -eq $null
         Write-Host "Boolean result: $issuesAreDisabled"
