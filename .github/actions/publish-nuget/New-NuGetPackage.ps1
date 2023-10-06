@@ -14,7 +14,7 @@
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
 #>
 
-param([array] $PackParameters, $EnablePackageValidation, $PackageValidationBaselineVersion)
+param([array] $PackParameters, $EnablePackageValidation, $PackageValidationBaselineVersion, $Version)
 
 <#
 .SYNOPSIS
@@ -63,9 +63,10 @@ function Get-ProjectProperty
 }
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
-
+Write-Output "Version major: $($Version.Major)"
+Write-Output "Baseline major: $($PackageValidationBaselineVersion.Major)"
 # Download baseline version NuGet packages
-if ($EnablePackageValidation -eq 'True')
+if ($EnablePackageValidation -eq 'True' && $Version.Major -gt $PackageValidationBaselineVersion.Major)
 {
     Write-Output "Creating temporary project for base line NuGet packages."
     dotnet new classlib -n TempProject

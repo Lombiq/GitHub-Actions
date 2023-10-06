@@ -166,6 +166,7 @@ runs:
         $parameters = @{
           EnablePackageValidation=$true
           PackageValidationBaselineVersion='${{ steps.setup.outputs.current-version }}'
+          Version='${{ steps.setup.outputs.publish-version }}'
           PackParameters = @(
             "--configuration:Release",
             "--warnaserror",
