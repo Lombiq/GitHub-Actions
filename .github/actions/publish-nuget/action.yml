@@ -86,7 +86,7 @@ runs:
         if ($tags.Count -gt 1) {
           if ($version -eq $current) {
             # In this case the new release is not a prelease so the previous tag should be used as base line version.
-            $baseLineVersion = tags[1]
+            $baseLineVersion = $tags[1]
           }
           else {
             $baseLineVersion = $current
