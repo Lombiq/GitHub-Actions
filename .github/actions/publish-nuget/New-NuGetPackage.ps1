@@ -63,8 +63,10 @@ function Get-ProjectProperty
 }
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
-Write-Output "Version comparison: $($Version.Substring(0, $version.IndexOf(".")) -gt $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf(".")))"
-Write-Output "Version match: $($Version -match '-(alpha|beta|preview|rc)')"
+Write-Output "Should validate breaking changes: $(($EnablePackageValidation -eq 'True' -And
+    !($Version -match '-(alpha|beta|preview|rc)') -And
+    $Version.Substring(0, $version.IndexOf(".")) -le $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf("."))))"
+
 # Download baseline version NuGet packages
 if ($EnablePackageValidation -eq 'True' -And
     !($Version -match '-(alpha|beta|preview|rc)') -And
@@ -83,6 +85,15 @@ if ($EnablePackageValidation -eq 'True' -And
     dotnet restore
     cd ..
     Remove-Item -Recurse -Force TempProject
+    $PackageValidationParameters=@(
+        "-p:EnablePackageValidation=$EnablePackageValidation"
+        "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
+    )
+}
+else {
+    $PackageValidationParameters=@(
+        "-p:EnablePackageValidation=$EnablePackageValidation"
+    )
 }
 
 foreach ($project in $projects)
@@ -121,15 +132,11 @@ foreach ($project in $projects)
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
-        dotnet pack $project -p:NuspecFile="$nuspecFile" @PackParameters `
-            -p:EnablePackageValidation=$EnablePackageValidation `
-            -p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion
+        dotnet pack $project -p:NuspecFile="$nuspecFile" @PackParameters @PackageValidationParameters
     }
     else
     {
-        dotnet pack $project @PackParameters `
-            -p:EnablePackageValidation=$EnablePackageValidation `
-            -p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion
+        dotnet pack $project @PackParameters @PackageValidationParameters
     }
 
     if ($LASTEXITCODE -ne 0)
