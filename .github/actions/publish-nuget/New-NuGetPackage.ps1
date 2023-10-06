@@ -63,10 +63,12 @@ function Get-ProjectProperty
 }
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
-Write-Output "Version major: $($Version.Major)"
-Write-Output "Baseline major: $($PackageValidationBaselineVersion.Major)"
+Write-Output "Version comparison: $($Version.Substring(0, $version.IndexOf(".")) -gt $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf(".")))"
+Write-Output "Version match: $($Version -match '-(alpha|beta|preview|rc)')"
 # Download baseline version NuGet packages
-if ($EnablePackageValidation -eq 'True' && $Version.Major -gt $PackageValidationBaselineVersion.Major)
+if ($EnablePackageValidation -eq 'True' -And
+    !($Version -match '-(alpha|beta|preview|rc)') -And
+    $Version.Substring(0, $version.IndexOf(".")) -le $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf(".")))
 {
     Write-Output "Creating temporary project for base line NuGet packages."
     dotnet new classlib -n TempProject
