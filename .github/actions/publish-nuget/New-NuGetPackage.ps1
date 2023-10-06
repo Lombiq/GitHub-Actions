@@ -64,6 +64,24 @@ function Get-ProjectProperty
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
+# Download baseline version NuGet packages
+if ($EnablePackageValidation -eq 'True')
+{
+    Write-Output "Creating temporary project for base line NuGet packages."
+    dotnet new classlib -n TempProject
+    cd TempProject
+
+    Write-Output "Installing baseline version NuGet packages."
+    foreach ($project in $projects)
+    {
+        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+    }
+
+    dotnet restore
+    cd ..
+    Remove-Item -Recurse -Force TempProject
+}
+
 foreach ($project in $projects)
 {
     Write-Output "Packing $($project.Name)..."
@@ -96,23 +114,6 @@ foreach ($project in $projects)
     }
 
     Push-Location $project.Directory
-
-    # Download baseline version nuget packages
-    Write-Output "PackageValidationBaselineVersion: $EnablePackageValidation"
-    Write-Output "LastMajorVersion: $PackageValidationBaselineVersion"
-    if ($EnablePackageValidation -eq 'True')
-    {
-        Write-Output "dotnet new classlib -n TempProject"
-        dotnet new classlib -n TempProject
-        cd TempProject
-        Write-Output $project.BaseName
-        Write-Output "dotnet add .\TempProject.csproj package " + $project.BaseName + " --version $PackageValidationBaselineVersion"
-        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
-        dotnet restore
-        cd ..
-        Remove-Item -Recurse -Force TempProject
-    }
-
 
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
