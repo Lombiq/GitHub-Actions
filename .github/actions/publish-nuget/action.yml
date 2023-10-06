@@ -83,8 +83,22 @@ runs:
           $version = "$next-preview-$Env:GITHUB_RUN_NUMBER"
         }
 
-        Write-Output "Current Version: $current"
-        Set-GitHubOutput "current-version" $current
+        if ($tags.Count -gt 1) {
+          if ($version -eq $current) {
+            # In this case the new release is not a prelease so the previous tag should be used as base line version.
+            $baseLineVersion = tags[1]
+          }
+          else {
+            $baseLineVersion = $current
+          }
+        }
+        else {
+          # In this case validation to base line version is not possible due to being it the first release.
+          $baseLineVersion = ''
+        }
+
+        Write-Output "Baseline Version: $baseLineVersion"
+        Set-GitHubOutput "baseline-version" $baseLineVersion
         Write-Output "Target Version: $version"
         Set-GitHubOutput "publish-version" $version
 
@@ -165,7 +179,7 @@ runs:
 
         $parameters = @{
           EnablePackageValidation=$true
-          PackageValidationBaselineVersion='${{ steps.setup.outputs.current-version }}'
+          PackageValidationBaselineVersion='${{ steps.setup.outputs.baseline-version }}'
           Version='${{ steps.setup.outputs.publish-version }}'
           PackParameters = @(
             "--configuration:Release",

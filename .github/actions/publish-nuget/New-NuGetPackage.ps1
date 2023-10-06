@@ -64,11 +64,13 @@ function Get-ProjectProperty
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 Write-Output "Should validate breaking changes: $(($EnablePackageValidation -eq 'True' -And
+    $PackageValidationBaselineVersion -And
     !($Version -match '-(alpha|beta|preview|rc)') -And
     $Version.Substring(0, $version.IndexOf(".")) -le $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf("."))))"
 
 # Download baseline version NuGet packages
 if ($EnablePackageValidation -eq 'True' -And
+    $PackageValidationBaselineVersion -And
     !($Version -match '-(alpha|beta|preview|rc)') -And
     $Version.Substring(0, $version.IndexOf(".")) -le $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf(".")))
 {
