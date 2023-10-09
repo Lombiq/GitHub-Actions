@@ -68,11 +68,11 @@ $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-I
 if ($EnablePackageValidation -eq 'True' -And
     $PackageValidationBaselineVersion -And
     !($Version -match '-(alpha|beta|preview|rc)') -And
-    $Version.Substring(0, $version.IndexOf(".")) -le $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf(".")))
+    $Version.Substring(0, $version.IndexOf('.')) -le $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf('.')))
 {
     Write-Output 'Creating temporary project for baseline NuGet packages.'
     dotnet new classlib -n TempProject
-    cd TempProject
+    Set-Location TempProject
 
     Write-Output 'Installing baseline version NuGet packages.'
     foreach ($project in $projects)
@@ -83,13 +83,14 @@ if ($EnablePackageValidation -eq 'True' -And
     dotnet restore
     Set-Location ..
     Remove-Item -Recurse -Force TempProject
-    $PackageValidationParameters=@(
+    $PackageValidationParameters = @(
         "-p:EnablePackageValidation=$EnablePackageValidation"
         "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
     )
 }
-else {
-    $PackageValidationParameters=@(
+else
+{
+    $PackageValidationParameters = @(
         "-p:EnablePackageValidation=$EnablePackageValidation"
     )
 }
