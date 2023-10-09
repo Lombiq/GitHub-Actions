@@ -77,6 +77,7 @@ runs:
             ForEach-Object { [version]$PSItem } |
             Sort-Object -Descending
         $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
+
         if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
           $next = New-Object "System.Version" $current.Major, $current.Minor, ($current.Build + 1)
 
@@ -85,21 +86,19 @@ runs:
 
         if ($tags.Count -gt 1) {
           if ($version -eq $current) {
-            # In this case the new release is not a prelease so the previous tag should be used as base line version.
-            $baseLineVersion = $tags[1]
+            # In this case the new release is not a prelease so the previous tag should be used as baseline version.
+            $baselineVersion = $tags[1]
           }
           else {
-            $baseLineVersion = $current
+            $baselineVersion = $current
           }
         }
         else {
-          # In this case validation to base line version is not possible due to being it the first release.
-          $baseLineVersion = ''
+          # In this case validation to baseline version is not possible due to being this the first release.
+          $baselineVersion = ''
         }
 
-        Write-Output "Baseline Version: $baseLineVersion"
-        Set-GitHubOutput "baseline-version" $baseLineVersion
-        Write-Output "Target Version: $version"
+        Set-GitHubOutput "baseline-version" $baselineVersion
         Set-GitHubOutput "publish-version" $version
 
     - name: Add Source Link package
