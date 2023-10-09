@@ -70,18 +70,18 @@ if ($EnablePackageValidation -eq 'True' -And
     !($Version -match '-(alpha|beta|preview|rc)') -And
     $Version.Substring(0, $version.IndexOf(".")) -le $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf(".")))
 {
-    Write-Output "Creating temporary project for baseline NuGet packages."
+    Write-Output 'Creating temporary project for baseline NuGet packages.'
     dotnet new classlib -n TempProject
     cd TempProject
 
-    Write-Output "Installing baseline version NuGet packages."
+    Write-Output 'Installing baseline version NuGet packages.'
     foreach ($project in $projects)
     {
         dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion --no-restore
     }
 
     dotnet restore
-    cd ..
+    Set-Location ..
     Remove-Item -Recurse -Force TempProject
     $PackageValidationParameters=@(
         "-p:EnablePackageValidation=$EnablePackageValidation"
