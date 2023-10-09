@@ -15,3 +15,5 @@ runs:
         repoToken: ${{ env.GITHUB_TOKEN }}
         commentOnDirty: "This pull request has merge conflicts. Please resolve those before requesting a review."
         dirtyLabel: "Merge Conflict"
+        # The default 120 is too long. The mergeable state is usually calculated by GitHub within seconds.
+        retryAfter: 5
