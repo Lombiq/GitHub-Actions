@@ -14,7 +14,7 @@
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
 #>
 
-param([array] $PackParameters, $EnablePackageValidation, $PackageValidationBaselineVersion, $Version)
+param([array] $PackParameters, [bool] $EnablePackageValidation, [string] $PackageValidationBaselineVersion, [string] $Version)
 
 <#
 .SYNOPSIS
@@ -65,14 +65,14 @@ function Get-ProjectProperty
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 # Download baseline version NuGet packages
-if ($EnablePackageValidation -eq 'True' -And
+if ($EnablePackageValidation -And
     $PackageValidationBaselineVersion -And
-    !($Version -match '-(alpha|beta|preview|rc)') -And
-    $Version.Substring(0, $version.IndexOf('.')) -le $PackageValidationBaselineVersion.Substring(0, $PackageValidationBaselineVersion.IndexOf('.')))
+    !($Version -match '-(alpha|beta|preview|rc)\.') -And
+    $Version.Split('.')[0] -le $PackageValidationBaselineVersion.Split('.')[0])
 {
     Write-Output 'Creating temporary project for baseline NuGet packages.'
     dotnet new classlib -n TempProject
-    Set-Location TempProject
+    Push-Location TempProject
 
     Write-Output 'Installing baseline version NuGet packages.'
     foreach ($project in $projects)
@@ -81,7 +81,7 @@ if ($EnablePackageValidation -eq 'True' -And
     }
 
     dotnet restore
-    Set-Location ..
+    Pop-Location
     Remove-Item -Recurse -Force TempProject
     $PackageValidationParameters = @(
         "-p:EnablePackageValidation=$EnablePackageValidation"
