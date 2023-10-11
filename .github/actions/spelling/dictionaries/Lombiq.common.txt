@@ -38,6 +38,7 @@ formattable
 ftp
 github
 gitmodules
+globalconfig
 Graphi
 gulpfile
 hastlayer
