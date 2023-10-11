@@ -150,7 +150,7 @@ jobs:
             -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Replace Media
-        run: |          
+        run: |
           $setStorageContentParameters = @{
             ResourceGroupName = '${{ inputs.resource-group-name }}'
             WebAppName = '${{ inputs.app-name }}'
