@@ -136,6 +136,7 @@ jobs:
         uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/INFRA-139
 
       - name: Stop Web App Slot
+        if: false
         run: |
           Stop-AzureWebAppSlot `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -151,10 +152,12 @@ jobs:
             DestinationSlotName = ${{ inputs.destination-slot-name }}
             ConnectionStringName = ${{ inputs.storage-connection-string-name }}
             ContainerWhiteList = ${{ inputs.blob-container-include-list }}
+            DestinationContainerNameSuffix = 'copytest'
           }
           Set-AzureWebAppStorageContentFromStorageWithAzCopy @setStorageContentParameters
 
       - name: Replace Database
+        if: false
         run: |
           Copy-AzureWebAppSqlDatabase `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -165,6 +168,7 @@ jobs:
             -Force
 
       - name: Add Destination Contained User to Destination Database
+        if: false
         run: |
           Install-Module sqlserver -AllowClobber -Force
           Add-AzureWebAppSqlDatabaseContainedUser `
@@ -175,6 +179,7 @@ jobs:
             -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
       - name: Remove Source Contained User from Destination Database
+        if: false
         run: |
           Remove-AzureWebAppSqlDatabaseContainedUser `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -185,13 +190,15 @@ jobs:
             -UserConnectionStringName ${{ inputs.database-connection-string-name }}
 
       - name: Add Azure Application Insights Release Annotation
-        if: ${{ inputs.application-insights-resource-id != '' }}
+        if: false
+        # if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: "Reset #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}"
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start Web App Slot
+        if: false
         run: |
           Start-AzureWebAppSlot `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -199,6 +206,7 @@ jobs:
             -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Test Web App Slot
+        if: false
         run: |
           Test-AzureWebApp `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -206,7 +214,8 @@ jobs:
             -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Start AfterReplace Maintenance on the Destination Slot
-        if: inputs.maintenance-host-name != ''
+        if: false
+        # if: inputs.maintenance-host-name != ''
         run: |
           $maintenanceParameters = @{
             HostName = '${{ inputs.maintenance-host-name }}'
@@ -218,6 +227,7 @@ jobs:
           Start-Maintenance @maintenanceParameters
 
       - name: Scale Database
+        if: false
         run: |
           Set-AzureWebAppSqlDatabaseServiceObjective `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
