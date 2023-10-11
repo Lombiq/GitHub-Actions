@@ -100,6 +100,13 @@ on:
         description: >
           PowerShell string array with the name of the included Blob Container(s), e.g. '@("media")' or '@("media",
           "dataprotection)'. The parameter must be a PowerShell string array.
+      storage-sas-lifetime-minutes:
+        type: number
+        default: 5
+        description: >
+          The number of minutes defining how long the generated Shared Access Signatures
+          (https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview) used for blob storage operations
+          are valid for. Default value is 5.
       application-insights-resource-id:
         type: string
         description: >
@@ -151,6 +158,7 @@ jobs:
             DestinationSlotName = '${{ inputs.destination-slot-name }}'
             ConnectionStringName = '${{ inputs.storage-connection-string-name }}'
             ContainerWhiteList = ${{ inputs.blob-container-include-list }}
+            SasLifetimeMinutes = ${{ inputs.storage-sas-lifetime-minutes }}
           }
           Set-AzureWebAppStorageContentFromStorageWithAzCopy @setStorageContentParameters
 
