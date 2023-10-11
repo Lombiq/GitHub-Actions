@@ -116,7 +116,7 @@ jobs:
     if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
     steps:
       - name: Comment (PR)
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-179
         with:
           post-comment: 1
           task: ${{ needs.check-spelling.outputs.followup }}
