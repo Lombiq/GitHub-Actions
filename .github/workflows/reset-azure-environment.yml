@@ -94,36 +94,12 @@ on:
         type: string
         default: S0
         description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
-      blob-container-exclude-list:
-        type: string
-        default: '@()'
-        description: >
-          PowerShell string array with the name of the excluded Blob Container(s), e.g. '@("not-media")' or
-          '@("not-media", "bad-container")'. The parameter must be a PowerShell string array. When a not empty
-          PowerShell string array is provided for "blob-container-include-list", then "blob-container-exclude-list" is
-          not taken into consideration.
       blob-container-include-list:
         type: string
         default: '@("media", "dataprotection")'
         description: >
           PowerShell string array with the name of the included Blob Container(s), e.g. '@("media")' or '@("media",
-          "dataprotection)'. The parameter must be a PowerShell string array. When a not empty PowerShell string array
-          is provided, "blob-container-exclude-list" is not taken into consideration.
-      folder-exclude-list:
-        type: string
-        default: '@("RecipeJournal", "`$`$`$ORCHARD`$`$`$.`$`$`$")'
-        description: >
-          PowerShell string array with the name of the excluded folder(s), e.g. '@("RecipeJournal")' or
-          '@("RecipeJournal", "BadFolder")'. The parameter must be a PowerShell string array. When a not empty
-          PowerShell string array is provided for "folder-include-list", then "folder-exclude-list" is not taken into
-          consideration.
-      folder-include-list:
-        type: string
-        default: '@()'
-        description: >
-          PowerShell string array with the name of the included folder(s), e.g. '@("NotRecipeJournal")' or
-          '@("NotRecipeJournal", "CoolFolder")'. The parameter must be a PowerShell string array. When a not empty
-          PowerShell string array is provided, "folder-exclude-list" is not taken into consideration.
+          "dataprotection)'. The parameter must be a PowerShell string array.
       application-insights-resource-id:
         type: string
         description: >
@@ -157,7 +133,7 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/INFRA-139
 
       - name: Stop Web App Slot
         run: |
@@ -168,16 +144,13 @@ jobs:
 
       - name: Replace Media
         run: |
-          Set-AzureWebAppStorageContentFromStorage `
+          Set-AzureWebAppStorageContentFromStorageWithAzCopy `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SourceSlotName ${{ inputs.source-slot-name }} `
             -DestinationSlotName ${{ inputs.destination-slot-name }} `
             -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-            -ContainerBlackList ${{ inputs.blob-container-exclude-list }} `
-            -ContainerWhiteList ${{ inputs.blob-container-include-list }} `
-            -FolderBlackList ${{ inputs.folder-exclude-list }} `
-            -FolderWhiteList ${{ inputs.folder-include-list }}
+            -ContainerWhiteList ${{ inputs.blob-container-include-list }}
 
       - name: Replace Database
         run: |
