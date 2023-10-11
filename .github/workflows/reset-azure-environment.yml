@@ -143,14 +143,16 @@ jobs:
             -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Replace Media
-        run: |
-          Set-AzureWebAppStorageContentFromStorageWithAzCopy `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SourceSlotName ${{ inputs.source-slot-name }} `
-            -DestinationSlotName ${{ inputs.destination-slot-name }} `
-            -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-            -ContainerWhiteList ${{ inputs.blob-container-include-list }}
+        run: |          
+          $setStorageContentParameters = @{
+            ResourceGroupName = ${{ inputs.resource-group-name }}
+            WebAppName = ${{ inputs.app-name }}
+            SourceSlotName = ${{ inputs.source-slot-name }}
+            DestinationSlotName = ${{ inputs.destination-slot-name }}
+            ConnectionStringName = ${{ inputs.storage-connection-string-name }}
+            ContainerWhiteList = ${{ inputs.blob-container-include-list }}
+          }
+          Set-AzureWebAppStorageContentFromStorageWithAzCopy @setStorageContentParameters
 
       - name: Replace Database
         run: |
