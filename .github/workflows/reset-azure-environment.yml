@@ -146,11 +146,11 @@ jobs:
       - name: Replace Media
         run: |          
           $setStorageContentParameters = @{
-            ResourceGroupName = ${{ inputs.resource-group-name }}
-            WebAppName = ${{ inputs.app-name }}
-            SourceSlotName = ${{ inputs.source-slot-name }}
-            DestinationSlotName = ${{ inputs.destination-slot-name }}
-            ConnectionStringName = ${{ inputs.storage-connection-string-name }}
+            ResourceGroupName = '${{ inputs.resource-group-name }}'
+            WebAppName = '${{ inputs.app-name }}'
+            SourceSlotName = '${{ inputs.source-slot-name }}'
+            DestinationSlotName = '${{ inputs.destination-slot-name }}'
+            ConnectionStringName = '${{ inputs.storage-connection-string-name }}'
             ContainerWhiteList = ${{ inputs.blob-container-include-list }}
             DestinationContainerNameSuffix = 'copytest'
           }
