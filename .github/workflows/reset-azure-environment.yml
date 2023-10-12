@@ -157,7 +157,7 @@ jobs:
             SourceSlotName = '${{ inputs.source-slot-name }}'
             DestinationSlotName = '${{ inputs.destination-slot-name }}'
             ConnectionStringName = '${{ inputs.storage-connection-string-name }}'
-            ContainerWhiteList = ${{ inputs.blob-container-include-list }}
+            ContainerIncludeList = ${{ inputs.blob-container-include-list }}
             SasLifetimeMinutes = ${{ inputs.storage-sas-lifetime-minutes }}
           }
           Set-AzureWebAppStorageContentFromStorageWithAzCopy @setStorageContentParameters
