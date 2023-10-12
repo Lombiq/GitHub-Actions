@@ -105,7 +105,7 @@ on:
         default: 5
         description: >
           The number of minutes defining how long the generated Shared Access Signatures
-          (https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview) used for blob storage operations
+          (https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview) used for Blob Storage operations
           are valid for. Default value is 5.
       application-insights-resource-id:
         type: string
