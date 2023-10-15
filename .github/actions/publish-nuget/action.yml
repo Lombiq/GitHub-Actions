@@ -68,23 +68,37 @@ runs:
                 exit 1
             }
         }
-        if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
-          # We have to use the CLI to query the remote repository for tags, because `gh tag` only returns the current
-          # tag in the runner, which will never match in this scenario.
-          $tags = gh api "/repos/$Env:GITHUB_REPOSITORY/git/refs/tags" |
+        # We have to use the CLI to query the remote repository for tags, because `gh tag` only returns the current
+        # tag in the runner, which will never match in this scenario.
+        $tags = gh api "/repos/$Env:GITHUB_REPOSITORY/git/refs/tags" |
             ConvertFrom-Json |
             ForEach-Object { $PSItem.ref -replace '^refs/tags/v', '' } |
             Where-Object { $PSItem -match '^\d+\.\d+\.\d+$' } |
             ForEach-Object { [version]$PSItem } |
             Sort-Object -Descending
-          $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
+        $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
 
+        if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
           $next = New-Object "System.Version" $current.Major, $current.Minor, ($current.Build + 1)
 
           $version = "$next-preview-$Env:GITHUB_RUN_NUMBER"
         }
 
-        Write-Output "Target Version: $version"
+        if ($tags.Count -gt 1) {
+          if ($version -eq $current) {
+            # In this case the new release is not a prelease so the previous tag should be used as baseline version.
+            $baselineVersion = $tags[1]
+          }
+          else {
+            $baselineVersion = $current
+          }
+        }
+        else {
+          # In this case validation to baseline version is not possible due to being this the first release.
+          $baselineVersion = ''
+        }
+
+        Set-GitHubOutput "baseline-version" $baselineVersion
         Set-GitHubOutput "publish-version" $version
 
     - name: Add Source Link package
@@ -162,7 +176,11 @@ runs:
         ${{ inputs.dotnet-pack-ignore-warning }}
         '@.Split() | ? { $_ }
 
-        New-NuGetPackage @(
+        $parameters = @{
+          EnablePackageValidation=$true
+          PackageValidationBaselineVersion='${{ steps.setup.outputs.baseline-version }}'
+          Version='${{ steps.setup.outputs.publish-version }}'
+          PackParameters = @(
             "--configuration:Release",
             "--warnaserror",
             "--no-restore",
@@ -178,9 +196,10 @@ runs:
             "-p:WarnOnPackingNonPackableProject=True",
             "-p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
             "-p:SymbolPackageFormat=snupkg",
-            "-p:NoDefaultExcludes=true",
-            "-p:EnablePackageValidation=true"
-        )
+            "-p:NoDefaultExcludes=true"
+          )}
+
+        New-NuGetPackage @parameters
 
     - name: Push with dotnet
       shell: pwsh

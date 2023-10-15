@@ -21,6 +21,9 @@ $mismatchRefs = Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -
 
 if ($mismatchRefs.Count -gt 0)
 {
+    Write-Output '> :warning: Warning :warning:' >> $env:GITHUB_STEP_SUMMARY
+    Write-Output '> Your pull request branch may be outdated if you see errors for files you did not edit. Please merge the target branch to resolve these errors.' >> $env:GITHUB_STEP_SUMMARY
+
     "These called GitHub Actions and Workflows do not match expected ref '$ExpectedRef'." >> $env:GITHUB_STEP_SUMMARY
 
     foreach ($mismatch in $mismatchRefs)

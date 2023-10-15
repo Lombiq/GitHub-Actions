@@ -14,7 +14,7 @@
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
 #>
 
-param([array] $Arguments)
+param([array] $PackParameters, [bool] $EnablePackageValidation, [string] $PackageValidationBaselineVersion, [string] $Version)
 
 <#
 .SYNOPSIS
@@ -64,6 +64,37 @@ function Get-ProjectProperty
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
+# Download baseline version NuGet packages
+if ($EnablePackageValidation -And
+    $PackageValidationBaselineVersion -And
+    !($Version -match '-(alpha|beta|preview|rc)\.') -And
+    $Version.Split('.')[0] -le $PackageValidationBaselineVersion.Split('.')[0])
+{
+    Write-Output 'Creating temporary project for baseline NuGet packages.'
+    dotnet new classlib -n TempProject
+    Push-Location TempProject
+
+    Write-Output 'Installing baseline version NuGet packages.'
+    foreach ($project in $projects)
+    {
+        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion --no-restore
+    }
+
+    dotnet restore
+    Pop-Location
+    Remove-Item -Recurse -Force TempProject
+    $PackageValidationParameters = @(
+        "-p:EnablePackageValidation=$EnablePackageValidation"
+        "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
+    )
+}
+else
+{
+    $PackageValidationParameters = @(
+        "-p:EnablePackageValidation=$EnablePackageValidation"
+    )
+}
+
 foreach ($project in $projects)
 {
     Write-Output "Packing $($project.Name)..."
@@ -100,11 +131,11 @@ foreach ($project in $projects)
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
-        dotnet pack $project -p:NuspecFile="$nuspecFile" @Arguments
+        dotnet pack $project -p:NuspecFile="$nuspecFile" @PackParameters @PackageValidationParameters
     }
     else
     {
-        dotnet pack $project @Arguments
+        dotnet pack $project @PackParameters @PackageValidationParameters
     }
 
     if ($LASTEXITCODE -ne 0)
