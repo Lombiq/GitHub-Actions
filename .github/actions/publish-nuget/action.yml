@@ -200,3 +200,26 @@ runs:
           )}
 
         New-NuGetPackage @parameters
+
+    - name: Push with dotnet
+      shell: pwsh
+      run: dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
+
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: NuGet-Package
+        path: artifacts
+        retention-days: ${{ inputs.nuget-artifact-retention-days }}
+
+    # This is not in its own action because it's all very specific to this NuGet publishing.
+    - name: Create Release
+      # v1.11.2
+      uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169
+      # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
+      # v4.3.1-alpha.osoe-86.
+      if: "!contains(steps.setup.outputs.publish-version, '-')"
+      with:
+        allowUpdates: true
+        generateReleaseNotes: true
+        artifacts: artifacts/*.nupkg, artifacts/*.snupkg
