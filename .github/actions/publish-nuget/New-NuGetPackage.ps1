@@ -77,7 +77,7 @@ if ($EnablePackageValidation -And
     Write-Output 'Installing baseline version NuGet packages.'
     foreach ($project in $projects)
     {
-        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion --no-restore
+        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
     }
 
     dotnet restore
