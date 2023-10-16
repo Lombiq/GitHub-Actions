@@ -115,8 +115,9 @@ foreach ($project in $projects)
         Write-Output 'Installing baseline version NuGet package.'
         dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
 
-        if ($LASTEXITCODE -ne 0){
-            Write-OutPut "Package version couldn't be added, thus package validation to baseline version won't be done."
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Output "Package version couldn't be added, thus package validation to baseline version won't be done."
             dotnet remove TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
             $PackageValidationParameters = @(
                 "-p:EnablePackageValidation=$EnablePackageValidation"
