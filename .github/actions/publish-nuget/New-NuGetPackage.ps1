@@ -62,38 +62,12 @@ function Get-ProjectProperty
     }
 }
 
-$projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
-
-# Download baseline version NuGet packages
-if ($EnablePackageValidation -And
+$shouldDownloadBaseLinePackages = ($EnablePackageValidation -And
     $PackageValidationBaselineVersion -And
     !($Version -match '-(alpha|beta|preview|rc)\.') -And
     $Version.Split('.')[0] -le $PackageValidationBaselineVersion.Split('.')[0])
-{
-    Write-Output 'Creating temporary project for baseline NuGet packages.'
-    dotnet new classlib -n TempProject
-    Push-Location TempProject
 
-    Write-Output 'Installing baseline version NuGet packages.'
-    foreach ($project in $projects)
-    {
-        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion --no-restore
-    }
-
-    dotnet restore
-    Pop-Location
-    Remove-Item -Recurse -Force TempProject
-    $PackageValidationParameters = @(
-        "-p:EnablePackageValidation=$EnablePackageValidation"
-        "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
-    )
-}
-else
-{
-    $PackageValidationParameters = @(
-        "-p:EnablePackageValidation=$EnablePackageValidation"
-    )
-}
+$projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
 {
@@ -124,6 +98,41 @@ foreach ($project in $projects)
 
         if ($isRequired) { exit 1 }
         continue
+    }
+
+    $PackageValidationParameters = @(
+        "-p:EnablePackageValidation=$EnablePackageValidation"
+        "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
+    )
+
+    # Download baseline version NuGet packages
+    if ($shouldDownloadBaseLinePackages)
+    {
+        Write-Output 'Creating temporary project for baseline NuGet package.'
+        dotnet new classlib -n TempProject
+        Push-Location TempProject
+
+        Write-Output 'Installing baseline version NuGet package.'
+        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Output "::warning:: Package version couldn't be added, thus package validation to baseline version won't be done."
+            dotnet remove TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+            $PackageValidationParameters = @(
+                "-p:EnablePackageValidation=$EnablePackageValidation"
+            )
+        }
+
+        dotnet restore
+        Pop-Location
+        Remove-Item -Recurse -Force TempProject
+    }
+    else
+    {
+        $PackageValidationParameters = @(
+            "-p:EnablePackageValidation=$EnablePackageValidation"
+        )
     }
 
     Push-Location $project.Directory
