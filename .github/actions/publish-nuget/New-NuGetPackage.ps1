@@ -78,6 +78,12 @@ if ($EnablePackageValidation -And
     foreach ($project in $projects)
     {
         dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+
+        if ($LASTEXITCODE -ne 0){
+            # If the package version couldn't be added, it can't do package validation check on it.
+            Write-OutPut "Package version couldn't be added, thus removing it."
+            dotnet remove TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+        }
     }
 
     dotnet restore
