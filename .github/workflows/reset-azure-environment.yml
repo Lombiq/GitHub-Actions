@@ -140,7 +140,7 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/INFRA-155
 
       - name: Stop Web App Slot
         run: |
@@ -151,7 +151,7 @@ jobs:
 
       - name: Replace Media
         run: |
-          $setStorageContentParameters = @{
+          $parameters = @{
             ResourceGroupName = '${{ inputs.resource-group-name }}'
             WebAppName = '${{ inputs.app-name }}'
             SourceSlotName = '${{ inputs.source-slot-name }}'
@@ -160,7 +160,7 @@ jobs:
             ContainerIncludeList = ${{ inputs.blob-container-include-list }}
             SasLifetimeMinutes = ${{ inputs.storage-sas-lifetime-minutes }}
           }
-          Set-AzureWebAppStorageContentFromStorageWithAzCopy @setStorageContentParameters
+          Invoke-AzureWebAppStorageAzCopy @parameters
 
       - name: Replace Database
         run: |
