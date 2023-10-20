@@ -151,7 +151,7 @@ jobs:
 
       - name: Replace Media
         run: |
-          $setStorageContentParameters = @{
+          $parameters = @{
             ResourceGroupName = '${{ inputs.resource-group-name }}'
             WebAppName = '${{ inputs.app-name }}'
             SourceSlotName = '${{ inputs.source-slot-name }}'
@@ -160,7 +160,7 @@ jobs:
             ContainerIncludeList = ${{ inputs.blob-container-include-list }}
             SasLifetimeMinutes = ${{ inputs.storage-sas-lifetime-minutes }}
           }
-          Set-AzureWebAppStorageContentFromStorageWithAzCopy @setStorageContentParameters
+          Invoke-AzureWebAppStorageAzCopy @parameters
 
       - name: Replace Database
         run: |
