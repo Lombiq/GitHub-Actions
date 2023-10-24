@@ -129,7 +129,7 @@ runs:
 
         Write-CacheConfiguration $isNuget $isNpm "${key}-${type}" $hashes[$type]
 
-    - name: Cache NuGet
+    - name: Cache Packages
       uses: actions/cache@v3
       if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' }}
       with:
