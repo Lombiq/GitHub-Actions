@@ -88,24 +88,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Runner Context
-      env:
-        RUNNER_CONTEXT: ${{ toJSON(runner) }}
-      shell: pwsh
-      run: Write-Output $Env:RUNNER_CONTEXT
-
-    - name: Strategy Context
-      env:
-        STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
-      shell: pwsh
-      run: Write-Output $Env:STRATEGY_CONTEXT
-
-    - name: Matrix Context
-      env:
-        MATRIX_CONTEXT: ${{ toJSON(matrix) }}
-      shell: pwsh
-      run: Write-Output $Env:MATRIX_CONTEXT
-
     - name: Setup Scripts
       shell: pwsh
       run: |
