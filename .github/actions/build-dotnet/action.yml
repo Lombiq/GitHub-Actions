@@ -100,7 +100,7 @@ runs:
       shell: pwsh
       run: Write-Output $Env:STRATEGY_CONTEXT
 
-      - name: Matrix Context
+    - name: Matrix Context
       env:
         MATRIX_CONTEXT: ${{ toJSON(matrix) }}
       shell: pwsh
