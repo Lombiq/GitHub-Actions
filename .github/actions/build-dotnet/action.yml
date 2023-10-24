@@ -88,6 +88,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      shell: pwsh
+      run: Write-Output $Env:GITHUB_CONTEXT
+
     - name: Setup Scripts
       shell: pwsh
       run: |
