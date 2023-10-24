@@ -55,10 +55,9 @@ on:
         type: string
         default: '0'
         description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
-          only current way to force "clear" the cache
-          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
-          (https://github.com/actions/cache/issues/2) is resolved.
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is an
+          alternative to clearing the cache manually, see
+          https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#managing-caches.
       timeout-minutes:
         type: number
         default: 360
