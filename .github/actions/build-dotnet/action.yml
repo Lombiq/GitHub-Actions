@@ -129,9 +129,17 @@ runs:
 
         Write-CacheConfiguration $isNuget $isNpm "${key}-${type}" $hashes[$type]
 
-    - name: Cache Packages
+    - name: Cache Packages with GitHub Cache
+      uses: actions/cache@v3
+      if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' && !contains(runner.name, 'buildjet') }}
+      with:
+        path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
+        key: ${{ steps.detect-cache-configuration.outputs.key }}
+        restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
+
+    - name: Cache Packages with BuildJet Cache
       uses: buildjet/cache@v3
-      if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' }}
+      if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' && contains(runner.name, 'buildjet') }}
       with:
         path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
         key: ${{ steps.detect-cache-configuration.outputs.key }}
