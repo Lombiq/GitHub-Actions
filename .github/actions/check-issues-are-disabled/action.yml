@@ -19,5 +19,6 @@ runs:
         else
           issuesAreDisabled=false
         fi
+        echo "$issuesAreDisabled"
         echo "issues-disabled=$issuesAreDisabled" >> $GITHUB_ENV
         echo "issues-disabled=$issuesAreDisabled" >> $GITHUB_OUTPUT
