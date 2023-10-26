@@ -9,16 +9,15 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup Scripts
-      shell: pwsh
-      run: |
-        "${{ github.action_path }}" >> $Env:GITHUB_PATH
-        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
-  
     - name: Check Issues are Disabled in Current Repository
-      shell: pwsh
+      shell: bash
       id: repository-has-disabled-issues
       run: |
-        $issuesAreDisabled = (gh issue status --repo '${{ github.repository }}' | ConvertTo-Json) -eq $null
-        Write-Host "Boolean result: $issuesAreDisabled"
-        Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
+        issues_status=$(gh issue status --repo "${{ github.repository }}" 2>&1)
+        if [[ $issues_status == *"GraphQL error"* ]]; then
+          issuesAreDisabled=true
+        else
+          issuesAreDisabled=false
+        fi
+        echo "issues-disabled=$issuesAreDisabled" >> $GITHUB_ENV
+        echo "::set-output name=issues-disabled::$issuesAreDisabled"
