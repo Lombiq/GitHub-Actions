@@ -14,11 +14,4 @@ runs:
       id: repository-has-disabled-issues
       run: |
         issues_status=$(gh issue status --repo "${{ github.repository }}" 2>&1)
-        if [[ $issues_status == *"GraphQL error"* ]]; then
-          issuesAreDisabled=true
-        else
-          issuesAreDisabled=false
-        fi
-        echo "$issuesAreDisabled"
-        echo "issues-disabled=$issuesAreDisabled" >> $GITHUB_ENV
-        echo "issues-disabled=$issuesAreDisabled" >> $GITHUB_OUTPUT
+        
