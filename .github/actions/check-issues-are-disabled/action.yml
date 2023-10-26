@@ -20,4 +20,4 @@ runs:
           issuesAreDisabled=false
         fi
         echo "issues-disabled=$issuesAreDisabled" >> $GITHUB_ENV
-        echo "::set-output name=issues-disabled::$issuesAreDisabled"
+        echo "issues-disabled=$issuesAreDisabled" >> $GITHUB_OUTPUT
