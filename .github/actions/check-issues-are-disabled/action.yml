@@ -21,10 +21,11 @@ runs:
       run: |
         try {
           $ErrorActionPreference = 'Stop'
-          $issuesAreDisabled = (gh issue status --repo '${{ github.repository }}' | ConvertTo-Json) -eq $null
+          $output = gh issue status --repo '${{ github.repository }}'
+          $issuesAreDisabled = ($output -eq $null)
         }
-        catch {
-          Write-Host "Caught an error:"
+        catch [System.Exception] {
+          Write-Host "Caught an error"
           Write-Host $_.Exception.Message
         }
         Write-Host "Boolean result: $issuesAreDisabled"
