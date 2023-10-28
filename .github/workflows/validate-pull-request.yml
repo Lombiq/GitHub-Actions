@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update Github issue and Pull Request
-        if: github.event_name == 'pull_request' && steps.check-issues-are-enabled.outputs.issues-enabled == 'false'
+        if: github.event_name == 'pull_request' && steps.check-issues-are-enabled.outputs.issues-enabled == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
