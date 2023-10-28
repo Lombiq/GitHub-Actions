@@ -13,5 +13,5 @@ runs:
       shell: bash
       id: repository-has-disabled-issues
       run: |
-        issues_status=$(gh issue status --repo "${{ github.repository }}" 2>&1)
+        issues_status=$(gh issue status --repo "${{ github.repository }}")
         
