@@ -1,10 +1,10 @@
-name: Check Issues Are Disabled
-description: Checks whether the current repository has disabled the issues feature.
+name: Check Issues Are Enabled
+description: Checks whether the current repository has enabled the issues feature.
 
 outputs:
-  issues-disabled:
-    description: Returns 'true' or 'false' indicating whether the issues feature is disabled.
-    value: ${{ steps.repository-has-disabled-issues.outputs.issues-disabled }}
+  issues-enabled:
+    description: Returns 'true' or 'false' indicating whether the issues feature is enabled.
+    value: ${{ steps.repository-has-enabled-issues.outputs.issues-enabled }}
 
 runs:
   using: "composite"
@@ -17,8 +17,8 @@ runs:
 
     - name: Check Issues are Disabled in Current Repository
       shell: pwsh
-      id: repository-has-disabled-issues
+      id: repository-has-enabled-issues
       run: |
-        $data = $(gh api repos/${{ github.repository }})
-        echo $data
+        $issuesAreEnabled = $(gh api repos/${{ github.repository }} | ConvertFrom-Json).has_issues
+        Set-GitHubOutput 'issues-disabled' $issuesAreEnabled
         
