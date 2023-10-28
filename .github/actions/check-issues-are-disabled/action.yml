@@ -19,6 +19,15 @@ runs:
       shell: pwsh
       id: repository-has-disabled-issues
       run: |
+        $repoInfo = Invoke-RestMethod `
+        -Uri "https://api.github.com/repos/${{ github.repository }}" `
+        -Headers @{Authorization = "token $env:GITUB_TOKEN"}
+        
+        if ($repoInfo.has_issues) {
+          Write-Output "Issues are enabled for this repository."
+        } else {
+          Write-Output "Issues are disabled for this repository."
+        }
         try {
           $ErrorActionPreference = 'Continue'
           echo $ErrorActionPreference
