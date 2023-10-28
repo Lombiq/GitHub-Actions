@@ -9,9 +9,24 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
     - name: Check Issues are Disabled in Current Repository
-      shell: bash
+      shell: pwsh
       id: repository-has-disabled-issues
       run: |
-        issues_status=$(gh issue status --repo "${{ github.repository }}")
+        try {
+          $ErrorActionPreference = 'Stop'
+          $issuesAreDisabled = (gh issue status --repo '${{ github.repository }}' | ConvertTo-Json) -eq $null
+        }
+        catch {
+          Write-Host "Caught an error:"
+          Write-Host $_.Exception.Message
+        }
+        Write-Host "Boolean result: $issuesAreDisabled"
+        Set-GitHubOutput 'issues-disabled' $issuesAreDisabled
         
