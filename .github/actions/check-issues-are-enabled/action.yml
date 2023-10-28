@@ -15,10 +15,10 @@ runs:
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
-    - name: Check Issues are Disabled in Current Repository
+    - name: Check Issues are Enabled in Current Repository
       shell: pwsh
       id: repository-has-enabled-issues
       run: |
         $issuesAreEnabled = $(gh api repos/${{ github.repository }} | ConvertFrom-Json).has_issues
-        Set-GitHubOutput 'issues-disabled' $issuesAreEnabled
+        Set-GitHubOutput 'issues-enabled' $issuesAreEnabled
         
