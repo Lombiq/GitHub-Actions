@@ -20,7 +20,7 @@ runs:
       id: repository-has-disabled-issues
       run: |
         try {
-          $ErrorActionPreference = 'Stop'
+          echo $ErrorActionPreference
           $output = gh issue status --repo '${{ github.repository }}'
           $issuesAreDisabled = ($output -eq $null)
         }
