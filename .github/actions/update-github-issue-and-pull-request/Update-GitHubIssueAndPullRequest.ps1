@@ -20,7 +20,7 @@ if ($Branch -NotLike '*issue*')
 
 $Branch -match '(\w+-\d+)'
 
-if ($matches[0] -eq $null)
+if ($matches -eq $null)
 {
     Exit
 }
