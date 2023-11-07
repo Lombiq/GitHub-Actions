@@ -1,5 +1,5 @@
 name: Check Issues Are Enabled
-description: Checks whether the current repository has enabled the issues feature.
+description: Checks whether the current repository has the issues feature enabled.
 
 outputs:
   issues-enabled:
