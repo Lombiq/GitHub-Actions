@@ -233,7 +233,7 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@dev
 ```
 
-If you get "Error: GraphqlError: Resource not accessible by integration" errors then also add the following permissions just below `uses`:
+If you get "Error: GraphqlError: Resource not accessible by integration" errors then also add the following permissions just below `uses`:<!--#spell-check-ignore-line-->
 
 ```yaml
     permissions:
