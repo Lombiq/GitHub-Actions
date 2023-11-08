@@ -233,6 +233,14 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/validate-pull-request.yml@dev
 ```
 
+If you get "Error: GraphqlError: Resource not accessible by integration" errors then also add the following permissions just below `uses`:
+
+```yaml
+    permissions:
+      pull-requests: write
+      repository-projects: read
+```
+
 ## Jira issue creation for community activities workflow
 
 Creates Jira issues for community activities happening on GitHub, like issues, discussions, and pull requests being opened. Pull requests are only taken into account if they're not already related to a Jira issue (by starting their title with a Jira issue key).
