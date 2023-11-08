@@ -59,21 +59,22 @@ on:
         default: 'false'
         description: >
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
-          packages, but negligible or even slower if you only have a handful.
+          packages, but negligible or even slower if you only have a handful. When run on BuildJet, will use the
+          BuildJet cache instead of GitHub's, which is faster.
       build-enable-npm-caching:
         type: string
         default: 'false'
         description: >
           If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
-          but negligible or even slower if you only have a handful.
+          packages, but negligible or even slower if you only have a handful. When run on BuildJet, will use the
+          BuildJet cache instead of GitHub's, which is faster.
       build-cache-version:
         type: string
         default: '0'
         description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
-          only current way to force "clear" the cache
-          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
-          (https://github.com/actions/cache/issues/2) is resolved.
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is an
+          alternative to clearing the cache manually, see
+          https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#managing-caches.
       build-create-binary-log:
         type: string
         default: 'false'
