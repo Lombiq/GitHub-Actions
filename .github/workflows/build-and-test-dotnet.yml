@@ -112,6 +112,12 @@ on:
         description: >
           When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
           the same version of a given package is used in all projects.
+      dotnet-consolidation-exclude-version-regex:
+        type: string
+        required: false
+        default: "*.*-alpha"
+        description: >
+          A regular expression to match package versions that will be skipped during NuGet package consolidation.
       warnings-as-errors:
         type: string
         default: 'true'
@@ -145,7 +151,7 @@ jobs:
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-723
         with:
           directory: ${{ inputs.build-directory }}
 
