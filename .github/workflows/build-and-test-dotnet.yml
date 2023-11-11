@@ -115,7 +115,7 @@ on:
       dotnet-consolidation-exclude-version-regex:
         type: string
         required: false
-        default: "*.*-alpha"
+        default: "-alpha"
         description: >
           A regular expression to match package versions that will be skipped during NuGet package consolidation.
       warnings-as-errors:
