@@ -27,7 +27,10 @@ runs:
       with:
         name: dotnet-consolidate
         version: 4.1.0
+
     - name: Verify consolidation status
       shell: pwsh
       working-directory: ${{ inputs.directory }}
-      run: dotnet consolidate -s (Get-ChildItem ${{ inputs.solution-path }}).FullName --excludedVersionsRegex ${{ inputs.exclude-version-regex }}
+      env:
+        ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
+      run: dotnet consolidate -s (Get-ChildItem ${{ inputs.solution-path }}).FullName --excludedVersionsRegex $Env::ExcludeVersionRegex
