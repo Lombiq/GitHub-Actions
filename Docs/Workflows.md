@@ -60,6 +60,13 @@ jobs:
 
 Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](SpellCheckingConfiguration.md) describing the configuration options and contribution guidelines. This documentation is also linked automatically at the end of every spell-checking report of a pull request.
 
+If the "Checkout" step of the spelling workflow fails stating that the workflow can't find the repository, you need `contents` permission. If the "Check Spelling" step fails, but no comment was posted, you need "pull-requests" write permission. Add the following permissions just below `uses`:
+```yaml
+    permissions:
+      contents: read
+      pull-requests: write
+```
+
 ### How to integrate spell-checking into a project
 
 1. Start by adding a job to an existing workflow or create one specific to spell-checking with the minimum configuration.
@@ -388,4 +395,11 @@ jobs:
       JIRA_USER_EMAIL: ${{ secrets.DEFAULT_JIRA_USER_EMAIL }}
       JIRA_API_TOKEN: ${{ secrets.DEFAULT_JIRA_API_TOKEN }}
       MERGE_TOKEN: ${{ secrets.DEFAULT_MERGE_TOKEN }}
+```
+
+If you get "Cannot index into a null array." or "gh: Resource not accessible by integration (HTTP 403)" errors, you need additional permissions for the `gh` CLI tool used in the workflow. Add the following permissions just below `uses`:
+```yaml
+    permissions:
+      actions: read
+      pull-requests: read
 ```
