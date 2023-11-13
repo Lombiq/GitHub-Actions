@@ -151,7 +151,7 @@ jobs:
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-723
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
