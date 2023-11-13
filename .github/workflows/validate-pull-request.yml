@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Update Github issue and Pull Request
+      - name: Update GitHub issue and Pull Request
         if: github.event_name == 'pull_request' && github.event.action == 'opened' 
         uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
         env:
