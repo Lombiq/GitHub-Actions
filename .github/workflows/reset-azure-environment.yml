@@ -174,7 +174,6 @@ jobs:
 
       - name: Add Destination Contained User to Destination Database
         run: |
-          Install-Module sqlserver -AllowClobber -Force
           Add-AzureWebAppSqlDatabaseContainedUser `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
