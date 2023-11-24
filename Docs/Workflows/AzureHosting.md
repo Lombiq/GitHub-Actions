@@ -1,8 +1,12 @@
 # Azure hosting workflows
 
+- They run in a [concurrency group](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency) composed using the `app-name` parameter to prevent them from running at the same time (and/or multiple instances).
+- They require [the repository to have an environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) with a name that matches the `slot-name` or `destination-slot-name` (whichever applies) parameter.
+- Optionally, [release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) can be added to an Azure Application Insights resource by defining passing in its ID in the `application-insights-resource-id` parameter.
+
 ## Deploy to Azure App Service workflow
 
-This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). Requires [the repository to have an environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) with a name that matches the `slot-name` parameter. The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _deploy-to-azure-app-service.yml_:
+This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). Example _deploy-to-azure-app-service.yml_:
 
 ```yaml
 name: Deploy to Azure App Service
@@ -38,7 +42,7 @@ This workflow has an alternate version (_deploy-orchard1-to-azure-app-service.ym
 
 ## Reset Azure Environment workflow
 
-This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Requires [the repository to have an environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) with a name that matches the `destination-slot-name` parameter. Optionally, [release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) can be added to the corresponding Azure Application Insights resource. Example _reset-azure-environment.yml_:
+This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Example _reset-azure-environment.yml_:
 
 ```yaml
 name: Reset Azure Environment
@@ -60,6 +64,7 @@ jobs:
       database-connection-string-name: Database__ConnectionString
       master-database-connection-string-name: Database__ConnectionString-master
       storage-connection-string-name: Storage_ConnectionString
+      application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
     secrets:
       AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL_ID }}
       AZURE_APP_SERVICE_RESET_AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_AZURE_TENANT_ID }}
@@ -68,7 +73,7 @@ jobs:
 
 ## Swap Azure Web App Slots workflow
 
-This workflow swaps two Azure Web App Slots associated with an Azure Web App. Requires [the repository to have an environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) with a name that matches the `destination-slot-name` parameter. [Release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) are added to the corresponding Azure Application Insights resource. Example _swap-azure-web-app-slots.yml_:
+This workflow swaps two Azure Web App Slots associated with an Azure Web App. Example _swap-azure-web-app-slots.yml_:
 
 ```yaml
 name: Swap Azure Web App Slots
