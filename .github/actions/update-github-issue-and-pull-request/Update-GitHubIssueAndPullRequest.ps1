@@ -18,7 +18,13 @@ if ($Branch -NotLike '*issue*')
     Exit
 }
 
-$Branch -match '(\w+-\d+)'
+$Branch -match '(\w+-\d+)' | Out-Null
+
+if ($null -eq $matches)
+{
+    throw "Issue key not found in the branch name '$Branch'!"
+}
+
 $issueKey = $matches[0]
 $issueLink = "[$issueKey]($jiraBrowseUrl$issuekey)"
 
