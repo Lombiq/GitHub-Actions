@@ -19,7 +19,14 @@ if ($Branch -NotLike '*issue*')
 }
 
 $Branch -match '(\w+-\d+)'
-$issueKey = $matches[0]
+
+$issueKey = $null
+
+if ($matches -ne $null)
+{
+    $issueKey = $matches[0]
+}
+
 $issueLink = "[$issueKey]($jiraBrowseUrl$issuekey)"
 
 if ($Title -NotLike "*$issueKey*")
