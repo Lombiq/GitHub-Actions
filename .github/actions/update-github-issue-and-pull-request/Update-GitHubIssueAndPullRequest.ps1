@@ -42,7 +42,7 @@ elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*")
 
 $issueQuery = "$issueKey in:title"
 $issueItem = $null
-$issuesEnabled = (gh repo view --json hasIssuesEnabled | ConvertFrom-Json).hasIssuesEnabled
+$issuesEnabled = (gh repo view $GitHubRepository --json hasIssuesEnabled | ConvertFrom-Json).hasIssuesEnabled
 
 if ($issuesEnabled)
 {
