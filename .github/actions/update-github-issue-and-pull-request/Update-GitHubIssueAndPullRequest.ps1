@@ -49,6 +49,10 @@ if ($issuesEnabled)
     $output = gh issue list --search $issueQuery --repo $GitHubRepository
     $issueItem = ($output | Select-Object -First 1)
 }
+else
+{
+    Write-Output "Issues are disabled in the repository '$GitHubRepository'"
+}
 
 if ($issueItem)
 {
