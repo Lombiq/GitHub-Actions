@@ -1,6 +1,6 @@
 # Workflows for building .NET Core and Orchard Core applications
 
-## Build and Test Orchard Core solution workflow
+## Build and Test Orchard Core solution
 
 Meant to be used with [Orchard Core](https://orchardcore.net/) solutions; this workflow checks out the code, installs dependencies, builds the solution, runs unit and UI tests (with [Lombiq UI Testing Toolbox for Orchard Core](https://github.com/Lombiq/UI-Testing-Toolbox)), and publishes artifacts as well as a test report.
 
@@ -24,7 +24,7 @@ jobs:
       timeout-minutes: 60
 ```
 
-## Build and Test .NET solution workflow
+## Build and Test .NET solution
 
 Builds a .NET solution (or project) with static code analysis, and runs tests with a test report like `build-and-test-orchard-core`. You can use it along the lines of the following:
 

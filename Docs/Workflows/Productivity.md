@@ -1,6 +1,6 @@
 # Productivity workflows
 
-## Spell-checking workflow
+## Spell-checking
 
 Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](SpellCheckingConfiguration.md) describing the configuration options and contribution guidelines. This documentation is also linked automatically at the end of every spell-checking report of a pull request.
 
@@ -54,7 +54,7 @@ jobs:
         other-project:my-dictionary.txt
 ```
 
-## NuGet publish workflow
+## Publish NuGet package
 
 Builds the project with the .NET SDK and publishes it as a NuGet package to the configured NuGet feed. Example _publish.yml_:
 
@@ -101,7 +101,7 @@ Valid values for `verbosity` are those defined by [MSBuild](https://docs.microso
 - If you have multiple projects in the repository or if the project you want to build is in a subfolder, then add a solution to the root of the repository that references all projects you want to build.
 - References to projects (`<ProjectReference>` elements) not in the repository won't work, these need to be changed to package references (`<PackageReference>` elements). Make the conditional based on `$(NuGetBuild)`. See the [Helpful Extensions project file](https://github.com/Lombiq/Helpful-Extensions/blob/dev/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions.csproj) for an example. References to projects in the repository will work and those projects, if configured with the proper metadata, will be published together, with dependencies retained among the packages too.
 
-## Submodule validate workflow
+## Validate submodule
 
 Validates pull requests in submodule repositories for various criteria:
 
@@ -128,7 +128,7 @@ If this is for a submodule of [Lombiq's Open-Source Orchard Core Extensions](htt
 
 Refer to [Github Actions reusable workflows](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows#overview) for more information.
 
-## Validate Pull Request workflow
+## Validate pull request
 
 Validates pull requests for various criteria:
 
@@ -157,7 +157,7 @@ If you get "Error: GraphqlError: Resource not accessible by integration" errors 
       repository-projects: read
 ```
 
-## Post Pull Request Checks Automation
+## Post-pull request checks automation
 
 Various automation that should be run after all other checks succeeded for a pull request. Currently does the following:
 
@@ -204,7 +204,7 @@ If you get "Cannot index into a null array." or "gh: Resource not accessible by 
       pull-requests: read
 ```
 
-## Jira issue creation for community activities workflow
+## Create Jira issues for community activities
 
 Creates Jira issues for community activities happening on GitHub, like issues, discussions, and pull requests being opened. Pull requests are only taken into account if they're not already related to a Jira issue (by starting their title with a Jira issue key).
 

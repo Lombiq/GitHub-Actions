@@ -4,7 +4,7 @@
 - They require [the repository to have an environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) with a name that matches the `slot-name` or `destination-slot-name` (whichever applies) parameter.
 - Optionally, [release annotations](https://learn.microsoft.com/en-us/azure/azure-monitor/app/annotations) can be added to an Azure Application Insights resource by defining passing in its ID in the `application-insights-resource-id` parameter.
 
-## Deploy to Azure App Service workflow
+## Deploy to Azure App Service
 
 This workflow builds and publishes a .NET web project and then deploys the app to [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/). The workflow also supports [Ready to Run compilation](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run). Example _deploy-to-azure-app-service.yml_:
 
@@ -40,7 +40,7 @@ If the app uses the [`Lombiq.Hosting.BuildVersionDisplay` module](https://github
 
 This workflow has an alternate version (_deploy-orchard1-to-azure-app-service.yml_) designed for Orchard 1-based applications.
 
-## Reset Azure Environment workflow
+## Reset Azure Environment
 
 This workflow resets an Azure Environment, by replacing the Orchard Core Media Library and the Database with the ones from a given source slot. Example _reset-azure-environment.yml_:
 
@@ -71,7 +71,7 @@ jobs:
       AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID }}
 ```
 
-## Swap Azure Web App Slots workflow
+## Swap Azure Web App Slots
 
 This workflow swaps two Azure Web App Slots associated with an Azure Web App. Example _swap-azure-web-app-slots.yml_:
 
