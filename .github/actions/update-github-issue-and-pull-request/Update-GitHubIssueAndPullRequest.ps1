@@ -51,7 +51,7 @@ if ($issuesEnabled)
 }
 else
 {
-    Write-Output "Issues are disabled in the repository '$GitHubRepository'"
+    Exit
 }
 
 if ($issueItem)
