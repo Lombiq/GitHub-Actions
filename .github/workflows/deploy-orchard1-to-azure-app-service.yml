@@ -1,7 +1,7 @@
 name: Deploy Orchard 1 to Azure App Service
 
 concurrency:
-  group: AzureDeployApp
+  group: ${{ inputs.app-name }}AzureWorkflow
 
 permissions:
   id-token: write
@@ -179,7 +179,7 @@ jobs:
         if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
-          release-name: "Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}"
+          release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start Web App Slot
