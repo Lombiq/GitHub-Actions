@@ -1,6 +1,6 @@
 # Composite GitHub Actions actions
 
-These actions can be invoked from a step in any other repository's workflow. They're utilized by [our reusable workflows](Workflows/Index).
+These actions can be invoked from a step in any other repository's workflow. They're utilized by [our reusable workflows](Workflows/Index.md).
 
 In addition to the below short explanations, check out the inline documentation of the action you want to use, especially its parameters.
 

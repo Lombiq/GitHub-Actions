@@ -25,8 +25,8 @@ We at [Lombiq](https://lombiq.com/) also used these workflows for the following 
 
 ## Documentation
 
-- [Reusable workflows](Docs/Workflows/Index)
-- [Composite actions](Docs/Actions)
+- [Reusable workflows](Docs/Workflows/Index.md)
+- [Composite actions](Docs/Actions.md)
 
 ## Contributing and support
 

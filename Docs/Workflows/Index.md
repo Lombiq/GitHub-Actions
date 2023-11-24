@@ -1,6 +1,6 @@
 # Reusable GitHub Actions workflows
 
-These workflows can be invoked from a step from any other repository's workflow. The utilize [our composite actions](../Actions).
+These workflows can be invoked from a step from any other repository's workflow. The utilize [our composite actions](../Actions.md).
 
 ## General notes
 
@@ -11,6 +11,6 @@ These workflows can be invoked from a step from any other repository's workflow.
 
 ## Workflow categories
 
-- [.NET Core and Orchard Core builds](BuildDotNetCoreOrchardCore)
-- [Productivity](Productivity)
-- [Azure hosting](AzureHosting)
+- [.NET Core and Orchard Core builds](BuildDotNetCoreOrchardCore.md)
+- [Productivity](Productivity.md)
+- [Azure hosting](AzureHosting.md)
