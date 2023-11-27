@@ -11,17 +11,17 @@ These workflows can be invoked from a step from any other repository's workflow.
 
 ## .NET Core and Orchard Core builds
 
-- [Build and Test .NET solution](BuildDotNetCoreOrchardCore/BuildAndTestDotNetSolution.md)
-- [Build and Test Orchard Core solution](BuildDotNetCoreOrchardCore/BuildAndTestOrchardCoreSolution.md)
+- [Build and Test .NET solution](Workflows/BuildDotNetCoreOrchardCore/BuildAndTestDotNetSolution.md)
+- [Build and Test Orchard Core solution](Workflows/BuildDotNetCoreOrchardCore/BuildAndTestOrchardCoreSolution.md)
 
 ## Productivity
 
-- [Create Jira issues for community activities](Productivity/CreateJiraIssuesForCommunityActivities.md)
-- [Post-pull request checks automation](Productivity/PostPullRequestChecksAutomation.md)
-- [Publish NuGet package](Productivity/PublishNuGetPackage.md)
-- [Spell-checking](Productivity/SpellChecking.md)
-- [Validate pull request](Productivity/ValidatePullRequest.md)
-- [Validate submodule](Productivity/ValidateSubmodule.md)
+- [Create Jira issues for community activities](Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md)
+- [Post-pull request checks automation](Workflows/Productivity/PostPullRequestChecksAutomation.md)
+- [Publish NuGet package](Workflows/Productivity/PublishNuGetPackage.md)
+- [Spell-checking](Workflows/Productivity/SpellChecking.md)
+- [Validate pull request](Workflows/Productivity/ValidatePullRequest.md)
+- [Validate submodule](Workflows/Productivity/ValidateSubmodule.md)
 
 ## Azure hosting
 
@@ -33,6 +33,6 @@ These workflows can be invoked from a step from any other repository's workflow.
 
 ### Azure hosting workflows
 
-- [Deploy to Azure App Service](AzureHosting/DeployToAzureAppService.md)
-- [Reset Azure Environment](AzureHosting/ResetAzureEnvironment.md)
-- [Swap Azure Web App Slots](AzureHosting/SwapAzureWebAppSlots.md)
+- [Deploy to Azure App Service](Workflows/AzureHosting/DeployToAzureAppService.md)
+- [Reset Azure Environment](Workflows/AzureHosting/ResetAzureEnvironment.md)
+- [Swap Azure Web App Slots](Workflows/AzureHosting/SwapAzureWebAppSlots.md)
