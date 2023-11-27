@@ -1,6 +1,6 @@
 # Reusable GitHub Actions workflows
 
-These workflows can be invoked from a step from any other repository's workflow. The utilize [our composite actions](../Actions.md).
+These workflows can be invoked from a step from any other repository's workflow. The utilize [our composite actions](Actions.md).
 
 ## General notes
 
