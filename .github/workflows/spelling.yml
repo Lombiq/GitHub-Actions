@@ -1,5 +1,18 @@
 name: Spelling
 
+concurrency:
+  # If "cancel-in-progress-for-this-pr" is set to "true" and this is running for a PR, then the concurrency group will
+  # be the constructed from the name of the workflow and the branch name, causing the already running workflow for this
+  # branch (in this repository) to be cancelled. Otherwise it will be the ID of the workflow run, making it globally
+  # unique and not cancel anything.
+  group: |
+    ${{
+      inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
+        && format('{0}-{1}', github.workflow, github.ref)
+        || github.run_id
+    }}
+  cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr }}
+
 on:
   workflow_call:
     secrets:
@@ -11,8 +24,12 @@ on:
 
     # When updating defaults here also update them in the `spelling` action.
     inputs:
+      cancel-in-progress-for-this-pr:
+        description: When set to "true", it will cancel the already running workflow for this PR.
+        type: string
+        default: 'false'
       cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'true'
       merge-file-excludes:
