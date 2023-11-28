@@ -15,7 +15,7 @@ on:
         type: string
         default: 'false'
       cancel-workflow-on-failure:
-        description: If "true", will cancel the current workflow run with all jobs if this workflow fails.
+        description: If "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'true'
       # This needs to be stringified JSON, because inputs don't support arrays, see
