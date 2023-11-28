@@ -1,17 +1,17 @@
 name: Spelling
 
-concurrency:
-  # If "cancel-in-progress-for-this-pr" is set to "true" and this is running for a PR, then the concurrency group will
-  # be the constructed from the name of the workflow and the branch name, causing the already running workflow for this
-  # branch (in this repository) to be cancelled. Otherwise it will be the ID of the workflow run, making it globally
-  # unique and not cancel anything.
-  group: |
-    ${{
-      inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
-        && format('{0}-{1}', github.workflow, github.ref)
-        || github.run_id
-    }}
-  cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr }}
+# concurrency:
+#   # If "cancel-in-progress-for-this-pr" is set to "true" and this is running for a PR, then the concurrency group will
+#   # be the constructed from the name of the workflow and the branch name, causing the already running workflow for this
+#   # branch (in this repository) to be cancelled. Otherwise it will be the ID of the workflow run, making it globally
+#   # unique and not cancel anything.
+#   group: |
+#     ${{
+#       inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
+#         && format('{0}-{1}', github.workflow, github.ref)
+#         || github.run_id
+#     }}
+#   cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr }}
 
 on:
   workflow_call:
@@ -83,57 +83,65 @@ on:
 jobs:
   check-spelling:
     name: Check Spelling
-    outputs:
-      followup: ${{ steps.check-spelling-action.outputs.followup }}
+    # outputs:
+    #   followup: ${{ steps.check-spelling-action.outputs.followup }}
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-        with:
-          token: ${{ secrets.CHECKOUT_TOKEN }}
-
-      # This is a workaround for the spelling workflow to check submodules too in the repository.
-      - name: Stub repo layout
+      - name: Debug concurrency
         shell: pwsh
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-          Remove-Item .\.git\ -recurse -force
-          git init .
-          git add .
-          git commit -m 'stub commit -- includes submodules'
+          Write-Output 'Input cancel-in-progress: ${{ input.cancel-in-progress-for-this-pr }}'
+          Write-Output 'Concurrency group format: ${{ format('{0}-{1}', github.workflow, github.ref) }}'
+          Write-Output 'Concurrency group: ${{ concurrency.group }}'
+          Write-Output 'Concurrency cancel in progress: ${{ concurrency.cancel-in-progress }}'
 
-      - name: Check Spelling
-        id: check-spelling-action
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
-        with:
-          merge-file-excludes: ${{ inputs.merge-file-excludes }}
-          merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}
-          merge-ignore-patterns: ${{ inputs.merge-ignore-patterns }}
-          default-dictionaries: ${{ inputs.default-dictionaries }}
-          additional-configuration-source-prefixes: ${{ inputs.additional-configuration-source-prefixes }}
-          additional-dictionaries: ${{ inputs.additional-dictionaries }}
-          configuration-path: ${{ inputs.configuration-path }}
-          default-configuration-repository: ${{ inputs.default-configuration-repository }}
-          post-comment: 0
+  #     - name: Checkout
+  #       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+  #       with:
+  #         token: ${{ secrets.CHECKOUT_TOKEN }}
 
-      - name: Cancel Workflow on Failure
-        if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     # This is a workaround for the spelling workflow to check submodules too in the repository.
+  #     - name: Stub repo layout
+  #       shell: pwsh
+  #       run: |
+  #         git config --global user.email "you@example.com"
+  #         git config --global user.name "Your Name"
+  #         Remove-Item .\.git\ -recurse -force
+  #         git init .
+  #         git add .
+  #         git commit -m 'stub commit -- includes submodules'
 
-  comment-pr:
-    name: Comment (PR)
-    runs-on: ubuntu-22.04
-    needs: check-spelling
-    permissions:
-      pull-requests: write
-    if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
-    steps:
-      - name: Comment (PR)
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
-        with:
-          post-comment: 1
-          task: ${{ needs.check-spelling.outputs.followup }}
+  #     - name: Check Spelling
+  #       id: check-spelling-action
+  #       uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+  #       with:
+  #         merge-file-excludes: ${{ inputs.merge-file-excludes }}
+  #         merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}
+  #         merge-ignore-patterns: ${{ inputs.merge-ignore-patterns }}
+  #         default-dictionaries: ${{ inputs.default-dictionaries }}
+  #         additional-configuration-source-prefixes: ${{ inputs.additional-configuration-source-prefixes }}
+  #         additional-dictionaries: ${{ inputs.additional-dictionaries }}
+  #         configuration-path: ${{ inputs.configuration-path }}
+  #         default-configuration-repository: ${{ inputs.default-configuration-repository }}
+  #         post-comment: 0
+
+  #     - name: Cancel Workflow on Failure
+  #       if: failure() && inputs.cancel-workflow-on-failure == 'true'
+  #       uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # comment-pr:
+  #   name: Comment (PR)
+  #   runs-on: ubuntu-22.04
+  #   needs: check-spelling
+  #   permissions:
+  #     pull-requests: write
+  #   if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
+  #   steps:
+  #     - name: Comment (PR)
+  #       uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+  #       with:
+  #         post-comment: 1
+  #         task: ${{ needs.check-spelling.outputs.followup }}
