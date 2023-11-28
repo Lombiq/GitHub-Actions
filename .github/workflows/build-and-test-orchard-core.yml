@@ -1,18 +1,5 @@
 name: Build and Test Orchard Core solution
 
-concurrency:
-  # If "cancel-in-progress-for-this-pr" is set to "true" and this is running for a PR, then the concurrency group will
-  # be the constructed from the name of the workflow and the branch name, causing the already running workflow for this
-  # branch (in this repository) to be cancelled. Otherwise it will be the ID of the workflow run, making it globally
-  # unique and not cancel anything.
-  group: |
-    ${{
-      inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
-        && format('{0}-{1}', github.workflow, github.ref)
-        || github.run_id
-    }}
-  cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
-
 on:
   workflow_call:
     secrets:
@@ -178,6 +165,18 @@ jobs:
       matrix:
         machine-type: ${{ fromJson(inputs.machine-types) }}
     timeout-minutes: ${{ inputs.timeout-minutes }}
+    concurrency:
+      # If "cancel-in-progress-for-this-pr" is set to "true" and this run is for a PR, then the concurrency group will
+      # be constructed from a handful of parameters to produce a value that would evaluate to the same value on a
+      # subsequent push, causing the already running workflow for this PR (in this repository) to be cancelled.
+      # Otherwise it will be the ID of the workflow run, making it globally unique and not cancel anything.
+      group: |
+        ${{
+          inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
+            && format('{0}_{1}_{2}', github.workflow, github.ref, matrix.machine-type)
+            || github.run_id
+        }}
+      cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
