@@ -5,8 +5,8 @@ concurrency:
   # be the constructed from the name of the workflow and the branch name, causing the already running workflow for this
   # branch (in this repository) to be cancelled. Otherwise it will be the ID of the workflow run, making it globally
   # unique and not cancel anything.
-  group: ${{ (inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request' && format('{0}-{1}', github.workflow, github.ref)) || github.run_id }}
-  cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr }}
+  group: ${{ inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request' && format('{0}-{1}', github.workflow, github.ref) || github.run_id }}
+  # cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr }}
 
 on:
   workflow_call:
