@@ -13,4 +13,4 @@ jobs:
     name: Spelling
     uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@issue/OSOE-743
     with:
-      cancel-in-progress: 'true'
+      cancel-in-progress-for-this-pr: 'true'
