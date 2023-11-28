@@ -93,6 +93,8 @@ jobs:
         run: |
           Write-Output 'Input cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr }}'
           Write-Output 'Concurrency group format: ${{ format('{0}-{1}', github.workflow, github.ref) }}'
+          Write-Output 'Concurrency group expression (cancel is false): ${{ inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request' && format('{0}-{1}', github.workflow, github.ref) || github.run_id }}'
+          Write-Output 'Concurrency group expression (cancel is true): ${{ 'true' == 'true' && github.event_name == 'pull_request' && format('{0}-{1}', github.workflow, github.ref) || github.run_id }}'
           Write-Output 'Concurrency group: ${{ github.concurrency.group }}'
           Write-Output 'Concurrency cancel in progress: ${{ github.concurrency.cancel-in-progress }}'
 
