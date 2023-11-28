@@ -91,7 +91,7 @@ jobs:
       - name: Debug concurrency
         shell: pwsh
         run: |
-          Write-Output 'Input cancel-in-progress: ${{ input.cancel-in-progress-for-this-pr }}'
+          Write-Output 'Input cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr }}'
           Write-Output 'Concurrency group format: ${{ format('{0}-{1}', github.workflow, github.ref) }}'
           Write-Output 'Concurrency group: ${{ concurrency.group }}'
           Write-Output 'Concurrency cancel in progress: ${{ concurrency.cancel-in-progress }}'
