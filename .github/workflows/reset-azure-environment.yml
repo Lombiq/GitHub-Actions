@@ -1,7 +1,7 @@
 name: Reset Azure Environment
 
 concurrency:
-  group: AzureResetEnvironment
+  group: ${{ inputs.app-name }}AzureWorkflow
 
 permissions:
   id-token: write
@@ -195,7 +195,7 @@ jobs:
         if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
-          release-name: "Reset #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}"
+          release-name: 'Reset #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start Web App Slot
