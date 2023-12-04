@@ -25,7 +25,7 @@ jobs:
       - name: Check Merge Queue Adds
         id: check-merge-queue-adds
         if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved')
-        uses: LavaTG/LGHA/.github/actions/check-merge-queue-adds@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/check-merge-queue-adds@issue/OSOE-517
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
