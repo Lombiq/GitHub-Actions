@@ -5,10 +5,15 @@ These workflows can be invoked from a step from any other repository's workflow.
 ## General notes
 
 - In addition to the short explanations and samples, check out the inline documentation of the workflow you want to use, especially its parameters. Those examples don't necessarily utilize all parameters.
-- Workflows with a `cancel-workflow-on-failure` parameter will by default cancel all jobs in the workflow run when the given reusable workflow fails (to save computing resources). You can disable this by setting the parameter to `"false"`.
 - To add the workflows to a project create a folder in the root of the repository that will call them, e.g. _.github/workflows/build-and-test.yml_ and/or _.github/workflows/publish-nuget.yml_. The examples below are for such files.
 - If you use these workflows with a self-hosted runner, then you'll need to fork this repository under the organization while keeping [these rules](https://docs.github.com/en/actions/using-workflows/reusing-workflows#access-to-reusable-workflows) in mind. Then, you need to enable workflows for the fork under its Actions tab (you'll see a big button for this). If you don't do the latter step, you'll get a "workflow was not found" error. Then you can also disable the `spelling-this-repo` and `validate-this-gha-refs` workflows, not to run them unnecessarily if you sync the fork with the original repo.<!--#spell-check-ignore-line-->
-- Some of the long-running workflows (for example solution builds and spell-checking) also support the `cancel-in-progress-for-this-pr` parameter. When it's set to `'true'`, it will cancel the already running workflow run or job (e.g., if the job uses strategy matrix to run on different machine types) when a newer workflow is started for a given pull request. You can use this to conserve computing resources (like paid GitHub Actions minutes) by not letting frequent commits under a PR each run their own build, for example, since only the most recent one will be run to completion. The default is `'false'`.
+
+## Saving on computing resources
+
+These features are designed to reduce resource usage (like paid GitHub Actions minutes) by cancelling workflows/jobs under specific circumstances and are enabled by default. They can be disabled by setting the value of the corresponding parameter to anything other than `'true'`.
+
+- Workflows with the `cancel-workflow-on-failure` parameter will by default cancel all jobs in the workflow run when the given reusable workflow fails.
+- When running under a pull request, some of the long-running jobs (for example solution builds and spell-checking) will by default be cancelled when a subsequent commit triggers them again. This is governed by the `cancel-in-progress-for-this-pr` parameter.
 
 ## .NET Core and Orchard Core builds
 
