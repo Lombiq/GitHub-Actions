@@ -22,7 +22,7 @@ else
 {
     $connectionStringStem = 'Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!'
 
-    $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'sql2019'
+    $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'sql2022'
 }
 
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionStringStem + $connectionStringSuffix
