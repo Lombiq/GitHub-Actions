@@ -148,7 +148,7 @@ jobs:
     concurrency:
       # If "cancel-in-progress-for-this-pr" is set to "true" and this run is for a pull request, then the concurrency
       # key will be constructed from a handful of parameters to produce a value that would evaluate to the same value on
-      # a subsequent push, causing the already running workflow for this pull request (in this repository) to be
+      # a subsequent push, causing the already running job (with the same strategy) for this pull request to be
       # cancelled. Otherwise it will be the ID of the workflow run and the machine type, making it more unique and not
       # cancel anything.
       group: |
