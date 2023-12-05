@@ -146,11 +146,11 @@ jobs:
         machine-type: ${{ fromJson(inputs.machine-types) }}
     timeout-minutes: ${{ inputs.timeout-minutes }}
     concurrency:
-      # If "cancel-in-progress-for-this-pr" is set to "true" and this run is for a PR, then the concurrency group will
-      # be constructed from a handful of parameters to produce a value that would evaluate to the same value on a
-      # subsequent push, causing the already running workflow for this PR (in this repository) to be cancelled.
-      # Otherwise it will be the ID of the workflow run and the machine type, making it more unique and not cancel
-      # anything.
+      # If "cancel-in-progress-for-this-pr" is set to "true" and this run is for a pull request, then the concurrency
+      # group will be constructed from a handful of parameters to produce a value that would evaluate to the same value
+      # on a subsequent push, causing the already running workflow for this pull request (in this repository) to be
+      # cancelled. Otherwise it will be the ID of the workflow run and the machine type, making it more unique and not
+      # cancel anything.
       group: |
         ${{
           inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
