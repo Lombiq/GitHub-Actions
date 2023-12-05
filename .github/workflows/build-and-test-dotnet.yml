@@ -12,8 +12,8 @@ on:
     inputs:
       cancel-in-progress-for-this-pr:
         description: >
-          When set to "true", it will cancel the already running workflow for this PR. See the concurrency settings of
-          the job for more details.
+          When set to "true", it will cancel the already running workflow for this pull request. See the concurrency
+          settings of the job for more details.
         type: string
         default: 'false'
       cancel-workflow-on-failure:
