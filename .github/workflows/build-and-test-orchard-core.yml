@@ -15,9 +15,9 @@ on:
           When set to "true", it will cancel the already running workflow for this PR. See the concurrency settings of
           the job for more details.
         type: string
-        default: 'false'
+        default: 'true'
       cancel-workflow-on-failure:
-        description: If "true", it will cancel the current workflow run with all jobs if this workflow fails.
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'true'
       # This needs to be stringified JSON, because inputs don't support arrays, see

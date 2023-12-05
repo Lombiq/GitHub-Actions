@@ -27,7 +27,7 @@ on:
       cancel-in-progress-for-this-pr:
         description: When set to "true", it will cancel the already running workflow for this PR.
         type: string
-        default: 'false'
+        default: 'true'
       cancel-workflow-on-failure:
         description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
