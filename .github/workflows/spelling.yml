@@ -3,14 +3,16 @@ name: Spelling
 concurrency:
   # If "cancel-in-progress-for-this-pr" is set to "true" and this is running for a pull request, then the concurrency
   # key will be constructed from the name of the workflow and the branch name, causing the already running job in this
-  # workflow for this pull request to be cancelled. Otherwise it will be the ID of the workflow run, making it globally unique
-  # and not cancel anything. Concurrency is defined for the whole workflow, because it has only two jobs (check-spelling
-  # and comment-pr) and the latter depends on the former, so they won't run in parallel.
+  # workflow for this pull request to be cancelled. Otherwise it will be the ID of the workflow run, making it globally
+  # unique and not cancel anything. Concurrency is defined for the whole workflow, because it has only two jobs
+  # (check-spelling and comment-pr) and the latter depends on the former, so they won't run in parallel. A technical
+  # name for this workflow is also included in both cases, so that it doesn't come into conflict with other jobs calling
+  # a different workflow that are started by the same caller workflow.
   group: |
     ${{
       inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
-        && format('{0}-{1}', github.workflow, github.ref)
-        || github.run_id
+        && format('{0}_spell-checking_{1}', github.workflow, github.ref)
+        || format('{0}_spell-checking', github.run_id)
     }}
   cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
 
