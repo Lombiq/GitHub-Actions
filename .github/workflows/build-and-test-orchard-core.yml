@@ -171,13 +171,20 @@ jobs:
     concurrency:
       # If "cancel-in-progress-for-this-pr" is set to "true" and this run is for a pull request, then the concurrency
       # key will be constructed from a handful of parameters to produce a value that would evaluate to the same value on
-      # a subsequent push, causing the already running job (with the same strategy) for this pull request to be
-      # cancelled. Otherwise it will be the ID of the workflow run and the machine type, making it more unique and not
-      # cancel anything.
+      # a subsequent push (while still allowing different solutions to be built with the same configuration), causing
+      # the already running job (with the same strategy) for this pull request to be cancelled. Otherwise it will be the
+      # ID of the workflow run and the machine type, making it more unique and not cancel anything.
       group: |
         ${{
           inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
-            && format('{0}_{1}_{2}_{3}_{4}', github.workflow, github.ref, matrix.machine-type, inputs.build-directory, inputs.build-solution-path)
+            && format(
+              '{0}_{1}_{2}_{3}_{4}_{5}',
+              github.workflow,
+              github.ref,
+              matrix.machine-type,
+              inputs.build-directory,
+              inputs.build-solution-path,
+              inputs.build-configuration)
             || format('{0}_{1}', github.run_id, matrix.machine-type)
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
