@@ -178,21 +178,8 @@ jobs:
       group: |
         ${{
           inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
-            && format(
-              '{0}_{1}_{2}_{3}_{4}_{5}',
-              github.workflow,
-              github.ref,
-              matrix.machine-type,
-              inputs.build-directory,
-              inputs.build-solution-path,
-              inputs.build-configuration)
-            || format(
-              '{0}_{1}_{2}_{3}_{4}',
-              github.run_id,
-              matrix.machine-type,
-              inputs.build-directory,
-              inputs.build-solution-path,
-              inputs.build-configuration)
+            && format('{0}_{1}_{2}_{3}_{4}_{5}', github.workflow, github.ref, matrix.machine-type, inputs.build-directory, inputs.build-solution-path, inputs.build-configuration)
+            || format('{0}_{1}_{2}_{3}_{4}', github.run_id, matrix.machine-type, inputs.build-directory, inputs.build-solution-path, inputs.build-configuration)
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
