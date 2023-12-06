@@ -12,7 +12,7 @@ on:
 
     inputs:
       cancel-workflow-on-failure:
-        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
+        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'true'
       # This needs to be stringified JSON because inputs don't support arrays, see
@@ -44,7 +44,7 @@ on:
         default: 'false'
         description: >
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
-          packages, but negligible or even slower if you only have a handful. When run on BuildJet, it will use the
+          packages, but negligible or even slower if you only have a handful. When run on BuildJet, will use the
           BuildJet cache instead of GitHub's, which is faster.
       build-enable-npm-caching:
         type: string
