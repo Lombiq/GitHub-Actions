@@ -179,7 +179,7 @@ jobs:
         ${{
           inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
             && format('{0}_{1}_{2}', github.workflow, github.ref, matrix.machine-type)
-            || format('{0}_{1}', github.run_id, matrix.machine-type)
+            || '')
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
