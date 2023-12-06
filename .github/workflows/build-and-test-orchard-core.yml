@@ -175,12 +175,7 @@ jobs:
       # the already running job (with the same strategy) for this pull request to be cancelled. Otherwise it will be the
       # ID of the workflow run and some of the same parameters, making it more unique so that parallel runs of this job
       # aren't kept waiting.
-      group: |
-        ${{
-          inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
-            && format('{0}_{1}_{2}_{3}_{4}_{5}', github.workflow, github.ref, matrix.machine-type)
-            || format('{0}_{1}', github.run_id, github.action)
-        }}
+      group: format('{0}_{1}_{2}', github.run_id, github.workflow, github.action)
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
       - name: Test configuration
