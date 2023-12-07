@@ -13,7 +13,8 @@ These workflows can be invoked from a step from any other repository's workflow.
 These features are designed to reduce resource usage (like paid GitHub Actions minutes) by cancelling workflows/jobs under specific circumstances and are enabled by default. They can be disabled by setting the value of the corresponding parameter to anything other than `'true'`.
 
 - Workflows with the `cancel-workflow-on-failure` parameter will by default cancel all jobs in the workflow run when the given reusable workflow fails.
-- When running under a pull request, some of the long-running jobs (for example solution builds and spell-checking) will by default be cancelled when a subsequent commit triggers them again. This is governed by the `cancel-in-progress-for-this-pr` parameter.
+- When running under a pull request, some of the long-running jobs (for example solution builds and spell-checking) will by default be cancelled when a subsequent commit triggers them again. This is based on the [concurrency](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency) feature and governed by the `cancel-in-progress-for-this-pr` parameter.
+  - Some of these workflows (mainly solution builds) also have an optional `parent-job-name` parameter. Use this to distinguish different jobs in the same parent workflow that call the same reusable workflow, otherwise they will conflict with each other.
 
 ## .NET Core and Orchard Core builds
 
