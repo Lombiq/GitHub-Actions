@@ -6,9 +6,9 @@ if ($Env:RUNNER_OS -eq 'Windows')
 }
 else
 {
-    $sqlServerName = "uitt-sqlserver"
+    $sqlServerName = 'uitt-sqlserver'
     $sqlServerLink = "mcr.microsoft.com/mssql/server:${sqlServerVersion}-latest"
-    
+
     $dockerRunSwitches = @(
         '--name', $sqlServerName
         '--env', 'ACCEPT_EULA=Y'
