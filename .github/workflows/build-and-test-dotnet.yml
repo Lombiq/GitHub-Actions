@@ -167,7 +167,7 @@ jobs:
         ${{
           inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
             && format('{0}_build-and-test-dotnet_{1}_{2}_{3}', github.workflow, inputs.parent-job-name, matrix.machine-type, github.ref)
-            || format('{0}_build-and-test-dotnet__{1}_{2}', github.run_id, inputs.parent-job-name, matrix.machine-type)
+            || format('{0}_build-and-test-dotnet_{1}_{2}', github.run_id, inputs.parent-job-name, matrix.machine-type)
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
