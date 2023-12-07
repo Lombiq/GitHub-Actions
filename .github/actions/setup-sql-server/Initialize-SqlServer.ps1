@@ -4,15 +4,17 @@ if ($Env:RUNNER_OS -eq 'Windows')
 }
 else
 {
+    $sqlServerName = 'sql2022'
+    $sqlServerVersion = '2022-latest'
     $dockerRunSwitches = @(
-        '--name', 'sql2022'
+        '--name', $sqlServerName
         '--env', 'ACCEPT_EULA=Y'
         '--env', 'SA_PASSWORD=Password1!'
         '--publish', '1433:1433'
-        '--detach', 'mcr.microsoft.com/mssql/server:2022-latest'
+        '--detach', "mcr.microsoft.com/mssql/server:$sqlServerVersion"
     )
 
-    docker pull mcr.microsoft.com/mssql/server:2022-latest &&
+    docker pull "mcr.microsoft.com/mssql/server:$sqlServerVersion" &&
     docker run @dockerRunSwitches &&
-    docker exec --user 0 sql2022 bash -c 'mkdir /data; chmod 777 /data --recursive; chown mssql:root /data'
+    docker exec --user 0 $sqlServerName bash -c 'mkdir /data; chmod 777 /data --recursive; chown mssql:root /data'
 }
