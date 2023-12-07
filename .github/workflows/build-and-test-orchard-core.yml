@@ -170,7 +170,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ${{ matrix.machine-type }}
-    name: Build and Test
+    name: Build and Test (testing github.workflow parameter)
     strategy:
       # The parameters added to the strategy matrix should also be used to construct the concurrency key.
       matrix:
@@ -194,10 +194,14 @@ jobs:
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
-      - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-        with:
-          token: ${{ secrets.CHECKOUT_TOKEN }}
+      - name: Test
+        shell: pwsh
+        run: Write-Warning '${{ github.workflow }}'
+
+      # - name: Checkout
+      #   uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      #   with:
+      #     token: ${{ secrets.CHECKOUT_TOKEN }}
 
       # - name: Set up .NET
       #   uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
