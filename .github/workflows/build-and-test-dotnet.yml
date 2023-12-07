@@ -16,6 +16,14 @@ on:
           settings of the job for more details.
         type: string
         default: 'true'
+      parent-job-name:
+        description: >
+          An optional technical identifier that is used to construct the concurrency key to be able to distinguish
+          different jobs in the same parent workflow calling this one. This is necessary if you build multiple solutions
+          (as separate jobs) in the same workflow for these jobs not to conflict with each other.
+        type: string
+        default: 'parent-job'
+        required: false
       cancel-workflow-on-failure:
         description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
@@ -151,14 +159,15 @@ jobs:
       # a subsequent push (while still allowing different solutions to be built with the same configuration), causing
       # the already running job (with the same strategy) for this pull request to be cancelled. Otherwise it will be the
       # ID of the workflow run combined with the strategy parameters, making it more unique so that parallel runs of
-      # this job aren't kept waiting. A technical name for this workflow is also included in both cases, so that it
-      # doesn't come into conflict with other jobs calling a different workflow that are started by the same caller
-      # workflow.
+      # this job aren't kept waiting. This workflow's technical name is also included in both cases, so that it doesn't
+      # conflict with other jobs calling a different workflow that are started by the same caller workflow. The caller
+      # job's technical name is optionally included in the concurrency key, so that different jobs in the same parent
+      # workflow calling this one don't conflict with each other.
       group: |
         ${{
           inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
-            && format('{0}_build-and-test-dotnet_{1}_{2}', github.workflow, github.ref, matrix.machine-type)
-            || format('{0}_build-and-test-dotnet_{1}', github.run_id, matrix.machine-type)
+            && format('{0}_build-and-test-dotnet_{1}_{2}_{3}', github.workflow, inputs.parent-job-name, matrix.machine-type, github.ref)
+            || format('{0}_build-and-test-dotnet__{1}_{2}', github.run_id, inputs.parent-job-name, matrix.machine-type)
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
