@@ -81,14 +81,25 @@ jobs:
         if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved')  || github.event_name == 'merge_group'
         shell: pwsh
         run: |
-          $headRef = "${{ github.event_name == 'merge_group' && github.event.merge_group.head_ref || github.head_ref }}"
-          $baseRef = "${{ github.event_name == 'merge_group' && github.event.merge_group.base_ref || github.base_ref }}"
-
-          # for merge group, the refs are the full path rather than just the branch name
-          $headRef = $headRef.replace('refs/heads/', '')
-          $baseRef = $baseRef.replace('refs/heads/', '')
-
           $eventName = "${{ github.event_name }}"
+
+          if ($eventName -eq 'merge_group') {
+            $headRef = "${{ github.event.merge_group.head_ref }}"
+            $baseRef = "${{ github.event.merge_group.base_ref }}"
+
+            # For merge group context, the refs are the full path rather than just the branch name, so adjust.
+            $headRef = $headRef.replace('refs/heads/', '')
+            $baseRef = $baseRef.replace('refs/heads/', '')
+          }
+          elseif ($eventName -eq 'pull_request_review') {
+            $headRef = "${{ github.event.pull_request.head.ref }}"
+            $baseRef = "${{ github.event.pull_request.base.ref }}"
+          }
+          else {
+            $headRef = "${{ github.head_ref }}"
+            $baseRef = "${{ github.base_ref }}"
+          }
+
           $skipReviewApproval = 'True'
           $lastReviewApproved = "${{ steps.check-pr-reviews.outputs.last-review-approved }}"
           $mergeQueueApproved = "${{ steps.check-merge-queue-adds.outputs.added-to-merge-queue }}"
