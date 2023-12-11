@@ -6,12 +6,11 @@ on:
   push:
     branches:
       - dev
-      - issue/OSOE-188
 
 jobs:
   yaml-linting:
     name: YAML Linting
-    uses: Lombiq/GitHub-Actions/.github/workflows/yaml-lint.yml@issue/OSOE-188
+    uses: Lombiq/GitHub-Actions/.github/workflows/yaml-lint.yml@dev
     with:
       config-file-path: '.trunk/configs/.yamllint.yaml'
       search-path: '.'
