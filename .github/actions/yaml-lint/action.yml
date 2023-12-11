@@ -4,5 +4,12 @@ description: Runs a linter on YAML files.
 runs:
   using: "composite"
   steps:
-    - name: Run yamllint with custom config
+    - name: Run yamllint on Linux
+      if: ${{ runner.os == 'Linux' }}
       run: yamllint -c ./.yamllint.yaml .
+      shell: bash
+
+    - name: Run yamllint on Windows
+      if: ${{ runner.os == 'Windows' }}
+      run: yamllint -c ./.yamllint.yaml .
+      shell: pwsh
