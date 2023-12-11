@@ -6,10 +6,10 @@ runs:
   steps:
     - name: Run yamllint on Linux
       if: ${{ runner.os == 'Linux' }}
-      run: yamllint -c ./.yamllint.yaml .
+      run: yamllint -c Lombiq/Github-Actions/.trunk/configs/.yamllint.yaml .
       shell: bash
 
     - name: Run yamllint on Windows
       if: ${{ runner.os == 'Windows' }}
-      run: yamllint -c ./.yamllint.yaml .
+      run: yamllint -c Lombiq/Github-Actions/.trunk/configs/.yamllint.yaml .
       shell: pwsh
