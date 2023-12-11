@@ -11,4 +11,4 @@ on:
 jobs:
   yaml-linting:
     name: YAML Linting
-    uses: Lombiq/GitHub-Actions/.github/actions/yaml-lint.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/actions/yaml-lint.yml@issue/OSOE-188
