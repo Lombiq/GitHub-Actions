@@ -1,0 +1,54 @@
+name: YAML Linting
+
+on:
+  workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
+          are used.
+
+    inputs:
+      # This needs to be stringified JSON because inputs don't support arrays, see
+      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
+      machine-types:
+        required: false
+        type: string
+        default: "['ubuntu-22.04', 'windows-2022']"
+        description: >
+          Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
+          "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
+      timeout-minutes:
+        required: false
+        type: number
+        default: 10
+        description: Configuration for the timeout-minutes parameter of the workflow. GitHub's default is 360.
+      cancel-workflow-on-failure:
+        description: If set to "true", this will cancel the current workflow run with all jobs if this workflow fails.
+        required: false
+        type: string
+        default: "true"
+
+jobs:
+  yaml-linting:
+    runs-on: ${{ matrix.machine-type }}
+    name: YAML Linting
+    strategy:
+      matrix:
+        machine-type: ${{ fromJson(inputs.machine-types) }}
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
+
+      - name: YAML Linting
+        uses: Lombiq/GitHub-Actions/.github/actions/yaml-lint@dev
+
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

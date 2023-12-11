@@ -1,0 +1,14 @@
+name: YAML Linting
+
+# Runs for PRs opened for any branch, and pushes to the dev branch.
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - issue/OSOE-188
+
+jobs:
+  yaml-linting:
+    name: YAML Linting
+    uses: Lombiq/GitHub-Actions/.github/actions/yaml-lint@dev

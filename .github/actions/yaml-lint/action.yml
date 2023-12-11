@@ -1,0 +1,8 @@
+name: YAML Linting
+description: Runs a linter on YAML files.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run yamllint with custom config
+        run: yamllint -c ./.yamllint.yaml .
