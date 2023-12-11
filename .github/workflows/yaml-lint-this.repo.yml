@@ -12,3 +12,6 @@ jobs:
   yaml-linting:
     name: YAML Linting
     uses: Lombiq/GitHub-Actions/.github/workflows/yaml-lint.yml@issue/OSOE-188
+    wth:
+      config-file-path: '.trunk/configs/.yamllint.yaml'
+      search-path: '.'

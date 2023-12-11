@@ -29,6 +29,14 @@ on:
         required: false
         type: string
         default: "true"
+      config-file-path:
+        description: 'Path to the yamllint configuration file'
+        required: true
+        default: '.yamllint.yaml'
+      search-path:
+        description: 'Path to search for YAML files'
+        required: true
+        default: '.'
 
 jobs:
   yaml-linting:
@@ -46,6 +54,9 @@ jobs:
 
       - name: YAML Linting
         uses: Lombiq/GitHub-Actions/.github/actions/yaml-lint@issue/OSOE-188
+        with:
+          config-file-path: ${{ inputs.config-file-path }}
+          search-path: ${{ inputs.search-path }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
