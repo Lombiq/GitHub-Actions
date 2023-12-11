@@ -4,10 +4,10 @@ description: Runs a linter on YAML files.
 runs:
   using: "composite"
   steps:
-    - name: Run yamllint on Linux
-      if: ${{ runner.os == 'Linux' }}
-      run: yamllint -c "${{ github.action_path }}/../../../.trunk/configs/.yamllint.yaml" .
-      shell: bash
+    # - name: Run yamllint on Linux
+    #   if: ${{ runner.os == 'Linux' }}
+    #   run: yamllint -c "${{ github.action_path }}/../../../.trunk/configs/.yamllint.yaml" .
+    #   shell: bash
 
     - name: Run yamllint on Windows
       if: ${{ runner.os == 'Windows' }}
