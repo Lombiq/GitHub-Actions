@@ -32,10 +32,12 @@ on:
       config-file-path:
         description: 'Path to the yamllint configuration file'
         required: true
+        type: string
         default: '.yamllint.yaml'
       search-path:
         description: 'Path to search for YAML files'
         required: true
+        type: string
         default: '.'
 
 jobs:
