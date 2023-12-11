@@ -11,5 +11,5 @@ runs:
 
     - name: Run yamllint on Windows
       if: ${{ runner.os == 'Windows' }}
-      run: yamllint -c Lombiq/Github-Actions/.trunk/configs/.yamllint.yaml .
+      run: yamllint -c "${{ github.action_path }}/../../../.trunk/configs/.yamllint.yaml" .
       shell: pwsh
