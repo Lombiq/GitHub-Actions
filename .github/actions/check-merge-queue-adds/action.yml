@@ -1,0 +1,29 @@
+name: Check Merge Queue Adds
+description: >
+  Checks current pull request timeline add events to determine if it was ever added to a 
+  merge queue. Intentionally not documented in Actions.md since it's only meant for 
+  internal use.
+
+outputs:
+  added-to-merge-queue:
+    description: "A boolean value indicating if pull request added to merge queue."
+    value: ${{ steps.check-merge-queue-adds.outputs.added-to-merge-queue }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Check Merge Queue Adds
+      id: check-merge-queue-adds
+      shell: pwsh
+      run: |
+        $parameters = @{
+            Repository = '${{ github.repository }}'
+            PullRequestNumber = '${{ github.event.pull_request.number }}'
+        }
+        Test-PullRequestMergeQueueAdds @parameters
