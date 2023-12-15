@@ -80,7 +80,7 @@ jobs:
 
       - name: Automatically Resolve or Done Jira issue
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-726
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
