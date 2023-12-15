@@ -17,17 +17,16 @@ on:
           for info on how to create PATs; you'll need one with the "repo" scope. Check out
           https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
           for instructions on what other tokens you can use.
-      JIRA_BASE_URL:
+      JIRA_ENDPOINT_URL:
         required: true
         description: >
-          Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
-          it must NOT end with a slash.
-      JIRA_USER_EMAIL:
+          Configure as explained under
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PostPullRequestChecksAutomation.md.
+      JIRA_API_KEY:
         required: true
-        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
-      JIRA_API_TOKEN:
-        required: true
-        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+        description: >
+          Configure as explained under
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PostPullRequestChecksAutomation.md.
 
     inputs:
       merge-method:
@@ -83,9 +82,8 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-726
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
-          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_ENDPOINT_URL: ${{ secrets.JIRA_ENDPOINT_URL }}
+          JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }}
 
       - name: Remove Label
         if: steps.check-steps-should-run.outputs.is-latest != 'false'

@@ -114,10 +114,10 @@ runs:
                 title = '${{ steps.issue-details.outputs.link-title }}'
             }
         }
-        $authorizationBytes = [Text.Encoding]::ASCII.GetBytes('${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_TOKEN }}')
+        $authorizationBytes = [Text.Encoding]::ASCII.GetBytes('${{ env.JIRA_USER_EMAIL }}:${{ env.JIRA_API_KEY }}')
         $authorizationBytesBase64 = [Convert]::ToBase64String($authorizationBytes)
         $requestParameters = @{
-            Uri = '${{ env.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink'
+            Uri = '${{ env.JIRA_ENDPOINT_URL }}/rest/api/3/issue/${{ steps.create-issue.outputs.issue }}/remotelink'
             Method = 'POST'
             ContentType = 'application/json'
             Headers = @{
@@ -138,5 +138,5 @@ runs:
         token: ${{ env.GITHUB_TOKEN }}
         issue-number: ${{ github.event.issue.number }}
         title: ${{ github.event.issue.title }} (${{ steps.create-issue.outputs.issue }})
-        body: "${{ github.event.issue.body }}\n\n[Jira issue](${{ env.JIRA_BASE_URL }}/browse/${{ steps.create-issue.outputs.issue }})"
+        body: "${{ github.event.issue.body }}\n\n[Jira issue](${{ env.JIRA_ENDPOINT_URL }}/browse/${{ steps.create-issue.outputs.issue }})"
         update-mode: "replace"
