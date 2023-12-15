@@ -7,8 +7,8 @@ on:
       JIRA_BASE_URL:
         required: false
         description: >
-          Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
-          it must NOT end with a slash.
+          The URL of your Jira instance, following the https://<yourdomain>.atlassian.net pattern. It must NOT end with
+          a slash.
     inputs:
       repository:
         type: string
