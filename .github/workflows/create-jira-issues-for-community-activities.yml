@@ -8,12 +8,12 @@ on:
         required: true
         description: >
           Configure as explained under
-          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PostPullRequestChecksAutomation.md.
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md.
       JIRA_API_KEY:
         required: true
         description: >
           Configure as explained under
-          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PostPullRequestChecksAutomation.md.
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md.
       JIRA_PROJECT_KEY:
         required: true
         description: The project key in JIRA, i.e. the prefix of issue keys (the "KEY" part of KEY-123).
