@@ -10,9 +10,9 @@ Various automation that should be run after all other checks succeeded for a pul
 You'll need to configure `JIRA_*` secrets first. See the [documentation of `create-jira-issues-for-community-activities`](CreateJiraIssuesForCommunityActivities.md) for details. The only difference is how you set up the `DEFAULT_JIRA_API_KEY`; use the following settings for the key:
 
 - Valid until: Unless you want to rotate the keys manually, remove the expiration.
-- Description: "Post-pull request checks automation for <project key>" (or what you prefer).
+- Description: "Post-pull request checks automation for \<project key\>" (or what you prefer).
 - Allowed methods: GET, POST.
-- Allowed endpoints: "/rest/api/3/issue/<project key>-".
+- Allowed endpoints: "/rest/api/3/issue/\<project key\>-".
 
 ## Setup
 

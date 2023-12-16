@@ -11,9 +11,9 @@ Creates Jira issues for community activities happening on GitHub, like issues, d
     - `DEFAULT_JIRA_ENDPOINT_URL`: The Endpoint URL indicated under the API Key Manager settings in Jira in the Apps menu.
     - `DEFAULT_JIRA_API_KEY`: Under the API Key Manager settings in Jira in the Apps menu, create an API key with the following settings
       - Valid until: Unless you want to rotate the keys manually, remove the expiration.
-      - Description: "Create Jira issues for community activities for <project key>" (or what you prefer).
-      - Allowed methods: POST.
-      - Allowed endpoints: "/rest/api/3/issue/<project key>-".
+      - Description: "Create Jira issues for community activities for \<project key\>" (or what you prefer).
+      - Allowed methods: GET, POST.
+      - Allowed endpoints: "/rest/api/3/issue", "/rest/api/3/serverInfo".
 3. Set up organization or repository secrets for the issue templates, see below.
 
 The secrets with the `*_JIRA_ISSUE_DESCRIPTION` suffix should contain templates for the Jira issues to be created, using the internal markup format of Jira (not Markdown). Example for one for `ISSUE_JIRA_ISSUE_DESCRIPTION`:
