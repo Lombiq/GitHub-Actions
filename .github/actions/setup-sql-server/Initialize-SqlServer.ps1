@@ -1,10 +1,11 @@
 param (
     [string]$sqlServerVersion = '2022'
+    [string]$sqlServerVersionNumber = '2022.16.0.1000'
 )
 
 if ($Env:RUNNER_OS -eq 'Windows')
 {
-    choco install sql-server-express --version=2022.16.0.1000 --no-progress
+    choco install sql-server-express --version=$sqlServerVersionNumber --no-progress
 }
 else
 {
