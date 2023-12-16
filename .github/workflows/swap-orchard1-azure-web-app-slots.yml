@@ -1,7 +1,7 @@
 name: Swap Azure Web App Slots
 
 concurrency:
-  group: AzureSwapAppSlots
+  group: ${{ inputs.app-name }}AzureWorkflow
 
 permissions:
   id-token: write
@@ -35,7 +35,7 @@ on:
 
     inputs:
       cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'false'
       machine-type:
@@ -113,7 +113,7 @@ jobs:
         if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
-          release-name: "Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}"
+          release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start AfterSwap Maintenance on the Destination Slot

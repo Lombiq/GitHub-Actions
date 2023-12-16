@@ -1,7 +1,7 @@
 name: Reset Azure Environment
 
 concurrency:
-  group: AzureResetEnvironment
+  group: ${{ inputs.app-name }}AzureWorkflow
 
 permissions:
   id-token: write
@@ -35,7 +35,7 @@ on:
 
     inputs:
       cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'false'
       machine-type:
@@ -174,7 +174,6 @@ jobs:
 
       - name: Add Destination Contained User to Destination Database
         run: |
-          Install-Module sqlserver -AllowClobber -Force
           Add-AzureWebAppSqlDatabaseContainedUser `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
@@ -196,7 +195,7 @@ jobs:
         if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
-          release-name: "Reset #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}"
+          release-name: 'Reset #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start Web App Slot
