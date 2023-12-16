@@ -54,7 +54,16 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        shell: pwsh
-        run: Write-Output $Env:GITHUB_CONTEXT
+      - name: Create Jira issues for community activities
+        uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-community-activities@issue/OSOE-726
+        env:
+          JIRA_ENDPOINT_URL: ${{ secrets.JIRA_ENDPOINT_URL }}
+          JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }}
+          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+          DISCUSSION_JIRA_ISSUE_DESCRIPTION: ${{ secrets.DISCUSSION_JIRA_ISSUE_DESCRIPTION }}
+          ISSUE_JIRA_ISSUE_DESCRIPTION: ${{ secrets.ISSUE_JIRA_ISSUE_DESCRIPTION }}
+          PULL_REQUEST_JIRA_ISSUE_DESCRIPTION: ${{ secrets.PULL_REQUEST_JIRA_ISSUE_DESCRIPTION }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          issue-component: ${{ inputs.issue-component }}
+          suffix-issue-titles: ${{ inputs.suffix-issue-titles }}
