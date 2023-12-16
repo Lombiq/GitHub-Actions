@@ -112,4 +112,5 @@ function GetIssueUrl {
 
 $issueKey = CreateIssue
 AddLink $issueKey
+Set-GitHubOutput 'issue-key' $issueKey
 Set-GitHubOutput 'issue-url' (GetIssueUrl $issueKey)
