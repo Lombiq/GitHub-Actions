@@ -8,7 +8,7 @@ $issueKey = Get-JiraIssueKeyFromPullRequestTitle $title
 
 $transition = $IsDone ? 'Done' : ($IsResolve ? 'Resolve' : $null)
 
-if ($transition -eq $null)
+if ($null -eq $transition)
 {
     Write-Error 'Unknown Jira issue transition was selected.'
     exit
@@ -35,7 +35,7 @@ $response = Invoke-RestMethod -Uri $Env:JIRA_ENDPOINT_URL -Method Get -Headers $
 
 $availableTransition = $response | Select-Object -ExpandProperty transitions | Where-Object { $_.name -eq $transition }
 
-if ($availableTransition -ne $null)
+if ($null -ne $availableTransition)
 {
     Write-Host "Transition exists. $($availableTransition.id)"
 
