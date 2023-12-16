@@ -45,5 +45,5 @@ runs:
       uses: buildsville/add-remove-label@eeae411a9be2e173f2420e1644514edbecc4e835
       with:
         token: ${{ env.GITHUB_TOKEN }}
-        labels: resolve-jira-issue-if-checks-succeed, done-jira-issue-if-checks-succeed
+        labels: merge-and-resolve-jira-issue-if-checks-succeed, resolve-jira-issue-if-checks-succeed, done-jira-issue-if-checks-succeed
         type: remove
