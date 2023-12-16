@@ -78,7 +78,7 @@ runs:
             LinkTitle = $issueDetails.LinkTitle
         }
 
-        .\Add-JiraIssue @params
+        Add-JiraIssue @params
 
     - name: Update GitHub Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
