@@ -37,7 +37,7 @@ $availableTransition = $response | Select-Object -ExpandProperty transitions | W
 
 if ($null -ne $availableTransition)
 {
-    Write-Host "Transition exists. $($availableTransition.id)"
+    Write-Output "Transition exists. $($availableTransition.id)"
 
     $body = @{
         options = @{
