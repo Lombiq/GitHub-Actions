@@ -43,7 +43,7 @@ on:
 jobs:
   yaml-linting:
     runs-on: ${{ matrix.machine-type }}
-    name: YAML Linting
+    name: YAML Linting Job
     strategy:
       matrix:
         machine-type: ${{ fromJson(inputs.machine-types) }}
