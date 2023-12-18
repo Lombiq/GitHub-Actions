@@ -9,7 +9,7 @@ During local development, YAML linting can be enabled in VSCode via the [Trunk C
 Additionally, the linter can be run as a standalone tool:
 
 ```bash
-yamllint -c ./.trunk/configs/.yamllint.yamll ./github
+yamllint -c ./.trunk/configs/.yamllint.yaml ./github
 ```
 
 Optionally, the Trunk Code extension can be used in conjunction with the [YAML by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) extension, which provides IntelliSense and description-on-hover capabilities based on a schema.
