@@ -4,11 +4,13 @@ param(
 
 # Filter actions based on files in action directory.
 [array]$actionFiles = $FileIncludeList | Where-Object -FilterScript {
-    if (Test-Path $PSitem) {
+    if (Test-Path $PSitem)
+    {
         (Get-Item $PSitem).Directory.GetFiles('action.yml').Count -gt 0 -or
         (Get-Item $PSitem).Directory.GetFiles('action.yaml').Count -gt 0
     }
-    else {
+    else
+    {
         $false
     }
 }
