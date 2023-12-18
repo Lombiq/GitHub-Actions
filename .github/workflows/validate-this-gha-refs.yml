@@ -44,7 +44,7 @@ jobs:
       - name: Get Applicable Git File Changes
         id: git-diff
         if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group'
-        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-files-from-git-diff@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-files-from-git-diff@issue/OSOE-188
         with:
           left-commit: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
           right-commit: ${{ github.sha }}
