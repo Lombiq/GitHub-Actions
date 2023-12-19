@@ -1,6 +1,5 @@
 param (
-    [string]$sqlServerVersion = '2022',
-    [string]$sqlServerVersionNumber = '2022.16.0.1000'
+    [string]$sqlServerVersion = '2022'
 )
 
 if ($Env:RUNNER_OS -eq 'Windows')
