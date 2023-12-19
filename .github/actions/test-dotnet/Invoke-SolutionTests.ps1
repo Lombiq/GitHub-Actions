@@ -16,7 +16,7 @@ $connectionStringSuffix = @(
 ) -join ''
 if ($Env:RUNNER_OS -eq 'Windows')
 {
-    $connectionStringStem = 'Server=.\MSSQLSERVER;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
+    $connectionStringStem = 'Server=.\(local);Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
 }
 else
 {
