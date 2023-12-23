@@ -26,7 +26,8 @@ param(
             ((Get-Item $PSitem).Extension -eq '.yml' -or
              (Get-Item $PSitem).Extension -eq '.yaml')
     }
-    catch {
+    catch
+    {
         return $false
     }
 }
