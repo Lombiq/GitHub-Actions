@@ -4,7 +4,8 @@ param(
 
 # Filter actions based on files in action directory.
 [array]$actionFiles = $FileIncludeList | Where-Object -FilterScript {
-    try {
+    try
+    {
         (Get-Item $PSitem).Directory.GetFiles('action.yml').Count -gt 0 -or
         (Get-Item $PSitem).Directory.GetFiles('action.yaml').Count -gt 0   
     }
@@ -18,9 +19,15 @@ param(
 
 # Filter workflow files excluding action yaml file names.
 [array]$workflows = $FileIncludeList | Where-Object -FilterScript {
-    (Get-Item $PSitem).BaseName -ne 'action' -and
-        ((Get-Item $PSitem).Extension -eq '.yml' -or
-         (Get-Item $PSitem).Extension -eq '.yaml')
+    try
+    {
+        (Get-Item $PSitem).BaseName -ne 'action' -and
+            ((Get-Item $PSitem).Extension -eq '.yml' -or
+            (Get-Item $PSitem).Extension -eq '.yaml')
+    }
+    catch {
+        return $false
+    }
 }
 
 # Combine actions and workflows.
