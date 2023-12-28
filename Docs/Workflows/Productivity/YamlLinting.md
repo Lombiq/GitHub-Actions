@@ -2,6 +2,24 @@
 
 This solution uses [`yamllint`](https://github.com/adrienverge/yamllint) for linting YAML files according to a configuration file. Such a configuration file includes a set of rules that are checked against when linting the files and can be found in `/.trunk/configs/.yamllint.yaml`.
 
+You would typically consume the corresponding GHA workflow for YAML linting like this:
+
+```yaml
+...
+
+jobs:
+    yaml-linting:
+        name: YAML Linting
+        uses: Lombiq/GitHub-Actions/.github/workflows/yaml-lint.yml@dev
+        with:
+            config-file-path: 'tools/Lombiq.GitHub.Actions/.trunk/configs/.yamllint.yaml'
+            search-path: '.github'
+```
+
+Where:
+* `config-file-path``: specifies the location of the yamllint rules file to use. See more details about such file [here](https://yamllint.readthedocs.io/en/stable/rules.html).
+* `search-path``: where the files to lint should be searched.
+
 ## Integration with VSCode
 
 During local development, YAML linting can be enabled in VSCode via the [Trunk Check](https://marketplace.visualstudio.com/items?itemName=Trunk.io) extension. Such a tool will look for the `yamllint` configuration file located in the folder `/.trunk`, which is already setup.
