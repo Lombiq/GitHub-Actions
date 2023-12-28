@@ -10,15 +10,6 @@ on:
           are used.
 
     inputs:
-      # This needs to be stringified JSON because inputs don't support arrays, see
-      # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
-      machine-types:
-        required: false
-        type: string
-        default: "['ubuntu-22.04', 'windows-2022']"
-        description: >
-          Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-          "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
       timeout-minutes:
         required: false
         type: number
@@ -42,11 +33,8 @@ on:
 
 jobs:
   yaml-linting:
-    runs-on: ${{ matrix.machine-type }}
+    runs-on: ubuntu-22.04
     name: YAML Linting Job
-    strategy:
-      matrix:
-        machine-type: ${{ fromJson(inputs.machine-types) }}
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
