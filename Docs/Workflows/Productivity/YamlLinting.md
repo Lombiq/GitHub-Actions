@@ -13,7 +13,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/workflows/yaml-lint.yml@dev
         with:
             config-file-path: 'tools/Lombiq.GitHub.Actions/.trunk/configs/.yamllint.yaml'
-            search-path: '.github'
+            search-path: '.'
 ```
 
 Where:
