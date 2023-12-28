@@ -17,8 +17,9 @@ jobs:
 ```
 
 Where:
-* `config-file-path``: specifies the location of the yamllint rules file to use. See more details about such file [here](https://yamllint.readthedocs.io/en/stable/rules.html).
-* `search-path``: where the files to lint should be searched.
+
+- `config-file-path``: specifies the location of the yamllint rules file to use. See more details about such file [here](https://yamllint.readthedocs.io/en/stable/rules.html).
+- `search-path``: where the files to lint should be searched.
 
 ## Integration with VSCode
 
