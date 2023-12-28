@@ -1,3 +1,7 @@
 rules:
     trailing-spaces: {}
     key-duplicates: {}
+    quoted-strings: {
+        quote-type: any,
+        required: false
+    }
