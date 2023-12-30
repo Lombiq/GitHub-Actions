@@ -8,11 +8,11 @@ if ($Env:RUNNER_OS -eq 'Windows')
 }
 else
 {
-    $sqlServerName = 'uitt-sqlserver'
+    $containerName = 'uitt-sqlserver'
     $sqlServerLink = "mcr.microsoft.com/mssql/server:${sqlServerVersion}-latest"
 
     $dockerRunSwitches = @(
-        '--name', $sqlServerName
+        '--name', $containerName
         '--env', 'ACCEPT_EULA=Y'
         '--env', 'SA_PASSWORD=Password1!'
         '--publish', '1433:1433'
@@ -21,5 +21,5 @@ else
 
     docker pull $sqlServerLink &&
     docker run @dockerRunSwitches &&
-    docker exec --user 0 $sqlServerName bash -c 'mkdir /data; chmod 777 /data --recursive; chown mssql:root /data'
+    docker exec --user 0 $containerName bash -c 'mkdir /data; chmod 777 /data --recursive; chown mssql:root /data'
 }
