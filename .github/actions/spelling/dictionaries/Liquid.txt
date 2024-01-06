@@ -5,4 +5,5 @@ endfor
 endform
 endscriptblock
 endzone
+jsonparse
 scriptblock

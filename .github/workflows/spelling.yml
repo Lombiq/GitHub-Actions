@@ -1,5 +1,21 @@
 name: Spelling
 
+concurrency:
+  # If "cancel-in-progress-for-this-pr" is set to "true" and this is running for a pull request, then the concurrency
+  # key will be constructed from the name of the workflow and the branch name, causing the already running job in this
+  # workflow for this pull request to be cancelled. Otherwise it will be the ID of the workflow run, making it globally
+  # unique and not cancel anything. Concurrency is defined for the whole workflow, because it has only two jobs
+  # (check-spelling and comment-pr) and the latter depends on the former, so they won't run in parallel. A technical
+  # name for this workflow is also included in both cases, so that it doesn't come into conflict with other jobs calling
+  # a different workflow that are started by the same caller workflow.
+  group: |
+    ${{
+      inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
+        && format('{0}_spell-checking_{1}', github.workflow, github.ref)
+        || format('{0}_spell-checking', github.run_id)
+    }}
+  cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
+
 on:
   workflow_call:
     secrets:
@@ -9,65 +25,62 @@ on:
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
 
+    # When updating defaults here also update them in the `spelling` action.
     inputs:
-      cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
-        required: false
+      cancel-in-progress-for-this-pr:
+        description: >
+          When set to "true", it will cancel the already running workflow for this pull request. See the concurrency
+          settings of the workflow above for more details.
         type: string
-        default: "true"
+        default: 'true'
+      cancel-workflow-on-failure:
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
+        type: string
+        default: 'true'
       merge-file-excludes:
         description: >
           When set to "true", the "excludes.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in
           the workspace repository.
-        required: false
         type: string
-        default: "true"
+        default: 'true'
       merge-forbidden-patterns:
         description: >
           When set to "true", the "line_forbidden.patterns" file's contents in Lombiq.GitHub.Actions will be merged into
           the one in the workspace repository.
-        required: false
         type: string
-        default: "true"
+        default: 'true'
       merge-ignore-patterns:
         description: >
           When set to "true", the "patterns.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in
           the workspace repository.
-        required: false
         type: string
-        default: "true"
+        default: 'true'
       default-dictionaries:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
-        required: false
         type: string
         default: |
           cspell:filetypes/filetypes.txt
-          cspell:software-terms/src/software-terms.txt
+          cspell:software-terms/dict/softwareTerms.txt
           lombiq-lgha:dictionaries/Lombiq.common.txt
       additional-configuration-source-prefixes:
         description: >
           JSON map of prefixes for additional configuration file (for now, only dictionary) URLs. "cspell" and
           "lombiq-lgha" are available by default, but can be overridden.
-        required: false
         type: string
       additional-dictionaries:
         description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
-        required: false
         type: string
       configuration-path:
         description: Relative path to the spell-checking configuration folder.
-        required: false
         type: string
         default: .github/actions/spelling
       default-configuration-repository:
         description: >
           Repository with default configuration to use when the workspace repository doesn't have its own configuration.
           The default from Check Spelling is ''.
-        required: false
         type: string
         default: Lombiq/GitHub-Actions@dev
       timeout-minutes:
-        required: false
         type: number
         default: 3
         description: Configuration for the timeout-minutes parameter of the workflow.

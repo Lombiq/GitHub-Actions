@@ -10,93 +10,94 @@ on:
           are used.
 
     inputs:
-      cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
-        required: false
+      cancel-in-progress-for-this-pr:
+        description: >
+          When set to "true", it will cancel the already running workflow for this pull request. See the concurrency
+          settings of the job for more details.
         type: string
-        default: "true"
+        default: 'true'
+      parent-job-name:
+        description: >
+          An optional technical identifier that is used to construct the concurrency key to be able to distinguish
+          different jobs in the same parent workflow calling this one. This is necessary if you build multiple solutions
+          (as separate jobs) in the same workflow for these jobs not to conflict with each other.
+        type: string
+        default: 'parent-job'
+        required: false
+      cancel-workflow-on-failure:
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
+        type: string
+        default: 'true'
       # This needs to be stringified JSON because inputs don't support arrays, see
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
-        required: false
         type: string
         default: "['ubuntu-22.04']"
         description: >
           Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
           "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
       dotnet-version:
-        required: false
         type: string
-        default: 6.0.x
+        default: 7.0.x
         description: Version of the .NET SDK to set up.
       blame-hang-timeout:
-        required: false
         type: string
-        default: ""
+        default: ''
         description: >
           Run the tests in blame mode and collects a hang dump when a test exceeds the given timeout. See
           https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details on available values.
       build-directory:
-        required: false
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
       build-configuration:
-        required: false
         type: string
         default: Release
         description: Configuration parameter for dotnet build (e.g. Debug, Release).
       build-solution-path:
-        required: false
         type: string
-        default: "*.sln"
+        default: '*.sln'
         description: >
           The path of the solution or project file to be built. If there's exactly one .sln file in the build directory
           then this can be omitted. For further information, see the documentation of the build-dotnet action.
       build-verbosity:
-        required: false
         type: string
         default: quiet
         description: Verbosity parameter for dotnet build.
       build-enable-code-analysis:
-        required: false
         type: string
-        default: "true"
+        default: 'true'
         description: Indicates whether to enable static code analysis during dotnet build.
       build-enable-nuget-caching:
-        required: false
         type: string
-        default: "false"
+        default: 'false'
         description: >
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
-          packages, but negligible or even slower if you only have a handful.
+          packages, but negligible or even slower if you only have a handful. When run on BuildJet, it will use the
+          BuildJet cache instead of GitHub's, which is faster.
       build-enable-npm-caching:
-        required: false
         type: string
-        default: "false"
+        default: 'false'
         description: >
           If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
-          but negligible or even slower if you only have a handful.
+          packages, but negligible or even slower if you only have a handful. When run on BuildJet, it will use the
+          BuildJet cache instead of GitHub's, which is faster.
       build-cache-version:
-        required: false
         type: string
-        default: "0"
+        default: '0'
         description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
-          only current way to force "clear" the cache
-          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
-          (https://github.com/actions/cache/issues/2) is resolved.
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is an
+          alternative to clearing the cache manually, see
+          https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#managing-caches.
       build-create-binary-log:
-        required: false
         type: string
-        default: "false"
+        default: 'false'
         description: >
           Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
           https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
       build-binary-log-artifact-retention-days:
-        required: false
         type: string
-        default: "14"
+        default: '14'
         description: >
           Duration in days after which the artifact of the build's binary log (if any) will expire. See
           https://github.com/actions/upload-artifact#retention-period for more details.
@@ -106,39 +107,39 @@ on:
         default: -1
         description: Run the dotnet test process with the given timeout in milliseconds.
       test-disable:
-        required: false
         type: string
-        default: "false"
+        default: 'false'
         description: Disables test execution completely if set to "true".
       test-filter:
-        required: false
         type: string
         description: >
           Filter expression for dotnet test. See:
           https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
       xunit-max-parallel-threads:
-        required: false
         type: string
-        default: "0"
+        default: '0'
         description: >
           Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
           https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
       timeout-minutes:
-        required: false
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
       verify-dotnet-consolidation:
-        required: false
         type: boolean
         default: true
         description: >
           When set to true, it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e.
           the same version of a given package is used in all projects.
-      warnings-as-errors:
-        required: false
+      dotnet-consolidation-exclude-version-regex:
         type: string
-        default: "true"
+        required: false
+        default: '-alpha'
+        description: >
+          A regular expression to match package versions that will be skipped during NuGet package consolidation.
+      warnings-as-errors:
+        type: string
+        default: 'true'
         description: >
           Whether compiler warnings should be treated as errors during the build process. The default value is "true",
           the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
@@ -153,9 +154,27 @@ jobs:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
     strategy:
+      # The parameters added to the strategy matrix should also be used to construct the concurrency key.
       matrix:
         machine-type: ${{ fromJson(inputs.machine-types) }}
     timeout-minutes: ${{ inputs.timeout-minutes }}
+    concurrency:
+      # If "cancel-in-progress-for-this-pr" is set to "true" and this run is for a pull request, then the concurrency
+      # key will be constructed from a handful of parameters to produce a value that would evaluate to the same value on
+      # a subsequent push (while still allowing different solutions to be built with the same configuration), causing
+      # the already running job (with the same strategy) for this pull request to be cancelled. Otherwise it will be the
+      # ID of the workflow run combined with the strategy parameters, making it more unique so that parallel runs of
+      # this job aren't kept waiting. This workflow's technical name is also included in both cases, so that it doesn't
+      # conflict with other jobs calling a different workflow that are started by the same caller workflow. The caller
+      # job's technical name is optionally included in the concurrency key, so that different jobs in the same parent
+      # workflow calling this one don't conflict with each other.
+      group: |
+        ${{
+          inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
+            && format('{0}_build-and-test-dotnet_{1}_{2}_{3}', github.workflow, inputs.parent-job-name, matrix.machine-type, github.ref)
+            || format('{0}_build-and-test-dotnet_{1}_{2}', github.run_id, inputs.parent-job-name, matrix.machine-type)
+        }}
+      cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
@@ -172,6 +191,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
         with:
           directory: ${{ inputs.build-directory }}
+          exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
 
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev

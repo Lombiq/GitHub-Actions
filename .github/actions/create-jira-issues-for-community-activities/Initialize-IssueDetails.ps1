@@ -1,4 +1,4 @@
-﻿param
+param
 (
     $GitHub,
     $IssueComponent,
@@ -44,7 +44,7 @@ switch ($GitHub.event_name)
             }
         }
     }
-    'pull_request'
+    'pull_request_target'
     {
         $summary = "Review `"$($GitHub.event.pull_request.title)`"$titleSuffix"
         $description = $PullReqestJiraIssueDescription
@@ -55,7 +55,7 @@ switch ($GitHub.event_name)
     {
         $message = @(
             "Unknown event `"$($GitHub.event_name)`". Please only call this script for one of the following events:"
-            'discussion, issues, pull_request.'
+            'discussion, issues, pull_request_target.'
         ) -join ' '
         Write-Error "::error::$message"
         exit 1

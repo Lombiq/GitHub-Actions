@@ -3,7 +3,7 @@ name: Validate Pull Request
 on:
   workflow_call:
     secrets:
-      # We can't access org secrets here so they need to be passed in.
+      # We can't access org secrets here so they must be passed in.
       JIRA_BASE_URL:
         required: false
         description: >
@@ -11,7 +11,6 @@ on:
           it must NOT end with a slash.
     inputs:
       timeout-minutes:
-        required: false
         type: number
         default: 3
         description: Configuration for the timeout-minutes parameter of the workflow.
@@ -21,8 +20,8 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Update Github issue and Pull Request
-        if: github.event_name == 'pull_request' && github.event.action == 'opened' 
+      - name: Update GitHub issue and Pull Request
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}

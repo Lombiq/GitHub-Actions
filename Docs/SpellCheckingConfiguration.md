@@ -44,7 +44,7 @@ Before adding an entry to one of the dictionary files, consider the following:
 
 ## Helper scripts for local development
 
-When using custom dictionary files on top of external ones (such as the ones from [check-spelling](https://github.com/check-spelling/cspell-dicts/tree/master) or [Lombiq's](https://github.com/Lombiq/GitHub-Actions/tree/dev/.github/actions/spelling)), these scripts can help reducing the number of entries you need to add to your own:
+When using custom dictionary files on top of external ones (such as the ones from [check-spelling](https://github.com/check-spelling/cspell-dicts/tree/master) or [Lombiq's](../.github/actions/spelling)), these scripts can help reducing the number of entries you need to add to your own:
 
 - _Merge-SpellCheckingDictionaryFile.ps1_: Use this to maintain your _excludes.txt_ file by adding the entries from another file, while still keeping your own. To just remove duplicates and sort the entries alphabetically in a single configuration file, pass in the same file for both parameters.
 - _Optimize-SpellCheckingDictionaryFile.ps1_: Use this to remove entries from your dictionary files that are already present in an external one you're referencing.

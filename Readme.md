@@ -15,7 +15,13 @@ Reusable workflows and actions for GitHub Actions shared between Lombiq projects
 
 These can be invoked from any other repository's build.
 
-[Check out a demo](https://www.youtube.com/watch?v=bhMnX0TsybM) on our YouTube channel!
+[Check out a demo](https://www.youtube.com/watch?v=bhMnX0TsybM) on our YouTube channel, and the Orchard Harvest 2023 conference talk about automated QA in Orchard Core [here](https://youtu.be/CHdhwD2NHBU).
+
+We at [Lombiq](https://lombiq.com/) also used these workflows for the following projects:
+
+- The new [Lombiq website](https://lombiq.com/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://lombiq.com/blog/how-we-renewed-and-migrated-lombiq-com-from-orchard-1-to-orchard-core)).
+- The new client portal for [WTW](https://www.wtwco.com/) ([see case study](https://lombiq.com/blog/lombiq-s-journey-with-wtw-s-client-portal)).<!-- #spell-check-ignore-line -->
+- They also make [DotNest, the Orchard SaaS](https://dotnest.com/) better.
 
 ## Documentation
 

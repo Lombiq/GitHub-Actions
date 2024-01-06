@@ -1,0 +1,38 @@
+name: Check Current Workflow is the Latest Workflow
+description: >
+  Checks whether the current workflow is the most recent workflow for the pull request. Intentionally not documented in
+  Actions.md since it's only meant for internal use.
+
+inputs:
+  current-workflow-id:
+    description: The current workflow run's database id.
+    required: true
+    default: ""
+
+outputs:
+  is-latest:
+    description: A boolean value indicating whether the current workflow is the most recent one.
+    value: ${{ steps.check-current-workflow-equals-latest.outputs.is-latest }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+      
+    - name: Check Current Workflow Equals Latest
+      shell: pwsh
+      id: check-current-workflow-equals-latest
+      run: |
+        $listSwitches = @(
+          '--repo', '${{ github.repository }}'
+          '--branch', '${{ github.head_ref }}'
+          '--workflow', '${{ github.workflow }}'
+          '--limit', '1'
+          '--json', 'databaseId'
+        )
+        $latestWorkflowRunDatabaseId = $(gh run list @listSwitches | ConvertFrom-Json)[0].databaseId
+        $currentEqualsLatest = ($latestWorkflowRunDatabaseId -eq ${{ inputs.current-workflow-id }})
+        Set-GitHubOutput 'is-latest' $currentEqualsLatest

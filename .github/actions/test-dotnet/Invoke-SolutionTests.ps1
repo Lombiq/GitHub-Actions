@@ -16,22 +16,23 @@ $connectionStringSuffix = @(
 ) -join ''
 if ($Env:RUNNER_OS -eq 'Windows')
 {
-    $connectionStringStem = 'Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
+    $connectionStringStem = 'Server=.;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
 }
 else
 {
     $connectionStringStem = 'Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!'
 
-    $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'sql2019'
+    $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'uitt-sqlserver'
 }
 
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionStringStem + $connectionStringSuffix
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
-# We assume that the solution was built in Release configuration. If the tests need to be built in Debug configuration,
-# as they should, we need to first build them, but not restore. Otherwise, the Release tests are already built, so we
-# don't need to build them here.
-$optOut = $Configuration -eq 'Debug' ? '--no-restore' : '--no-build'
+$solutionName = [System.IO.Path]::GetFileNameWithoutExtension($Solution)
+$solutionDirectory = [System.IO.Path]::GetDirectoryName($Solution)
+
+
+Write-Output "Running tests for the $Solution solution."
 
 $tests = dotnet sln $Solution list |
     Select-Object -Skip 2 |
@@ -39,14 +40,32 @@ $tests = dotnet sln $Solution list |
     Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
     Select-String -NotMatch 'Lombiq.Tests.csproj' |
     Where-Object {
-        $result = dotnet test $optOut --configuration $Configuration --list-tests --verbosity $Verbosity $PSItem 2>&1 | Out-String -Width 9999
-        -not [string]::IsNullOrEmpty($result) -and $result.Contains('The following Tests are available')
+        # While the test projects are run individually, passing in the solution name and solution dir via the
+        # conventional MSBuild properties allows build customization.
+        $switches = @(
+            "--configuration:$Configuration"
+            '--list-tests'
+            "--verbosity:$Verbosity"
+            "-p:SolutionName=""$solutionName"""
+            "-p:SolutionDir=""$solutionDirectory"""
+        )
+
+        # Without Out-String, Contains() below won't work for some reason.
+        $output = dotnet test @switches $PSItem 2>&1 | Out-String -Width 9999
+
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Error "::error::dotnet test failed for the project $PSItem with the following output:`n$output"
+            exit 1
+        }
+
+        -not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available')
     }
 
 Set-GitHubOutput 'test-count' $tests.Length
 Set-GitHubOutput 'dotnet-test-hang-dump' 0
 
-Write-Output "Starting to execute tests from $($tests.Length) projects."
+Write-Output "Starting to execute tests from $($tests.Length) project(s)."
 
 function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 {
@@ -130,7 +149,6 @@ foreach ($test in $tests)
     Write-Output "Starting to execute tests from the $test project."
 
     $dotnetTestSwitches = @(
-        $optOut,
         '--configuration', $Configuration
         '--nologo',
         '--logger', 'trx;LogFileName=test-results.trx'
@@ -143,6 +161,7 @@ foreach ($test in $tests)
     )
 
     Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join ' ')``."
+
 
     $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
     if ($processResult.ExitCode -eq 0)
