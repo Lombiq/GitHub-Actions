@@ -10,22 +10,25 @@ param ($Solution, $Verbosity, $Filter, $Configuration, $BlameHangTimeout, $TestP
 # the Actions web UI. Note that we use bash to output the log using bash to avoid pwsh wrapping the output to the
 # default buffer width.
 
-$connectionStringSuffix = @(
-    ';MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;Encrypt=false;'
-    'TrustServerCertificate=true'
-) -join ''
 if ($Env:RUNNER_OS -eq 'Windows')
 {
-    $connectionStringStem = 'Server=.;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
+    $connectionSecurity = 'Integrated Security=True'
 }
 else
 {
-    $connectionStringStem = 'Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!'
+    $connectionSecurity = 'User Id=sa;Password=Password1!'
 
     $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'uitt-sqlserver'
 }
 
-$Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionStringStem + $connectionStringSuffix
+$connectionString = @(
+    'Server=.;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
+    $connectionSecurity
+    'MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;Encrypt=false'
+    'TrustServerCertificate=true'
+) -join ';'
+
+$Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionString
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
 $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($Solution)
@@ -67,6 +70,45 @@ Set-GitHubOutput 'dotnet-test-hang-dump' 0
 
 Write-Output "Starting to execute tests from $($tests.Length) project(s)."
 
+function GetChildProcesses($Id)
+{
+    return Get-Process | Where-Object { $_.Parent.Id -eq $Id }
+}
+
+function DumpProcess($Output, $RootProcess, $DumpRootPath, $Process)
+{
+    if ($Process -eq $null)
+    {
+        return
+    }
+
+    $output.AppendLine("::warning::Collecting a dump of the process $($Process.Id).")
+
+    dotnet-dump collect -p $Process.Id --type Full -o "$DumpRootPath/dotnet-test-hang-dump-$($RootProcess.Id)-$($Process.Name)_$($Process.Id).dmp"
+}
+
+function DumpProcessTree($Output, $RootProcess, $DumpRootPath, $CurrentProcess)
+{
+    foreach ($child in GetChildProcesses -Id $CurrentProcess.Id)
+    {
+        DumpProcessTree -Output $Output -RootProcess $RootProcess -DumpRootPath $DumpRootPath -CurrentProcess $child
+    }
+
+    DumpProcess -Output $Output -RootProcess $RootProcess -DumpRootPath $DumpRootPath -Process $CurrentProcess
+}
+
+function KillProcessTree($Output, $Process)
+{
+    $Output.AppendLine("::warning::Killing the process $($Process.Name)($($Process.Id)).")
+
+    foreach ($child in GetChildProcesses -Id $Process.Id)
+    {
+        KillProcessTree -Output $Output -Process $child
+    }
+
+    Stop-Process -Force -InputObject $Process
+}
+
 function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 {
     $process = [System.Diagnostics.Process]@{
@@ -88,14 +130,10 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
     $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
         $Event.MessageData.Output.AppendLine($Event.SourceEventArgs.Data)
-        [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost', '', Justification='Only Write-Host is available here.')]
-        Write-Host $Event.SourceEventArgs.Data
     }
 
     $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {
         $Event.MessageData.Output.AppendLine($Event.SourceEventArgs.Data)
-        [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost', '', Justification='Only Write-Host is available here.')]
-        Write-Host $Event.SourceEventArgs.Data
     }
 
     $process.Start() | Out-Null
@@ -103,31 +141,25 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     $process.BeginErrorReadLine()
 
     $process.WaitForExit($Timeout)
-    if ($process.HasExited)
+    $hasExited = $process.HasExited
+    if ($hasExited)
     {
         $exitCode = $process.ExitCode
     }
     else
     {
-        Write-Output "::warning::The process $($process.Id) didn't exit in $Timeout seconds."
+        $output.AppendLine("::warning::The process $($process.Id) didn't exit in $Timeout seconds.")
 
-        Write-Output "::warning::Collecting a dump of the process $($process.Id)."
+        $output.AppendLine("::warning::Collecting a dump of the process $($process.Id) tree.")
         $dumpRootPath = './DotnetTestHangDumps'
         New-Item -ItemType 'directory' -Path $dumpRootPath -Force | Out-Null
-        dotnet-dump collect -p $process.Id --type Full -o "$dumpRootPath/dotnet-test-hang-dump-$($process.Id).dmp"
+
+        $rootProcess = Get-Process -Id $process.Id
+        DumpProcessTree -RootProcess $rootProcess -DumpRootPath $dumpRootPath -CurrentProcess $rootProcess
+
         Set-GitHubOutput 'dotnet-test-hang-dump' 1
 
-        Write-Output "::warning::Killing the process $($process.Id)."
-        Stop-Process -Force -Id $process.Id
-        if ($output.ToString() -Like '*Test Run Successful.*')
-        {
-            Write-Output "::warning::The process $($process.Id) was killed but the tests were successful."
-            $exitCode = 0
-        }
-        else
-        {
-            $exitCode = -1
-        }
+        KillProcessTree -Output $output -Process $rootProcess
     }
 
     Unregister-Event $stdoutEvent.Id
@@ -136,6 +168,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     return @{
         Output = $output.ToString()
         ExitCode = $exitCode
+        HasExited = $hasExited
     }
 }
 
@@ -151,9 +184,9 @@ foreach ($test in $tests)
     $dotnetTestSwitches = @(
         '--configuration', $Configuration
         '--nologo',
-        '--logger', 'trx;LogFileName=test-results.trx'
+        '--logger', '''trx;LogFileName=test-results.trx'''
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
-        '--logger', 'console;verbosity=detailed'
+        '--logger', '''console;verbosity=detailed'''
         '--verbosity', $Verbosity
         $BlameHangTimeout ? ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full') : ''
         $Filter ? '--filter', $Filter : ''
@@ -162,11 +195,19 @@ foreach ($test in $tests)
 
     Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join ' ')``."
 
-
     $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
-    if ($processResult.ExitCode -eq 0)
+
+    Write-Output $processResult.Output
+
+    if ($processResult.ExitCode -eq 0 || (!$processResult.HasExited && $processResult.Output -Like '*Test Run Successful.*'))
     {
+        if (!$processResult.HasExited)
+        {
+            Write-Output "::warning::The process $($process.Id) was killed but the tests were successful."
+        }
+
         Write-Output "Test successful: $test"
+
         continue
     }
 
