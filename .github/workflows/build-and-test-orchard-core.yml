@@ -103,7 +103,7 @@ on:
         required: false
         type: number
         default: -1
-        description: Run the dotnet test process with the given timeout in milliseconds.
+        description: Run the dotnet test process with the given timeout in milliseconds. -1 means no timeout.
       print-config-summary:
         type: string
         default: 'false'
