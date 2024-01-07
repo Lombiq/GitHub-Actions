@@ -22,7 +22,7 @@ else
 }
 
 $connectionString = @(
-    'Server=.;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
+    'Server=.;Database=LombiqUITestingToolbox_{{id}}'
     $connectionSecurity
     'MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;Encrypt=false'
     'TrustServerCertificate=true'
