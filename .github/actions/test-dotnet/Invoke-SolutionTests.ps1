@@ -72,7 +72,7 @@ Write-Output "Starting to execute tests from $($tests.Length) project(s)."
 
 function GetChildProcesses($Id)
 {
-    return Get-Process | Where-Object { $PSItem.Parent.Id -eq $Id }
+    return Get-Process | Where-Object { $PSItem.Parent -and $PSItem.Parent.Id -eq $Id }
 }
 
 function DumpProcess($Output, $RootProcess, $DumpRootPath, $Process)
