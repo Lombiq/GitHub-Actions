@@ -22,9 +22,14 @@ else
 }
 
 $connectionString = @(
-    'Server=.;Database=LombiqUITestingToolbox_{{id}}'
+    'Server=.'
+    'Database=LombiqUITestingToolbox_{{id}}'
     $connectionSecurity
-    'MultipleActiveResultSets=True;Connection Timeout=60;ConnectRetryCount=15;ConnectRetryInterval=5;Encrypt=false'
+    'MultipleActiveResultSets=True'
+    'Connection Timeout=60'
+    'ConnectRetryCount=15'
+    'ConnectRetryInterval=5'
+    'Encrypt=false'
     'TrustServerCertificate=true'
 ) -join ';'
 
