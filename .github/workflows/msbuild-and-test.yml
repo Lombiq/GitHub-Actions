@@ -77,6 +77,11 @@ on:
         type: string
         default: 'true'
         description: Indicates whether to enable static code analysis during msbuild.
+      dotnet-test-process-timeout:
+        required: false
+        type: number
+        default: -1
+        description: Run the dotnet test process with the given timeout in milliseconds. -1 means no timeout.
       test-disable:
         type: string
         default: 'false'
@@ -123,6 +128,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
         with:
           build-directory: ${{ inputs.build-directory }}
+          dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
           test-configuration: 'Release'
