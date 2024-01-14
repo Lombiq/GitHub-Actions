@@ -15,11 +15,6 @@ inputs:
     required: false
     default: .
     description: Path to the directory where a solution file can be found and thus the .NET build has run.
-  dotnet-test-process-timeout:
-    required: false
-    type: number
-    default: -1
-    description: Run the dotnet test process with the given timeout in milliseconds. -1 means no timeout.
   solution-path:
     required: false
     default: "*.sln"
@@ -85,12 +80,6 @@ runs:
 
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
 
-    - name: Install dotnet-dump
-      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
-      with:
-        name: dotnet-dump
-        version: 7.0.421201
-
     - name: Run Tests
       id: run-tests
       shell: pwsh
@@ -102,7 +91,6 @@ runs:
           Filter = "${{ inputs.test-filter }}"
           Configuration = "${{ inputs.test-configuration }}"
           BlameHangTimeout = "${{ inputs.blame-hang-timeout }}"
-          TestProcessTimeout = ${{ inputs.dotnet-test-process-timeout }}
         }
 
         Invoke-SolutionTests @switches
@@ -140,15 +128,6 @@ runs:
       with:
         name: ui-test-blame-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/BlameHangDumps/
-        if-no-files-found: ignore
-        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
-
-    - name: Upload DotnetTestHangDumps
-      uses: actions/upload-artifact@v3.1.1
-      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0 && steps.run-tests.outputs.dotnet-test-hang-dump != 0
-      with:
-        name: dotnet-test-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
-        path: ${{ inputs.build-directory }}/DotnetTestHangDumps/
         if-no-files-found: ignore
         retention-days: ${{ inputs.ui-test-artifact-retention-days }}
 
