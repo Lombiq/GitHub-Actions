@@ -130,7 +130,7 @@ runs:
       shell: pwsh
       run: |
         $defaultPrefixes = @{
-          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/'
+          'lombiq-lgha' = 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/TDEAL-16/.github/actions/spelling/'
           'cspell' = 'https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20230509/dictionaries/'
         }
 
@@ -207,3 +207,4 @@ runs:
           lombiq-lgha:dictionaries/Liquid.txt
           lombiq-lgha:dictionaries/Lombiq.common.txt
           lombiq-lgha:dictionaries/Lombiq.people.txt
+          lombiq-lgha:dictionaries/Security.txt

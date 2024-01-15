@@ -1,0 +1,5 @@
+amd
+clickjacking
+nosniff
+softwaresecurityproject
+PII
