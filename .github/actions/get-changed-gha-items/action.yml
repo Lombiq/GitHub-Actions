@@ -28,4 +28,4 @@ runs:
         $params = @{
             FileIncludeList = ${{ inputs.file-include-list }}
         }
-        Get-GHA-Items-From-File-List @params
+        Get-GhaItemsFromFileList @params
