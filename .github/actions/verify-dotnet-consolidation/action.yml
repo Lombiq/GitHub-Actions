@@ -16,7 +16,7 @@ inputs:
       grepping is still possible but a name with spaces must be escaped separately.
   exclude-version-regex:
     required: false
-    default: "-alpha"
+    default: "\\-alpha"
     description: A regular expression to match package versions that will be skipped during checking.
 
 runs:
