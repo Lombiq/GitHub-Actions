@@ -26,7 +26,7 @@ runs:
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
         name: dotnet-consolidate
-        version: 4.1.0
+        version: 4.2.0
 
     - name: Verify consolidation status
       shell: pwsh
