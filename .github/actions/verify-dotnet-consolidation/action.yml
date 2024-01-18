@@ -33,4 +33,4 @@ runs:
       working-directory: ${{ inputs.directory }}
       env:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
-      run: dotnet consolidate -s (Get-ChildItem ${{ inputs.solution-path }}).FullName --excludedVersionsRegex $Env:ExcludeVersionRegex
+      run: dotnet consolidate -s (Get-ChildItem ${{ inputs.solution-path }}).FullName --excludedVersionsRegex "$($Env:ExcludeVersionRegex)"
