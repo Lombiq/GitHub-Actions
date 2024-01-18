@@ -194,6 +194,10 @@ jobs:
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
+      - name: Check CPU
+        shell: pwsh
+        run: (Get-ComputerInfo -Property CsProcessors).CsProcessors
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
