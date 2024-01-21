@@ -84,7 +84,7 @@ function MemDumpProcess($Output, $RootProcess, $DumpRootPath, $Process)
 {
     $Output.AppendLine("::warning::Collecting a dump of the process $($Process.Id).")
 
-    $outputFile = "$DumpRootPath/dotnet-test-hang-dump-$($RootProcess.Id)-$($Process.Parent.Id)-$($Process.Name)_$($Process.Id)"
+    $outputFile = "$DumpRootPath/dotnet-test-hang-dump-$($RootProcess.Id)-$($Process.Parent.Id)-$($Process.ProcessName)_$($Process.Id)"
 
     dotnet-dump collect -p $Process.Id --type Full -o "$outputFile.dmp" 2>&1 > "$outputFile.log"
 }
@@ -101,7 +101,7 @@ function MemDumpProcessTree($Output, $RootProcess, $DumpRootPath, $CurrentProces
 
 function KillProcessTree($Output, $Process)
 {
-    $Output.AppendLine("::warning::Killing the process $($Process.Name)($($Process.Id)).")
+    $Output.AppendLine("::warning::Killing the process $($Process.ProcessName)($($Process.Id)).")
 
     foreach ($child in GetChildProcesses -Id $Process.Id)
     {
