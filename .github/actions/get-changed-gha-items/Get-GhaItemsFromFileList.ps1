@@ -6,6 +6,12 @@ param(
 [array]$actionFiles = $FileIncludeList | Where-Object -FilterScript {
     try
     {
+        $itemDirectory = (Get-Item $PSItem).Directory.FullName
+        $isInGitHubDir = $itemDirectory -like '*/.github/*' -or $itemDirectory -eq '*/.github'
+        if (-not $isInGitHubDir) {
+            return $false
+        }
+
         (Get-Item $PSitem).Directory.GetFiles('action.yml').Count -gt 0 -or
         (Get-Item $PSitem).Directory.GetFiles('action.yaml').Count -gt 0
     }
