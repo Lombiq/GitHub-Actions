@@ -6,7 +6,8 @@ param(
 [array]$actionFiles = $FileIncludeList | Where-Object -FilterScript {
     $itemDirectory = (Get-Item $PSItem).Directory.FullName
     $isInGitHubDir = $itemDirectory -like '*/.github/*' -or $itemDirectory -eq '*/.github'
-    if (-not $isInGitHubDir) {
+    if (-not $isInGitHubDir)
+    {
         return $false
     }
 
