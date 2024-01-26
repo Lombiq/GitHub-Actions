@@ -1,7 +1,7 @@
 name: Check Merge Queue Adds
 description: >
-  Checks current pull request timeline add events to determine if it was ever added to a 
-  merge queue. Intentionally not documented in Actions.md since it's only meant for 
+  Checks current pull request timeline add events to determine if it was ever added to a
+  merge queue. Intentionally not documented in Actions.md since it's only meant for
   internal use.
 
 outputs:

@@ -30,6 +30,7 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 - [Spell-checking](Workflows/Productivity/SpellChecking.md)
 - [Validate pull request](Workflows/Productivity/ValidatePullRequest.md)
 - [Validate submodule](Workflows/Productivity/ValidateSubmodule.md)
+- [Lint YAML files](Workflows/Productivity/YamlLinting.md)
 
 ## Azure hosting
 
