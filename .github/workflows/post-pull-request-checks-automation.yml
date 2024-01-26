@@ -54,7 +54,7 @@ jobs:
     steps:
       - name: Check Further Steps Should Run
         if: inputs.run-only-latest-workflow == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/check-current-workflow-is-latest@issue/OSOE-188
+        uses: Lombiq/GitHub-Actions/.github/actions/check-current-workflow-is-latest@dev
         id: check-steps-should-run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,7 +72,7 @@ jobs:
 
       - name: Automatically Merge Pull Request
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@issue/OSOE-188
+        uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@dev
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
         with:
@@ -80,7 +80,7 @@ jobs:
 
       - name: Automatically Resolve or Done Jira issue
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-188
+        uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@dev
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
