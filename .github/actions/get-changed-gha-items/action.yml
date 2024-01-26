@@ -7,7 +7,7 @@ inputs:
     required: false
     default: '@()'
     description: >
-      PowerShell string array of file names to return corresponding GitHub Actions (GHA) items. The 
+      PowerShell string array of file names to return corresponding GitHub Actions (GHA) items. The
       parameter must be a PowerShell string array.
 outputs:
   changed-items:
@@ -20,7 +20,7 @@ runs:
       shell: pwsh
       run: |
         "${{ github.action_path }}" >> $Env:GITHUB_PATH
-        
+
     - name: Get GHA Items
       id: get-gha-items
       shell: pwsh
@@ -28,4 +28,4 @@ runs:
         $params = @{
             FileIncludeList = ${{ inputs.file-include-list }}
         }
-        Get-GHA-Items-From-File-List @params
+        Get-GhaItemsFromFileList @params

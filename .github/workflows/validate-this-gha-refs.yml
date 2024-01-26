@@ -100,12 +100,11 @@ jobs:
             $baseRef = "${{ github.base_ref }}"
           }
 
-          $skipReviewApproval = 'True'
           $lastReviewApproved = "${{ steps.check-pr-reviews.outputs.last-review-approved }}"
           $mergeQueueApproved = "${{ steps.check-merge-queue-adds.outputs.added-to-merge-queue }}"
 
           # Ternary operator syntax available starting in PowerShell 7.0.
-          $expectedRef = (($skipReviewApproval -eq 'False' -and $lastReviewApproved -eq 'True') -or $eventName -eq 'merge_group' -or ($eventName -eq 'pull_request' -and $mergeQueueApproved -eq 'True')) ? $baseRef : $headRef
+          $expectedRef = ($lastReviewApproved -eq 'True' -or $eventName -eq 'merge_group' -or ($eventName -eq 'pull_request' -and $mergeQueueApproved -eq 'True')) ? $baseRef : $headRef
 
           $output = "expected-ref=$expectedRef"
           $output >> $env:GITHUB_OUTPUT

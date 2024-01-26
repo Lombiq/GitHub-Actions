@@ -1,0 +1,21 @@
+name: YAML Linting
+description: Runs a linter on YAML files.
+
+
+inputs:
+  config-file-path:
+    description: 'Path to the yamllint configuration file'
+    required: true
+    default: '.yamllint.yaml'
+
+  search-path:
+    description: 'Path to search for YAML files'
+    required: true
+    default: '.'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run yamllint
+      run: yamllint -c "${{ inputs.config-file-path }}" "${{ inputs.search-path }}"
+      shell: pwsh
