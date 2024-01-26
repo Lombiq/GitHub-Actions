@@ -34,6 +34,7 @@ if ($mismatchRefs.Count -gt 0)
         $linenumber = $mismatch.LineNumber
         $title = $mismatch.Line
 
+        # Test
         # The below statement won't work becuase actions/toolkit will not link to files that are not part of the commit.
         # See: https://github.com/actions/toolkit/issues/470
         # Write-Output "::error file=$filename,line=$linenumber,title=$title::GHA Ref does not match '$ExpectedRef'"
