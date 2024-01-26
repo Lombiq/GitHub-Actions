@@ -4,6 +4,7 @@ on:
   workflow_call:
     secrets:
       CHECKOUT_TOKEN:
+        required: false
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
@@ -13,7 +14,7 @@ on:
 
     inputs:
       cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'true'
       source:

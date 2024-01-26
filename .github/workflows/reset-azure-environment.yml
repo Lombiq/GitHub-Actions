@@ -1,18 +1,41 @@
 name: Reset Azure Environment
 
 concurrency:
-  group: AzureResetEnvironment
+  group: ${{ inputs.app-name }}AzureWorkflow
+
+permissions:
+  id-token: write
+  contents: read
 
 on:
   workflow_call:
     secrets:
-      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL:
+      # These secrets are for OpenID Connect-based authentication with Azure services through the azure/login action
+      # (proxied by our login-to-azure action below). Check out its documentation on how these secrets are used:
+      # https://github.com/azure/login.
+      AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL_ID:
         required: true
+        description: >
+          The Application (client) ID of the Azure Service Principal or Managed Credential, which will be mapped to the
+          client-id parameter when calling azure/login.
+      AZURE_APP_SERVICE_RESET_AZURE_TENANT_ID:
+        required: true
+        description: >
+          The Tenant (Directory) ID of the Microsoft Entra ID tenant, which will be mapped to the tenant-id parameter
+          when calling azure/login.
+      AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID:
+        required: true
+        description: >
+          The ID of the Azure Subscription the resources are under, which will be mapped to the subscription-id
+          parameter when calling azure/login. You can look this up e.g. in the Azure Portal under any resource or the
+          subscription itself.
+
       MAINTENANCE_USER_NAME:
       MAINTENANCE_PASSWORD:
+
     inputs:
       cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'false'
       machine-type:
@@ -71,36 +94,19 @@ on:
         type: string
         default: S0
         description: The name of the service objective to scale the database to, e.g. B, S1, S4, P4, P6.
-      blob-container-exclude-list:
-        type: string
-        default: '@()'
-        description: >
-          PowerShell string array with the name of the excluded Blob Container(s), e.g. '@("not-media")' or
-          '@("not-media", "bad-container")'. The parameter must be a PowerShell string array. When a not empty
-          PowerShell string array is provided for "blob-container-include-list", then "blob-container-exclude-list" is
-          not taken into consideration.
       blob-container-include-list:
         type: string
         default: '@("media", "dataprotection")'
         description: >
           PowerShell string array with the name of the included Blob Container(s), e.g. '@("media")' or '@("media",
-          "dataprotection)'. The parameter must be a PowerShell string array. When a not empty PowerShell string array
-          is provided, "blob-container-exclude-list" is not taken into consideration.
-      folder-exclude-list:
-        type: string
-        default: '@("RecipeJournal", "`$`$`$ORCHARD`$`$`$.`$`$`$")'
+          "dataprotection)'. The parameter must be a PowerShell string array.
+      storage-sas-lifetime-minutes:
+        type: number
+        default: 5
         description: >
-          PowerShell string array with the name of the excluded folder(s), e.g. '@("RecipeJournal")' or
-          '@("RecipeJournal", "BadFolder")'. The parameter must be a PowerShell string array. When a not empty
-          PowerShell string array is provided for "folder-include-list", then "folder-exclude-list" is not taken into
-          consideration.
-      folder-include-list:
-        type: string
-        default: '@()'
-        description: >
-          PowerShell string array with the name of the included folder(s), e.g. '@("NotRecipeJournal")' or
-          '@("NotRecipeJournal", "CoolFolder")'. The parameter must be a PowerShell string array. When a not empty
-          PowerShell string array is provided, "folder-exclude-list" is not taken into consideration.
+          The number of minutes defining how long the generated Shared Access Signatures
+          (https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview) used for Blob Storage operations
+          are valid for. Default value is 5.
       application-insights-resource-id:
         type: string
         description: >
@@ -120,6 +126,7 @@ jobs:
   reset-azure-environment:
     runs-on: ${{ inputs.machine-type }}
     name: Reset Azure Environment
+    environment: ${{ inputs.destination-slot-name }}
     defaults:
       run:
         shell: pwsh
@@ -128,7 +135,9 @@ jobs:
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
         env:
-          SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_SERVICE_PRINCIPAL_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
         uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
@@ -142,16 +151,16 @@ jobs:
 
       - name: Replace Media
         run: |
-          Set-AzureWebAppStorageContentFromStorage `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SourceSlotName ${{ inputs.source-slot-name }} `
-            -DestinationSlotName ${{ inputs.destination-slot-name }} `
-            -ConnectionStringName ${{ inputs.storage-connection-string-name }} `
-            -ContainerBlackList ${{ inputs.blob-container-exclude-list }} `
-            -ContainerWhiteList ${{ inputs.blob-container-include-list }} `
-            -FolderBlackList ${{ inputs.folder-exclude-list }} `
-            -FolderWhiteList ${{ inputs.folder-include-list }}
+          $parameters = @{
+            ResourceGroupName = '${{ inputs.resource-group-name }}'
+            WebAppName = '${{ inputs.app-name }}'
+            SourceSlotName = '${{ inputs.source-slot-name }}'
+            DestinationSlotName = '${{ inputs.destination-slot-name }}'
+            ConnectionStringName = '${{ inputs.storage-connection-string-name }}'
+            ContainerIncludeList = ${{ inputs.blob-container-include-list }}
+            SasLifetimeMinutes = ${{ inputs.storage-sas-lifetime-minutes }}
+          }
+          Invoke-AzureWebAppStorageAzCopy @parameters
 
       - name: Replace Database
         run: |
@@ -165,7 +174,6 @@ jobs:
 
       - name: Add Destination Contained User to Destination Database
         run: |
-          Install-Module sqlserver -AllowClobber -Force
           Add-AzureWebAppSqlDatabaseContainedUser `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
@@ -187,7 +195,7 @@ jobs:
         if: ${{ inputs.application-insights-resource-id != '' }}
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
-          release-name: "Reset #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}"
+          release-name: 'Reset #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start Web App Slot

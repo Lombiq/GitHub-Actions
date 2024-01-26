@@ -10,10 +10,14 @@ inputs:
     description: Path to the directory where a solution file can be found.
   solution-path:
     required: false
-    default: "*.sln"
+    default: '*.sln'
     description: >
       The path of the solution file to be processed. The value is given to PowerShell's `Get-ChildItem` cmdlet as-is, so
       grepping is still possible but a name with spaces must be escaped separately.
+  exclude-version-regex:
+    required: false
+    default: '\-alpha'
+    description: A regular expression to match package versions that will be skipped during checking.
 
 runs:
   using: "composite"
@@ -22,8 +26,26 @@ runs:
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
         name: dotnet-consolidate
-        version: 2.0.0
+        version: 4.2.0
+
     - name: Verify consolidation status
       shell: pwsh
       working-directory: ${{ inputs.directory }}
-      run: dotnet consolidate -s (Get-ChildItem ${{ inputs.solution-path }}).FullName
+      env:
+        ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
+      run: |
+        $consolidateParams = @(
+            '--solutions', (Get-ChildItem '${{ inputs.solution-path }}').FullName
+            '--excludedVersionsRegex', $Env:ExcludeVersionRegex
+        )
+
+        $output = dotnet consolidate @consolidateParams 2>&1 | Out-String -Width 9999
+
+        Write-Output $output
+
+        # An error in the options won't cause dotnet-consolidate to return a non-zero exit code, so we need to check the
+        # output for errors.
+        if ($LASTEXITCODE -ne 0 -or $output.Contains('ERROR(S)'))
+        {
+            Write-Error '::error::dotnet consolidate failed with the above errors.'
+        }

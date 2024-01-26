@@ -16,19 +16,21 @@ $connectionStringSuffix = @(
 ) -join ''
 if ($Env:RUNNER_OS -eq 'Windows')
 {
-    $connectionStringStem = 'Server=.\SQLEXPRESS;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
+    $connectionStringStem = 'Server=.;Database=LombiqUITestingToolbox_{{id}};Integrated Security=True'
 }
 else
 {
     $connectionStringStem = 'Server=.;Database=LombiqUITestingToolbox_{{id}};User Id=sa;Password=Password1!'
 
-    $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'sql2019'
+    $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'uitt-sqlserver'
 }
 
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionStringStem + $connectionStringSuffix
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
 $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($Solution)
+$solutionDirectory = [System.IO.Path]::GetDirectoryName($Solution)
+
 
 Write-Output "Running tests for the $Solution solution."
 
@@ -38,13 +40,14 @@ $tests = dotnet sln $Solution list |
     Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
     Select-String -NotMatch 'Lombiq.Tests.csproj' |
     Where-Object {
-        # While the test projects are run individually, passing in the solution name via the conventional MSBuild
-        # property allows build customization.
+        # While the test projects are run individually, passing in the solution name and solution dir via the
+        # conventional MSBuild properties allows build customization.
         $switches = @(
             "--configuration:$Configuration"
             '--list-tests'
             "--verbosity:$Verbosity"
             "-p:SolutionName=""$solutionName"""
+            "-p:SolutionDir=""$solutionDirectory"""
         )
 
         # Without Out-String, Contains() below won't work for some reason.

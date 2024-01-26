@@ -1,23 +1,47 @@
 name: Deploy to Azure App Service
 
 concurrency:
-  group: AzureDeployApp
+  group: ${{ inputs.app-name }}AzureWorkflow
+
+permissions:
+  id-token: write
+  contents: read
 
 on:
   workflow_call:
     secrets:
       CHECKOUT_TOKEN:
+        required: false
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
-      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL:
+
+      # These secrets are for OpenID Connect-based authentication with Azure services through the azure/login action
+      # (proxied by our login-to-azure action below). Check out its documentation on how these secrets are used:
+      # https://github.com/azure/login.
+      AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID:
         required: true
+        description: >
+          The Application (client) ID of the Azure Service Principal or Managed Credential, which will be mapped to the
+          client-id parameter when calling azure/login.
+      AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID:
+        required: true
+        description: >
+          The Tenant (Directory) ID of the Microsoft Entra ID tenant, which will be mapped to the tenant-id parameter
+          when calling azure/login.
+      AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID:
+        required: true
+        description: >
+          The ID of the Azure Subscription the resources are under, which will be mapped to the subscription-id
+          parameter when calling azure/login. You can look this up e.g. in the Azure Portal under any resource or the
+          subscription itself.
+
       AZURE_APP_SERVICE_PUBLISH_PROFILE:
         required: true
 
     inputs:
       cancel-workflow-on-failure:
-        description: When set to "true", will cancel the current workflow run with all jobs if this workflow fails.
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'false'
       machine-type:
@@ -45,22 +69,22 @@ on:
         default: 'false'
         description: >
           If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet
-          packages, but negligible or even slower if you only have a handful.
+          packages, but negligible or even slower if you only have a handful. When run on BuildJet, it will use the
+          BuildJet cache instead of GitHub's, which is faster.
       build-enable-npm-caching:
         type: string
         default: 'false'
         description: >
           If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages,
-          but negligible or even slower if you only have a handful.
+          packages, but negligible or even slower if you only have a handful. When run on BuildJet, it will use the
+          BuildJet cache instead of GitHub's, which is faster.
       build-cache-version:
         type: string
         default: '0'
         description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
-          easiest current way to force "clear" the cache
-          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
-          (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
-          API.
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is an
+          alternative to clearing the cache manually, see
+          https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#managing-caches.
       timeout-minutes:
         type: number
         default: 360
@@ -113,6 +137,7 @@ jobs:
   deploy:
     runs-on: ${{ inputs.machine-type }}
     name: Deploy to Azure App Service
+    environment: ${{ inputs.slot-name }}
     defaults:
       run:
         shell: pwsh
@@ -172,7 +197,9 @@ jobs:
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
         env:
-          SERVICE_PRINCIPAL: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
         uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
@@ -195,7 +222,7 @@ jobs:
       - name: Add Azure Application Insights Release Annotation
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
-          release-name: "Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}"
+          release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
       - name: Start Web App Slot

@@ -14,7 +14,7 @@
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
 #>
 
-param([array] $Arguments)
+param([array] $PackParameters, [bool] $EnablePackageValidation, [string] $PackageValidationBaselineVersion, [string] $Version)
 
 <#
 .SYNOPSIS
@@ -62,6 +62,11 @@ function Get-ProjectProperty
     }
 }
 
+$shouldDownloadBaseLinePackages = ($EnablePackageValidation -And
+    $PackageValidationBaselineVersion -And
+    !($Version -match '-(alpha|beta|preview|rc)[.-]') -And
+    $Version.Split('.')[0] -le $PackageValidationBaselineVersion.Split('.')[0])
+
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
@@ -95,16 +100,51 @@ foreach ($project in $projects)
         continue
     }
 
+    $PackageValidationParameters = @(
+        "-p:EnablePackageValidation=$EnablePackageValidation"
+        "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
+    )
+
+    # Download baseline version NuGet packages
+    if ($shouldDownloadBaseLinePackages)
+    {
+        Write-Output 'Creating temporary project for baseline NuGet package.'
+        dotnet new classlib -n TempProject
+        Push-Location TempProject
+
+        Write-Output 'Installing baseline version NuGet package.'
+        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Output "::warning:: Package version couldn't be added, thus package validation to baseline version won't be done."
+            dotnet remove TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+            $PackageValidationParameters = @(
+                "-p:EnablePackageValidation=$EnablePackageValidation"
+            )
+        }
+
+        dotnet restore
+        Pop-Location
+        Remove-Item -Recurse -Force TempProject
+    }
+    else
+    {
+        $PackageValidationParameters = @(
+            "-p:EnablePackageValidation=$EnablePackageValidation"
+        )
+    }
+
     Push-Location $project.Directory
 
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
-        dotnet pack $project -p:NuspecFile="$nuspecFile" @Arguments
+        dotnet pack $project -p:NuspecFile="$nuspecFile" @PackParameters @PackageValidationParameters
     }
     else
     {
-        dotnet pack $project @Arguments
+        dotnet pack $project @PackParameters @PackageValidationParameters
     }
 
     if ($LASTEXITCODE -ne 0)

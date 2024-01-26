@@ -18,7 +18,13 @@ if ($Branch -NotLike '*issue*')
     Exit
 }
 
-$Branch -match '(\w+-\d+)'
+$Branch -match '(\w+-\d+)' | Out-Null
+
+if ($null -eq $matches)
+{
+    throw "Issue key not found in the branch name '$Branch'!"
+}
+
 $issueKey = $matches[0]
 $issueLink = "[$issueKey]($jiraBrowseUrl$issuekey)"
 
@@ -40,28 +46,35 @@ elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*")
     $Body = $Body.replace($issueKey, $issueLink)
 }
 
-$issueQuery = "$issueKey in:title"
-$output = gh issue list --search $issueQuery --repo $GitHubRepository
-$issueItem = ($output | Select-Object -First 1)
-
-if ($issueItem)
+if ((gh repo view $GitHubRepository --json hasIssuesEnabled | ConvertFrom-Json).hasIssuesEnabled)
 {
-    $issueNumber = $issueItem -split '\t' | Select-Object -First 1
-    $fixesIssue = "Fixes #$issueNumber"
+    $issueQuery = "$issueKey in:title"
+    $output = gh issue list --search $issueQuery --repo $GitHubRepository
+    $issueItem = ($output | Select-Object -First 1)
 
-    if ($Body -NotLike "*$fixesIssue*")
+    if ($issueItem)
     {
-        $Body = "$Body`n$fixesIssue"
+        $issueNumber = $issueItem -split '\t' | Select-Object -First 1
+        $fixesIssue = "Fixes #$issueNumber"
+
+        if ($Body -NotLike "*$fixesIssue*")
+        {
+            $Body = "$Body`n$fixesIssue"
+        }
+
+        if ($issueNumber)
+        {
+            gh api -X PATCH "/repos/$GitHubRepository/issues/$issueNumber" -f "assignee=$Assignee"
+        }
     }
-
-    if ($issueNumber)
+    else
     {
-        gh api -X PATCH "/repos/$GitHubRepository/issues/$issueNumber" -f "assignee=$Assignee"
+        Write-Output "No issue was found with the query '$issueQuery' in the repository '$GitHubRepository'."
     }
 }
 else
 {
-    Write-Output "No issue was found with the query '$issueQuery' in the repository '$GitHubRepository'"
+    Write-Output "Issues are disabled in the '$GitHubRepository' repository."
 }
 
 if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))

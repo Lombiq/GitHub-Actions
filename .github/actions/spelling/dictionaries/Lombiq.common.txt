@@ -36,7 +36,9 @@ expando
 Firefox
 formattable
 ftp
+github
 gitmodules
+globalconfig
 Graphi
 gulpfile
 hastlayer

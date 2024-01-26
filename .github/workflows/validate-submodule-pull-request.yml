@@ -5,6 +5,7 @@ on:
     # We can't access org secrets here so they must be passed in.
     secrets:
       JIRA_BASE_URL:
+        required: false
         description: >
           Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
           it must NOT end with a slash.
@@ -23,7 +24,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Update Github issue and Pull Request
+      - name: Update GitHub issue and Pull Request
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
         env:

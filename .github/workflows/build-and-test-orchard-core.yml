@@ -4,13 +4,28 @@ on:
   workflow_call:
     secrets:
       CHECKOUT_TOKEN:
+        required: false
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
 
     inputs:
+      cancel-in-progress-for-this-pr:
+        description: >
+          When set to "true", it will cancel the already running workflow for this pull request. See the concurrency
+          settings of the job for more details.
+        type: string
+        default: 'true'
+      parent-job-name:
+        description: >
+          An optional technical identifier that is used to construct the concurrency key to be able to distinguish
+          different jobs in the same parent workflow calling this one. This is necessary if you build multiple solutions
+          (as separate jobs) in the same workflow for these jobs not to conflict with each other.
+        type: string
+        default: 'parent-job'
+        required: false
       cancel-workflow-on-failure:
-        description: If "true", will cancel the current workflow run with all jobs if this workflow fails.
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'true'
       # This needs to be stringified JSON, because inputs don't support arrays, see
@@ -69,11 +84,9 @@ on:
         type: string
         default: '0'
         description: >
-          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is the
-          easiest current way to force "clear" the cache
-          (https://github.community/t/how-to-clear-cache-in-github-actions/129038/5) until the associated issue
-          (https://github.com/actions/cache/issues/2) is resolved and the feature is available not just via the RESTful
-          API.
+          Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is an
+          alternative to clearing the cache manually, see
+          https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#managing-caches.
       build-create-binary-log:
         type: string
         default: 'false'
@@ -140,6 +153,12 @@ on:
         description: >
           If "true", it will be verified whether the NuGet packages of the .NET solution are consolidated, i.e. the same
           version of a given package is used in all projects.
+      dotnet-consolidation-exclude-version-regex:
+        type: string
+        required: false
+        default: '\-alpha'
+        description: >
+          A regular expression to match package versions that will be skipped during NuGet package consolidation.
       warnings-as-errors:
         type: string
         default: 'true'
@@ -153,9 +172,27 @@ jobs:
     runs-on: ${{ matrix.machine-type }}
     name: Build and Test
     strategy:
+      # The parameters added to the strategy matrix should also be used to construct the concurrency key.
       matrix:
         machine-type: ${{ fromJson(inputs.machine-types) }}
     timeout-minutes: ${{ inputs.timeout-minutes }}
+    concurrency:
+      # If "cancel-in-progress-for-this-pr" is set to "true" and this run is for a pull request, then the concurrency
+      # key will be constructed from a handful of parameters to produce a value that would evaluate to the same value on
+      # a subsequent push (while still allowing different solutions to be built with the same configuration), causing
+      # the already running job (with the same strategy) for this pull request to be cancelled. Otherwise it will be the
+      # ID of the workflow run combined with the strategy parameters, making it more unique so that parallel runs of
+      # this job aren't kept waiting. This workflow's technical name is also included in both cases, so that it doesn't
+      # conflict with other jobs calling a different workflow that are started by the same caller workflow. The caller
+      # job's technical name is optionally included in the concurrency key, so that different jobs in the same parent
+      # workflow calling this one don't conflict with each other.
+      group: |
+        ${{
+          inputs.cancel-in-progress-for-this-pr == 'true' && github.event_name == 'pull_request'
+            && format('{0}_build-and-test-orchard-core_{1}_{2}_{3}', github.workflow, inputs.parent-job-name, matrix.machine-type, github.ref)
+            || format('{0}_build-and-test-orchard-core_{1}_{2}', github.run_id, inputs.parent-job-name, matrix.machine-type)
+        }}
+      cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
@@ -172,6 +209,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
         with:
           directory: ${{ inputs.build-directory }}
+          exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
 
       - name: Enable Node.js corepack
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
