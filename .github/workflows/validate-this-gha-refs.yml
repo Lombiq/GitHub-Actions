@@ -102,7 +102,7 @@ jobs:
 
           $lastReviewApproved = "${{ steps.check-pr-reviews.outputs.last-review-approved }}"
           $mergeQueueApproved = "${{ steps.check-merge-queue-adds.outputs.added-to-merge-queue }}"
-
+          # Test
           # Ternary operator syntax available starting in PowerShell 7.0.
           $expectedRef = ($lastReviewApproved -eq 'True' -or $eventName -eq 'merge_group' -or ($eventName -eq 'pull_request' -and $mergeQueueApproved -eq 'True')) ? $baseRef : $headRef
 
