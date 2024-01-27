@@ -16,7 +16,8 @@ on:
           https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
           for info on how to create PATs; you'll need one with the "repo" scope. Check out
           https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
-          for instructions on what other tokens you can use.
+          for instructions on what other tokens you can use. We recommend creating such a token from under a bot user
+          account only used for such operations, so it's not tied to a natural person.
       JIRA_BASE_URL:
         required: true
         description: >
