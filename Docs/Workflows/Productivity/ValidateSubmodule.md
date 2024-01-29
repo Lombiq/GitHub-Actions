@@ -11,6 +11,7 @@ Example _validate-pull-request.yml_:
 name: Validate Pull Request
 
 on:
+  # You can use pull_request if this is for a private repo that can't be forked.
   pull_request_target:
 
 jobs:

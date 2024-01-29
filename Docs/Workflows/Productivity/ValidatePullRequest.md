@@ -10,6 +10,7 @@ name: Validate Pull Request
 
 on:
   push:
+  # You can use pull_request if this is for a private repo that can't be forked.
   pull_request_target:
     types: [opened, synchronize]
 
