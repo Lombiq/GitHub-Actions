@@ -11,7 +11,7 @@ Example _validate-pull-request.yml_:
 name: Validate Pull Request
 
 on:
-  pull_request:
+  pull_request_target:
 
 jobs:
   validate-pull-request:

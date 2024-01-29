@@ -25,7 +25,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Update GitHub issue and Pull Request
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request_target' && github.event.action == 'opened'
         uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
