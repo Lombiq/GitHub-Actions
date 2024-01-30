@@ -3,7 +3,7 @@ name: Validate Pull Request
 # is meant to actually run here, so don't call it from other repos.
 
 on:
-  pull_request:
+  pull_request_target:
 
 jobs:
   validate-pull-request:
