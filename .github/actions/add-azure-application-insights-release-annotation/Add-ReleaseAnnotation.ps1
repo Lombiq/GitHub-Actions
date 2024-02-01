@@ -15,14 +15,18 @@ $annotation = @{
     Properties = ConvertTo-Json $ReleaseProperties -Compress
 }
 
+$headers = @{
+    "Content-Type" = "application/json"
+}
+
 # Encoding parenthesis to prevent the request from failing.
 $ApplicationInsightsResourceId = $ApplicationInsightsResourceId.Replace('(', '%28').Replace(')', '%29')
 $body = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
 
 Write-Output "Running following command:"
-Write-Output "az rest --method put --uri ""$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01"" --body ""$($body) "" --headers ""Content-Type=application/json"" --debug"
+Write-Output "az rest --method put --uri ""$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01"" --body ""$($body) "" --debug --headers $(ConvertTo-Json $headers)"
 
-az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) " --debug
+az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) " --debug --headers (ConvertTo-Json $headers)
 
 if (!$?)
 {
