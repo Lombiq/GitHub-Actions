@@ -1,4 +1,4 @@
-name: Build and Test .NET solution
+@name: Build and Test .NET solution
 
 on:
   workflow_call:
@@ -182,7 +182,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-751
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
