@@ -20,9 +20,9 @@ $ApplicationInsightsResourceId = $ApplicationInsightsResourceId.Replace('(', '%2
 $body = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
 
 Write-Output "Running following command:"
-Write-Output "az rest --method put --uri ""$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01"" --body ""$($body) "" --headers ""Content-Type=application/json"""
+Write-Output "az rest --method put --uri ""$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01"" --body ""$($body) "" --headers ""Content-Type=application/json"" --debug"
 
-az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) " --headers "Content-Type=application/json"
+az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) " --headers "Content-Type=application/json" --debug
 
 if (!$?)
 {
