@@ -1,4 +1,4 @@
-@name: Build and Test .NET solution
+name: Build and Test .NET solution
 
 on:
   workflow_call:
