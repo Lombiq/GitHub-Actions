@@ -27,8 +27,8 @@ Write-Output "Running following command:"
 #Write-Output "az rest --method put --uri ""$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01"" --body ""$($body) "" --debug --headers $(ConvertTo-Json $headers -Compress)"
 # az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) " --debug --headers (ConvertTo-Json $headers -Compress)
 
-Write-Output "Invoke-AzRestMethod -Path ""ApplicationInsightsResourceId/Annotations?api-version=2015-05-01"" -Method PUT -Payload $body"
-Invoke-AzRestMethod -Path "ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body 
+Write-Output "Invoke-AzRestMethod -Path ""$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01"" -Method PUT -Payload $body"
+Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body 
 if (!$?)
 {
     exit 1
