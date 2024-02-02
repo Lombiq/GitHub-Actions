@@ -15,17 +15,17 @@ $annotation = @{
     #Properties = ConvertTo-Json $ReleaseProperties -Compress
 }
 
-$headers = @{
-    "Content-Type" = "application/json"
-}
+# $headers = @{
+#     "Content-Type" = "application/json"
+# }
 
 # Encoding parenthesis to prevent the request from failing.
-$ApplicationInsightsResourceId = $ApplicationInsightsResourceId.Replace('(', '%28').Replace(')', '%29')
+#$ApplicationInsightsResourceId = $ApplicationInsightsResourceId.Replace('(', '%28').Replace(')', '%29')
 $body = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
 
 Write-Output "Running following command:"
 Write-Output "az rest --method put --uri ""$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01"" --body ""$($body) "" --debug --headers $(ConvertTo-Json $headers -Compress)"
- az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) " --debug --headers (ConvertTo-Json $headers -Compress)
+az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) " --debug --headers (ConvertTo-Json $headers -Compress)
 
 #Write-Output "Invoke-AzRestMethod -Path ""$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01"" -Method PUT -Payload $body"
 #Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body 
