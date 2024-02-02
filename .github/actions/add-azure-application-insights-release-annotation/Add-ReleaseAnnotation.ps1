@@ -12,7 +12,7 @@ $annotation = @{
     EventTime = (Get-Date).ToUniversalTime().GetDateTimeFormats('s')[0]
     # AI only displays annotations from the "Deployment" category so this must be this string.
     Category = 'Deployment'
-    Properties = ConvertTo-Json $ReleaseProperties -Compress
+    #Properties = ConvertTo-Json $ReleaseProperties -Compress
 }
 
 $headers = @{
@@ -24,11 +24,11 @@ $ApplicationInsightsResourceId = $ApplicationInsightsResourceId.Replace('(', '%2
 $body = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
 
 Write-Output "Running following command:"
-#Write-Output "az rest --method put --uri ""$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01"" --body ""$($body) "" --debug --headers $(ConvertTo-Json $headers -Compress)"
-# az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) " --debug --headers (ConvertTo-Json $headers -Compress)
+Write-Output "az rest --method put --uri ""$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01"" --body ""$($body) "" --debug --headers $(ConvertTo-Json $headers -Compress)"
+ az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) " --debug --headers (ConvertTo-Json $headers -Compress)
 
-Write-Output "Invoke-AzRestMethod -Path ""$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01"" -Method PUT -Payload $body"
-Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body 
+#Write-Output "Invoke-AzRestMethod -Path ""$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01"" -Method PUT -Payload $body"
+#Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body 
 if (!$?)
 {
     exit 1
