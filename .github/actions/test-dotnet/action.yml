@@ -118,7 +118,7 @@ runs:
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       run: Merge-FailureDumps -Directory "${{ inputs.build-directory }}"
 
-    # Under Windows this can fail with "ENOENT: no such file or directory" if the path is too long, see 
+    # Under Windows this can fail with "ENOENT: no such file or directory" if the path is too long, see
     # https://github.com/actions/upload-artifact/issues/240.
     - name: Upload UI Testing Artifacts
       uses: actions/upload-artifact@v3.1.1
