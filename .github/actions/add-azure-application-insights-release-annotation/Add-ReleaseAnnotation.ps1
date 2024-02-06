@@ -10,8 +10,8 @@ $annotation = @{
     Id = [GUID]::NewGuid();
     AnnotationName = $ReleaseName;
     EventTime = (Get-Date).ToUniversalTime().GetDateTimeFormats("s")[0];
-    Category = "Deployment";
     # AI only displays annotations from the "Deployment" category so this must be this string.
+    Category = "Deployment";
     Properties = ConvertTo-Json $ReleaseProperties -Compress
 }
 
