@@ -16,6 +16,8 @@ $annotation = @{
 
 # Encoding parenthesis to prevent the request from failing.
 $ApplicationInsightsResourceId = $ApplicationInsightsResourceId.Replace('(', '%28').Replace(')', '%29')
+
+# Double escaping is not needed anymore, for more info see: https://github.com/Azure/azure-cli/issues/15529#issuecomment-1211884315
 $body = (ConvertTo-Json $annotation -Compress)
 
 az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) "
