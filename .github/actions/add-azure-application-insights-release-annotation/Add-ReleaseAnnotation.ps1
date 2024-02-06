@@ -10,7 +10,8 @@ $annotation = @{
     Id = [GUID]::NewGuid();
     AnnotationName = $ReleaseName;
     EventTime = (Get-Date).ToUniversalTime().GetDateTimeFormats("s")[0];
-    Category = "Deployment"; #Application Insights only displays annotations from the "Deployment" Category
+    Category = "Deployment";
+    # AI only displays annotations from the "Deployment" category so this must be this string.
     Properties = ConvertTo-Json $ReleaseProperties -Compress
 }
 
@@ -21,7 +22,6 @@ $ApplicationInsightsResourceId = $ApplicationInsightsResourceId.Replace('(', '%2
 $body = ConvertTo-Json $annotation -Compress
 
 az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) "
-
 
 if (!$?)
 {
