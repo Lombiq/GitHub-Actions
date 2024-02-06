@@ -1,5 +1,5 @@
 param (
-    [string]$sqlServerExpressVersion = '2022.16.0.1000',
+    [string]$windowsSqlServerExpressVersion = '2022.16.0.1000',
     [string]$sqlServerVersion = '2022'
 )
 
