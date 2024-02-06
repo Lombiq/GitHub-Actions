@@ -165,6 +165,35 @@ jobs:
         run: |
           "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
 
+      - name: Build and Static Code Analysis
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        with:
+          directory: ${{ inputs.build-directory }}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
+          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
+          cache-version: ${{ inputs.build-cache-version }}
+          solution-or-project-path: ${{ inputs.web-project-path }}
+          # Arguments need to be separated into newlines: https://stackoverflow.com/a/59077879/16192320
+          dotnet-build-switches: |
+            --self-contained
+            ${{ inputs.self-contained }}
+            -p:PublishReadyToRun=${{ inputs.ready-to-run }}
+            ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+            -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Publish
+        run: |
+          dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
+            --no-build `
+            --configuration Release `
+            --output '${{ inputs.build-directory }}/Published' `
+            --verbosity ${{ inputs.build-verbosity }} `
+            --self-contained ${{ inputs.self-contained }} `
+            -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
+            ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
         env:
@@ -173,7 +202,22 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/OSOE-792
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+
+      - name: Stop Web App Slot
+        run: |
+          Stop-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
+        with:
+          app-name: ${{ inputs.app-name }}
+          slot-name: ${{ inputs.slot-name }}
+          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+          package: ${{ inputs.build-directory }}/Published
 
       - name: Add Azure Application Insights Release Annotation
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-792
