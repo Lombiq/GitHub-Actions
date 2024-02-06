@@ -22,7 +22,7 @@ else
 }
 
 $connectionString = @(
-    'Server=\SQLEXPRESS'
+    'Server=SQLEXPRESS'
     'Database=LombiqUITestingToolbox_{{id}}'
     $connectionSecurity
     'MultipleActiveResultSets=True'
