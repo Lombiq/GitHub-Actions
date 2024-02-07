@@ -17,8 +17,12 @@ $annotation = @{
 
 # Encoding parenthesis to prevent the request from failing.
 $ApplicationInsightsResourceId = $ApplicationInsightsResourceId.Replace('(', '%28').Replace(')', '%29')
-$body = (ConvertTo-Json $annotation -Compress) -replace '(\\+)"', '$1$1"' -replace "`"", "`"`""
-az rest --method put --uri "$($ApplicationInsightsResourceId)/Annotations?api-version=2015-05-01" --body "$($body) "
+
+# Double escaping is not needed anymore, for more info see: https://github.com/Azure/azure-cli/issues/15529#issuecomment-1211884315
+$body = ConvertTo-Json $annotation -Compress
+
+# Az CLI and Invoke-AzRestMethod both work in GitHub Actions, but Az throws various (inconsistent) errors in localhost.
+Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body
 
 if (!$?)
 {
