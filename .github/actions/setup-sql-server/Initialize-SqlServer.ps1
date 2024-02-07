@@ -5,7 +5,7 @@ param (
 
 if ($Env:RUNNER_OS -eq 'Windows')
 {
-    choco install sql-server-express --version=$windowsSqlServerExpressVersion--no-progress
+    choco install sql-server-express --version=$windowsSqlServerExpressVersion --no-progress
 }
 else
 {
