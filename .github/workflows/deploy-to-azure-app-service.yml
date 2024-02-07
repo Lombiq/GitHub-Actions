@@ -202,7 +202,7 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/OSOE-792
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
       - name: Stop Web App Slot
         run: |
@@ -220,7 +220,7 @@ jobs:
           package: ${{ inputs.build-directory }}/Published
 
       - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-792
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
