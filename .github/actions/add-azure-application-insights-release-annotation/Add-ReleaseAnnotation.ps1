@@ -21,6 +21,7 @@ $ApplicationInsightsResourceId = $ApplicationInsightsResourceId.Replace('(', '%2
 # Double escaping is not needed anymore, for more info see: https://github.com/Azure/azure-cli/issues/15529#issuecomment-1211884315
 $body = ConvertTo-Json $annotation -Compress
 
+# Az CLI and Invoke-AzRestMethod both work in GitHub Actions, but Az throws various (inconsistent) errors in localhost.
 Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body
 
 if (!$?)
