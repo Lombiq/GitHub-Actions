@@ -143,57 +143,6 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-        with:
-          token: ${{ secrets.CHECKOUT_TOKEN }}
-
-      - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
-        with:
-          dotnet-version: ${{ inputs.dotnet-version }}
-
-      - name: Enable Node corepack
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
-
-      # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
-      # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
-      # take advantage of the dotnet CLI tolerating the usage of the equal sign.
-      - name: Set up runtime option
-        id: set-up-runtime-option
-        if: ${{ inputs.runtime != '' }}
-        run: |
-          "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
-
-      - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
-        with:
-          directory: ${{ inputs.build-directory }}
-          verbosity: ${{ inputs.build-verbosity }}
-          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
-          enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
-          enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
-          cache-version: ${{ inputs.build-cache-version }}
-          solution-or-project-path: ${{ inputs.web-project-path }}
-          # Arguments need to be separated into newlines: https://stackoverflow.com/a/59077879/16192320
-          dotnet-build-switches: |
-            --self-contained
-            ${{ inputs.self-contained }}
-            -p:PublishReadyToRun=${{ inputs.ready-to-run }}
-            ${{ steps.set-up-runtime-option.outputs.runtime-option }}
-            -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-      - name: Publish
-        run: |
-          dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
-            --no-build `
-            --configuration Release `
-            --output '${{ inputs.build-directory }}/Published' `
-            --verbosity ${{ inputs.build-verbosity }} `
-            --self-contained ${{ inputs.self-contained }} `
-            -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
-            ${{ steps.set-up-runtime-option.outputs.runtime-option }}
-
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
         env:
@@ -204,40 +153,11 @@ jobs:
       - name: Initialize PowerShell modules
         uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/OSOE-792
 
-      - name: Stop Web App Slot
-        run: |
-          Stop-AzureWebAppSlot `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.slot-name }}
-
-      - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
-        with:
-          app-name: ${{ inputs.app-name }}
-          slot-name: ${{ inputs.slot-name }}
-          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-          package: ${{ inputs.build-directory }}/Published
-
       - name: Add Azure Application Insights Release Annotation
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-792
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
-
-      - name: Start Web App Slot
-        run: |
-          Start-AzureWebAppSlot `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.slot-name }}
-
-      - name: Test Web App Slot
-        run: |
-          Test-AzureWebApp `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.slot-name }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
