@@ -5,12 +5,12 @@ param (
 
 if ($Env:RUNNER_OS -eq 'Windows')
 {
-    choco install sql-server-express --version=$sqlServerExpressVersion --no-progress
+    choco install sql-server-express --version=$windowsSqlServerExpressVersion--no-progress
 }
 else
 {
     $containerName = 'uitt-sqlserver'
-    $sqlServerLink = "mcr.microsoft.com/mssql/server:${sqlServerVersion}-latest"
+    $sqlServerLink = "mcr.microsoft.com/mssql/server:${linuxSqlServerVersion}-latest"
 
     $dockerRunSwitches = @(
         '--name', $containerName
