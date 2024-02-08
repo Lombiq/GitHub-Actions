@@ -115,7 +115,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/COLI-1304
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
         with:
           directory: ${{ inputs.build-directory }}
           solution-or-project-path: ${{ inputs.solution-or-project-path }}
