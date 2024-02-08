@@ -7,7 +7,7 @@ if (-not $existingSource)
 }
 else
 {
-    Write-Output "Package source for NuGet.org is already registered."
+    Write-Output 'Package source for NuGet.org is already registered.'
 }
 
 # Get the latest version of the package.
