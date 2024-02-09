@@ -1,0 +1,44 @@
+name: Set GitHub Actions References
+description: >
+  Explicitly sets all called GitHub Action and Workflow references to an expected version.
+
+inputs:
+  path-include-list:
+    required: false
+    default: '@(".github")'
+    description: >
+      PowerShell string array of paths, relative to the repository root, to search for GHA files, e.g. '@(".github")' or '@(".github/actions", ".github/workflows")'. The
+      parameter must be a PowerShell string array.
+  file-include-list:
+    required: false
+    default: '@("*.yml","*.yaml")'
+    description: >
+      PowerShell string array of file name patterns to include when evaluating GHA files, e.g. '@("*.yml")' or '@("*.yml", "*.yaml")'. The
+      parameter must be a PowerShell string array.
+  called-repo-base-include-list:
+    required: false
+    default: '@("${{ github.repository }}")'
+    description: >
+      PowerShell string array of repository base URLs to include when evaluating called GHA Workflows and Actions, e.g '@("Lombiq/GitHub-Actions")' or
+      '@("Lombiq/GitHub-Actions", "Lombiq/Open-Source-Orchard-Core-Extensions")'. The parameter must be a PowerShell string array.
+  expected-ref:
+    required: true
+    description: The expected reference value to set for all called GHA Workflows and Actions.
+runs:
+  using: "composite"
+  steps:
+    - name: Setup
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+
+    - name: Set References
+      shell: pwsh
+      run: |
+        $params = @{
+            PathIncludeList = ${{ inputs.path-include-list }}
+            FileIncludeList = ${{ inputs.file-include-list }}
+            CalledRepoBaseIncludeList = ${{ inputs.called-repo-base-include-list }}
+            ExpectedRef = "${{ inputs.expected-ref }}"
+        }
+        Set-Called-GHA-Refs @params
