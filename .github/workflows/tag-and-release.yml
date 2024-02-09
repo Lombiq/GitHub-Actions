@@ -16,7 +16,6 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.TAG_AND_RELEASE }}
-
       - name: Determine Version Tag Name from Branch Name
         id: determine-tag
         shell: pwsh
@@ -26,12 +25,10 @@ jobs:
           $output = "tagname=$tagname"
           Write-Output "output=$output"
           $output >> $env:GITHUB_OUTPUT
-      
       - name: Set Ref for GitHub Actions and Workflows
         uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@issue/OSOE-735
         with:
           expected-ref: '${{ steps.determine-tag.outputs.tagname }}'
-
       - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
