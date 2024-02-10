@@ -2,7 +2,7 @@ name: Tag and Release LGHA
 on:
   push:
     branches:
-      - release/*
+      - release/**
 
 jobs:
   run:
@@ -32,5 +32,10 @@ jobs:
       - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: Update called GitHub Actions and Workflows to release version
+          commit_message: 'Pin GitHub Actions and Workflows to ${{ steps.determine-tag.outputs.tagname }}'
           tagging_message: ${{ steps.determine-tag.outputs.tagname }}
+      - name: Push Tag (Force)
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          git push --tags --force

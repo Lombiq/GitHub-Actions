@@ -8,28 +8,33 @@ param(
 if ($CalledRepoBaseIncludeList.Count -eq 0)
 {
     Write-Output '::warning file=Check-Called-GHA-refs.ps1,line10::CalledRepoBaseIncludeList is empty which is unexpected. If this was intentional, you can ignore this warning.'
-    exit 0 # Nothing to check because array is empty.
 }
-
-$CalledRepoBaseIncludeList = $CalledRepoBaseIncludeList.ForEach({ 'uses:\s*' + $PSItem + '(.*)@(.*)' })
-
-$matchedRefs = Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse |
-    Select-String -Pattern $CalledRepoBaseIncludeList 
-
-if ($matchedRefs.Count -gt 0)
+else
 {
+    $CalledRepoBaseIncludeList = $CalledRepoBaseIncludeList.ForEach({ 'uses:\s*' + $PSItem + '(.*)@(.*)' })
 
-    "These called GitHub Actions and Workflows have been explicitly set to ref '$ExpectedRef'." >> $env:GITHUB_STEP_SUMMARY
+    $matchedRefs = Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse |
+        Select-String -Pattern $CalledRepoBaseIncludeList
 
-    foreach ($matched in $matchedRefs)
+    if ($matchedRefs.Count -gt 0)
     {
-        $oldline = $matched.Line
-        $newline = $matched.Line -Replace '@(.*)', "@$ExpectedRef"
-        Write-Output $oldline
-        Write-Output $newline
+        foreach ($matched in $matchedRefs)
+        {
+            $oldline = $matched.Line
+            $newline = $matched.Line -Replace '@(.*)', "@$ExpectedRef"
 
-        $filename = $matched.RelativePath($pwd)
+            if ($oldine -ne $newline)
+            {
+                Write-Output "$oldline => $newline"
 
-        (Get-Content $filename).Replace($oldline, $newline) | Set-Content $filename
+                $filename = $matched.RelativePath($pwd)
+                $linenumber = $mismatch.LineNumber
+                $title = "GHA Ref pinned to '$ExpectedRef'"
+
+                (Get-Content $filename).Replace($oldline, $newline) | Set-Content $filename
+
+                Write-Output "::notice file=$filename,line=$linenumber,title=$title::GHA Ref changed to '$ExpectedRef'"
+            }
+        }
     }
 }
