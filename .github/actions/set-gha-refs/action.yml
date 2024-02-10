@@ -25,7 +25,7 @@ inputs:
     required: false
     default: '@()'
     description: >
-      PowerShell string array of additional RegEx patterns to include when searching for branch references that need to be 
+      PowerShell string array of additional RegEx patterns to include when searching for branch references that need to be
       updated, e.g. 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/(?<ref>[aA-zZ,0-9,-,\.,/,_]*)/.github/'. The pattern MUST include a regex named capture group (?<ref>[aA-zZ,0-9,-,\.,/,_]*) so the captured ref
       can be updated correctly. The parameter must be a PowerShell string array.
   expected-ref:
