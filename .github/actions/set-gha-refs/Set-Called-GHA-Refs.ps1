@@ -1,5 +1,6 @@
 param(
     [String[]] $CalledRepoBaseIncludeList,
+    [String[]] $AdditionalPatternIncludeList,
     [String[]] $PathIncludeList,
     [String[]] $FileIncludeList,
     [String] $ExpectedRef
@@ -11,17 +12,22 @@ if ($CalledRepoBaseIncludeList.Count -eq 0)
 }
 else
 {
-    $CalledRepoBaseIncludeList = $CalledRepoBaseIncludeList.ForEach({ 'uses:\s*' + $PSItem + '(.*)@(.*)' })
+    $CalledRepoBaseIncludeList = $CalledRepoBaseIncludeList.ForEach({ 'uses:\s*' + $PSItem + '.*@(?<ref>[aA-zZ,0-9,-,\.,/,_]*)' })
 
     $matchedRefs = Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse |
         Select-String -Pattern $CalledRepoBaseIncludeList
+
+    $additionalRefs = Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse |
+        Select-String -Pattern $AdditionalPatternIncludeList
+
+    $matchedRefs = $matchedRefs + $additionalRefs
 
     if ($matchedRefs.Count -gt 0)
     {
         foreach ($matched in $matchedRefs)
         {
             $oldline = $matched.Line
-            $newline = $matched.Line -Replace '@(.*)', "@$ExpectedRef"
+            $newline = $matched.Line -Replace $matched.Matches[0].Groups['ref'].Value, "$ExpectedRef"
 
             if ($oldine -ne $newline)
             {

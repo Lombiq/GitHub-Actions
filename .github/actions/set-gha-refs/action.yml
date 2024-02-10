@@ -21,6 +21,13 @@ inputs:
     description: >
       PowerShell string array of repository base URLs to include when evaluating called GHA Workflows and Actions, e.g '@("Lombiq/GitHub-Actions")' or
       '@("Lombiq/GitHub-Actions", "Lombiq/Open-Source-Orchard-Core-Extensions")'. The parameter must be a PowerShell string array.
+  additional-pattern-include-list:
+    required: false
+    default: '@()'
+    description: >
+      PowerShell string array of additional RegEx patterns to include when searching for branch references that need to be 
+      updated, e.g. 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/(?<ref>[aA-zZ,0-9,-,\.,/,_]*)/.github/'. The pattern MUST include a regex named capture group (?<ref>[aA-zZ,0-9,-,\.,/,_]*) so the captured ref
+      can be updated correctly. The parameter must be a PowerShell string array.
   expected-ref:
     required: true
     description: The expected reference value to set for all called GHA Workflows and Actions.
@@ -39,6 +46,7 @@ runs:
             PathIncludeList = ${{ inputs.path-include-list }}
             FileIncludeList = ${{ inputs.file-include-list }}
             CalledRepoBaseIncludeList = ${{ inputs.called-repo-base-include-list }}
+            AdditionalPatternIncludeList = ${{ inputs.additional-pattern-include-list }}
             ExpectedRef = "${{ inputs.expected-ref }}"
         }
         Set-Called-GHA-Refs @params

@@ -28,6 +28,7 @@ jobs:
       - name: Set Ref for GitHub Actions and Workflows
         uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@issue/OSOE-735
         with:
+          additional-pattern-include-list: '@("https://raw.githubusercontent.com/Lombiq/GitHub-Actions/(?<ref>[aA-zZ,0-9,-,\.,/,_]*)/.github")'
           expected-ref: '${{ steps.determine-tag.outputs.tagname }}'
       - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5
