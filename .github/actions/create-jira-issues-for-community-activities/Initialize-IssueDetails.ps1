@@ -44,7 +44,7 @@ switch ($GitHub.event_name)
             }
         }
     }
-    'pull_request_target'
+    'pull_request'
     {
         $summary = "Review `"$($GitHub.event.pull_request.title)`"$titleSuffix"
         $description = $PullRequestJiraIssueDescription
