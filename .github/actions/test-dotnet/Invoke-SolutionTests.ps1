@@ -25,12 +25,11 @@ $connectionString = @(
     'Server=.'
     'Database=LombiqUITestingToolbox_{{id}}'
     $connectionSecurity
-    'MultipleActiveResultSets=True'
     'Connection Timeout=60'
     'ConnectRetryCount=15'
     'ConnectRetryInterval=5'
     'Encrypt=false'
-    'TrustServerCertificate=true'
+    'TrustServerCertificate=True'
 ) -join ';'
 
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionString
