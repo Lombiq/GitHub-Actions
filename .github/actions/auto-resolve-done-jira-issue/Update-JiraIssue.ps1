@@ -15,7 +15,7 @@ if ($null -eq $transition)
 }
 
 $headers = @{
-    'apikey' = $Env:JIRA_API_KEY
+    'apikey' = $Env:JIRA_API_TOKEN
     'Content-Type' = 'application/json'
     'Accept' = 'application/json'
 }
@@ -31,7 +31,7 @@ $body = @{
     url = "/rest/api/3/issue/$issueKey/transitions"
 } | ConvertTo-Json
 
-$response = Invoke-RestMethod -Uri $Env:JIRA_ENDPOINT_URL -Method Get -Headers $headers -Body $body
+$response = Invoke-RestMethod -Uri $Env:JIRA_BASE_URL -Method Get -Headers $headers -Body $body
 
 $availableTransition = $response | Select-Object -ExpandProperty transitions | Where-Object { $PSItem.name -eq $transition }
 
@@ -55,7 +55,7 @@ if ($null -ne $availableTransition)
         url = "/rest/api/3/issue/$issueKey/transitions"
     } | ConvertTo-Json -Depth 3
 
-    $response = Invoke-RestMethod -Uri $Env:JIRA_ENDPOINT_URL -Method Post -Headers $headers -Body $body
+    $response = Invoke-RestMethod -Uri $Env:JIRA_BASE_URL -Method Post -Headers $headers -Body $body
 }
 else
 {

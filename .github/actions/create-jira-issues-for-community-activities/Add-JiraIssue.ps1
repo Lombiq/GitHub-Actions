@@ -9,7 +9,7 @@ param
 )
 
 $headers = @{
-    'apikey' = $Env:JIRA_API_KEY
+    'apikey' = $Env:JIRA_API_TOKEN
     'Content-Type' = 'application/json'
     'Accept' = 'application/json'
 }
@@ -63,7 +63,7 @@ function CreateIssue {
     
     $body = $body | ConvertTo-Json -Depth 9
 
-    $response = Invoke-RestMethod -Uri $Env:JIRA_ENDPOINT_URL -Method Post -Headers $headers -Body $body
+    $response = Invoke-RestMethod -Uri $Env:JIRA_BASE_URL -Method Post -Headers $headers -Body $body
     Write-Information "Jira issue created with the key $($response.key)." -InformationAction Continue
     $response.key
 }
@@ -88,7 +88,7 @@ function AddLink {
         url = "/rest/api/3/issue/$issueKey/remotelink"
     } | ConvertTo-Json -Depth 3
     
-    Invoke-RestMethod -Uri $Env:JIRA_ENDPOINT_URL -Method Post -Headers $headers -Body $body
+    Invoke-RestMethod -Uri $Env:JIRA_BASE_URL -Method Post -Headers $headers -Body $body
 }
 
 function GetIssueUrl {
@@ -105,7 +105,7 @@ function GetIssueUrl {
         url = "/rest/api/3/serverInfo"
     } | ConvertTo-Json
     
-    $response = Invoke-RestMethod -Uri $Env:JIRA_ENDPOINT_URL -Method Get -Headers $headers -Body $body
+    $response = Invoke-RestMethod -Uri $Env:JIRA_BASE_URL -Method Get -Headers $headers -Body $body
 
     "$($response.baseUrl)/browse/$issueKey"
 }
