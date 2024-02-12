@@ -7,6 +7,7 @@ Various automation that should be run after all other checks succeeded for a pul
 
 ## Prerequisites
 
+You'll need to configure `JIRA_*` secrets first. See the [documentation of `create-jira-issues-for-community-activities`](CreateJiraIssuesForCommunityActivities.md) for details.
 
 ## Setup
 
