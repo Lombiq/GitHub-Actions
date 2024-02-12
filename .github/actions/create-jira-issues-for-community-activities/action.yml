@@ -36,6 +36,11 @@ runs:
       run: |
         $output = "False"
 
+        if ("${{ github.event.pull_request }}" -ne "")
+        {
+            $output = (Confirm-PullRequestTitle "$Env:PR_TITLE") -or $Env:GITHUB_HEAD_REF -Like "*issue*"
+        }
+
         Set-GitHubOutput "is-issue-pr" $output
 
     - name: Create Jira Issue
