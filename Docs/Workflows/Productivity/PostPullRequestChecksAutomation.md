@@ -7,12 +7,6 @@ Various automation that should be run after all other checks succeeded for a pul
 
 ## Prerequisites
 
-You'll need to configure `JIRA_*` secrets first. See the [documentation of `create-jira-issues-for-community-activities`](CreateJiraIssuesForCommunityActivities.md) for details. The only difference is how you set up the `DEFAULT_JIRA_API_KEY`; use the following settings for the key:
-
-- Valid until: Unless you want to rotate the keys manually, remove the expiration.
-- Description: "Post-pull request checks automation for \<project key\>" (or what you prefer).
-- Allowed methods: GET, POST.
-- Allowed endpoints: "/rest/api/3/issue/\<project key\>-".
 
 ## Setup
 
@@ -42,8 +36,9 @@ jobs:
     if: github.event.pull_request != ''
     uses: Lombiq/GitHub-Actions/.github/workflows/post-pull-request-checks-automation.yml@dev
     secrets:
-      JIRA_ENDPOINT_URL: ${{ secrets.DEFAULT_JIRA_ENDPOINT_URL }}
-      JIRA_API_KEY: ${{ secrets.DEFAULT_JIRA_API_KEY }}
+      JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
+      JIRA_USER_EMAIL: ${{ secrets.DEFAULT_JIRA_USER_EMAIL }}
+      JIRA_API_TOKEN: ${{ secrets.DEFAULT_JIRA_API_TOKEN }}
       MERGE_TOKEN: ${{ secrets.DEFAULT_MERGE_TOKEN }}
 ```
 

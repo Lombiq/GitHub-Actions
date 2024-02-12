@@ -7,8 +7,8 @@ on:
       JIRA_BASE_URL:
         required: false
         description: >
-          The URL of your Jira instance, following the https://<yourdomain>.atlassian.net pattern. It must NOT end with
-          a slash.
+          The URL of your Jira (Atlassian) instance, following the https://<yourdomain>.atlassian.net pattern (e.g.
+          "https://lombiq.atlassian.net"). It must NOT end with a slash.
     inputs:
       repository:
         type: string

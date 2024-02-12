@@ -17,16 +17,21 @@ on:
           for info on how to create PATs; you'll need one with the "repo" scope. Check out
           https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
           for instructions on what other tokens you can use.
-      JIRA_ENDPOINT_URL:
+      JIRA_BASE_URL:
         required: true
         description: >
           Configure as explained under
-          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PostPullRequestChecksAutomation.md.
-      JIRA_API_KEY:
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md.
+      JIRA_USER_EMAIL:
         required: true
         description: >
           Configure as explained under
-          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PostPullRequestChecksAutomation.md.
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md.
+      JIRA_API_TOKEN:
+        required: true
+        description: >
+          Configure as explained under
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md.
 
     inputs:
       merge-method:
@@ -79,11 +84,12 @@ jobs:
 
       - name: Automatically Resolve or Done Jira issue
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-726
+        uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-722
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
-          JIRA_ENDPOINT_URL: ${{ secrets.JIRA_ENDPOINT_URL }}
-          JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }}
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
 
       - name: Remove Label
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
