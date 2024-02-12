@@ -28,7 +28,7 @@ $connectionString = @(
     'Connection Timeout=60'
     'ConnectRetryCount=15'
     'ConnectRetryInterval=5'
-    'Encrypt=false'
+    'Encrypt=False'
     'TrustServerCertificate=True'
 ) -join ';'
 
