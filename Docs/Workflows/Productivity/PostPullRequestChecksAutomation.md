@@ -5,7 +5,18 @@ Various automation that should be run after all other checks succeeded for a pul
 - Merges the current pull request if the "merge-and-resolve-jira-issue-if-checks-succeed" or "merge-if-checks-succeed" label is present. With prerequisite jobs you can execute this only if all others jobs have succeeded. Unlike [GitHub's auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request), this works without branch protection rules.
 - Resolves the Jira issue corresponding to the pull request if the "resolve-jira-issue-if-checks-succeed" or "merge-and-resolve-jira-issue-if-checks-succeed" label is present, or sets the issue to Done if the "done-jira-issue-if-checks-succeed" label is.
 
-See an example of how you can utilize this workflow, together with jobs that do other checks below. For configuring the `JIRA_*` secrets see the documentation of `create-jira-issues-for-community-activities` above. If you want merges done by this workflow to also be able to trigger other workflows (like running a build on the target branch), you have to specify a custom personal access token for `MERGE_TOKEN`; check out the workflow's inline documentation for details.
+## Prerequisites
+
+You'll need to configure `JIRA_*` secrets first. See the [documentation of `create-jira-issues-for-community-activities`](CreateJiraIssuesForCommunityActivities.md) for details. The only difference is how you set up the `DEFAULT_JIRA_API_KEY`; use the following settings for the key:
+
+- Valid until: Unless you want to rotate the keys manually, remove the expiration.
+- Description: "Post-pull request checks automation for \<project key\>" (or what you prefer).
+- Allowed methods: GET, POST.
+- Allowed endpoints: "/rest/api/3/issue/\<project key\>-".
+
+## Setup
+
+See an example of how you can utilize this workflow, together with jobs that do other checks below. For details on `MERGE_TOKEN` check out the workflow's inline documentation.
 
 ```yaml
 name: Build and Test
@@ -31,9 +42,8 @@ jobs:
     if: github.event.pull_request != ''
     uses: Lombiq/GitHub-Actions/.github/workflows/post-pull-request-checks-automation.yml@dev
     secrets:
-      JIRA_BASE_URL: ${{ secrets.DEFAULT_JIRA_BASE_URL }}
-      JIRA_USER_EMAIL: ${{ secrets.DEFAULT_JIRA_USER_EMAIL }}
-      JIRA_API_TOKEN: ${{ secrets.DEFAULT_JIRA_API_TOKEN }}
+      JIRA_ENDPOINT_URL: ${{ secrets.DEFAULT_JIRA_ENDPOINT_URL }}
+      JIRA_API_KEY: ${{ secrets.DEFAULT_JIRA_API_KEY }}
       MERGE_TOKEN: ${{ secrets.DEFAULT_MERGE_TOKEN }}
 ```
 

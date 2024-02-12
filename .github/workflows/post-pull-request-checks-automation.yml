@@ -16,19 +16,17 @@ on:
           https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
           for info on how to create PATs; you'll need one with the "repo" scope. Check out
           https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
-          for instructions on what other tokens you can use. We recommend creating such a token from under a bot user
-          account only used for such operations, so it's not tied to a natural person.
-      JIRA_BASE_URL:
+          for instructions on what other tokens you can use.
+      JIRA_ENDPOINT_URL:
         required: true
         description: >
-          Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
-          it must NOT end with a slash.
-      JIRA_USER_EMAIL:
+          Configure as explained under
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PostPullRequestChecksAutomation.md.
+      JIRA_API_KEY:
         required: true
-        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
-      JIRA_API_TOKEN:
-        required: true
-        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+        description: >
+          Configure as explained under
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PostPullRequestChecksAutomation.md.
 
     inputs:
       merge-method:
@@ -81,12 +79,11 @@ jobs:
 
       - name: Automatically Resolve or Done Jira issue
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@issue/OSOE-726
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
-          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_ENDPOINT_URL: ${{ secrets.JIRA_ENDPOINT_URL }}
+          JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }}
 
       - name: Remove Label
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
