@@ -33,7 +33,7 @@ $body = @{
 
 $response = Invoke-RestMethod -Uri $Env:JIRA_ENDPOINT_URL -Method Get -Headers $headers -Body $body
 
-$availableTransition = $response | Select-Object -ExpandProperty transitions | Where-Object { $_.name -eq $transition }
+$availableTransition = $response | Select-Object -ExpandProperty transitions | Where-Object { $PSItem.name -eq $transition }
 
 if ($null -ne $availableTransition)
 {
