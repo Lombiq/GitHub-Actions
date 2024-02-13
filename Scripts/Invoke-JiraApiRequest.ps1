@@ -1,3 +1,8 @@
+[Diagnostics.CodeAnalysis.SuppressMessage(
+    'PSAvoidUsingConvertToSecureStringWithPlainText',
+    '',
+    Justification = 'The API token already comes from a secure store. Under GHA, we cannnot make it any more secure. ' +
+        'Also see: https://github.com/PowerShell/PSScriptAnalyzer/issues/574.')]
 param (
     [string]$ApiEndpoint,
     [string]$Method,

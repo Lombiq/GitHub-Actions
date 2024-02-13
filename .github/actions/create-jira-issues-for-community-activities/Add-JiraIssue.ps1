@@ -1,9 +1,12 @@
 [Diagnostics.CodeAnalysis.SuppressMessage(
-    'PSReviewUnusedParameter', 
+    'PSReviewUnusedParameter',
     'Summary',
     Justification = 'It is actually used. This is a known issue: https://github.com/PowerShell/PSScriptAnalyzer/issues/1891.')]
 [Diagnostics.CodeAnalysis.SuppressMessage('PSReviewUnusedParameter', 'Description', Justification = 'Same.')]
 [Diagnostics.CodeAnalysis.SuppressMessage('PSReviewUnusedParameter', 'Type', Justification = 'Same.')]
+[Diagnostics.CodeAnalysis.SuppressMessage('PSReviewUnusedParameter', 'IssueComponent', Justification = 'Same.')]
+[Diagnostics.CodeAnalysis.SuppressMessage('PSReviewUnusedParameter', 'LinkUrl', Justification = 'Same.')]
+[Diagnostics.CodeAnalysis.SuppressMessage('PSReviewUnusedParameter', 'LinkTitle', Justification = 'Same.')]
 param
 (
     $Summary,
@@ -33,9 +36,11 @@ function CreateIssue
     if (-not [string]::IsNullOrWhiteSpace($IssueComponent))
     {
         $body.fields += @{
-            components = @(@{
-                name = $IssueComponent
-            })
+            components = @(
+                @{
+                    name = $IssueComponent
+                }
+            )
         }
     }
 
@@ -52,7 +57,7 @@ function AddLink
 {
     param($issueKey)
 
-    $bodyJson =  @{
+    $bodyJson = @{
         object = @{
             url = $LinkUrl
             title = $LinkTitle
