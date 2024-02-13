@@ -14,48 +14,21 @@ if ($null -eq $transition)
     exit
 }
 
-$headers = @{
-    'apikey' = $Env:JIRA_API_TOKEN
-    'Content-Type' = 'application/json'
-    'Accept' = 'application/json'
-}
-
-$body = @{
-    options = @{
-        method = 'GET'
-        headers = @{
-            'Content-Type' = 'application/json'
-            'Accept' = 'application/json'
-        }
-    }
-    url = "/rest/api/3/issue/$issueKey/transitions"
-} | ConvertTo-Json
-
-$response = Invoke-RestMethod -Uri $Env:JIRA_BASE_URL -Method Get -Headers $headers -Body $body
+$response = Invoke-JiraApiGet "issue/$issueKey/transitions"
 
 $availableTransition = $response | Select-Object -ExpandProperty transitions | Where-Object { $PSItem.name -eq $transition }
 
 if ($null -ne $availableTransition)
 {
-    Write-Output "Transition exists. $($availableTransition.id)"
+    Write-Output "Transition exists: $($availableTransition.id)."
 
-    $body = @{
-        options = @{
-            method = 'POST'
-            headers = @{
-                'Content-Type' = 'application/json'
-                'Accept' = 'application/json'
-            }
-            body = @{
-                transition = @{
-                    id = $availableTransition.id
-                }
-            }
+    $bodyJson = @{
+        transition = @{
+            id = $availableTransition.id
         }
-        url = "/rest/api/3/issue/$issueKey/transitions"
     } | ConvertTo-Json -Depth 3
 
-    $response = Invoke-RestMethod -Uri $Env:JIRA_BASE_URL -Method Post -Headers $headers -Body $body
+    Invoke-JiraApiPost "issue/$issueKey/transitions" $bodyJson
 }
 else
 {
