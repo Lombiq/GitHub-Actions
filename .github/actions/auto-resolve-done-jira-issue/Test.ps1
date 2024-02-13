@@ -1,3 +1,5 @@
+# You can use this script to test Update-JiraIssue locally, after filling out the credentials below. Be sure not to
+# commmit those!
 $Env:JIRA_BASE_URL = 'https://lombiq.atlassian.net'
 $Env:JIRA_USER_EMAIL = 'your.name@lombiq.com'
 $Env:JIRA_API_TOKEN = 'your API token here'
