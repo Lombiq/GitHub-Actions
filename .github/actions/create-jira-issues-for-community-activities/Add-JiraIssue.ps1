@@ -1,3 +1,9 @@
+[Diagnostics.CodeAnalysis.SuppressMessage(
+    'PSReviewUnusedParameter', 
+    'Summary',
+    Justification = 'It is actually used. This is a known issue: https://github.com/PowerShell/PSScriptAnalyzer/issues/1891.')]
+[Diagnostics.CodeAnalysis.SuppressMessage('PSReviewUnusedParameter', 'Description', Justification = 'Same.')]
+[Diagnostics.CodeAnalysis.SuppressMessage('PSReviewUnusedParameter', 'Type', Justification = 'Same.')]
 param
 (
     $Summary,
@@ -8,7 +14,8 @@ param
     $LinkTitle
 )
 
-function CreateIssue {
+function CreateIssue
+{
     $body = @{
         fields = @{
             project = @{
@@ -22,15 +29,16 @@ function CreateIssue {
             labels = @('created-from-github')
         }
     }
-    
-    if (-not [string]::IsNullOrWhiteSpace($IssueComponent)) {
+
+    if (-not [string]::IsNullOrWhiteSpace($IssueComponent))
+    {
         $body.fields += @{
             components = @(@{
                 name = $IssueComponent
             })
         }
     }
-    
+
     $bodyJson = $body | ConvertTo-Json -Depth 9
 
     $response = Invoke-JiraApiPost 'issue' $bodyJson
@@ -40,7 +48,8 @@ function CreateIssue {
     $response.key
 }
 
-function AddLink {
+function AddLink
+{
     param($issueKey)
 
     $bodyJson =  @{
@@ -49,7 +58,7 @@ function AddLink {
             title = $LinkTitle
         }
     } | ConvertTo-Json -Depth 3
-    
+
     Invoke-JiraApiPost "issue/$issueKey/remotelink" $bodyJson
 }
 
