@@ -23,7 +23,8 @@ $parameters = @{
     Credential = $credential
 }
 
-if ($BodyJson) {
+if ($BodyJson)
+{
     $parameters['Body'] = $BodyJson
 }
 
