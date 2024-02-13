@@ -63,8 +63,8 @@ runs:
       # Lombiq.Hosting.Deployments module (https://github.com/Lombiq/Hosting-Deployments) enabled.
       run: |
         $givenSwitches = @'
-            -p:BuildVersionDisplay_BuildText="${{ github.head_ref }} (${{ github.sha }})"
-            -p:BuildVersionDisplay_BuildUrl="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            -p:BuildVersionDisplay_BuildText=${{ github.sha }}_${{ github.head_ref }}
+            -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             ${{ inputs.msbuild-switches }}
         '@
 
