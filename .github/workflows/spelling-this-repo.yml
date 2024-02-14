@@ -11,4 +11,4 @@ on:
 jobs:
   spelling:
     name: Spelling
-    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@task/gha-refs-validate-without-merge-queue-test-pr
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
