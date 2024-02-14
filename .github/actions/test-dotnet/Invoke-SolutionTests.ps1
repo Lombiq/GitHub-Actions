@@ -12,17 +12,19 @@ param ($Solution, $Verbosity, $Filter, $Configuration, $BlameHangTimeout, $TestP
 
 if ($Env:RUNNER_OS -eq 'Windows')
 {
+    $server = '.\SQLEXPRESS'
     $connectionSecurity = 'Integrated Security=True'
 }
 else
 {
+    $server = '.'
     $connectionSecurity = 'User Id=sa;Password=Password1!'
 
     $Env:Lombiq_Tests_UI__DockerConfiguration__ContainerName = 'uitt-sqlserver'
 }
 
 $connectionString = @(
-    'Server=.\SQLEXPRESS'
+    "Server=$server"
     'Database=LombiqUITestingToolbox_{{id}}'
     $connectionSecurity
     'Connection Timeout=60'
