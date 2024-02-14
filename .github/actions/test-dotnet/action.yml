@@ -89,7 +89,7 @@ runs:
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
         name: dotnet-dump
-        version: 7.0.421201
+        version: 8.0.510501
 
     - name: Run Tests
       id: run-tests
