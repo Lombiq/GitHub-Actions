@@ -4,9 +4,9 @@ Creates Jira issues for community activities happening on GitHub, like issues, d
 
 ## Prerequisites
 
-1. Create up a separate user account in Jira for each such use case (unless you want to open up API access too much). We recommend having at least one bot account that's only used for such automation tasks. This account should have the necessary permissions to create issues in the target project(s).
+1. Create up a separate user account in Jira for each such use case (unless you want to open up API access too much). We recommend creating at least one bot account dedicated to automation tasks. Ensure this account has the specific permissions required to create issues in the target Jira project(s).
 2. Create a [Jira API token](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/) under the user. Note that such tokens have the same access as the user account they were created for, and their scope can't be restricted ([nor can there be single-use Jira guest users](https://jira.atlassian.com/browse/JRACLOUD-74242)).
-3. Set up organization or repository secrets for the `JIRA_*` parameters. You may use secret names without the `DEFAULT_*` prefix, but that's our recommendation for organization-level secrets, so you have defaults but can override them on a per-repository basis. For repository secrets, names without this prefix is recommended.
+3. Set up organization or repository secrets for the `JIRA_*` parameters. Use the `DEFAULT_*` prefix for organization-level secrets to establish defaults that can be overridden on a per-repository basis. For repository-specific secrets, omit this prefix.
     - `DEFAULT_JIRA_BASE_URL`: The URL of your Jira (Atlassian) instance, following the `https://<yourdomain>.atlassian.net` pattern (e.g. `https://lombiq.atlassian.net`). It must NOT end with a slash.
     - `DEFAULT_JIRA_USER_EMAIL`: The e-mail address of the user account.
     - `DEFAULT_JIRA_API_TOKEN`: The API token of the user account.
@@ -27,7 +27,7 @@ All three templates are optional and if not provided, defaults will be used.
 
 ## Setup
 
-You can use the workflow as demonstrated below. Note that it's important to use the `pull_request_target` trigger instead of `pull_request` because the latter doesn't trigger for pull requests from forks, defeating the whole purpose of this workflow.
+You can use the workflow as demonstrated below. It's crucial to use the `pull_request_target` trigger instead of `pull_request`. The `pull_request` trigger does not activate for pull requests from forks, which is essential for this workflow to function as intended.
 
 ```yaml
 name: Create Jira issues for community activities
