@@ -1,0 +1,51 @@
+name: Tag Version
+
+on:
+  workflow_call:
+    secrets:
+      # We can't access org secrets here so they need to be passed in.
+      TAG_VERSION_TOKEN:
+        required: false
+        description: >
+          An authentication token, like a personal access token (PAT), that provides 'Workflow' permission with write access
+          to the workflow files of the repository and can be used to modify GitHub actions and workflows. This is necessary 
+          because when a pull request is merged while being authenticated with the default GITHUB_TOKEN of a workflow run,
+          then the merge won't trigger other workflows (like a build workflow on the target branch). This is an intentional limitation, see:
+          https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow.
+          Thus, we need to use an alternative authentication token. See
+          https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+          for info on how to create PATs; you'll need one with the "work" scope. We recommend creating such a token from under a bot user
+          account only used for such operations, so it's not tied to a natural person.
+jobs:
+  run:
+    name: Set GitHub Action/Workflow to Version Tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.TAG_VERSION_TOKEN }}
+      - name: Determine Version Tag Name from Branch Name
+        id: determine-tag
+        shell: pwsh
+        run: |
+          $refname = "${{ github.ref_name }}"
+          $tagname = $refname -replace 'release/', ''
+          $output = "tagname=$tagname"
+          Write-Output "output=$output"
+          $output >> $env:GITHUB_OUTPUT
+      - name: Set Ref for GitHub Actions and Workflows
+        uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@issue/OSOE-735
+        with:
+          additional-pattern-include-list: '@("https://raw.githubusercontent.com/Lombiq/GitHub-Actions/(?<ref>[aA-zZ,0-9,-,\.,/,_]*)/.github")'
+          expected-ref: '${{ steps.determine-tag.outputs.tagname }}'
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Set GitHub Actions/Workflows to tag ${{ steps.determine-tag.outputs.tagname }}'
+          tagging_message: ${{ steps.determine-tag.outputs.tagname }}
+      - name: Force Push Tag
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          git push --tags --force

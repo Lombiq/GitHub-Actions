@@ -1,0 +1,13 @@
+name: Tag Version (this repo)
+on:
+  push:
+    branches:
+      - release/**
+
+jobs:
+  run:
+    name: Tag Version Automation
+    if: github.event.pusher.name != 'LombiqBot'
+    uses: Lombiq/GitHub-Actions/.github/workflows/tag-version.yml@issue/OSOE-735
+    secrets:
+      TAG_VERSION_TOKEN: ${{ secrets.LOMBIQBOT_GITHUB_PERSONAL_ACCESS_TOKEN }}
