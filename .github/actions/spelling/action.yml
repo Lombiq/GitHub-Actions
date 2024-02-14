@@ -1,6 +1,7 @@
 # This file needs to be present in this exact folder for the workflow using this action to be able to work with submodules.
 name: Spelling
 description: Checks for spelling errors in files.
+# Dummy change
 
 # When updating defaults here also update them in the `spelling` workflow.
 inputs:
