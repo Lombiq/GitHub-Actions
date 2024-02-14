@@ -8,7 +8,7 @@ on:
         required: false
         description: >
           An authentication token, like a personal access token (PAT), that provides 'Workflow' permission with write access
-          to the workflow files of the repository and can be used to modify GitHub actions and workflows. This is necessary 
+          to the workflow files of the repository and can be used to modify GitHub actions and workflows. This is necessary
           because when a pull request is merged while being authenticated with the default GITHUB_TOKEN of a workflow run,
           then the merge won't trigger other workflows (like a build workflow on the target branch). This is an intentional limitation, see:
           https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow.
