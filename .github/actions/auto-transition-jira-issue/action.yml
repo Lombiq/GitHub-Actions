@@ -38,7 +38,7 @@ runs:
             IsDone = '${{ steps.check-done.outputs.contains-label }}' -eq 'True'
             IsResolve = '${{ steps.check-resolve.outputs.contains-label }}' -eq 'True'
         }
-        Update-JiraIssue @parameters
+        Set-JiraIssueStatus @parameters
 
     - name: Remove Label
       # v2.0.0

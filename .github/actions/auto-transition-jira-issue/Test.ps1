@@ -1,4 +1,4 @@
-# You can use this script to test Update-JiraIssue locally, after filling out the credentials below. Be sure not to
+# You can use this script to test Set-JiraIssueStatus locally, after filling out the credentials below. Be sure not to
 # commmit those!
 $Env:JIRA_BASE_URL = 'https://lombiq.atlassian.net'
 $Env:JIRA_USER_EMAIL = 'your.name@lombiq.com'
@@ -18,4 +18,4 @@ $issueParams = @{
     IsResolve = $false
 }
 
-.\Update-JiraIssue.ps1 @issueParams
+.\Set-JiraIssueStatus.ps1 @issueParams
