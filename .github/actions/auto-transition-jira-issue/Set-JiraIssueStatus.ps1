@@ -18,7 +18,11 @@ $response = Invoke-JiraApiGet "issue/$issueKey/transitions"
 
 $availableTransition = $response | Select-Object -ExpandProperty transitions | Where-Object { $PSItem.name -eq $transition }
 
-if ($null -ne $availableTransition)
+if ($null -eq $availableTransition)
+{
+    Write-Warning "The ""$transition"" transition is not available for the issue."
+}
+else
 {
     Write-Output "Transition exists: $($availableTransition.id)."
 
@@ -29,8 +33,4 @@ if ($null -ne $availableTransition)
     } | ConvertTo-Json -Depth 3
 
     Invoke-JiraApiPost "issue/$issueKey/transitions" $bodyJson
-}
-else
-{
-    Write-Warning "The ""$transition"" transition is not available for the issue."
 }
