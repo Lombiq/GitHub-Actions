@@ -23,7 +23,7 @@ h1. Checklist
 * [Issue completion checklist|https://example.com/checklist]
 ```
 
-All three templates are optional and if not provided, defaults will be used.
+All three templates are optional and if not provided, defaults from [the `Initialize-IssueTemplates` script](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/create-jira-issues-for-community-activities/Initialize-IssueTemplates.ps1) will be used.
 
 ## Setup
 
