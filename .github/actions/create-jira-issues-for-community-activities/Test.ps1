@@ -1,4 +1,4 @@
-# You can use this script to test Add-JiraIssue locally, after filling out the credentials below. Be sure not to
+# You can use this script to test New-JiraIssue locally, after filling out the credentials below. Be sure not to
 # commmit those!
 $Env:JIRA_BASE_URL = 'https://lombiq.atlassian.net'
 $Env:JIRA_USER_EMAIL = 'your.name@lombiq.com'
@@ -20,4 +20,4 @@ $issueParams = @{
     LinkTitle = 'Lombiq'
 }
 
-.\Add-JiraIssue.ps1 @issueParams
+.\New-JiraIssue.ps1 @issueParams
