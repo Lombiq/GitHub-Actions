@@ -4,7 +4,7 @@ Creates Jira issues for community activities happening on GitHub, like issues, d
 
 ## Prerequisites
 
-1. Create up a separate user account in Jira for each such use case (unless you want to open up API access too much). We recommend creating at least one bot account dedicated to automation tasks. Ensure this account has the specific permissions required to create issues in the target Jira project(s).
+1. Create a separate user account in Jira for each such use case (unless you want to open up API access too much). We recommend creating at least one bot account dedicated to automation tasks. Ensure this account has the specific permissions required to create issues in the target Jira project(s).
 2. Create a [Jira API token](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/) under the user. Note that such tokens have the same access as the user account they were created for, and their scope can't be restricted ([nor can there be single-use Jira guest users](https://jira.atlassian.com/browse/JRACLOUD-74242)).
 3. Set up organization or repository secrets for the `JIRA_*` parameters. We recommend using the `DEFAULT_*` prefix for organization-level secrets to establish defaults that can be overridden on a per-repository basis. For repository-specific secrets, omit this prefix.
     - `DEFAULT_JIRA_BASE_URL`: The URL of your Jira (Atlassian) instance, following the `https://<yourdomain>.atlassian.net` pattern (e.g. `https://lombiq.atlassian.net`). It must NOT end with a slash.
