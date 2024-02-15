@@ -13,7 +13,7 @@ $secureApiKey = ConvertTo-SecureString -String $Env:JIRA_API_TOKEN -AsPlainText 
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $Env:JIRA_USER_EMAIL, $secureApiKey
 
 $parameters = @{
-    Uri = "$($Env:JIRA_BASE_URL)/rest/api/2/$ApiEndpoint"
+    Uri = "$($Env:JIRA_BASE_URL.TrimEnd('/'))/rest/api/2/$ApiEndpoint"
     Method = $Method
     ContentType = 'application/json'
     Headers = @{
