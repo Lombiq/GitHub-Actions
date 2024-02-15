@@ -53,9 +53,8 @@ function CreateIssue
     }
     catch
     {
-        $message = "Failed to create the Jira issue with the following error: $($PSItem.Exception.Message) " +
-            'If this seems like a temporary issue, try to rerun the workflow.'
-        Write-Error $message
+        Write-Error ("Failed to create the Jira issue with the following error: $($PSItem.Exception.Message) " +
+            'If this seems like a temporary issue, try to rerun the workflow.')
         exit 1
     }
 
@@ -79,9 +78,8 @@ function AddLink
     }
     catch
     {
-        $message = 'Failed to add the link of the GitHub resource to the newly created Jira issue with the following ' +
-            "error: $($PSItem.Exception.Message) The issue will need to be updated by hand."
-        Write-Error $message
+        Write-Error ('Failed to add the link of the GitHub resource to the newly created Jira issue with the ' +
+            "following error: $($PSItem.Exception.Message) The issue will need to be updated by hand.")
         exit 1
     }
 }
