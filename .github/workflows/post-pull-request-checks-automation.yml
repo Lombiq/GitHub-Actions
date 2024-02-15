@@ -82,7 +82,7 @@ jobs:
         with:
           merge-method: ${{ inputs.merge-method }}
 
-      - name: Automatically Resolve or Done Jira issue
+      - name: Automatically Transition Jira issue
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
         uses: Lombiq/GitHub-Actions/.github/actions/auto-transition-jira-issue@issue/OSOE-722
         env:
