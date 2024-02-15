@@ -4,9 +4,9 @@ Creates Jira issues for community activities happening on GitHub, like issues, d
 
 ## Prerequisites
 
-1. Create a separate user account in Jira for each such use case (unless you want to open up API access too much). We recommend creating at least one bot account dedicated to automation tasks. Ensure this account has the specific permissions required to create issues in the target Jira project(s).
+1. Create a separate user account in Jira for each such use case (unless you want to open up API access too much). We recommend creating at least one bot account dedicated to automation tasks. Ensure this account has the permissions required to create and edit issues in the target Jira project(s), which, if you're using the default Jira configuration, requires the Developers role.
 2. Create a [Jira API token](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/) under the user. Note that such tokens have the same access as the user account they were created for, and their scope can't be restricted ([nor can there be single-use Jira guest users](https://jira.atlassian.com/browse/JRACLOUD-74242)).
-3. Set up organization or repository secrets for the `JIRA_*` parameters. We recommend using the `DEFAULT_*` prefix for organization-level secrets to establish defaults that can be overridden on a per-repository basis. For repository-specific secrets, omit this prefix.
+3. Set up organization or repository secrets for the `JIRA_*` parameters ([see docs](https://docs.github.com/en/codespaces/managing-codespaces-for-your-organization/managing-development-environment-secrets-for-your-repository-or-organization)). We recommend using the `DEFAULT_*` prefix for organization-level secrets to establish defaults that can be overridden on a per-repository basis. For repository-specific secrets, omit this prefix.
     - `DEFAULT_JIRA_BASE_URL`: The URL of your Jira (Atlassian) instance, following the `https://<yourdomain>.atlassian.net` pattern (e.g. `https://lombiq.atlassian.net`), or your custom domain.
     - `DEFAULT_JIRA_USER_EMAIL`: The e-mail address of the user account.
     - `DEFAULT_JIRA_API_TOKEN`: The API token of the user account.
@@ -27,7 +27,7 @@ All three templates are optional and if not provided, defaults from [the `Initia
 
 ## Setup
 
-You can use the workflow as demonstrated below. It's crucial to use the `pull_request_target` trigger instead of `pull_request`. The `pull_request` trigger does not activate for pull requests from forks, which is essential for this workflow to function as intended.
+You can use the workflow as demonstrated below. It's crucial to use the `pull_request_target` trigger instead of `pull_request`. The `pull_request` trigger does not activate for pull requests from forks, which is necessary for this workflow to function as intended. Note that while it's safe to run our `create-jira-issues-for-community-activities` workflow started by `pull_request_target`, you should be careful what else such workflows do, see [the official docs](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target).
 
 ```yaml
 name: Create Jira issues for community activities
