@@ -46,9 +46,18 @@ function CreateIssue
 
     $bodyJson = $body | ConvertTo-Json -Depth 9
 
-    $response = Invoke-JiraApiPost 'issue' $bodyJson
-
-    Write-Information "Jira issue created with the key $($response.key)." -InformationAction Continue
+    try
+    {
+        $response = Invoke-JiraApiPost 'issue' $bodyJson
+        Write-Information "Jira issue created with the key $($response.key)." -InformationAction Continue
+    }
+    catch
+    {
+        $message = "Failed to create the Jira issue with the following error: $($PSItem.Exception.Message) " +
+            'If this seems like a temporary issue, try to rerun the workflow.'
+        Write-Error $message
+        exit 1
+    }
 
     $response.key
 }
@@ -64,7 +73,17 @@ function AddLink
         }
     } | ConvertTo-Json -Depth 3
 
-    Invoke-JiraApiPost "issue/$issueKey/remotelink" $bodyJson
+    try
+    {
+        Invoke-JiraApiPost "issue/$issueKey/remotelink" $bodyJson
+    }
+    catch
+    {
+        $message = 'Failed to add the link of the GitHub resource to the newly created Jira issue with the following ' +
+            "error: $($PSItem.Exception.Message) The issue will need to be updated by hand."
+        Write-Error $message
+        exit 1
+    }
 }
 
 $issueKey = CreateIssue
