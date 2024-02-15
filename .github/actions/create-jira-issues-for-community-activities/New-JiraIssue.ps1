@@ -70,4 +70,4 @@ function AddLink
 $issueKey = CreateIssue
 AddLink $issueKey
 Set-GitHubOutput 'issue-key' $issueKey
-Set-GitHubOutput 'issue-url' "$($Env:JIRA_BASE_URL )/browse/$issueKey"
+Set-GitHubOutput 'issue-url' "$($Env:JIRA_BASE_URL)/browse/$issueKey"
