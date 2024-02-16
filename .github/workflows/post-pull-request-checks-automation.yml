@@ -16,19 +16,22 @@ on:
           https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
           for info on how to create PATs; you'll need one with the "repo" scope. Check out
           https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
-          for instructions on what other tokens you can use. We recommend creating such a token from under a bot user
-          account only used for such operations, so it's not tied to a natural person.
+          for instructions on what other tokens you can use.
       JIRA_BASE_URL:
         required: true
         description: >
-          Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables. Note that
-          it must NOT end with a slash.
+          Configure as explained under
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md.
       JIRA_USER_EMAIL:
         required: true
-        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+        description: >
+          Configure as explained under
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md.
       JIRA_API_TOKEN:
         required: true
-        description: Configure as explained under https://github.com/marketplace/actions/jira-login#enviroment-variables.
+        description: >
+          Configure as explained under
+          https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md.
 
     inputs:
       merge-method:
@@ -79,9 +82,9 @@ jobs:
         with:
           merge-method: ${{ inputs.merge-method }}
 
-      - name: Automatically Resolve or Done Jira issue
+      - name: Automatically Transition Jira issue
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/auto-resolve-done-jira-issue@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/auto-transition-jira-issue@dev
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
