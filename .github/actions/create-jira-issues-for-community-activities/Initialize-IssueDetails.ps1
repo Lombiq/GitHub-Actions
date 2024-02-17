@@ -5,7 +5,7 @@ param
     $SuffixIssueTitles,
     $DiscussionJiraIssueDescription,
     $IssueJiraIssueDescription,
-    $PullReqestJiraIssueDescription
+    $PullRequestJiraIssueDescription
 )
 
 $context = [string]::IsNullOrEmpty($IssueComponent) ? $GitHub.repository : $IssueComponent
@@ -47,7 +47,7 @@ switch ($GitHub.event_name)
     'pull_request_target'
     {
         $summary = "Review `"$($GitHub.event.pull_request.title)`"$titleSuffix"
-        $description = $PullReqestJiraIssueDescription
+        $description = $PullRequestJiraIssueDescription
         $linkUrl = $GitHub.event.pull_request.html_url
         $linkTitle = 'GitHub pull request'
     }
@@ -67,8 +67,10 @@ if ($null -eq $type)
     $type = 'Task'
 }
 
-Set-GitHubOutput 'summary' $summary
-Set-GitHubOutput 'json-description' $($description | ConvertTo-Json)
-Set-GitHubOutput 'type' $type
-Set-GitHubOutput 'link-url' $linkUrl
-Set-GitHubOutput 'link-title' $linkTitle
+[PSCustomObject]@{
+    Summary = $summary
+    Description = $description
+    Type = $type
+    LinkUrl = $linkUrl
+    LinkTitle = $linkTitle
+}
