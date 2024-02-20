@@ -1,4 +1,4 @@
-name: Automatically Resolve or Done Jira issue
+name: Automatically Transition Jira issue
 description: >
   Resolves the Jira issue corresponding to the pull request if the "resolve-jira-issue-if-checks-succeed" or
   "merge-and-resolve-jira-issue-if-checks-succeed" label is present, or sets the issue to Done if the
@@ -28,8 +28,7 @@ runs:
         label1: "resolve-jira-issue-if-checks-succeed"
         label2: "merge-and-resolve-jira-issue-if-checks-succeed"
 
-    - name: Initialize Jira Issue Parameters
-      id: initialize-jira-issue-parameters
+    - name: Transition Jira Issue
       if: steps.check-done.outputs.contains-label == 'true' || steps.check-resolve.outputs.contains-label == 'true'
       shell: pwsh
       run: |
@@ -39,30 +38,12 @@ runs:
             IsDone = '${{ steps.check-done.outputs.contains-label }}' -eq 'True'
             IsResolve = '${{ steps.check-resolve.outputs.contains-label }}' -eq 'True'
         }
-        Initialize-IssueParameters @parameters
-
-    - name: Login to Jira
-      if: steps.initialize-jira-issue-parameters.outputs.can-transition == 'true'
-      # v3
-      uses: atlassian/gajira-login@ca13f8850ea309cf44a6e4e0c49d9aa48ac3ca4c
-      env:
-        JIRA_BASE_URL: ${{ env.JIRA_BASE_URL }}
-        JIRA_USER_EMAIL: ${{ env.JIRA_USER_EMAIL }}
-        JIRA_API_TOKEN: ${{ env.JIRA_API_TOKEN }}
-
-    - name: Transition Jira Issue
-      if: steps.initialize-jira-issue-parameters.outputs.can-transition == 'true'
-      # v3
-      uses: atlassian/gajira-transition@4749176faf14633954d72af7a44d7f2af01cc92b
-      with:
-        issue: ${{ steps.initialize-jira-issue-parameters.outputs.key }}
-        transition: ${{ steps.initialize-jira-issue-parameters.outputs.transition }}
+        Set-JiraIssueStatus @parameters
 
     - name: Remove Label
-      if: steps.initialize-jira-issue-parameters.outputs.can-transition == 'true'
       # v2.0.0
       uses: buildsville/add-remove-label@eeae411a9be2e173f2420e1644514edbecc4e835
       with:
         token: ${{ env.GITHUB_TOKEN }}
-        labels: resolve-jira-issue-if-checks-succeed, done-jira-issue-if-checks-succeed
+        labels: merge-and-resolve-jira-issue-if-checks-succeed, resolve-jira-issue-if-checks-succeed, done-jira-issue-if-checks-succeed
         type: remove

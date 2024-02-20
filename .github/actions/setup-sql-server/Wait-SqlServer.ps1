@@ -6,7 +6,7 @@ for ($i = 1; $i -le $maxTryCount; $i++)
 
     if ($Env:RUNNER_OS -eq 'Windows')
     {
-        sqlcmd -b -Q 'SELECT @@SERVERNAME as ServerName' 2>&1>$null
+        sqlcmd -b -S .\SQLEXPRESS -Q 'SELECT @@SERVERNAME as ServerName' 2>&1>$null
     }
     else
     {
