@@ -38,7 +38,7 @@ on:
           "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
       dotnet-version:
         type: string
-        default: 7.0.x
+        default: 8.0.x
         description: Version of the .NET SDK to set up.
       blame-hang-timeout:
         type: string
@@ -205,7 +205,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-751
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
@@ -250,7 +250,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-751
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}

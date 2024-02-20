@@ -27,7 +27,7 @@ on:
         description: The logging verbosity type used by the `dotnet` command.
       dotnet-version:
         type: string
-        default: 7.0.x
+        default: 8.0.x
         description: Version of the .NET SDK to set up.
       timeout-minutes:
         type: number
@@ -70,7 +70,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-751
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
