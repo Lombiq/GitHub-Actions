@@ -83,7 +83,7 @@ jobs:
           additional-pattern-include-list: ${{ inputs.additional-pattern-include-list }}
           expected-ref: '${{ steps.determine-tag.outputs.tagname }}'
       - name: Commit and Push Changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5
         with:
           commit_message: 'Set GitHub Actions/Workflows to tag ${{ steps.determine-tag.outputs.tagname }}'
           tagging_message: ${{ steps.determine-tag.outputs.tagname }}
