@@ -7,27 +7,29 @@ inputs:
     required: false
     default: '@(".github")'
     description: >
-      PowerShell string array of paths, relative to the repository root, to search for GHA files, e.g. '@(".github")' or '@(".github/actions", ".github/workflows")'. The
-      parameter must be a PowerShell string array.
+      PowerShell string array of paths, relative to the repository root, to search for GHA files, e.g. '@(".github")' or
+      '@(".github/actions", ".github/workflows")'. The parameter must be a PowerShell string array.
   file-include-list:
     required: false
     default: '@("*.yml","*.yaml")'
     description: >
-      PowerShell string array of file name patterns to include when evaluating GHA files, e.g. '@("*.yml")' or '@("*.yml", "*.yaml")'. The
-      parameter must be a PowerShell string array.
+      PowerShell string array of file name patterns to include when evaluating GHA files, e.g. '@("*.yml")' or
+      '@("*.yml", "*.yaml")'. The parameter must be a PowerShell string array.
   called-repo-base-include-list:
     required: false
     default: '@("${{ github.repository }}")'
     description: >
-      PowerShell string array of repository base URLs to include when evaluating called GHA Workflows and Actions, e.g '@("Lombiq/GitHub-Actions")' or
-      '@("Lombiq/GitHub-Actions", "Lombiq/Open-Source-Orchard-Core-Extensions")'. The parameter must be a PowerShell string array.
+      PowerShell string array of repository base URLs to include when evaluating called GHA Workflows and Actions, e.g
+      '@("Lombiq/GitHub-Actions")' or '@("Lombiq/GitHub-Actions", "Lombiq/Open-Source-Orchard-Core-Extensions")'. The
+      parameter must be a PowerShell string array.
   additional-pattern-include-list:
     required: false
     default: '@()'
     description: >
-      PowerShell string array of additional RegEx patterns to include when searching for branch references that need to be
-      updated, e.g. 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/(?<ref>[aA-zZ,0-9,-,\.,/,_]*)/.github/'. The pattern MUST include a regex named capture group (?<ref>[aA-zZ,0-9,-,\.,/,_]*) so the captured ref
-      can be updated correctly. The parameter must be a PowerShell string array.
+      PowerShell string array of additional RegEx patterns to include when searching for branch references that need to
+      be updated, e.g. 'https://raw.githubusercontent.com/Lombiq/GitHub-Actions/(?<ref>[aA-zZ,0-9,-,\.,/,_]*)/.github/'.
+      The pattern MUST include a regex named capture group (?<ref>[aA-zZ,0-9,-,\.,/,_]*) so the captured ref can be
+      updated correctly. The parameter must be a PowerShell string array.
   expected-ref:
     required: true
     description: The expected reference value to set for all called GHA Workflows and Actions.
