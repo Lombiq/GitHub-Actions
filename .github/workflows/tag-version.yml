@@ -61,6 +61,12 @@ jobs:
     name: Set GitHub Action/Workflow to Version Tag
     runs-on: ubuntu-latest
     steps:
+      - name: Setup Scripts
+        shell: pwsh
+        run: |
+          "${{ github.action_path }}" >> $Env:GITHUB_PATH
+          (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
       - name: Checkout Repository
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
@@ -72,9 +78,7 @@ jobs:
         run: |
           $refname = "${{ inputs.expected-ref }}"
           $tagname = $refname -replace 'release/', ''
-          $output = "tagname=$tagname"
-          Write-Output "output=$output"
-          $output >> $env:GITHUB_OUTPUT
+          Set-GitHubOutput -Key 'output' -Value $tagname
 
       - name: Set Ref for GitHub Actions and Workflows
         uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@issue/OSOE-735
