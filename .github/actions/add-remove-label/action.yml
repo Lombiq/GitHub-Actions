@@ -1,0 +1,35 @@
+name: Add/Remove Label
+description: >
+  Runs buildsville/add-remove-label. Exists only to centralize which version of the action we use. Intentionally not
+  documented in Actions.md since it's only meant for internal use.
+
+# Copied from https://github.com/buildsville/add-remove-label/blob/master/action.yml.
+inputs:
+  token:
+    description: 'github token'
+    required: true
+    default: ''
+  labels:
+    description: 'labels to edit'
+    required: false
+    default: ''
+  label:
+    description: 'label to edit'
+    required: false
+    default: ''
+  type:
+    description: 'add or remove'
+    required: true
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: Add/Remove Label
+      # v2.0.1
+      uses: buildsville/add-remove-label@ac59c9f0aeb66eb12d6366eb1d69ec1906e9ef9a
+      with:
+        token: ${{ inputs.token }}
+        labels: ${{ inputs.token }}
+        label: ${{ inputs.label }}
+        type: ${{ inputs.type }}
