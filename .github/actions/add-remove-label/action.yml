@@ -30,6 +30,6 @@ runs:
       uses: buildsville/add-remove-label@ac59c9f0aeb66eb12d6366eb1d69ec1906e9ef9a
       with:
         token: ${{ inputs.token }}
-        labels: ${{ inputs.token }}
+        labels: ${{ inputs.labels }}
         label: ${{ inputs.label }}
         type: ${{ inputs.type }}
