@@ -37,7 +37,7 @@ runs:
 
     - name: Remove Label
       if: steps.check-mergeability.outputs.contains-label == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@issue/OSOE-188
+      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@issue/LMBQ-267
       with:
         token: ${{ env.GITHUB_TOKEN }}
         labels: merge-if-checks-succeed
