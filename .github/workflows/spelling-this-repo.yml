@@ -11,7 +11,7 @@ on:
 jobs:
   spelling:
     name: Spelling
-    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@issue/LMBQ-267
     with:
       additional-dictionaries: |
         cspell:companies/src/companies.txt

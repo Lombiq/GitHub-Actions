@@ -3,3 +3,4 @@ clickjacking
 nosniff
 softwaresecurityproject
 PII
+XSS
