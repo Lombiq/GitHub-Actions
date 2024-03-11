@@ -56,13 +56,16 @@ on:
         default: '${{ github.ref_name }}'
         description: The expected reference value to set for all called GHA Workflows and Actions.
         type: string
+
 jobs:
   run:
     name: Set GitHub Action/Workflow to Version Tag
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
     steps:
       - name: Setup Scripts
-        shell: pwsh
         run: |
           "${{ github.action_path }}" >> $Env:GITHUB_PATH
           (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
@@ -74,7 +77,6 @@ jobs:
 
       - name: Determine Version Tag Name from Branch Name
         id: determine-tag
-        shell: pwsh
         run: |
           $refname = "${{ inputs.expected-ref }}"
           $tagname = $refname -replace 'release/', ''
@@ -97,6 +99,4 @@ jobs:
 
       - name: Force Push Tag
         continue-on-error: true
-        shell: pwsh
-        run: |
-          git push --tags --force
+        run: git push --tags --force

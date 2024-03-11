@@ -33,8 +33,9 @@ inputs:
   expected-ref:
     required: true
     description: The expected reference value to set for all called GHA Workflows and Actions.
+
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Setup
       shell: pwsh
