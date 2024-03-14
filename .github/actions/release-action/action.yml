@@ -42,7 +42,7 @@ inputs:
     required: false
     default: ''
   commit:
-    description: "An optional commit reference. This will be used to create the tag if it does not exist."
+    description: 'An optional commit reference. This will be used to create the tag if it does not exist.'
     required: false
     default: ''
   discussionCategory:
@@ -52,7 +52,7 @@ inputs:
     required: false
     default: ''
   draft:
-    description: "Optionally marks this release as a draft release. Set to true to enable."
+    description: 'Optionally marks this release as a draft release. Set to true to enable.'
     required: false
     default: ''
   generateReleaseNotes:
@@ -101,7 +101,7 @@ inputs:
     required: false
     default: ''
   prerelease:
-    description: "Optionally marks this release as prerelease. Set to true to enable."
+    description: 'Optionally marks this release as prerelease. Set to true to enable.'
     required: false
     default: ''
   removeArtifacts:
@@ -109,11 +109,11 @@ inputs:
     required: false
     default: 'false'
   replacesArtifacts:
-    description: "Indicates if existing release artifacts should be replaced. Defaults to true."
+    description: 'Indicates if existing release artifacts should be replaced. Defaults to true.'
     required: false
     default: 'true'
   repo:
-    description: "Optionally specify the repo where the release should be generated. Defaults to current repo"
+    description: 'Optionally specify the repo where the release should be generated. Defaults to current repo'
     required: false
     default: ''
   skipIfReleaseExists:
@@ -136,6 +136,7 @@ inputs:
       prerelease.
     required: false
     default: 'false'
+
 outputs:
   id:
     description: 'The identifier of the created release.'
