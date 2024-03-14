@@ -44,7 +44,7 @@ inputs:
   commit:
     description: "An optional commit reference. This will be used to create the tag if it does not exist."
     required: false
-    default: ''  
+    default: ''
   discussionCategory:
     description: >
       When provided this will generate a discussion of the specified category. The category must exist otherwise this
