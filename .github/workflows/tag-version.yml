@@ -65,15 +65,15 @@ jobs:
       run:
         shell: pwsh
     steps:
-      - name: Setup Scripts
-        run: |
-          "${{ github.action_path }}" >> $Env:GITHUB_PATH
-          (Resolve-Path "${{ github.action_path }}/../../Scripts").Path >> $Env:GITHUB_PATH
 
       - name: Checkout Repository
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.TAG_VERSION_TOKEN }}
+
+      - name: Setup Scripts
+        run: |
+          (Resolve-Path "Scripts").Path >> $Env:GITHUB_PATH
 
       - name: Determine Version Tag Name from Branch Name
         id: determine-tag
