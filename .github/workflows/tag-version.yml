@@ -68,7 +68,7 @@ jobs:
       - name: Setup Scripts
         run: |
           "${{ github.action_path }}" >> $Env:GITHUB_PATH
-          (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+          (Resolve-Path "${{ github.action_path }}/../../Scripts").Path >> $Env:GITHUB_PATH
 
       - name: Checkout Repository
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
