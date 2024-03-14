@@ -212,10 +212,8 @@ runs:
         path: artifacts
         retention-days: ${{ inputs.nuget-artifact-retention-days }}
 
-    # This is not in its own action because it's all very specific to this NuGet publishing.
     - name: Create Release
-      # v1.11.2
-      uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169
+      uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-735
       # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
       # v4.3.1-alpha.osoe-86.
       if: "!contains(steps.setup.outputs.publish-version, '-')"
