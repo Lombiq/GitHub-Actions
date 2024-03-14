@@ -38,7 +38,9 @@ To ensure that when changing actions or workflows their references to other acti
 
 ## Versioning, Tags and Releases
 
-To release versions of Lombiq GitHub Actions, and allow consumers to reference resusable and composite actions in a versioned way (e.g. `@v1.0`), we employ some automation to do this  in a consitent and predictable way. See [issue #284 "Introduce versioning and releases (OSOE-735)"](https://github.com/Lombiq/GitHub-Actions/issues/284) for additional details on why we do this.
+To release versions of Lombiq GitHub Actions, and allow consumers to reference a specific version of a reusable workflow or composite action (e.g. `@v1.0`), we employ some automation to do this in a consistent and predictable way.
+See [issue #284 "Introduce versioning and releases (OSOE-735)"](https://github.com/Lombiq/GitHub-Actions/issues/284) <!-- #spell-check-ignore-line -->
+for additional details on why we do this.
 
 New versions of Lombiq GitHub Actions are automatically tagged using the [Tag Version (this repo)](https://github.com/Lombiq/GitHub-Actions/blob/issue/OSOE-735/.github/workflows/tag-version-this-repo.yml) workflow. This workflow is triggered for release branches with a name that matches the `release/**` pattern (e.g. `release/v1.0`, `release/v2.0-alpha`, etc.).
 
