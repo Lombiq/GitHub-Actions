@@ -78,9 +78,8 @@ jobs:
       - name: Determine Version Tag Name from Branch Name
         id: determine-tag
         run: |
-          $refname = "${{ inputs.expected-ref }}"
-          $tagname = $refname -replace 'release/', ''
-          Set-GitHubOutput -Key 'output' -Value $tagname
+          $tagname = "${{ inputs.expected-ref }}" -replace 'release/', ''
+          Set-GitHubOutput -Key 'tagname' -Value $tagname
 
       - name: Set Ref for GitHub Actions and Workflows
         uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@issue/OSOE-735
