@@ -11,6 +11,6 @@ jobs:
     if: github.event.pusher.name != 'LombiqBot'
     uses: Lombiq/GitHub-Actions/.github/workflows/tag-version.yml@issue/OSOE-735
     with:
-      additional-pattern-include-list: '@("https://raw.githubusercontent.com/Lombiq/GitHub-Actions/(?<ref>[aA-zZ,0-9,-,\.,/,_]*)/.github")'
+      additional-pattern-include-list: '@("https://raw.githubusercontent.com/Lombiq/GitHub-Actions/(?<ref>[\w\./-]*)/.github")'
     secrets:
       TAG_VERSION_TOKEN: ${{ secrets.LOMBIQBOT_GITHUB_PERSONAL_ACCESS_TOKEN }}
