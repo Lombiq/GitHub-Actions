@@ -34,7 +34,7 @@ else
                 Write-Output "$oldline => $newline"
 
                 $filename = $matched.RelativePath($pwd)
-                $linenumber = $mismatch.LineNumber
+                $linenumber = $matched.LineNumber
                 $title = "GHA Ref pinned to '$ExpectedRef'"
 
                 (Get-Content $filename).Replace($oldline, $newline) | Set-Content $filename
