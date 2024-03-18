@@ -163,7 +163,8 @@ on:
         required: false
         default: '\-alpha'
         description: >
-          A regular expression to match package versions that will be skipped during NuGet package consolidation.
+          A regular expression to match package versions that will be skipped during NuGet package consolidation. See
+          the dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
       warnings-as-errors:
         type: string
         default: 'true'
