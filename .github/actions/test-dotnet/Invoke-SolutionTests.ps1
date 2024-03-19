@@ -125,18 +125,18 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
         }
     }
 
-    $output = New-Object System.Text.StringBuilder
     $eventHandlerArgs = @{
-        Output = $output
         Process = $process
+        HasTestRunSuccessful = $false
     }
 
     $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
-        $Event.MessageData.Output.AppendLine($Event.SourceEventArgs.Data)
+        Write-Host $Event.SourceEventArgs.Data
+        $Event.MessageData.HasTestRunSuccessful = $Event.MessageData.HasTestRunSuccessful -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
     }
 
     $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {
-        $Event.MessageData.Output.AppendLine($Event.SourceEventArgs.Data)
+        Write-Host $Event.SourceEventArgs.Data
     }
 
     $process.Start() | Out-Null
@@ -151,6 +151,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     }
     else
     {
+        $output = New-Object System.Text.StringBuilder
         $output.AppendLine("::warning::The process $($process.Id) didn't exit in $Timeout seconds.")
 
         $output.AppendLine("::warning::Collecting a dump of the process $($process.Id) tree.")
@@ -163,15 +164,17 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
         Set-GitHubOutput 'dotnet-test-hang-dump' 1
 
         KillProcessTree -Output $output -Process $rootProcess
+
+        Write-Output $output.ToString()
     }
 
     Unregister-Event $stdoutEvent.Id
     Unregister-Event $stderrEvent.Id
 
     return @{
-        Output = $output.ToString()
         ExitCode = $exitCode
         HasExited = $hasExited
+        HasTestRunSuccessful = $eventHandlerArgs.HasTestRunSuccessful
     }
 }
 
@@ -200,9 +203,7 @@ foreach ($test in $tests)
 
     $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
 
-    Write-Output $processResult.Output
-
-    if ($processResult.ExitCode -eq 0 || (!$processResult.HasExited && $processResult.Output -Like '*Test Run Successful.*'))
+    if ($processResult.ExitCode -eq 0 || (!$processResult.HasExited && $processResult.HasTestRunSuccessful))
     {
         if (!$processResult.HasExited)
         {
