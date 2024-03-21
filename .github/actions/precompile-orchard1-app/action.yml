@@ -64,7 +64,7 @@ runs:
         path: ${{ inputs.checkout-path }}
 
     - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@v1.0
 
     # Calling nuget restore separately on the actual solution, because we're passing Orchard.proj to the msbuild action
     # instead to be able to call the Precompiled target on it.
@@ -73,7 +73,7 @@ runs:
       run: nuget restore ${{ inputs.checkout-path }}/${{ inputs.solution-path }}
 
     - name: Publish Precompiled app
-      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@v1.0
       with:
         directory: ${{ inputs.checkout-path }}
         verbosity: ${{ inputs.verbosity }}

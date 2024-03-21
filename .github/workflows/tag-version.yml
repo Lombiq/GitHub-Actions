@@ -67,7 +67,7 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@v1.0
         with:
           token: ${{ secrets.TAG_VERSION_TOKEN }}
 
@@ -82,7 +82,7 @@ jobs:
           Set-GitHubOutput -Key 'tagname' -Value $tagname
 
       - name: Set Ref for GitHub Actions and Workflows
-        uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@v1.0
         with:
           path-include-list: ${{ inputs.path-include-list }}
           file-include-list: ${{ inputs.file-include-list }}
@@ -101,7 +101,7 @@ jobs:
         run: git push --tags --force
 
       - name: Create Release
-        uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/release-action@v1.0
         # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
         # v4.3.1-alpha.osoe-86.
         if: "!contains(steps.determine-tag.outputs.tagname, '-')"
