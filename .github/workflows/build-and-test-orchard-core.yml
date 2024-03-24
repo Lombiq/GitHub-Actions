@@ -163,7 +163,8 @@ on:
         required: false
         default: '\-alpha'
         description: >
-          A regular expression to match package versions that will be skipped during NuGet package consolidation.
+          A regular expression to match package versions that will be skipped during NuGet package consolidation. See
+          the dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
       warnings-as-errors:
         type: string
         default: 'true'
@@ -211,7 +212,7 @@ jobs:
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/LMBQ-267
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
