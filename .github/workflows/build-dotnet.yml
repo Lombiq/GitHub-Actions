@@ -25,7 +25,7 @@ on:
           "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
       dotnet-version:
         type: string
-        default: 7.0.x
+        default: 8.0.x
         description: Version of the .NET SDK to set up.
       build-directory:
         type: string

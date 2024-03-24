@@ -50,7 +50,7 @@ on:
         description: The name of the type of machine to run the workflow under.
       dotnet-version:
         type: string
-        default: 7.0.x
+        default: 8.0.x
         description: Version of the .NET SDK to set up.
       build-directory:
         type: string

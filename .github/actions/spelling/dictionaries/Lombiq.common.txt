@@ -48,6 +48,7 @@ hotfixes
 idx
 iis
 img
+importmap
 Inbox
 inheritdoc
 Intelli
@@ -57,6 +58,7 @@ jira
 JObject
 JProperty
 JToken
+jsnext
 JValue
 langword
 lgha
@@ -134,6 +136,7 @@ versioning
 viewmodel
 vuedraggable
 vuejs
+vuetify
 walkthrough
 warnaserror
 wcag

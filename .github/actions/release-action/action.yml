@@ -1,0 +1,51 @@
+name: Create Release
+description: >
+  Runs ncipollo/release-action. Exists only to centralize which version of the action we use. Intentionally not
+  documented in Actions.md since it's only meant for internal use.
+
+# Copied from https://github.com/ncipollo/release-action/blob/v1.11.2/action.yml. Formatted to wrap long
+# descriptions. Removed inputs not used by Lombiq GitHub-Actions.
+inputs:
+  allowUpdates:
+    description: >
+      An optional flag which indicates if we should update a release if it already exists. Defaults to false.
+    required: false
+    default: ''
+  artifacts:
+    description: >
+      An optional set of paths representing artifacts to upload to the release. This may be a single path or a comma
+      delimited list of paths (or globs).
+    required: false
+    default: ''
+  generateReleaseNotes:
+    description: 'Indicates if release notes should be automatically generated.'
+    required: false
+    default: 'false'
+  tag:
+    description: 'An optional tag for the release. If this is omitted the git ref will be used (if it is a tag).'
+    required: false
+    default: ''
+
+outputs:
+  id:
+    description: 'The identifier of the created release.'
+    value: ${{ steps.create-release.outputs.id }}
+  html_url:
+    description: 'The HTML URL of the release.'
+    value: ${{ steps.create-release.outputs.html_url }}
+  upload_url:
+    description: 'The URL for uploading assets to the release.'
+    value: ${{ steps.create-release.outputs.upload_url }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Create Release
+      id: create-release
+      # v1.11.2
+      uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169
+      with:
+        allowUpdates: ${{ inputs.allowUpdates }}
+        artifacts: ${{ inputs.artifacts }}
+        generateReleaseNotes: ${{ inputs.generateReleaseNotes }}
+        tag: ${{ inputs.tag }}
