@@ -1,13 +1,13 @@
 # Register NuGet.org as a package source since GitHub runners don't necessarily have it by default.
 $existingSource = Get-PackageSource -Name NuGet.org -ErrorAction SilentlyContinue
 
-if (-not $existingSource)
+if ($existingSource)
 {
-    Register-PackageSource -Name NuGet.org -Location https://api.nuget.org/v3/index.json -ProviderName NuGet
+    Write-Output 'Package source for NuGet.org is already registered.'
 }
 else
 {
-    Write-Output 'Package source for NuGet.org is already registered.'
+    Register-PackageSource -Name NuGet.org -Location https://api.nuget.org/v3/index.json -ProviderName NuGet
 }
 
 # Get the latest version of the package.
