@@ -9,6 +9,14 @@ on:
         description: >
           The URL of your Jira (Atlassian) instance, following the https://<yourdomain>.atlassian.net pattern (e.g.
           "https://lombiq.atlassian.net").
+      PARENT_TOKEN:
+        required: false
+        description: >
+          An authentication token, like a personal access token (PAT), that provides read access to the parent
+          repository. This is needed for private repositories to check if the parent pull request exists. See
+          https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+          for info on how to create PATs; you'll need one with the "repo" scope. Not needed if
+          the parent repository is public.
     inputs:
       repository:
         type: string
@@ -35,7 +43,7 @@ jobs:
         if: github.event.pull_request != ''
         uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PARENT_TOKEN != '' && secrets.PARENT_TOKEN || secrets.GITHUB_TOKEN }}
         with:
           title: ${{ github.event.pull_request.title }}
           repository: ${{ inputs.repository }}
