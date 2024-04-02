@@ -37,8 +37,7 @@ runs:
 
     - name: Remove Label
       if: steps.check-mergeability.outputs.contains-label == 'true'
-      # v2.0.0
-      uses: buildsville/add-remove-label@eeae411a9be2e173f2420e1644514edbecc4e835
+      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
       with:
         token: ${{ env.GITHUB_TOKEN }}
         labels: merge-if-checks-succeed
