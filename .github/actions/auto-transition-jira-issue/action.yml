@@ -41,7 +41,7 @@ runs:
         Set-JiraIssueStatus @parameters
 
     - name: Remove Label
-      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@issue/LMBQ-267
+      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
       with:
         token: ${{ env.GITHUB_TOKEN }}
         labels: merge-and-resolve-jira-issue-if-checks-succeed, resolve-jira-issue-if-checks-succeed, done-jira-issue-if-checks-succeed
