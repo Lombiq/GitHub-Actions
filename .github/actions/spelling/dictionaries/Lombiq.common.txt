@@ -55,6 +55,7 @@ Intelli
 IXL
 JArray
 jira
+JNode
 JObject
 JOptions
 JProperty
