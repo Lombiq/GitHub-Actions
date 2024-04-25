@@ -141,14 +141,14 @@ runs:
         # solution, or fail if there are multiple projects".
         solution-or-project-path: ""
         dotnet-build-switches: |
-          -p:NuGetBuild=true
-          -p:LangVersion=Latest
-          -p:GenerateDocumentationFile=True
-          -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200
-          -p:EnableNETAnalyzers=false
-          -p:ContinuousIntegrationBuild=true
-          -p:DebugSymbols=true
-          -p:DebugType=portable
+          /p:NuGetBuild=true
+          /p:LangVersion=Latest
+          /p:GenerateDocumentationFile=True
+          /p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200
+          /p:EnableNETAnalyzers=false
+          /p:ContinuousIntegrationBuild=true
+          /p:DebugSymbols=true
+          /p:DebugType=portable
 
     - name: Actions prior to dotnet pack
       if: hashFiles('Invoke-BeforePack.ps1')
