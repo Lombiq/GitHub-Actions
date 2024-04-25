@@ -140,11 +140,11 @@ foreach ($project in $projects)
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
-        dotnet pack $project -p:NuspecFile="$nuspecFile" @PackParameters @PackageValidationParameters
+        dotnet pack $project -p:NuspecFile="$nuspecFile" -p:NuGetBuild=true @PackParameters @PackageValidationParameters
     }
     else
     {
-        dotnet pack $project @PackParameters @PackageValidationParameters
+        dotnet pack $project -p:NuGetBuild=true @PackParameters @PackageValidationParameters
     }
 
     if ($LASTEXITCODE -ne 0)
