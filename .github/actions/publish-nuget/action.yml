@@ -166,19 +166,7 @@ runs:
       #   https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg.
       # * p:EnablePackageValidation=true is for package validation, see:
       #   https://docs.microsoft.com/en-us/dotnet/fundamentals/package-validation/overview.
-      run: |
-        if ([string]::IsNullOrWhiteSpace($Env:API_KEY)) {
-          Write-Output "::error::API_KEY is missing or empty."
-          exit 1
-        }
-
-        $noWarn = @('NU5104%3BCS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200') + @'
-        ${{ inputs.dotnet-pack-ignore-warning }}
-        '@.Split() | ? { $_ }
-
-        $parameters = @{
-          EnablePackageValidation=$true
-          PackageValidationBaselineVersion='${{ steps.setup.outputs.baseline-version }}'
+  sVersion='${{ steps.setup.outputs.baseline-version }}'
           Version='${{ steps.setup.outputs.publish-version }}'
           PackParameters = @(
             "--configuration:Release",
@@ -199,7 +187,7 @@ runs:
             "-p:NoDefaultExcludes=true"
           )}
 
-        New-NuGetPackage @parameters
+        AsdNew-NuGetPackage @parameters
 
     - name: Push with dotnet
       shell: pwsh
