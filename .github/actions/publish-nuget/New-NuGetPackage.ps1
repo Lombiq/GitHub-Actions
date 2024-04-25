@@ -136,15 +136,18 @@ foreach ($project in $projects)
     }
 
     Push-Location $project.Directory
-
+	$paramss = @PackParameters
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
+		
         dotnet pack $project -p:NuspecFile="$nuspecFile" @PackParameters @PackageValidationParameters
+		Write-Output "::error file=$($project.FullName)::dotnet pack failed for the project $($paramss)."
     }
     else
     {
         dotnet pack $project @PackParameters @PackageValidationParameters
+		Write-Output "::error file=$($project.FullName)::dotnet pack failed for the project $($paramss)."
     }
 
     if ($LASTEXITCODE -ne 0)
