@@ -186,17 +186,17 @@ runs:
             "--no-restore",
             "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
-            "-p:NuGetBuild=true",
-            "-p:LangVersion=Latest",
-            "-p:Version=${{ steps.setup.outputs.publish-version }}",
-            "-p:NuspecProperties=version=${{ steps.setup.outputs.publish-version }}",
-            "-p:GenerateDocumentationFile=True",
-            "-p:NoWarn=$($noWarn -join '%3B')",
-            "-p:TreatWarningsAsErrors=true",
-            "-p:WarnOnPackingNonPackableProject=True",
-            "-p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
-            "-p:SymbolPackageFormat=snupkg",
-            "-p:NoDefaultExcludes=true"
+            "/p:NuGetBuild=true",
+            "/p:LangVersion=Latest",
+            "/p:Version=${{ steps.setup.outputs.publish-version }}",
+            "/p:NuspecProperties=version=${{ steps.setup.outputs.publish-version }}",
+            "/p:GenerateDocumentationFile=True",
+            "/p:NoWarn=$($noWarn -join '%3B')",
+            "/p:TreatWarningsAsErrors=true",
+            "/p:WarnOnPackingNonPackableProject=True",
+            "/p:IncludeSymbols=${{ inputs.dotnet-pack-include-symbols }}",
+            "/p:SymbolPackageFormat=snupkg",
+            "/p:NoDefaultExcludes=true"
           )}
 
         New-NuGetPackage @parameters
