@@ -234,15 +234,6 @@ jobs:
           create-binary-log: ${{ inputs.build-create-binary-log }}
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
-          dotnet-build-switches: |
-            -p:NuGetBuild=true
-            -p:LangVersion=Latest
-            -p:GenerateDocumentationFile=True
-            -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200
-            -p:EnableNETAnalyzers=false
-            -p:ContinuousIntegrationBuild=true
-            -p:DebugSymbols=true
-            -p:DebugType=portable
 
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
