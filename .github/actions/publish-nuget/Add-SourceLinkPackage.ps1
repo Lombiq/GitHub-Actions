@@ -17,6 +17,9 @@ else
 
 foreach ($projectFile in $projectFiles)
 {
+    # Below we first prepare the project file by adding the NuGetBuild=true property to the top of it. This is needed
+    # for dotnet add package which could otherwise fail due to conditions in the project file.
+
     # Load the project file as XML.
     $projectXml = [xml](Get-Content $projectFile)
 
@@ -36,7 +39,8 @@ foreach ($projectFile in $projectFiles)
     # Save the changes back to the .csproj file.
     $projectXml.Save($projectFile)
 
-    # --no-restore because we run it in a separate step.
+    # --no-restore because we run it in a separate step with a configured output verbosity, what's not possible with
+    # the package command.
     dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json' --no-restore
 }
 
