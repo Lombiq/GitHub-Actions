@@ -40,7 +40,8 @@ foreach ($projectFile in $projectFiles)
     $projectXml.Save($projectFile)
 
     # --no-restore because we run it in a separate step with a configured output verbosity, what's not possible with
-    # the package command.
+    # the package command (and letting it implicitly restore here also makes NuGet publishing take 2-3 times as much).
+    # Unfortunately, this also makes it skip compatibility checks.
     dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json' --no-restore
 }
 
