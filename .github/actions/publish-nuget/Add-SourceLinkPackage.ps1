@@ -17,5 +17,5 @@ else
 
 foreach ($projectFile in $projectFiles)
 {
-    dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json'
+    dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json' -p:NuGetBuild=true
 }
