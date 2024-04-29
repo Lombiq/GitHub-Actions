@@ -101,7 +101,6 @@ runs:
         Set-GitHubOutput "baseline-version" $baselineVersion
         Set-GitHubOutput "publish-version" $version
 
-    # Also implicitly restores NuGet depdenencies.
     - name: Add Source Link package and set NuGetBuild=true
       shell: pwsh
       run: Add-SourceLinkPackage
@@ -112,6 +111,10 @@ runs:
 
     - name: Enable Node corepack
       uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
+    - name: Install dependencies
+      shell: pwsh
+      run: dotnet restore --verbosity ${{ inputs.verbosity }}
 
     - name: Generate nuspec file if needed
       if: hashFiles('ConvertTo-Nuspec.ps1')

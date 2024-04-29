@@ -39,9 +39,9 @@ foreach ($projectFile in $projectFiles)
     # Save the changes back to the .csproj file.
     $projectXml.Save($projectFile)
 
-    # --no-restore would also skip compatibility checks. So, we don't use it, even though running restore in a separate
-    # step with a configured output verbosity, what's only possible with the dotnet restore command, would be better.
-    dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json'
+    # --no-restore because we run it in a separate step with a configured output verbosity, what's not possible with
+    # the package command.
+    dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json' --no-restore
 }
 
 Write-Output 'SourceLink package added to all projects.'
