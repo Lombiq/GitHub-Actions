@@ -17,5 +17,9 @@ else
 
 foreach ($projectFile in $projectFiles)
 {
-    dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json' -p:NuGetBuild=true
+    # --no-restore because NuGet restore needs -p:NuGetBuild=true passed but that only works with dotnet restore, what
+    # we run in a separate step.
+    dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json' --no-restore
 }
+
+Write-Output 'SourceLink package added to all projects.'
