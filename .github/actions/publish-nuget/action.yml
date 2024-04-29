@@ -101,7 +101,7 @@ runs:
         Set-GitHubOutput "baseline-version" $baselineVersion
         Set-GitHubOutput "publish-version" $version
 
-    - name: Add Source Link package
+    - name: Add Source Link package and set NuGetBuild=true
       shell: pwsh
       run: Add-SourceLinkPackage
 
