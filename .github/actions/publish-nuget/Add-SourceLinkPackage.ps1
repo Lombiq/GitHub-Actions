@@ -41,10 +41,11 @@ foreach ($projectFile in $projectFiles)
     # Save the changes back to the .csproj file.
     $projectXml.Save($projectFile)
 
-    # --no-restore because we run it in a separate step with a configured output verbosity, what's not possible with
-    # the package command (and letting it implicitly restore here also makes NuGet publishing take 2-3 times as much).
-    # Unfortunately, this also makes it skip compatibility checks.
-    dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json' --no-restore
+    # We can't use --no-restore because not only would it skip checks, it'd also be incompatible with projects using
+    # Central Package Management (https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management).
+    # Unfortunately, this makes NuGet publishing a lot slower than using dotnet restore, and it's also more verbose
+    # (without the ability to configure that verbosity).
+    dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json'
 }
 
 Write-Output 'SourceLink package added to all projects.'
