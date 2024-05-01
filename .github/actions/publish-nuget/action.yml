@@ -121,6 +121,8 @@ runs:
     - name: Build
       uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       # Notes on the configuration:
+      # * -p:NuGetBuild=true is our property to load Lombiq dependencies from NuGet by switching project references
+      #   to package references.
       # * -p:GenerateDocumentationFile=True is for generating XML doc files. Needed both for build and pack. It'd
       #   cause CS* warnings but we handle that centrally from .NET Analyzers so disabling them here.
       # * VSTHRD* rules come from somewhere unknown, disabling them.
@@ -136,6 +138,7 @@ runs:
         # solution, or fail if there are multiple projects".
         solution-or-project-path: ""
         dotnet-build-switches: |
+          -p:NuGetBuild=true
           -p:LangVersion=Latest
           -p:GenerateDocumentationFile=True
           -p:NoWarn=CS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200
@@ -180,6 +183,7 @@ runs:
             "--no-restore",
             "--output:" + (Join-Path $PWD artifacts),
             "--verbosity:${{ inputs.verbosity }}",
+            "-p:NuGetBuild=true",
             "-p:LangVersion=Latest",
             "-p:Version=${{ steps.setup.outputs.publish-version }}",
             "-p:NuspecProperties=version=${{ steps.setup.outputs.publish-version }}",
