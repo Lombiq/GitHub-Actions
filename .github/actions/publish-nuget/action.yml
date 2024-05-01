@@ -102,7 +102,7 @@ runs:
         Set-GitHubOutput "publish-version" $version
 
     # This also implicitly restores NuGet dependencies.
-    - name: Add Source Link package and set NuGetBuild=true
+    - name: Add Source Link package
       shell: pwsh
       run: Add-SourceLinkPackage
 

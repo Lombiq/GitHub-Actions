@@ -46,6 +46,11 @@ foreach ($projectFile in $projectFiles)
     # Unfortunately, this makes NuGet publishing a lot slower than using dotnet restore, and it's also more verbose
     # (without the ability to configure that verbosity).
     dotnet add $projectFile.FullName package 'Microsoft.SourceLink.GitHub' --source 'https://api.nuget.org/v3/index.json'
+
+    # The NuGetBuild property mustn't remain in the project file.
+    $projectXml = [xml](Get-Content $projectFile)
+    $projectXml.Project.RemoveChild($projectXml.Project.FirstChild)
+    $projectXml.Save($projectFile)
 }
 
 Write-Output 'SourceLink package added to all projects.'
