@@ -43,6 +43,8 @@ $solutionDirectory = [System.IO.Path]::GetDirectoryName($Solution)
 
 Write-Output "Running tests for the $Solution solution."
 
+Write-Output 'Gathering test projects.'
+
 $tests = dotnet sln $Solution list |
     Select-Object -Skip 2 |
     Select-String '\.Tests\.' |
