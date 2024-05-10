@@ -153,10 +153,11 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     }
     else
     {
-        $output = New-Object System.Text.StringBuilder
-        $output.AppendLine("::warning::The process $($process.Id) didn't exit in $Timeout seconds.")
+        # Write-Output doesn't work here.
+        "::warning::The process $($process.Id) didn't exit in $Timeout seconds." | Out-Host
+        "::warning::Collecting a dump of the process $($process.Id) tree." | Out-Host
 
-        $output.AppendLine("::warning::Collecting a dump of the process $($process.Id) tree.")
+        $output = New-Object System.Text.StringBuilder
         $dumpRootPath = './DotnetTestHangDumps'
         New-Item -ItemType 'directory' -Path $dumpRootPath -Force | Out-Null
 
@@ -167,7 +168,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
         KillProcessTree -Output $output -Process $rootProcess
 
-        Write-Output $output.ToString()
+        $output.ToString() | Out-Host
     }
 
     Unregister-Event $stdoutEvent.Id
