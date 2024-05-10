@@ -129,12 +129,12 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
     $eventHandlerArgs = @{
         Process = $process
-        HasTestRunSuccessful = $false
+        HasTestRunSuccessfully = $false
     }
 
     $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
         $Event.SourceEventArgs.Data | Out-Host
-        $Event.MessageData.HasTestRunSuccessful = $Event.MessageData.HasTestRunSuccessful -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
+        $Event.MessageData.HasTestRunSuccessfully = $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
     }
 
     $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {
@@ -177,7 +177,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     return @{
         ExitCode = $exitCode
         HasExited = $hasExited
-        HasTestRunSuccessful = $eventHandlerArgs.HasTestRunSuccessful
+        HasTestRunSuccessfully = $eventHandlerArgs.HasTestRunSuccessfully
     }
 }
 
@@ -206,7 +206,7 @@ foreach ($test in $tests)
 
     $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
 
-    if ($processResult.ExitCode -eq 0 || (!$processResult.HasExited && $processResult.HasTestRunSuccessful))
+    if ($processResult.ExitCode -eq 0 || (!$processResult.HasExited && $processResult.HasTestRunSuccessfully))
     {
         if (!$processResult.HasExited)
         {
