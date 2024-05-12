@@ -177,6 +177,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     Unregister-Event $stderrEvent.Id
 
     return @{
+        ProcessId = $process.Id
         ExitCode = $exitCode
         HasExited = $hasExited
         HasTestRunSuccessfully = $eventHandlerArgs.HasTestRunSuccessfully
@@ -212,7 +213,7 @@ foreach ($test in $tests)
     {
         if (!$processResult.HasExited)
         {
-            Write-Output "::warning::The process $($process.Id) was killed but the tests were successful."
+            Write-Output "::warning::The process $($processResult.ProcessId) was killed but the tests were successful."
         }
 
         Write-Output "Test successful: $test"
