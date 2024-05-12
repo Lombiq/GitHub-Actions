@@ -210,7 +210,7 @@ foreach ($test in $tests)
 
     $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
 
-    if ($processResult.ExitCode -eq 0 || (!$processResult.HasExited && $processResult.HasTestRunSuccessfully))
+    if ($processResult.ExitCode -eq 0 || (!$processResult.HasExited -and $processResult.HasTestRunSuccessfully))
     {
         if (!$processResult.HasExited)
         {
