@@ -134,7 +134,8 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
     $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
         $Event.SourceEventArgs.Data | Out-Host
-        $Event.MessageData.HasTestRunSuccessfully = $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
+        $Event.MessageData.HasTestRunSuccessfully = 
+            $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
     }
 
     $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {
