@@ -132,12 +132,15 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
         HasTestRunSuccessfully = $false
     }
 
-    $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
+    $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action
+    {
         $Event.SourceEventArgs.Data | Out-Host
-        $Event.MessageData.HasTestRunSuccessfully = $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
+        $Event.MessageData.HasTestRunSuccessfully = 
+            $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
     }
 
-    $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {
+    $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action
+    {
         $Event.SourceEventArgs.Data | Out-Host
     }
 
@@ -147,6 +150,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
     $process.WaitForExit($Timeout)
     $hasExited = $process.HasExited
+
     if ($hasExited)
     {
         $exitCode = $process.ExitCode
