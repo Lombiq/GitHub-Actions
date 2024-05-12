@@ -219,6 +219,9 @@ foreach ($test in $tests)
     }
 
     Write-Output "Test failed: $test"
+    $statusMessage = "Test process exit code: $($processResult.ExitCode). Process exited: $($processResult.HasExited). " +
+        "Test run successful: $($processResult.HasTestRunSuccessfully)."
+    Write-Output $statusMessage
 
     exit 100
 }
