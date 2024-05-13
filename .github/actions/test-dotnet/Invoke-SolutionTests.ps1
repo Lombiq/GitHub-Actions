@@ -85,7 +85,7 @@ function GetChildProcesses($Id)
 
 function MemDumpProcess($Output, $RootProcess, $DumpRootPath, $Process)
 {
-    $Output.AppendLine("::warning::Collecting a dump of the process $($Process.Id).")
+    $Output.AppendLine("Collecting a dump of the process $($Process.Id).")
 
     $outputFile = "$DumpRootPath/dotnet-test-hang-dump-$($RootProcess.Id)-$($Process.Parent.Id)_$($Process.Id)"
     $Process | Format-Table Id, SI, Name, Path, @{ Label = 'TotalRunningTime'; Expression = { (Get-Date) - $PSItem.StartTime } } > "$outputFile.log"
@@ -104,7 +104,7 @@ function MemDumpProcessTree($Output, $RootProcess, $DumpRootPath, $CurrentProces
 
 function KillProcessTree($Output, $Process)
 {
-    $Output.AppendLine("::warning::Killing the process $($Process.ProcessName)($($Process.Id)).")
+    $Output.AppendLine("Killing the process $($Process.ProcessName)($($Process.Id)).")
 
     foreach ($child in GetChildProcesses -Id $Process.Id)
     {
@@ -156,8 +156,8 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     else
     {
         # Write-Output doesn't work here.
-        "::warning::The process $($process.Id) didn't exit in $Timeout seconds." | Out-Host
-        "::warning::Collecting a dump of the process $($process.Id) tree." | Out-Host
+        "::warning::The process $($process.Id) for $Arguments didn't exit in $Timeout milliseconds." | Out-Host
+        "Collecting a dump of the process $($process.Id) tree." | Out-Host
 
         $output = New-Object System.Text.StringBuilder
         $dumpRootPath = './DotnetTestHangDumps'
@@ -213,7 +213,7 @@ foreach ($test in $tests)
     {
         if (!$processResult.HasExited)
         {
-            Write-Output "::warning::The process $($processResult.ProcessId) was killed but the tests were successful."
+            Write-Output "::warning::The process $($processResult.ProcessId) for $test was killed but the tests were successful."
         }
 
         Write-Output "Test successful: $test"
