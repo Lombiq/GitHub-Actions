@@ -156,7 +156,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     else
     {
         # Write-Output doesn't work here.
-        "::warning::The process $($process.Id) for $Arguments didn't exit in $Timeout milliseconds." | Out-Host
+        "::warning::The process $($process.Id) for $FileName $Arguments didn't exit in $Timeout milliseconds." | Out-Host
         "Collecting a dump of the process $($process.Id) tree." | Out-Host
 
         $output = New-Object System.Text.StringBuilder
