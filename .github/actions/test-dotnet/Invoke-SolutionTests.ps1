@@ -134,8 +134,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
     $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
         $Event.SourceEventArgs.Data | Out-Host
-        $Event.MessageData.HasTestRunSuccessfully = 
-            $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
+        $Event.MessageData.HasTestRunSuccessfully = $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
     }
 
     $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {
@@ -222,8 +221,8 @@ foreach ($test in $tests)
     }
 
     Write-Output "Test failed: $test"
-    $statusMessage = "Test process exit code: $($processResult.ExitCode). Process exited: $($processResult.HasExited). " +
-        "Test run successful: $($processResult.HasTestRunSuccessfully)."
+    $statusMessage = "Test process exit code: $($processResult.ExitCode). Process exited: $($processResult.HasExited). "
+    $statusMessage += "Test run successful: $($processResult.HasTestRunSuccessfully)."
     Write-Output $statusMessage
 
     exit 100
