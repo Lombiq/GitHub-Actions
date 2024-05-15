@@ -73,7 +73,7 @@ dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
     if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
 
-if ($noErrors -and !$?)
+if ($noErrors -and -not $?)
 {
     exit 1
 }
@@ -122,4 +122,3 @@ if ($expectedErrorCodes)
     Write-Output 'Verification complete, the solution or project only has the expected errors!'
     exit 0
 }
-

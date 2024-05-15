@@ -203,9 +203,9 @@ foreach ($test in $tests)
 
     $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
 
-    if ($processResult.ExitCode -eq 0 || (!$processResult.HasExited && $processResult.HasTestRunSuccessful))
+    if ($processResult.ExitCode -eq 0 || (-not $processResult.HasExited && $processResult.HasTestRunSuccessful))
     {
-        if (!$processResult.HasExited)
+        if (-not $processResult.HasExited)
         {
             Write-Output "::warning::The process $($process.Id) was killed but the tests were successful."
         }
