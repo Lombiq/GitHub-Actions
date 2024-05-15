@@ -60,9 +60,11 @@ runs:
         ${{ inputs.publish-version }}
         '@.Trim()
 
-        if ($version -eq 'USE_GITHUB_REF_NAME') {
+        if ($version -eq 'USE_GITHUB_REF_NAME')
+        {
             $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
-            if (!($version -match '^\d+\.\d+\.\d+(-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?)?$')) {
+            if (!($version -match '^\d+\.\d+\.\d+(-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?)?$'))
+            {
                 Write-Output "::error::`"v$version`" is invalid. The correct format is `"vM.N.O`" or `"vM.N.O-[alpha|beta|preview|rc]`" with an optional `".X.<issue-code>`" suffix."
 
                 exit 1
@@ -78,25 +80,32 @@ runs:
             Sort-Object -Descending
         $current = if ($tags.Count -gt 0) { $tags[0] } else { [version]"0.0.0" }
 
-        if ($version -eq 'USE_GITHUB_RUN_NUMBER') {
-          $next = New-Object "System.Version" $current.Major, $current.Minor, ($current.Build + 1)
-
-          $version = "$next-preview-$Env:GITHUB_RUN_NUMBER"
+        if ($version -eq 'USE_GITHUB_RUN_NUMBER')
+        {
+            $next = New-Object "System.Version" $current.Major, $current.Minor, ($current.Build + 1)
+            $version = "$next-preview-$Env:GITHUB_RUN_NUMBER"
         }
 
-        if ($tags.Count -gt 1) {
-          if ($version -eq $current) {
-            # In this case the new release is not a prelease so the previous tag should be used as baseline version.
-            $baselineVersion = $tags[1]
-          }
-          else {
-            $baselineVersion = $current
-          }
+        if ($tags.Count -gt 1)
+        {
+            if ($version -eq $current)
+            {
+                # In this case the new release is not a prelease so the previous tag should be used as baseline version.
+                $baselineVersion = $tags[1]
+            }
+            else
+            {
+                $baselineVersion = $current
+            }
         }
-        else {
-          # In this case validation to baseline version is not possible due to being this the first release.
-          $baselineVersion = ''
+        else
+        {
+            # In this case validation to baseline version is not possible due to being this the first release.
+            $baselineVersion = ''
         }
+
+        Write-Output "Baseline version: $baselineVersion"
+        Write-Output "Publish version: $version"
 
         Set-GitHubOutput "baseline-version" $baselineVersion
         Set-GitHubOutput "publish-version" $version
@@ -164,9 +173,10 @@ runs:
       # * p:EnablePackageValidation=true is for package validation, see:
       #   https://docs.microsoft.com/en-us/dotnet/fundamentals/package-validation/overview.
       run: |
-        if ([string]::IsNullOrWhiteSpace($Env:API_KEY)) {
-          Write-Output "::error::API_KEY is missing or empty."
-          exit 1
+        if ([string]::IsNullOrWhiteSpace($Env:API_KEY))
+        {
+            Write-Output "::error::API_KEY is missing or empty."
+            exit 1
         }
 
         $noWarn = @('NU5104%3BCS1573%3BCS1591%3BVSTHRD002%3BVSTHRD200') + @'
