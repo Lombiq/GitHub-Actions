@@ -104,6 +104,9 @@ runs:
             $baselineVersion = ''
         }
 
+        Write-Output "Baseline Version: $baselineVersion"
+        Write-Output "Publish Version: $version"
+
         Set-GitHubOutput "baseline-version" $baselineVersion
         Set-GitHubOutput "publish-version" $version
 
