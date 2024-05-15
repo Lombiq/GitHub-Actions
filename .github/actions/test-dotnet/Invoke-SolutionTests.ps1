@@ -43,6 +43,8 @@ $solutionDirectory = [System.IO.Path]::GetDirectoryName($Solution)
 
 Write-Output "Running tests for the $Solution solution."
 
+Write-Output 'Gathering test projects.'
+
 $tests = dotnet sln $Solution list |
     Select-Object -Skip 2 |
     Select-String '\.Tests\.' |
@@ -83,7 +85,7 @@ function GetChildProcesses($Id)
 
 function MemDumpProcess($Output, $RootProcess, $DumpRootPath, $Process)
 {
-    $Output.AppendLine("::warning::Collecting a dump of the process $($Process.Id).")
+    $Output.AppendLine("Collecting a dump of the process $($Process.Id).")
 
     $outputFile = "$DumpRootPath/dotnet-test-hang-dump-$($RootProcess.Id)-$($Process.Parent.Id)_$($Process.Id)"
     $Process | Format-Table Id, SI, Name, Path, @{ Label = 'TotalRunningTime'; Expression = { (Get-Date) - $PSItem.StartTime } } > "$outputFile.log"
@@ -102,7 +104,7 @@ function MemDumpProcessTree($Output, $RootProcess, $DumpRootPath, $CurrentProces
 
 function KillProcessTree($Output, $Process)
 {
-    $Output.AppendLine("::warning::Killing the process $($Process.ProcessName)($($Process.Id)).")
+    $Output.AppendLine("Killing the process $($Process.ProcessName)($($Process.Id)).")
 
     foreach ($child in GetChildProcesses -Id $Process.Id)
     {
@@ -127,12 +129,12 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
     $eventHandlerArgs = @{
         Process = $process
-        HasTestRunSuccessful = $false
+        HasTestRunSuccessfully = $false
     }
 
     $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
         $Event.SourceEventArgs.Data | Out-Host
-        $Event.MessageData.HasTestRunSuccessful = $Event.MessageData.HasTestRunSuccessful -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
+        $Event.MessageData.HasTestRunSuccessfully = $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
     }
 
     $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {
@@ -145,16 +147,18 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
     $process.WaitForExit($Timeout)
     $hasExited = $process.HasExited
+
     if ($hasExited)
     {
         $exitCode = $process.ExitCode
     }
     else
     {
-        $output = New-Object System.Text.StringBuilder
-        $output.AppendLine("::warning::The process $($process.Id) didn't exit in $Timeout seconds.")
+        # Write-Output doesn't work here.
+        "::warning::The process $($process.Id) for $FileName $Arguments didn't exit in $Timeout milliseconds." | Out-Host
+        "Collecting a dump of the process $($process.Id) tree." | Out-Host
 
-        $output.AppendLine("::warning::Collecting a dump of the process $($process.Id) tree.")
+        $output = New-Object System.Text.StringBuilder
         $dumpRootPath = './DotnetTestHangDumps'
         New-Item -ItemType 'directory' -Path $dumpRootPath -Force | Out-Null
 
@@ -165,16 +169,17 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
         KillProcessTree -Output $output -Process $rootProcess
 
-        Write-Output $output.ToString()
+        $output.ToString() | Out-Host
     }
 
     Unregister-Event $stdoutEvent.Id
     Unregister-Event $stderrEvent.Id
 
     return @{
+        ProcessId = $process.Id
         ExitCode = $exitCode
         HasExited = $hasExited
-        HasTestRunSuccessful = $eventHandlerArgs.HasTestRunSuccessful
+        HasTestRunSuccessfully = $eventHandlerArgs.HasTestRunSuccessfully
     }
 }
 
@@ -182,7 +187,7 @@ foreach ($test in $tests)
 {
     # This could benefit from grouping, above the level of the potential groups created by the tests (the Lombiq UI
     # Testing Toolbox adds per-test groups too). However, there's no nested grouping, see
-    # https://github.com/actions/runner/issues/1477. See the # c341ef145d2a0898c5900f64604b67b21d2ea5db commit for a
+    # https://github.com/actions/runner/issues/1477. See the c341ef145d2a0898c5900f64604b67b21d2ea5db commit for a
     # nested grouping implementation.
 
     Write-Output "Starting to execute tests from the $test project."
@@ -203,11 +208,11 @@ foreach ($test in $tests)
 
     $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
 
-    if ($processResult.ExitCode -eq 0 || (-not $processResult.HasExited && $processResult.HasTestRunSuccessful))
+    if ($processResult.ExitCode -eq 0 -or (-not $processResult.HasExited -and $processResult.HasTestRunSuccessfully))
     {
         if (-not $processResult.HasExited)
         {
-            Write-Output "::warning::The process $($process.Id) was killed but the tests were successful."
+            Write-Output "::warning::The process $($processResult.ProcessId) for $test was killed but the tests were successful."
         }
 
         Write-Output "Test successful: $test"
@@ -216,6 +221,9 @@ foreach ($test in $tests)
     }
 
     Write-Output "Test failed: $test"
+    $statusMessage = "Test process exit code: $($processResult.ExitCode). Process exited: $($processResult.HasExited). "
+    $statusMessage += "Test run successful: $($processResult.HasTestRunSuccessfully)."
+    Write-Output $statusMessage
 
     exit 100
 }
