@@ -8,6 +8,8 @@ $switches = @{
     Verbosity = 'quiet'
     Filter = ''
     Configuration = 'Debug'
+    BlameHangTimeout = '600000'
+    TestProcessTimeout = '600000'
 }
 
 .\tools\Lombiq.GitHub.Actions\.github\actions\test-dotnet\Invoke-SolutionTests.ps1 @switches
