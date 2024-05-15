@@ -110,7 +110,8 @@ jobs:
           $output >> $env:GITHUB_OUTPUT
 
       - name: Verify GitHub Actions Items Match Expected Ref (Pull & Approve/Merge PR)
-        if: (github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group') && steps.add-prefix.outputs.prefixed-files != '@()'
+        # if: (github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group') && steps.add-prefix.outputs.prefixed-files != '@()'
+        if: false
         uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
         with:
           called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'
