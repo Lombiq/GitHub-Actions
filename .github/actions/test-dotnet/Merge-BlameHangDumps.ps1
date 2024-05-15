@@ -1,4 +1,3 @@
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'Configuration', Justification = 'The Configuration parameter is in use.')]
 param ($Directory, $Configuration)
 
 $rootDirectory = Resolve-Path $Directory
