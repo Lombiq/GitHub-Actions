@@ -3,7 +3,7 @@ param(
     [string] $Branch
 )
 
-if (!($Branch -match '(\w+-\d+)'))
+if (-not ($Branch -match '(\w+-\d+)'))
 {
     exit
 }

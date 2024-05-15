@@ -64,7 +64,7 @@ function Get-ProjectProperty
 
 $shouldDownloadBaseLinePackages = ($EnablePackageValidation -And
     $PackageValidationBaselineVersion -And
-    !($Version -match '-(alpha|beta|preview|rc)[.-]') -And
+    -not ($Version -match '-(alpha|beta|preview|rc)[.-]') -And
     $Version.Split('.')[0] -le $PackageValidationBaselineVersion.Split('.')[0])
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
