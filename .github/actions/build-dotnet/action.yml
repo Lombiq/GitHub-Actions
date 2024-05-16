@@ -88,6 +88,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Check dotnet info
+      shell: pwsh
+      run: |
+        dotnet --info
+
     - name: Setup Scripts
       shell: pwsh
       run: |
