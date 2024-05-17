@@ -194,6 +194,10 @@ jobs:
             -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
             ${{ steps.set-up-runtime-option.outputs.runtime-option }}
 
+      - name: Compress Publish Package
+        run: |
+          Compress-Archive -Path .\Published\* -DestinationPath .\Published.zip
+
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-710
         env:
@@ -217,11 +221,10 @@ jobs:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
           publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-          package: ${{ inputs.build-directory }}/Published/**
+          package: ${{ inputs.build-directory }}/Published.zip
           # For docs on the below configs see https://github.com/Azure/webapps-deploy/releases/tag/v3.0.0.
-          type: static
+          type: zip
           restart: false
-          target-path: /site/wwwroot
           clean: false
 
       - name: Add Azure Application Insights Release Annotation
