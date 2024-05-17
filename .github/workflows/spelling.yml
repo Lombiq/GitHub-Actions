@@ -111,7 +111,7 @@ jobs:
 
       - name: Check Spelling
         id: check-spelling-action
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-744
         with:
           merge-file-excludes: ${{ inputs.merge-file-excludes }}
           merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}

@@ -39,7 +39,7 @@ on:
       config:
         description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
         type: string
-        default: '../actions/markdown-lint/lombiq.markdownlint.json'
+        default: '.github/actions/markdown-lint/lombiq.markdownlint.json'
       fix:
         description: Whether to fix issues automatically for the rules that support it (any truthy value enables).
         type: string
