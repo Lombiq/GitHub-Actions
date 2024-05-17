@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Checkout Repository (Pull & Approve/Merge PR)
         if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group'
-        uses: actions/checkout@v3
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-710
         with:
           fetch-depth: 0
 
