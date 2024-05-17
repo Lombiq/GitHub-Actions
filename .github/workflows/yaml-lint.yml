@@ -53,7 +53,3 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  markdown-linting:
-    name: Markdown Linting
-    uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@issue/OSOE-744
