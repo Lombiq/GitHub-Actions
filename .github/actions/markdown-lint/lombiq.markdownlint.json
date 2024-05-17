@@ -10,9 +10,9 @@
         ]
     },
     "MD049": {
-        "style": "asterisk"
+        "style": "underscore"
     },
     "MD050": {
-        "style": "underscore"
+        "style": "asterisk"
     }
 }
