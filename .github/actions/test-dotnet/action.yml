@@ -155,8 +155,8 @@ runs:
         retention-days: ${{ inputs.ui-test-artifact-retention-days }}
 
     - name: Test Report
-      # v10
-      uses: phoenix-actions/test-reporting@93ce19fa5882ebe3969ebdb9ee1024b3d29e776f
+      # v15
+      uses: phoenix-actions/test-reporting@f957cd93fc2d848d556fa0d03c57bc79127b6b5e
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
         name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
