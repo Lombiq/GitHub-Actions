@@ -1,0 +1,34 @@
+name: Markdown Linting
+description: >
+  Lints markdown files by wrapping the markdownlint-cli2 action
+  (https://github.com/DavidAnson/markdownlint-cli2-action).
+
+# When updating defaults here also update them in the `markdown-lint` workflow.
+inputs:
+  config:
+    description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
+    default: 'lombiq.markdownlint.json'
+    required: false
+  fix:
+    description: Whether to fix issues automatically for the rules that support it (any truthy value enables).
+    default: ''
+    required: false
+  globs:
+    description: Glob expression(s) of files to lint (newline-delimited).
+    default: '*.{md,markdown}'
+    required: false
+  separator:
+    description: String to use as a separator for the "globs" input (defaults to newline).
+    default: "\n"
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Markdown Linting
+      uses: DavidAnson/markdownlint-cli2-action@3aaa38e446fbd2c288af4291aa0f55d64651050f # v12.0.0
+      with:
+        config: ${{ inputs.config }}
+        fix: ${{ inputs.fix }}
+        globs: ${{ inputs.globs }}
+        separator: ${{ inputs.separator }}

@@ -1,7 +1,6 @@
 name: YAML Linting
 description: Runs a linter on YAML files.
 
-
 inputs:
   config-file-path:
     description: 'Path to the yamllint configuration file'
@@ -14,7 +13,7 @@ inputs:
     default: '.'
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Run yamllint
       run: yamllint -c "${{ inputs.config-file-path }}" "${{ inputs.search-path }}"
