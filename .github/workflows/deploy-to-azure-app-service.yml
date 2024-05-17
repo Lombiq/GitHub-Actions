@@ -217,7 +217,7 @@ jobs:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
           publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-          package: ${{ inputs.build-directory }}/Published/*
+          package: ${{ inputs.build-directory }}/Published/**
           # For docs on the below configs see https://github.com/Azure/webapps-deploy/releases/tag/v3.0.0.
           type: static
           restart: false
