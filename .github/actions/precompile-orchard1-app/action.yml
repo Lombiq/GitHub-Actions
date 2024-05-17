@@ -59,7 +59,6 @@ runs:
       with:
         repository: ${{ inputs.repository }}
         ref: ${{ inputs.checkout-ref }}
-        submodules: recursive
         token: ${{ inputs.token }}
         path: ${{ inputs.checkout-path }}
 

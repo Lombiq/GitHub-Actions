@@ -19,6 +19,9 @@ inputs:
       used.
   path:
     description: 'Relative path under $GITHUB_WORKSPACE to place the repository'
+  fetch-depth:
+    description: 'Number of commits to fetch. 0 indicates all history for all branches and tags.'
+    default: 1
 
 runs:
   using: "composite"
@@ -42,3 +45,4 @@ runs:
         submodules: "recursive"
         token: ${{ env.CHECKOUT_TOKEN }}
         path: ${{ inputs.path }}
+        fetch-depth: ${{ inputs.fetch-depth }}
