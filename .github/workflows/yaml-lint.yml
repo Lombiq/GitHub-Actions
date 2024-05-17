@@ -19,7 +19,7 @@ on:
         description: If set to "true", this will cancel the current workflow run with all jobs if this workflow fails.
         required: false
         type: string
-        default: "true"
+        default: 'true'
       config-file-path:
         description: 'Path to the yamllint configuration file'
         required: true
@@ -43,7 +43,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: YAML Linting
-        uses: Lombiq/GitHub-Actions/.github/actions/yaml-lint@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/yaml-lint@issue/OSOE-744
         with:
           config-file-path: ${{ inputs.config-file-path }}
           search-path: ${{ inputs.search-path }}
@@ -53,3 +53,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  markdown-linting:
+    name: Markdown Linting
+    uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@issue/OSOE-744

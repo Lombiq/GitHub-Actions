@@ -10,4 +10,4 @@ on:
 jobs:
   markdown-linting:
     name: Markdown Linting
-    uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@issue/OSOE-744

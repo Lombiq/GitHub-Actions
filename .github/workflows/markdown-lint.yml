@@ -80,7 +80,7 @@ jobs:
           git commit -m 'stub commit -- includes submodules'
 
       - name: Markdown Linting
-        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@issue/OSOE-744
         with:
           config: ${{ inputs.config }}
           fix: ${{ inputs.fix }}
