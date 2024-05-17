@@ -47,7 +47,7 @@ on:
       globs:
         description: Glob expression(s) of files to lint (newline-delimited).
         type: string
-        default: '*.{md,markdown}'
+        default: '**/*.{md,markdown}'
       separator:
         description: String to use as a separator for the "globs" input (defaults to newline).
         type: string

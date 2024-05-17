@@ -12,5 +12,5 @@ jobs:
     name: Markdown Linting
     uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@issue/OSOE-744
     with:
-      globs: '*.{md,markdown};!License.md'
+      globs: '**/*.{md,markdown};!License.md'
       separator: ';'
