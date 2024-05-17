@@ -25,7 +25,7 @@ runs:
   using: "composite"
   steps:
     - name: Install dotnet-consolidate
-      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@issue/OSOE-710
       with:
         name: dotnet-consolidate
         version: 4.2.0

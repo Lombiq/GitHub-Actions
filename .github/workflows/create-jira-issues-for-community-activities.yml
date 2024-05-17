@@ -60,7 +60,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Create Jira issues for community activities
-        uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-community-activities@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/create-jira-issues-for-community-activities@issue/OSOE-710
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}

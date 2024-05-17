@@ -22,12 +22,12 @@ jobs:
     steps:
       - name: Update GitHub issue and Pull Request
         if: (github.event_name == 'pull_request_target' || github.event_name == 'pull_request') && github.event.action == 'opened'
-        uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@issue/OSOE-710
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check for Merge Conflict in PR
-        uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/check-merge-conflict@issue/OSOE-710
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
