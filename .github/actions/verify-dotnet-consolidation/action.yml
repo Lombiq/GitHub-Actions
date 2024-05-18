@@ -32,6 +32,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
     - name: Install dotnet-consolidate
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
@@ -45,34 +51,6 @@ runs:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
       run: |
         $solutionPath = (Get-Item '${{ inputs.solution-path }}').FullName;
-
         $excludedProjects = (Get-Item ${{ inputs.solution-path }}).FullName
-        if ($excludedProjects.Count -gt 0)
-        {
-            foreach ($projectPath in $excludedProjects)
-            {
-                dotnet sln $solutionPath remove $projectPath
-            }
-        }
 
-        $consolidateParams = @(
-            '--solutions', $solutionPath
-            '--excludedVersionsRegex', $Env:ExcludeVersionRegex
-        )
-
-        $output = dotnet consolidate @consolidateParams 2>&1 | Out-String -Width 9999
-
-        Write-Output $output
-
-        # An error in the options won't cause dotnet-consolidate to return a non-zero exit code, so we need to check the
-        # output for errors.
-        if ($LASTEXITCODE -ne 0 -or $output.Contains('ERROR(S)'))
-        {
-            Write-Error '::error::dotnet consolidate failed with the above errors.'
-        }
-        elseif ($excludedProjects.Count -gt 0)
-        {
-            # if there wasn't an error and we have removed at least one project form the solution, reset the repo.
-            git reset --hard
-            git submodule update --init
-        }
+        Test-DotnetPackageConsolidation -SolutionPath $solutionPath -ExcludedProjects $excludedProjects
