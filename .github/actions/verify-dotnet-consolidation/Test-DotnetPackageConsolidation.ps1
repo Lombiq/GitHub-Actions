@@ -7,6 +7,7 @@ if ($ExcludedProjects.Count -gt 0)
 {
     foreach ($projectPath in $ExcludedProjects)
     {
+        Write-Output "dotnet sln '$SolutionPath' remove '$projectPath'"
         dotnet sln $SolutionPath remove $projectPath
     }
 }
