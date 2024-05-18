@@ -1,6 +1,6 @@
 param(
     [string] $SolutionPath,
-    [strin[]] $ExcludedProjects
+    [string[]] $ExcludedProjects
 )
 
 if ($ExcludedProjects.Count -gt 0)
