@@ -20,6 +20,14 @@ inputs:
     description: >
       A regular expression to match package versions that will be skipped during NuGet package consolidation. See the
       dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
+  exclude-project-path:
+    required: false
+    default: src/*.Web/*.csproj
+    description: >
+      A path expression referring to the projects that should be temporarily removed from the solution before NuGet
+      package consolidation. These are restored after the fact by resetting the git repository. The expression is passed
+      to the Get-Item cmdlet as-is, so you can use wildcard characters and even specify multiple paths by separating
+      them with a comma.
 
 runs:
   using: "composite"
@@ -36,8 +44,19 @@ runs:
       env:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
       run: |
+        $solutionPath = (Get-Item '${{ inputs.solution-path }}').FullName;
+
+        $excludedProjects = (Get-Item ${{ inputs.solution-path }}).FullName
+        if ($excludedProjects.Count -gt 0)
+        {
+            foreach ($projectPath in $excludedProjects)
+            {
+                dotnet sln $solutionPath remove $projectPath
+            }
+        }
+
         $consolidateParams = @(
-            '--solutions', (Get-Item '${{ inputs.solution-path }}').FullName
+            '--solutions', $solutionPath
             '--excludedVersionsRegex', $Env:ExcludeVersionRegex
         )
 
@@ -50,4 +69,10 @@ runs:
         if ($LASTEXITCODE -ne 0 -or $output.Contains('ERROR(S)'))
         {
             Write-Error '::error::dotnet consolidate failed with the above errors.'
+        }
+        elseif ($excludedProjects.Count -gt 0)
+        {
+            # if there wasn't an error and we have removed at least one project form the solution, reset the repo.
+            git reset --hard
+            git submodule update --init
         }
