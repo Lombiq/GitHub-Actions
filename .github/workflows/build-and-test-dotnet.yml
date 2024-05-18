@@ -138,6 +138,15 @@ on:
         description: >
           A regular expression to match package versions that will be skipped during NuGet package consolidation. See
           the dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
+      dotnet-consolidation-exclude-project-path:
+        type: string
+        required: false
+        default: 'src/*.Web/*.csproj'
+        description: >
+          A path expression referring to the projects that should be temporarily removed from the solution before NuGet
+          package consolidation. These are restored after the fact by resetting the git repository. The expression is
+          passed to the Get-Item cmdlet as-is, so you can use wildcard characters and even specify multiple paths by
+          separating them with a comma.
       warnings-as-errors:
         type: string
         default: 'true'
@@ -189,10 +198,11 @@ jobs:
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OFFI-33
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
+          exclude-project-path: ${{ inputs.dotnet-consolidation-exclude-project-path }}
 
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
