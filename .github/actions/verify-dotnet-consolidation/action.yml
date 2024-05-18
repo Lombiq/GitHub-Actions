@@ -12,7 +12,7 @@ inputs:
     required: false
     default: '*.sln'
     description: >
-      The path of the solution file to be processed. The value is given to PowerShell's `Get-ChildItem` cmdlet as-is, so
+      The path of the solution file to be processed. The value is given to PowerShell's `Get-Item` cmdlet as-is, so
       grepping is still possible but a name with spaces must be escaped separately.
   exclude-version-regex:
     required: false
@@ -37,7 +37,7 @@ runs:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
       run: |
         $consolidateParams = @(
-            '--solutions', (Get-ChildItem '${{ inputs.solution-path }}').FullName
+            '--solutions', (Get-Item '${{ inputs.solution-path }}').FullName
             '--excludedVersionsRegex', $Env:ExcludeVersionRegex
         )
 
