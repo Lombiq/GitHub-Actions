@@ -111,11 +111,11 @@ jobs:
 
       - name: Verify GitHub Actions Items Match Expected Ref (Pull & Approve/Merge PR)
         if: (github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group') && steps.add-prefix.outputs.prefixed-files != '@()'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-859
         with:
           called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'
           expected-ref: ${{ steps.determine-ref.outputs.expected-ref }}
 
       - name: Verify GitHub Actions Items Match Expected Ref (Push)
         if: github.event_name == 'push'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@issue/OSOE-859
