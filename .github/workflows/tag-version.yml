@@ -96,7 +96,7 @@ jobs:
           additional-pattern-include-list: ${{ inputs.additional-pattern-include-list }}
           expected-ref: '${{ steps.determine-tag.outputs.tagname }}'
 
-      - name: Commit and Push Changes
+      - name: Commit and Push Release Branch Changes
         uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5
         with:
           commit_message: 'Set GitHub Actions/Workflows to tag ${{ steps.determine-tag.outputs.tagname }}'
@@ -123,5 +123,9 @@ jobs:
           git fetch origin ${{ inputs.merge-target }}
           git checkout ${{ inputs.merge-target }}
           # Merge without taking any changes from the release branch.
-          git merge --strategy=ours ${{ inputs.expected-ref }}
+          git merge --strategy=ours --no-commit ${{ inputs.expected-ref }}
 
+        - name: Commit and Push Merge Target Changes
+          uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5
+          with:
+            commit_message: Merge remote-tracking branch '${{ inputs.expected-ref }}' into ${{ inputs.expected-ref }}
