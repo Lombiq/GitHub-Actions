@@ -120,6 +120,7 @@ jobs:
         # Same as Create Release above.
         if: "!contains(steps.determine-tag.outputs.tagname, '-')"
         run: |
+          git fetch origin ${{ inputs.merge-target }}
           git checkout ${{ inputs.merge-target }}
           # Merge without taking any changes from the release branch.
           git merge --strategy=ours ${{ inputs.expected-ref }}
