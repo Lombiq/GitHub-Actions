@@ -4,19 +4,31 @@ description: >
   Actions.md since it's only meant for internal use.
 
 inputs:
+  repository:
+    description: 'Repository name with owner. For example, actions/checkout'
+    default: ${{ github.repository }}
+  ref:
+    description: >
+      The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to
+      the reference or SHA for that event. Otherwise, uses the default branch.
   token:
     required: false
     default: ${{ github.token }}
     description: >
       The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules are
       used.
+  path:
+    description: 'Relative path under $GITHUB_WORKSPACE to place the repository'
+  fetch-depth:
+    description: 'Number of commits to fetch. 0 indicates all history for all branches and tags.'
+    default: 1
 
 runs:
   using: "composite"
   steps:
     # This step is needed when the workflow calling this action receives the checkout token as a secret, but when that
     # parameter is not supplied, the runner sets the value of that secret to empty string, which is passed on to this
-    # action, thus the default value of the parameter will not be applied. Related bugreport:
+    # action, thus the default value of the parameter will not be applied. Related bug report:
     # https://github.com/actions/runner/issues/924
     - name: Set Checkout Token
       shell: pwsh
@@ -26,7 +38,11 @@ runs:
         $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
         "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
 
-    - uses: actions/checkout@v3.1.0
+    - uses: actions/checkout@v4.1.6
       with:
+        repository: ${{ inputs.repository }}
+        ref: ${{ inputs.ref }}
         submodules: "recursive"
         token: ${{ env.CHECKOUT_TOKEN }}
+        path: ${{ inputs.path }}
+        fetch-depth: ${{ inputs.fetch-depth }}

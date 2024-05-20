@@ -48,7 +48,7 @@ Get-ChildItem $testDirectory.Path -Recurse |
         $relativePath = [System.IO.Path]::GetRelativePath($rootDirectory, $PSItem.Directory.FullName)
 
         # The artifact directory can contain directories, that have ":" in the name of them on Ubuntu. However, this
-        # causes an error in "actions/upload-artifact@v3.1.1".
+        # causes an error in actions/upload-artifact.
         $destinationDirectory = (Join-Path -Path $dumpDirectory.FullName -ChildPath $relativePath) -replace ':', '_'
         if (-not (Test-Path -Path $destinationDirectory))
         {

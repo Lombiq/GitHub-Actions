@@ -130,7 +130,7 @@ runs:
         Write-CacheConfiguration $isNuget $isNpm "${key}-${type}" $hashes[$type]
 
     - name: Cache Packages with GitHub Cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4.0.2
       if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' && !contains(runner.name, 'buildjet') }}
       with:
         path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
@@ -138,7 +138,8 @@ runs:
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
     - name: Cache Packages with BuildJet Cache
-      uses: buildjet/cache@v3
+      # v4.0.2
+      uses: buildjet/cache@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4
       if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' && contains(runner.name, 'buildjet') }}
       with:
         path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
@@ -203,7 +204,7 @@ runs:
         Write-Output ("Solution or project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
 
     - name: Upload MSBuild Binary Log
-      uses: actions/upload-artifact@v3.1.1
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       if: (success() || failure()) && inputs.create-binary-log == 'true'
       with:
         name: build-binary-log-${{ steps.build.outputs.artifact-name-suffix }}.binlog

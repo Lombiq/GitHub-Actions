@@ -194,6 +194,10 @@ jobs:
             -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
             ${{ steps.set-up-runtime-option.outputs.runtime-option }}
 
+      - name: Compress Publish Package
+        run: |
+          Compress-Archive -Path .\Published\* -DestinationPath .\Published.zip
+
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
         env:
@@ -212,12 +216,16 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@016bdd3f9b7cec60310bcf9da98f671628795644 # v2.2.4
+        uses: azure/webapps-deploy@de617f46172a906d0617bb0e50d81e9e3aec24c8 # v3.0.1
         with:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
           publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
-          package: ${{ inputs.build-directory }}/Published
+          package: ${{ inputs.build-directory }}/Published.zip
+          # For docs on the below configs see https://github.com/Azure/webapps-deploy/releases/tag/v3.0.0.
+          type: zip
+          restart: false
+          clean: false
 
       - name: Add Azure Application Insights Release Annotation
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
