@@ -220,7 +220,7 @@ runs:
         retention-days: ${{ inputs.nuget-artifact-retention-days }}
 
     - name: Create Release
-      uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-862
       # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
       # v4.3.1-alpha.osoe-86.
       if: "!contains(steps.setup.outputs.publish-version, '-')"
