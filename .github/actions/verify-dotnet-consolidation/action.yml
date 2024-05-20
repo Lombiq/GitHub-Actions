@@ -12,7 +12,7 @@ inputs:
     required: false
     default: '*.sln'
     description: >
-      The path of the solution file to be processed. The value is given to PowerShell's `Get-ChildItem` cmdlet as-is, so
+      The path of the solution file to be processed. The value is given to PowerShell's `Get-Item` cmdlet as-is, so
       grepping is still possible but a name with spaces must be escaped separately.
   exclude-version-regex:
     required: false
@@ -20,10 +20,24 @@ inputs:
     description: >
       A regular expression to match package versions that will be skipped during NuGet package consolidation. See the
       dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
+  exclude-project-path:
+    required: false
+    default: src/*.Web/*.csproj
+    description: >
+      A path expression referring to the projects that should be temporarily removed from the solution before NuGet
+      package consolidation. These are restored after the fact by resetting the git repository. The expression is passed
+      to the Get-Item cmdlet as-is, so you can use wildcard characters and even specify multiple paths by separating
+      them with a comma.
 
 runs:
   using: "composite"
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
     - name: Install dotnet-consolidate
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
@@ -36,18 +50,7 @@ runs:
       env:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
       run: |
-        $consolidateParams = @(
-            '--solutions', (Get-ChildItem '${{ inputs.solution-path }}').FullName
-            '--excludedVersionsRegex', $Env:ExcludeVersionRegex
-        )
+        $solutionPath = (Get-Item '${{ inputs.solution-path }}').FullName;
+        $excludedProjects = (Get-Item ${{ inputs.exclude-project-path }} -ErrorAction Ignore).FullName
 
-        $output = dotnet consolidate @consolidateParams 2>&1 | Out-String -Width 9999
-
-        Write-Output $output
-
-        # An error in the options won't cause dotnet-consolidate to return a non-zero exit code, so we need to check the
-        # output for errors.
-        if ($LASTEXITCODE -ne 0 -or $output.Contains('ERROR(S)'))
-        {
-            Write-Error '::error::dotnet consolidate failed with the above errors.'
-        }
+        Test-DotnetPackageConsolidation -SolutionPath $solutionPath -ExcludedProjects $excludedProjects
