@@ -56,6 +56,14 @@ on:
         default: '${{ github.ref_name }}'
         description: The expected reference value to set for all called GHA Workflows and Actions.
         type: string
+      merge-target:
+        required: false
+        default: '${{ github.event.repository.default_branch }}'
+        description: >
+          The target branch to merge back to after setting the GitHub Actions and Workflows to the version tag. This is
+          necessary because otherwise, the auto-generated release notes will include all the changes since the start of
+          the repo, due to the ancestors of the current release branch not containing the previous release branch.
+        type: string
 
 jobs:
   run:
@@ -109,4 +117,12 @@ jobs:
           allowUpdates: true
           generateReleaseNotes: true
           tag: ${{ steps.determine-tag.outputs.tagname }}
+
+      - name: Merge Back
+        # Same as Create Release above.
+        if: "!contains(steps.determine-tag.outputs.tagname, '-')"
+        run: |
+          git checkout ${{ inputs.merge-target }}
+          # Merge without taking any changes from the release branch.
+          git merge --strategy=ours ${{ inputs.expected-ref }}
 

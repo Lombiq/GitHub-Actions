@@ -38,13 +38,13 @@ To ensure that when changing actions or workflows their references to other acti
 
 ## Versioning, Tags and Releases
 
-To release versions of Lombiq GitHub Actions, and allow consumers to reference a specific version of a reusable workflow or composite action (e.g. `@v1.0`), we employ some automation to do this in a consistent and predictable way.
+To release versions of Lombiq GitHub Actions, and allow consumers to reference a specific version of a reusable workflow or composite action (e.g. `@v1.0.0`), we employ some automation to do this in a consistent and predictable way.
 
 See [issue #284 "Introduce versioning and releases (OSOE-735)"](https://github.com/Lombiq/GitHub-Actions/issues/284) for additional details on why we do this. <!-- #spell-check-ignore-line -->
 
-New versions of Lombiq GitHub Actions are automatically tagged using the [Tag Version (this repo)](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/workflows/tag-version-this-repo.yml) workflow. This workflow is triggered for release branches with a name that matches the `release/**` pattern (e.g. `release/v1.0`, `release/v2.0-alpha`, etc.).
+New versions of Lombiq GitHub Actions are automatically tagged using the [Tag Version (this repo)](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/workflows/tag-version-this-repo.yml) workflow. This workflow is triggered for release branches with a name that matches the `release/**` pattern (e.g. `release/v1.0.0`, `release/v2.1.0-alpha`, etc.).
 
-The create a new release, create a new branch following the above naming convention at the commit to be released and push it.
+The create a new release, create a new branch following the above naming convention at the commit to be released and push it. Take this similar to how you would add a release tag in other repos, and don't push anything else to the release branch.
 
 When you push your new release branch, the following things happen automatically:
 
