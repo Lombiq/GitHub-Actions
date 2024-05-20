@@ -27,7 +27,7 @@ if ($LASTEXITCODE -ne 0 -or $output.Contains('ERROR(S)'))
 {
     Write-Error '::error::dotnet consolidate failed with the above errors.'
 }
-# if there wasn't an error and we have removed at least one project form the solution, reset the repo to restore the
+# If there wasn't an error and we have removed at least one project from the solution, reset the repo to restore the
 # removed projects.
 elseif ($ExcludedProjects.Count -gt 0)
 {
