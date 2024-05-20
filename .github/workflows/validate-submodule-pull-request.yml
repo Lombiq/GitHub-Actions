@@ -34,14 +34,14 @@ jobs:
     steps:
       - name: Update GitHub issue and Pull Request
         if: (github.event_name == 'pull_request_target' || github.event_name == 'pull_request') && github.event.action == 'opened'
-        uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@v1.1.0
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Ensure Parent PR Exists
         if: github.event.pull_request != ''
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.PARENT_TOKEN != '' && secrets.PARENT_TOKEN || secrets.GITHUB_TOKEN }}
         with:

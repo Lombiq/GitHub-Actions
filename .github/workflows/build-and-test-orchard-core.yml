@@ -201,27 +201,27 @@ jobs:
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@v1.1.0
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@v1.1.0
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@v1.1.0
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
 
       - name: Enable Node.js corepack
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@v1.1.0
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@v1.1.0
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration}}
@@ -237,21 +237,21 @@ jobs:
 
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
-        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@v1.1.0
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@v1.1.0
 
       - name: Set up Azurite
         if: inputs.set-up-azurite == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@v1.1.0
         with:
           location: ${{ inputs.build-directory}}
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@v1.1.0
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
@@ -265,6 +265,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
