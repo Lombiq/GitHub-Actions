@@ -79,15 +79,13 @@ jobs:
         with:
           token: ${{ secrets.TAG_VERSION_TOKEN }}
 
-      - name: Setup Scripts
-        run: |
-          (Resolve-Path "Scripts").Path >> $Env:GITHUB_PATH
-
       - name: Determine Version Tag Name from Branch Name
         id: determine-tag
         run: |
           $tagname = "${{ inputs.expected-ref }}" -replace 'release/', ''
-          Set-GitHubOutput -Key 'tagname' -Value $tagname
+          # Same as Set-GitHubOutput. But using that would require converting this to an action and duplicating the
+          # parameters just to use that one script.
+          "tagname=$tagname" >> $Env:GITHUB_OUTPUT
 
       - name: Set Ref for GitHub Actions and Workflows
         uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@dev
