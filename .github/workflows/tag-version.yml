@@ -133,4 +133,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5
         with:
           commit_message: Merge remote-tracking branch '${{ inputs.expected-ref }}' into ${{ inputs.expected-ref }}
-          skip_dirty_check: false
+          skip_dirty_check: true
+          skip_fetch: true
+          skip_checkout: true
