@@ -65,17 +65,17 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Publish to NuGet
-        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
         with:
           source: ${{ inputs.source }}
           verbosity: ${{ inputs.verbosity }}
@@ -89,6 +89,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

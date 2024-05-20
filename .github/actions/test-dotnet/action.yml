@@ -86,7 +86,7 @@ runs:
         "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
 
     - name: Install dotnet-dump
-      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@issue/OSOE-710
+      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
         name: dotnet-dump
         version: 8.0.510501
@@ -121,7 +121,7 @@ runs:
     # Under Windows this can fail with "ENOENT: no such file or directory" if the path is too long, see
     # https://github.com/actions/upload-artifact/issues/240.
     - name: Upload UI Testing Artifacts
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-710
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
@@ -137,7 +137,7 @@ runs:
       run: Merge-BlameHangDumps -Directory "${{ inputs.build-directory }}" -Configuration "${{ inputs.test-configuration }}"
 
     - name: Upload BlameHangDumps
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-710
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != '' && steps.merge-blame-hang-dumps.outputs.dump-count != 0
       with:
         name: ui-test-blame-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
@@ -146,7 +146,7 @@ runs:
         retention-days: ${{ inputs.ui-test-artifact-retention-days }}
 
     - name: Upload DotnetTestHangDumps
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-710
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0 && steps.run-tests.outputs.dotnet-test-hang-dump != 0
       with:
         name: dotnet-test-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}

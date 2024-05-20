@@ -45,7 +45,7 @@ inputs:
       Repository with default configuration to use when the workspace repository doesn't have its own configuration. The
       default from Check Spelling is ''.
     required: false
-    default: Lombiq/GitHub-Actions@issue/OSOE-710
+    default: Lombiq/GitHub-Actions@dev
   post-comment:
     description: Flag for if check-spelling should post comment, the default is 1.
     required: false

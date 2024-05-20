@@ -55,7 +55,7 @@ runs:
       if: inputs.repository != ''
       # Using the official checkout action directly, because our wrapper action doesn't have most of the parameters we
       # need here. We only need those parameters for this action though.
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-710
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
       with:
         repository: ${{ inputs.repository }}
         ref: ${{ inputs.checkout-ref }}
@@ -63,7 +63,7 @@ runs:
         path: ${{ inputs.checkout-path }}
 
     - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-710
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     # Calling nuget restore separately on the actual solution, because we're passing Orchard.proj to the msbuild action
     # instead to be able to call the Precompiled target on it.
@@ -72,7 +72,7 @@ runs:
       run: nuget restore ${{ inputs.checkout-path }}/${{ inputs.solution-path }}
 
     - name: Publish Precompiled app
-      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/OSOE-710
+      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
       with:
         directory: ${{ inputs.checkout-path }}
         verbosity: ${{ inputs.verbosity }}

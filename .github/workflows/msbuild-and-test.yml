@@ -103,19 +103,19 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Enable Node corepack
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       # This is necessary for building Gulp Extensions and test-dotnet.
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
         with:
           directory: ${{ inputs.build-directory }}
           solution-or-project-path: ${{ inputs.solution-or-project-path }}
@@ -125,7 +125,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
         with:
           build-directory: ${{ inputs.build-directory }}
           dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
@@ -135,6 +135,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-710
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
