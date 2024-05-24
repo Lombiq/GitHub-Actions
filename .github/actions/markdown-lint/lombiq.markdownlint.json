@@ -1,18 +1,10 @@
+// When updating, also update the same configuration file in Lombiq.NodeJs.Extensions.
 {
     "default": true,
-    "MD004": {
-        "style": "dash"
-    },
+    "MD004": { "style": "dash" },
     "MD013": false,
-    "MD033": {
-        "allowed_elements": [
-            "kbd"
-        ]
-    },
-    "MD049": {
-        "style": "underscore"
-    },
-    "MD050": {
-        "style": "asterisk"
-    }
-}
+    "MD033": { "allowed_elements": [ "kbd" ] },
+    "MD049": { "style": "underscore" },
+    "MD050": { "style": "asterisk" }
+  }
+  

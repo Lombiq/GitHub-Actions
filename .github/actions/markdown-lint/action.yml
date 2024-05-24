@@ -26,6 +26,7 @@ runs:
   using: 'composite'
   steps:
     - name: Markdown Linting
+    # When upgrading, also update Lombiq.NodeJs.Extensions to use the corresponding version of the markdownlint package.
       uses: DavidAnson/markdownlint-cli2-action@b4c9feab76d8025d1e83c653fa3990936df0e6c8 # v16.0.0
       with:
         config: ${{ inputs.config }}
