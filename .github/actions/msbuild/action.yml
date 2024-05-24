@@ -49,8 +49,8 @@ runs:
         (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
     - name: Add MSBuild to PATH
-      # v1.1.3
-      uses: microsoft/setup-msbuild@34cfbaee7f672c76950673338facd8a73f637506
+      # v2.0.0
+      uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce
       with:
         vs-version: "[17.3,]"
         msbuild-architecture: x64

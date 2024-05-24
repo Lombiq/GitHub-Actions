@@ -213,7 +213,7 @@ runs:
       run: dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
 
     - name: Publish Artifacts
-      uses: actions/upload-artifact@v3.1.1
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       with:
         name: NuGet-Package
         path: artifacts
