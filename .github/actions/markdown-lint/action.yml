@@ -26,7 +26,7 @@ runs:
   using: 'composite'
   steps:
     - name: Markdown Linting
-      uses: DavidAnson/markdownlint-cli2-action@3aaa38e446fbd2c288af4291aa0f55d64651050f # v12.0.0
+      uses: DavidAnson/markdownlint-cli2-action@b4c9feab76d8025d1e83c653fa3990936df0e6c8 # v16.0.0
       with:
         config: ${{ inputs.config }}
         fix: ${{ inputs.fix }}
