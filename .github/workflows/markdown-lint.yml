@@ -41,9 +41,6 @@ jobs:
     name: Markdown Linting
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
-    defaults:
-      run:
-        shell: pwsh
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
@@ -57,32 +54,6 @@ jobs:
           fix: ${{ inputs.fix }}
           globs: ${{ inputs.globs }}
           separator: ${{ inputs.separator }}
-
-      - name: Setup Scripts
-        shell: pwsh
-        run: |
-          "${{ github.action_path }}" >> $Env:GITHUB_PATH
-          (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
-
-      - name: List files updated by markdown-lint automatic fixes
-        if: inputs.fix == 'true'
-        id: markdown-lint-fix-files
-        run: |
-          $files = ConvertFrom-MultiLineStringToStringArray -Lines (git diff --name-only '*.md' '*.markdown')
-          Set-GitHubOutput 'files' $files
-
-      - name: Upload files fixed by markdown-lint
-        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
-        if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.files != ''
-        with:
-          name: markdown-lint-fixed-files
-          path: steps.markdown-lint-fix-files.outputs.files
-          if-no-files-found: warn
-          retention-days: 1
-
-      - name: Fail workflow if markdown-lint fixes were made
-        if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.files != ''
-        run: exit 1
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

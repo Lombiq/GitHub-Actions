@@ -33,3 +33,29 @@ runs:
         fix: ${{ inputs.fix }}
         globs: ${{ inputs.globs }}
         separator: ${{ inputs.separator }}
+
+    - name: Setup Scripts
+      shell: pwsh
+      run: (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: List files updated by markdown-lint automatic fixes
+      if: inputs.fix == 'true'
+      id: markdown-lint-fix-files
+      shell: pwsh
+      run: |
+        $files = ConvertFrom-MultiLineStringToStringArray -Lines (git diff --name-only '*.md' '*.markdown')
+        Set-GitHubOutput 'files' $files
+
+    - name: Upload files fixed by markdown-lint
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.files != ''
+      with:
+        name: markdown-lint-fixed-files
+        path: steps.markdown-lint-fix-files.outputs.files
+        if-no-files-found: warn
+        retention-days: 1
+
+    - name: Fail workflow if markdown-lint fixes were made
+      if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.files != ''
+      shell: pwsh
+      run: exit 1
