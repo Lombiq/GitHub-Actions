@@ -51,7 +51,8 @@ runs:
       if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.files != ''
       with:
         name: markdown-lint-fixed-files
-        path: ${{ steps.markdown-lint-fix-files.outputs.files }}
+        path: |
+          ${{ steps.markdown-lint-fix-files.outputs.files }}
         if-no-files-found: warn
         retention-days: 1
 
