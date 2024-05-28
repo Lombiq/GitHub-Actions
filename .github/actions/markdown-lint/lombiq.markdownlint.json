@@ -6,4 +6,4 @@
     "MD033": { "allowed_elements": [ "kbd" ] },
     "MD049": { "style": "underscore" },
     "MD050": { "style": "asterisk" }
-  }
+}
