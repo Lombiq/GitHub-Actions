@@ -54,6 +54,9 @@ jobs:
           fix: ${{ inputs.fix }}
           globs: ${{ inputs.globs }}
           separator: ${{ inputs.separator }}
+      
+      - name: List files updated by markdown-lint automatic fixes
+        run: git diff --name-only
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
