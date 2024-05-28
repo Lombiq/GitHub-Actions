@@ -59,5 +59,5 @@ runs:
       if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.files != ''
       shell: pwsh
       run: |
-        Write-Output '::error::The following files were modified by "markdown-lint" and are available to download as artifacts:`n${{ steps.markdown-lint-fix-files.outputs.files}}'
+        Write-Output '::error::The following files were modified by markdown-lint and are available to download as artifacts: ${{ steps.markdown-lint-fix-files.outputs.files}}'
         exit 1
