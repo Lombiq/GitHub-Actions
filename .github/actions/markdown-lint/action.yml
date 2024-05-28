@@ -58,4 +58,6 @@ runs:
     - name: Fail workflow if markdown-lint fixes were made
       if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.files != ''
       shell: pwsh
-      run: Write-Output '::error::Markdown linting fixes were applied and the modified files are available as artifacts.'
+      run: |
+        Write-Output '::error::The following files were modified by "markdown-lint" and are available to download as artifacts:`n${{ steps.markdown-lint-fix-files.outputs.files}}'
+        exit 1
