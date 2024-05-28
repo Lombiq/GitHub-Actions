@@ -47,17 +47,6 @@ jobs:
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
-      # This is a workaround to be able to check submodules too in the repository.
-      - name: Stub repo layout
-        shell: pwsh
-        run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-          Remove-Item .\.git\ -recurse -force
-          git init .
-          git add .
-          git commit -m 'stub commit -- includes submodules'
-
       - name: Markdown Linting
         uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@issue/OSOE-744
         with:
