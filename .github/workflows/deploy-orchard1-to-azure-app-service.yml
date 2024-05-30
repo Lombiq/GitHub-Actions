@@ -146,7 +146,7 @@ jobs:
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-865
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID }}
