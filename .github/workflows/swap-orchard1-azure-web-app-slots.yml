@@ -92,7 +92,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-865
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}
