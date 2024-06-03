@@ -50,7 +50,7 @@ runs:
           New-Item -ItemType File -Path $destination -Force
           Copy-Item -Path $PSItem -Destination $destination -Force
         }
-        
+
         Set-GitHubOutput 'has-fixes' ($files.Length -gt 0).ToString().ToLower()
         Set-GitHubOutput 'artifact-path' $artifactFolder
 
