@@ -17,12 +17,12 @@ When integrating spell-checking to your project for the first time or working on
 
 [Configuration files](https://github.com/check-spelling/check-spelling/wiki/Configuration#files) allow you to define words and patterns that shouldn't be considered spelling mistakes, e.g.:
 
-- *allow.txt*: Normal, expected words that just simply weren't added to the base or other referenced dictionary files yet.
-- *excludes.txt*: Perl-style regexes to ignore specific paths, files or extensions.
-- *expect.txt*: Dictionary file of arbitrary strings that aren't words, but otherwise valid and aren't spelling mistakes.
-- *patterns.txt*: Technical strings that aren't made up of words or word stems but follow a certain structure or pattern can be skipped using Perl-styled regexes. Some technical strings are already covered in Lombiq's version, such as hex color codes, Git commit hashes, GUIDs, and more.
+- _allow.txt_: Normal, expected words that just simply weren't added to the base or other referenced dictionary files yet.
+- _excludes.txt_: Perl-style regexes to ignore specific paths, files or extensions.
+- _expect.txt_: Dictionary file of arbitrary strings that aren't words, but otherwise valid and aren't spelling mistakes.
+- _patterns.txt_: Technical strings that aren't made up of words or word stems but follow a certain structure or pattern can be skipped using Perl-styled regexes. Some technical strings are already covered in Lombiq's version, such as hex color codes, Git commit hashes, GUIDs, and more.
 
-You can provide these files in your own repository and by default they must be placed under the path *.github/actions/spelling* (configurable through the action/workflow). To ease maintaining dictionary files (and keep a consistent behavior), keep the entries sorted alphabetically.
+You can provide these files in your own repository and by default they must be placed under the path _.github/actions/spelling_ (configurable through the action/workflow). To ease maintaining dictionary files (and keep a consistent behavior), keep the entries sorted alphabetically.
 
 ## Tips for external dictionaries
 
@@ -46,8 +46,8 @@ Before adding an entry to one of the dictionary files, consider the following:
 
 When using custom dictionary files on top of external ones (such as the ones from [check-spelling](https://github.com/check-spelling/cspell-dicts/tree/master) or [Lombiq's](../.github/actions/spelling)), these scripts can help reducing the number of entries you need to add to your own:
 
-- *Merge-SpellCheckingDictionaryFile.ps1*: Use this to maintain your *excludes.txt* file by adding the entries from another file, while still keeping your own. To just remove duplicates and sort the entries alphabetically in a single configuration file, pass in the same file for both parameters.
-- *Optimize-SpellCheckingDictionaryFile.ps1*: Use this to remove entries from your dictionary files that are already present in an external one you're referencing.
+- _Merge-SpellCheckingDictionaryFile.ps1_: Use this to maintain your _excludes.txt_ file by adding the entries from another file, while still keeping your own. To just remove duplicates and sort the entries alphabetically in a single configuration file, pass in the same file for both parameters.
+- _Optimize-SpellCheckingDictionaryFile.ps1_: Use this to remove entries from your dictionary files that are already present in an external one you're referencing.
 
 ## Working with a non-dev branch of `Lombiq.GitHub.Actions`
 
