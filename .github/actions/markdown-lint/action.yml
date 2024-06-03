@@ -38,26 +38,33 @@ runs:
       shell: pwsh
       run: (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
 
-    - name: List files updated by markdown-lint automatic fixes
+    - name: Copy files updated by markdown-lint automatic fixes
       if: inputs.fix == 'true'
       id: markdown-lint-fix-files
       shell: pwsh
       run: |
-        $files = ConvertFrom-MultiLineStringToStringArray -Lines (git diff --name-only '*.md' '*.markdown')
-        Set-GitHubOutput 'files' $files
+        $artifactFolder = [System.Guid]::NewGuid()
+        $files = git diff --name-only '*.md' '*.markdown'
+        $files | ForEach-Object {
+          $destination = "$artifactFolder/$PSItem"
+          New-Item -ItemType File -Path $destination -Force
+          Copy-Item -Path $PSItem -Destination $destination -Force
+        }
+        
+        Set-GitHubOutput 'has-fixes' ($files.Length -gt 0).ToString().ToLower()
+        Set-GitHubOutput 'artifact-path' $artifactFolder
 
     - name: Upload files fixed by markdown-lint
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
-      if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.files != ''
+      if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.has-fixes == 'true'
       with:
         name: markdown-lint-fixed-files
-        path: ${{ steps.markdown-lint-fix-files.outputs.files }}
-        if-no-files-found: warn
+        path: ${{ steps.markdown-lint-fix-files.outputs.artifact-path }}
         retention-days: 1
 
     - name: Fail workflow if markdown-lint fixes were made
-      if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.files != ''
+      if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.has-fixes == 'true'
       shell: pwsh
       run: |
-        Write-Output '::error::The following files were modified by markdown-lint and are available to download as artifacts: ${{ steps.markdown-lint-fix-files.outputs.files}}'
+        Write-Output '::error::Some files were modified by markdown-lint and are available to download as artifacts.'
         exit 1
