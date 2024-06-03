@@ -3,7 +3,8 @@ description: >
   Lints markdown files by wrapping the markdownlint-cli2 action
   (https://github.com/DavidAnson/markdownlint-cli2-action).
 
-# When updating defaults here also update them in the `markdown-lint` workflow.
+# When updating defaults here also update them in the `markdown-lint` workflow. These parameters are passed on directly
+# to the markdownlint-cli2 action, see: https://github.com/DavidAnson/markdownlint-cli2-action/blob/main/action.yml.
 inputs:
   config:
     description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
@@ -26,7 +27,8 @@ runs:
   using: 'composite'
   steps:
     - name: Markdown Linting
-      # When upgrading, also update Lombiq.NodeJs.Extensions to use the corresponding version of the markdownlint package.
+      # When upgrading, also update Lombiq.NodeJs.Extensions to use the corresponding version of the markdownlint
+      # package.
       uses: DavidAnson/markdownlint-cli2-action@b4c9feab76d8025d1e83c653fa3990936df0e6c8 # v16.0.0
       with:
         config: ${{ inputs.config }}
