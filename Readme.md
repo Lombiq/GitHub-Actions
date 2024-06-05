@@ -37,6 +37,12 @@ Bug reports, feature requests, comments, questions, code contributions and love 
 
 This project is developed by [Lombiq Technologies](https://lombiq.com/). Commercial-grade support is available through Lombiq.
 
+### Default .NET version
+
+For .NET workflows, the default .NET SDK version we should provide is a concrete patch version of the latest .NET version, the most recent one at the time of updating .NET support (e.g., to `8.0.301` when .NET 8 is the latest). We need to pin the .NET SDK to a specific version like this to avoid unexpected build changes that patch version updates bring (what happens if the version is specified as e.g. `8.0.301`). See [this issue](https://github.com/dotnet/roslyn/issues/73639) for more context.
+
+We can still choose to update to a more recent patch version, but only deliberately.
+
 ### Reference validation
 
 To ensure that when changing actions or workflows their references to other actions/workflows are up-to-date (i.e. instead of `@dev` they reference each other with `@current-branch`) the [Validate GitHub Actions Refs workflow](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/workflows/validate-this-gha-refs.yml) will fail if references are incorrect. This is the case also if after a pull request approve that references don't point to the target branch; before merging, that should be fixed, otherwise merging via the merge queue will fail.
