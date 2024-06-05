@@ -26,6 +26,7 @@ We at [Lombiq](https://lombiq.com/) also used these workflows for the following 
 ## Documentation
 
 > [!NOTE]
+
 > The code samples in the documentation reference the latest versions of the workflows and actions from the `dev` branch with `@dev`. This allows you to always use the latest versions, and get updates immediately. If instead you prefer stability, reference a specific version instead, like `@1.2.0`. You can see the versions available under [Releases](https://github.com/Lombiq/GitHub-Actions/releases).
 
 - [Reusable workflows](Docs/Workflows.md)
