@@ -1,0 +1,72 @@
+name: Markdown Linting
+description: >
+  Lints markdown files by wrapping the markdownlint-cli2 action
+  (https://github.com/DavidAnson/markdownlint-cli2-action).
+
+# When updating defaults here also update them in the `markdown-lint` workflow. These parameters are passed on directly
+# to the markdownlint-cli2 action, see: https://github.com/DavidAnson/markdownlint-cli2-action/blob/main/action.yml.
+inputs:
+  config:
+    description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
+    default: 'lombiq.markdownlint.json'
+    required: false
+  fix:
+    description: Whether to fix issues automatically for the rules that support it (any truthy value enables).
+    default: ''
+    required: false
+  globs:
+    description: Glob expression(s) of files to lint (newline-delimited).
+    default: '**/*.{md,markdown}'
+    required: false
+  separator:
+    description: String to use as a separator for the "globs" input (defaults to newline).
+    default: "\n"
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Markdown Linting
+      # When upgrading, also update Lombiq.NodeJs.Extensions to use the corresponding version of the markdownlint
+      # package.
+      uses: DavidAnson/markdownlint-cli2-action@b4c9feab76d8025d1e83c653fa3990936df0e6c8 # v16.0.0
+      with:
+        config: ${{ inputs.config }}
+        fix: ${{ inputs.fix }}
+        globs: ${{ inputs.globs }}
+        separator: ${{ inputs.separator }}
+
+    - name: Setup Scripts
+      shell: pwsh
+      run: (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Copy files updated by markdown-lint automatic fixes
+      if: inputs.fix == 'true'
+      id: markdown-lint-fix-files
+      shell: pwsh
+      run: |
+        $artifactFolder = [System.Guid]::NewGuid()
+        $files = git diff --name-only '*.md' '*.markdown'
+        $files | ForEach-Object {
+          $destination = "$artifactFolder/$PSItem"
+          New-Item -ItemType File -Path $destination -Force
+          Copy-Item -Path $PSItem -Destination $destination -Force
+        }
+
+        Set-GitHubOutput 'has-fixes' ($files.Length -gt 0).ToString().ToLower()
+        Set-GitHubOutput 'artifact-path' $artifactFolder
+
+    - name: Upload files fixed by markdown-lint
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.has-fixes == 'true'
+      with:
+        name: markdown-lint-fixed-files
+        path: ${{ steps.markdown-lint-fix-files.outputs.artifact-path }}
+        retention-days: 1
+
+    - name: Fail workflow if markdown-lint fixes were made
+      if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.has-fixes == 'true'
+      shell: pwsh
+      run: |
+        Write-Output '::error::Some files were modified by markdown-lint and are available to download as artifacts.'
+        exit 1

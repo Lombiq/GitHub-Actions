@@ -1,6 +1,6 @@
 # YAML Linting
 
-This solution uses [`yamllint`](https://github.com/adrienverge/yamllint) for linting YAML files according to a configuration file. Such a configuration file includes a set of rules that are checked against when linting the files and can be found in `/.trunk/configs/.yamllint.yaml`.
+This workflow uses [`yamllint`](https://github.com/adrienverge/yamllint) for linting YAML files according to a configuration file. Such a configuration file includes a set of rules that are checked against when linting the files and can be found in `/.trunk/configs/.yamllint.yaml`.
 
 You would typically consume the corresponding GHA workflow for YAML linting like this:
 

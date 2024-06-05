@@ -29,10 +29,12 @@ In addition to the below short explanations, check out the inline documentation 
 - `cancel-workflow`: Cancels the current workflow run, i.e. all jobs. Useful if you want to cancel the rest of the workflow when one job fails. Suitable workflows in this project expose this functionality via the `cancel-workflow-on-failure` parameter.
 - `check-merge-conflict`: Labels and comments on pull requests with merge conflicts.
 - `create-jira-issues-for-community-activities`: Creates Jira issues for community activities happening on GitHub, like issues, discussions, and pull requests being opened. Pull requests are only taken into account if they're not already related to a Jira issue (by starting their title with a Jira issue key).
+- `markdown-lint`: Checks for linting errors in markdown files, allowing for an optional configuration file to be used. Based on the [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2-action) action.
 - `publish-nuget`: Publishes the content of the current directory as a NuGet package.
 - `update-github-issue-and-pull-request`: Adds the Jira issue key prefix and link to pull requests as well as a Fixes reference to a GitHub issue, if a suitable one is found.
 - `verify-submodule-pull-request`: Assuming that the current repository is a submodule in another repository, this action verifies that a pull request with a matching issue code has been opened there as well.
 - `spelling`: Checks for spelling mistakes in a repository. Check out [this action's own documentation](SpellCheckingConfiguration.md) on how to use it and contribute to the configuration and dictionaries.
+- `yaml-lint`: Checks for linting errors in YAML-files, allowing for an optional configuration file to be used.
 
 ## Azure hosting
 

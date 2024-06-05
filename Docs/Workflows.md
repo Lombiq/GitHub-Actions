@@ -25,12 +25,13 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 ## Productivity
 
 - [Create Jira issues for community activities](Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md)
+- [Markdown linting](Workflows/Productivity/MarkdownLinting.md)
 - [Post-pull request checks automation](Workflows/Productivity/PostPullRequestChecksAutomation.md)
 - [Publish NuGet package](Workflows/Productivity/PublishNuGetPackage.md)
 - [Spell-checking](Workflows/Productivity/SpellChecking.md)
 - [Validate pull request](Workflows/Productivity/ValidatePullRequest.md)
 - [Validate submodule](Workflows/Productivity/ValidateSubmodule.md)
-- [Lint YAML files](Workflows/Productivity/YamlLinting.md)
+- [YAML linting](Workflows/Productivity/YamlLinting.md)
 
 ## Azure hosting
 

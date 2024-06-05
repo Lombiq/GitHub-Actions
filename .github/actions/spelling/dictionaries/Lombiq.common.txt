@@ -71,6 +71,7 @@ linting
 loglevel
 lombiq
 lucene
+markdownlint
 mediafield
 mediatheme
 mentoring
