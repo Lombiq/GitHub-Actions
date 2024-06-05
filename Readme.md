@@ -53,7 +53,7 @@ When you push your new release branch, the following things happen automatically
 3. The [Set GitHub Actions References](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/set-gha-refs/action.yml) action recursively searches all files in the `.github` folder to find each call to a GitHub Action or Workflow contained in this repository.
 4. By default, references to called actions and workflows targeting the release branch (see above) are string replaced with the version name (e.g. `v1.0`).
    - Additionally, the [Set GitHub Actions References](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/set-gha-refs/action.yml) action has a parameter called [additional-pattern-include-list](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/set-gha-refs/action.yml#L24) which allows for replacing `release/v1.0` under special circumstances such as for the [spelling action explicit file reference](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/spelling/action.yml#L133) scenario.
-5. The [stefanzweifel/git-auto-commit-action](https://github.com/stefanzweifel/git-auto-commit-action/commit/8756aa072ef5b4a080af5dc8fef36c5d586e521d) action is used to automatically: <!-- #spell-check-ignore-line -->
+5. The [stefanzweifel/git-auto-commit-action](https://github.com/stefanzweifel/git-auto-commit-action) action is used to automatically: <!-- #spell-check-ignore-line -->
    - Commit the updated files to the `release/v1.0` branch.
    - Create a new git tag using the release name (e.g. `v1.0`).
 6. Tags are force pushed to update the `v1.0` tag if it needs to be updated.
