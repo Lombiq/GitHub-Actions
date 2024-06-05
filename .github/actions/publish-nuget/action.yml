@@ -120,7 +120,7 @@ runs:
       run: Update-ManifestVersion './' '${{ steps.setup.outputs.publish-version }}'
 
     - name: Enable Node corepack
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@v1.2.0
 
     - name: Generate nuspec file if needed
       if: hashFiles('ConvertTo-Nuspec.ps1')
@@ -128,7 +128,7 @@ runs:
       run: ./ConvertTo-Nuspec.ps1 '${{ steps.setup.outputs.publish-version }}'
 
     - name: Build
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@v1.2.0
       # Notes on the configuration:
       # * -p:NuGetBuild=true is our property to load Lombiq dependencies from NuGet by switching project references
       #   to package references.
@@ -213,14 +213,14 @@ runs:
       run: dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
 
     - name: Publish Artifacts
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@v1.2.0
       with:
         name: NuGet-Package
         path: artifacts
         retention-days: ${{ inputs.nuget-artifact-retention-days }}
 
     - name: Create Release
-      uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/release-action@v1.2.0
       # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
       # v4.3.1-alpha.osoe-86.
       if: "!contains(steps.setup.outputs.publish-version, '-')"

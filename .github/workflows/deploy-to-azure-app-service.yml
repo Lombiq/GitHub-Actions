@@ -144,17 +144,17 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@v1.2.0
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@v1.2.0
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Enable Node corepack
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@v1.2.0
 
       # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
       # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
@@ -166,7 +166,7 @@ jobs:
           "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@v1.2.0
         with:
           directory: ${{ inputs.build-directory }}
           verbosity: ${{ inputs.build-verbosity }}
@@ -199,7 +199,7 @@ jobs:
           Compress-Archive -Path .\Published\* -DestinationPath .\Published.zip
 
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@v1.2.0
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID }}
@@ -228,7 +228,7 @@ jobs:
           clean: false
 
       - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@v1.2.0
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
@@ -249,6 +249,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@v1.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

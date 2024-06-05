@@ -10,7 +10,7 @@ on:
 jobs:
   markdown-linting:
     name: Markdown Linting
-    uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@v1.2.0
     with:
       globs: '**/*.{md,markdown};!License.md'
       separator: ';'

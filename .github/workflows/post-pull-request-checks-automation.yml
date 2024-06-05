@@ -58,7 +58,7 @@ jobs:
     steps:
       - name: Check Further Steps Should Run
         if: inputs.run-only-latest-workflow == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/check-current-workflow-is-latest@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/check-current-workflow-is-latest@v1.2.0
         id: check-steps-should-run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -76,7 +76,7 @@ jobs:
 
       - name: Automatically Merge Pull Request
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/auto-merge-pull-request@v1.2.0
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
         with:
@@ -84,7 +84,7 @@ jobs:
 
       - name: Automatically Transition Jira issue
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/auto-transition-jira-issue@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/auto-transition-jira-issue@v1.2.0
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
@@ -93,7 +93,7 @@ jobs:
 
       - name: Remove Label
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@v1.2.0
         with:
           token: ${{ env.MERGE_TOKEN }}
           labels: merge-and-resolve-jira-issue-if-checks-succeed
