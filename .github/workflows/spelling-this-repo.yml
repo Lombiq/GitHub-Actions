@@ -11,11 +11,11 @@ on:
 jobs:
   spelling:
     name: Spelling
-    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@issue/OSOE-744
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
     with:
       additional-dictionaries: |
         cspell:companies/src/companies.txt
       additional-configuration-source-prefixes: >
         {
-          "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/issue/OSOE-744/.github/actions/spelling/"
+          "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/"
         }
