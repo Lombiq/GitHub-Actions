@@ -12,24 +12,24 @@ inputs:
     description: The logging verbosity type used by the `dotnet` command.
   dotnet-pack-ignore-warning:
     required: false
-    default: ""
+    default: ''
     description: >
       Additional warning codes for the `-p:NoWarn=` argument of `dotnet pack`. The items can be separated by any
       whitespace, including newlines.
   dotnet-pack-include-symbols:
     required: false
-    default: "true"
+    default: 'true'
     description: If set to "true", a symbol package will be created together with the NuGet package.
   publish-version:
     required: false
-    default: "USE_GITHUB_REF_NAME"
+    default: 'USE_GITHUB_REF_NAME'
     description: >
       The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment variable
       is used which is suitable if the version is derived from a git tag. If "USE_GITHUB_RUN_NUMBER" is used, then the
       version is derived from the latest non-prerelease version tag and the current run number.
   nuget-artifact-retention-days:
     required: false
-    default: "14"
+    default: '14'
     description: >
       Duration in days after which the artifact of the NuGet package publishing (if any) will expire. See
       https://github.com/actions/upload-artifact#retention-period for more details. Note that this only affects the
@@ -37,7 +37,7 @@ inputs:
       remain indefinitely.
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Setup Scripts
       shell: pwsh
@@ -145,7 +145,7 @@ runs:
         publish-version: ${{ steps.setup.outputs.publish-version }}
         # Intentionally an empty string to use the default dotnet build behavior of "build the only project or only
         # solution, or fail if there are multiple projects".
-        solution-or-project-path: ""
+        solution-or-project-path: ''
         dotnet-build-switches: |
           -p:NuGetBuild=true
           -p:LangVersion=Latest
