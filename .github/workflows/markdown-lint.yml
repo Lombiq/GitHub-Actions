@@ -1,0 +1,62 @@
+name: Markdown Linting
+
+on:
+  workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
+          are used.
+
+    # When updating defaults here also update them in the `markdown-lint` action.
+    inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
+        type: string
+        default: 'true'
+      config:
+        description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
+        type: string
+        default: '.github/actions/markdown-lint/lombiq.markdownlint.json'
+      fix:
+        description: Whether to fix issues automatically for the rules that support it (any truthy value enables).
+        type: string
+        default: ''
+      globs:
+        description: Glob expression(s) of files to lint (newline-delimited).
+        type: string
+        default: '**/*.{md,markdown}'
+      separator:
+        description: String to use as a separator for the "globs" input (defaults to newline).
+        type: string
+        default: "\n"
+      timeout-minutes:
+        type: number
+        default: 1
+        description: Configuration for the timeout-minutes parameter of the workflow.
+
+jobs:
+  markdown-linting:
+    name: Markdown Linting
+    runs-on: ubuntu-22.04
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
+
+      - name: Markdown Linting
+        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@dev
+        with:
+          config: ${{ inputs.config }}
+          fix: ${{ inputs.fix }}
+          globs: ${{ inputs.globs }}
+          separator: ${{ inputs.separator }}
+
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -19,7 +19,7 @@ on:
         description: If set to "true", this will cancel the current workflow run with all jobs if this workflow fails.
         required: false
         type: string
-        default: "true"
+        default: 'true'
       config-file-path:
         description: 'Path to the yamllint configuration file'
         required: true

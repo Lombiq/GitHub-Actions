@@ -1,0 +1,17 @@
+name: Markdown Linting
+
+# Runs for PRs opened for any branch, and pushes to the dev branch.
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+
+jobs:
+  markdown-linting:
+    name: Markdown Linting
+    uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@dev
+    with:
+      globs: '**/*.{md,markdown};!License.md'
+      separator: ';'
+      fix: true

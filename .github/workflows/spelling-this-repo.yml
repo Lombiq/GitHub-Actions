@@ -15,3 +15,7 @@ jobs:
     with:
       additional-dictionaries: |
         cspell:companies/src/companies.txt
+      additional-configuration-source-prefixes: >
+        {
+          "lombiq-lgha": "https://raw.githubusercontent.com/Lombiq/GitHub-Actions/dev/.github/actions/spelling/"
+        }
