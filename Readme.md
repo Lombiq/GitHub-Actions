@@ -25,6 +25,9 @@ We at [Lombiq](https://lombiq.com/) also used these workflows for the following 
 
 ## Documentation
 
+> [!NOTE]
+> The code samples in the documentation reference the latest versions of the workflows and actions from the `dev` branch with `@dev`. This allows you to always use the latest versions, and get updates immediately. If instead you prefer stability, reference a specific version instead, like `@1.2.0`. You can see the versions available under [Releases](https://github.com/Lombiq/GitHub-Actions/releases).
+
 - [Reusable workflows](Docs/Workflows.md)
 - [Composite actions](Docs/Actions.md)
 
@@ -34,9 +37,11 @@ Bug reports, feature requests, comments, questions, code contributions and love 
 
 This project is developed by [Lombiq Technologies](https://lombiq.com/). Commercial-grade support is available through Lombiq.
 
+### Reference validation
+
 To ensure that when changing actions or workflows their references to other actions/workflows are up-to-date (i.e. instead of `@dev` they reference each other with `@current-branch`) the [Validate GitHub Actions Refs workflow](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/workflows/validate-this-gha-refs.yml) will fail if references are incorrect. This is the case also if after a pull request approve that references don't point to the target branch; before merging, that should be fixed, otherwise merging via the merge queue will fail.
 
-## Versioning, Tags and Releases
+### Versioning, Tags and Releases
 
 To release versions of Lombiq GitHub Actions, and allow consumers to reference a specific version of a reusable workflow or composite action (e.g. `@v1.0`), we employ some automation to do this in a consistent and predictable way.
 
