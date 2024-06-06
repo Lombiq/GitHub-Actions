@@ -44,7 +44,7 @@ See [issue #284 "Introduce versioning and releases (OSOE-735)"](https://github.c
 
 New versions of Lombiq GitHub Actions are automatically tagged using the [Tag Version (this repo)](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/workflows/tag-version-this-repo.yml) workflow. This workflow is triggered for release branches with a name that matches the `release/**` pattern (e.g. `release/v1.0.0`, `release/v2.1.0-alpha`, etc.).
 
-To create a new release, create a new branch following the above naming convention at the commit to be released and push it. Take this similar to how you would add a release tag in other repos, and don't push anything else to the release branch.
+To create a new release, create a new branch following the above naming convention at the commit to be released and push it. This is similar to how you would add a release tag in other repos, and don't push anything else to the release branch.
 
 When you push your new release branch, the following things happen automatically:
 
