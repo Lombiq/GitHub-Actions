@@ -56,6 +56,14 @@ on:
         default: '${{ github.ref_name }}'
         description: The expected reference value to set for all called GHA Workflows and Actions.
         type: string
+      merge-target:
+        required: false
+        default: '${{ github.event.repository.default_branch }}'
+        description: >
+          The target branch to merge back to after setting the GitHub Actions and Workflows to the version tag. This is
+          necessary because otherwise, the auto-generated release notes will include all the changes since the start of
+          the repo, due to the ancestors of the current release branch not containing the previous release branch.
+        type: string
 
 jobs:
   run:
@@ -65,21 +73,18 @@ jobs:
       run:
         shell: pwsh
     steps:
-
       - name: Checkout Repository
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.TAG_VERSION_TOKEN }}
 
-      - name: Setup Scripts
-        run: |
-          (Resolve-Path "Scripts").Path >> $Env:GITHUB_PATH
-
       - name: Determine Version Tag Name from Branch Name
         id: determine-tag
         run: |
           $tagname = "${{ inputs.expected-ref }}" -replace 'release/', ''
-          Set-GitHubOutput -Key 'tagname' -Value $tagname
+          # Same as Set-GitHubOutput. But using that would require converting this to an action and duplicating the
+          # parameters just to use that one script.
+          "tagname=$tagname" >> $Env:GITHUB_OUTPUT
 
       - name: Set Ref for GitHub Actions and Workflows
         uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@dev
@@ -90,7 +95,7 @@ jobs:
           additional-pattern-include-list: ${{ inputs.additional-pattern-include-list }}
           expected-ref: '${{ steps.determine-tag.outputs.tagname }}'
 
-      - name: Commit and Push Changes
+      - name: Commit and Push Release Branch Changes
         uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5
         with:
           commit_message: 'Set GitHub Actions/Workflows to tag ${{ steps.determine-tag.outputs.tagname }}'
@@ -110,3 +115,24 @@ jobs:
           generateReleaseNotes: true
           tag: ${{ steps.determine-tag.outputs.tagname }}
 
+      - name: Merge Back
+        # Same as Create Release above.
+        if: "!contains(steps.determine-tag.outputs.tagname, '-')"
+        run: |
+          git fetch origin ${{ inputs.merge-target }}
+          git checkout ${{ inputs.merge-target }}
+          # Setting the credentials is needed even with the --no-commit merge.
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          # Merge without taking any changes from the release branch.
+          git merge --strategy=ours --no-commit ${{ inputs.expected-ref }}
+
+      - name: Commit and Push Merge Target Changes
+        # Same as Create Release above.
+        if: "!contains(steps.determine-tag.outputs.tagname, '-')"
+        uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5
+        with:
+          commit_message: Merge remote-tracking branch '${{ inputs.expected-ref }}' into ${{ inputs.merge-target }}
+          skip_dirty_check: true
+          skip_fetch: true
+          skip_checkout: true
