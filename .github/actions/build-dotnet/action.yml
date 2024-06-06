@@ -131,16 +131,15 @@ runs:
 
     - name: Cache Packages with GitHub Cache
       uses: actions/cache@v4.0.2
-      if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' && !contains(runner.name, 'buildjet') }}
+      if: steps.detect-cache-configuration.outputs.cache-enabled == 'true' && !contains(runner.name, 'buildjet')
       with:
         path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
         key: ${{ steps.detect-cache-configuration.outputs.key }}
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
     - name: Cache Packages with BuildJet Cache
-      # v4.0.2
-      uses: buildjet/cache@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4
-      if: ${{ steps.detect-cache-configuration.outputs.cache-enabled == 'true' && contains(runner.name, 'buildjet') }}
+      uses: buildjet/cache@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2
+      if: steps.detect-cache-configuration.outputs.cache-enabled == 'true' && contains(runner.name, 'buildjet')
       with:
         path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
         key: ${{ steps.detect-cache-configuration.outputs.key }}
