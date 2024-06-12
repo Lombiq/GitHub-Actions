@@ -63,7 +63,7 @@ function CreateIssue
 
 function AddLink
 {
-    param($issueKey)
+    param($IssueKey)
 
     $bodyJson = @{
         object = @{
@@ -74,7 +74,7 @@ function AddLink
 
     try
     {
-        Invoke-JiraApiPost "issue/$issueKey/remotelink" $bodyJson
+        Invoke-JiraApiPost "issue/$IssueKey/remotelink" $bodyJson
     }
     catch
     {
@@ -84,7 +84,7 @@ function AddLink
     }
 }
 
-$issueKey = CreateIssue
-AddLink $issueKey
-Set-GitHubOutput 'issue-key' $issueKey
-Set-GitHubOutput 'issue-url' "$($Env:JIRA_BASE_URL.TrimEnd('/'))/browse/$issueKey"
+$IssueKey = CreateIssue
+AddLink $IssueKey
+Set-GitHubOutput 'issue-key' $IssueKey
+Set-GitHubOutput 'issue-url' "$($Env:JIRA_BASE_URL.TrimEnd('/'))/browse/$IssueKey"
