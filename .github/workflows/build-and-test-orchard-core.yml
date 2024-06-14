@@ -231,7 +231,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-580
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration}}
