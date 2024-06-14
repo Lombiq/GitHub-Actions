@@ -192,7 +192,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-855
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 

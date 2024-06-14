@@ -112,7 +112,7 @@ jobs:
 
       # This is necessary for building Gulp Extensions and test-dotnet.
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-855
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
 
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev

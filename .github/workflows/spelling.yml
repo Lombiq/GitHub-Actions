@@ -111,7 +111,7 @@ jobs:
 
       - name: Check Spelling
         id: check-spelling-action
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-855
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
           merge-file-excludes: ${{ inputs.merge-file-excludes }}
           merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}
@@ -138,7 +138,7 @@ jobs:
     if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
     steps:
       - name: Comment (PR)
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-855
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
         with:
           post-comment: 1
           task: ${{ needs.check-spelling.outputs.followup }}
