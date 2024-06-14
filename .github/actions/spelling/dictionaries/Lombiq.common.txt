@@ -122,6 +122,7 @@ taghelper
 taxonomyfield
 teamcity
 templated
+textlint
 timespan
 timezones
 tls
