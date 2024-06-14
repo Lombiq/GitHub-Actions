@@ -43,7 +43,7 @@ This project is developed by [Lombiq Technologies](https://lombiq.com/). Commerc
 
 ### Default .NET version
 
-For .NET workflows, the default .NET SDK version we should provide is a concrete patch version of the latest .NET version, the most recent one at the time of updating .NET support (e.g., to `8.0.301` when .NET 8 is the latest). We need to pin the .NET SDK to a specific version like this to avoid unexpected build changes that patch version updates bring (what happens if the version is specified as e.g. `8.0.301`). See [this issue](https://github.com/dotnet/roslyn/issues/73639) for more context.
+For .NET workflows, the default .NET SDK version we should provide is a concrete patch version of the latest .NET version, the most recent one at the time of updating .NET support (e.g., to `8.0.301` when .NET 8 is the latest). We need to pin the .NET SDK to a specific version like this to avoid unexpected build changes that patch version updates bring (which happens if the version is specified as e.g. `8.0.x`). See [this issue](https://github.com/dotnet/roslyn/issues/73639) for more context.
 
 We can still choose to update to a more recent patch version, but only deliberately.
 
