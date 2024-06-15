@@ -158,7 +158,7 @@ runs:
       # source prefixes" step with the dictionary version tag that belongs to the commit of the release. See
       # https://github.com/check-spelling/check-spelling/blob/v0.0.22/action.yml#L67 for current version.
       # Also update check_extra_dictionaries below as necessary.
-      uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # v0.0.22
+      uses: Lombiq/check-spelling@issue/OSOE-855-dotnet-quality-warning # Post-v0.0.22 with actions/cache update.
       with:
         check_file_names: 1
         config: ${{ inputs.configuration-path }}
