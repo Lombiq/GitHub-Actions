@@ -38,7 +38,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-855-dotnet-quality-warning
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
