@@ -26,17 +26,22 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
     # This step is needed when the workflow calling this action receives the checkout token as a secret, but when that
     # parameter is not supplied, the runner sets the value of that secret to empty string, which is passed on to this
     # action, thus the default value of the parameter will not be applied. Related bug report:
-    # https://github.com/actions/runner/issues/924
+    # https://github.com/actions/runner/issues/924.
     - name: Set Checkout Token
       shell: pwsh
       env:
         CHECKOUT_TOKEN: ${{ inputs.token }}
       run: |
         $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
-        "CHECKOUT_TOKEN=$checkoutToken" >> $Env:GITHUB_ENV
+        Set-GitHubEnv 'CHECKOUT_TOKEN' $checkoutToken
 
     - uses: actions/checkout@v4.1.6
       with:

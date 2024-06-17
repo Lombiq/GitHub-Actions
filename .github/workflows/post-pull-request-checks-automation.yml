@@ -72,7 +72,7 @@ jobs:
           MERGE_TOKEN: ${{ secrets.MERGE_TOKEN }}
         run: |
           $mergeToken = $Env:MERGE_TOKEN ? $Env:MERGE_TOKEN : "${{ secrets.GITHUB_TOKEN }}"
-          "MERGE_TOKEN=$mergeToken" >> $Env:GITHUB_ENV
+          Set-GitHubEnv 'MERGE_TOKEN' $mergeToken
 
       - name: Automatically Merge Pull Request
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
