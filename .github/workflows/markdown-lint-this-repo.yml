@@ -10,7 +10,7 @@ on:
 jobs:
   markdown-linting:
     name: Markdown Linting
-    uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@issue/OSOE-855-dotnet-quality-warning
+    uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@dev
     with:
       globs: '**/*.{md,markdown};!License.md'
       separator: ';'
