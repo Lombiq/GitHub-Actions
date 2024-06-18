@@ -72,6 +72,7 @@ jobs:
           MERGE_TOKEN: ${{ secrets.MERGE_TOKEN }}
         run: |
           $mergeToken = $Env:MERGE_TOKEN ? $Env:MERGE_TOKEN : "${{ secrets.GITHUB_TOKEN }}"
+          # This could use Set-GitHubEnv but then we'd need to turn this into an action.
           "MERGE_TOKEN=$mergeToken" >> $Env:GITHUB_ENV
 
       - name: Automatically Merge Pull Request

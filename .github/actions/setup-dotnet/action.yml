@@ -10,18 +10,27 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
     - name: Set Environment Variables
       shell: pwsh
       run: |
-        # This ceremony is needed to make the env vars available in subsequent steps too, see:
-        # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable.
-        # Note that in PowerShell, echo is not needed. Make sure not to put spaces around the equal signs when writing
-        # to $Env:GITHUB_ENV.
-        "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true" >> $Env:GITHUB_ENV
-        $Env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
+        Set-GitHubEnv 'DOTNET_SKIP_FIRST_TIME_EXPERIENCE' 'true'
+        Set-GitHubEnv 'DOTNET_CLI_TELEMETRY_OPTOUT' 'true'
 
-        "DOTNET_CLI_TELEMETRY_OPTOUT=true" >> $Env:GITHUB_ENV
-        $Env:DOTNET_CLI_TELEMETRY_OPTOUT = "true"
+    # For wildcard .NET versions, the General Availability ("ga") channel should be selected. For concrete versions,
+    # this shouldn't be set, because that'll cause a warning.
+    - name: Set dotnet-quality
+      id: set-dotnet-quality
+      shell: pwsh
+      run: |
+        if ('${{ inputs.dotnet-version }}' -match 'x')
+        {
+            Set-GitHubOutput 'dotnet-quality' 'ga'
+        }
 
     # setup-dotnet won't install a version if it is already preinstalled on the VM. Note that it checks the latest
     # released .NET version for wildcard versions. So, e.g. with 6.0.x specified it'll still install 6.0.402 if the VM
@@ -31,10 +40,9 @@ runs:
       id: setup-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
-        dotnet-quality: ga
+        dotnet-quality: ${{ steps.set-dotnet-quality.outputs.dotnet-quality }}
 
     - name: Save .NET SDK Version Into Environment Variable
       shell: pwsh
       run: |
-        "DOTNET_SDK_TO_USE=${{ steps.setup-dotnet.outputs.dotnet-version }}" >> $Env:GITHUB_ENV
-        $Env:DOTNET_SDK_TO_USE = "${{ steps.setup-dotnet.outputs.dotnet-version }}"
+        Set-GitHubEnv 'DOTNET_SDK_TO_USE' ${{ steps.setup-dotnet.outputs.dotnet-version }}

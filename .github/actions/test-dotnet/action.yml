@@ -83,7 +83,7 @@ runs:
             Exit 0
         }
 
-        "Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests=${{ inputs.ui-test-parallelism }}" >> $Env:GITHUB_ENV
+        Set-GitHubEnv 'Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests' ${{ inputs.ui-test-parallelism }}
 
     - name: Install dotnet-dump
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
