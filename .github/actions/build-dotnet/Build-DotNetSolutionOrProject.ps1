@@ -1,4 +1,4 @@
-param (
+﻿param (
     [string] $Configuration,
     [string] $SolutionOrProject,
     [string] $Verbosity,
@@ -9,9 +9,9 @@ param (
     [boolean] $CreateBinaryLog,
     [boolean] $WarningsAsErrors)
 
-function ConvertTo-Array([string] $rawInput)
+function ConvertTo-Array([string] $RawInput)
 {
-    $rawInput.Replace("`r", '').Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
+    $RawInput.Replace("`r", '').Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
 Write-Output "Version number for the .NET build products: $Version"
