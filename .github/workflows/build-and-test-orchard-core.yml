@@ -38,7 +38,7 @@ on:
           "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
       dotnet-version:
         type: string
-        default: 8.0.x
+        default: 8.0.301
         description: Version of the .NET SDK to set up.
       blame-hang-timeout:
         type: string
