@@ -1,4 +1,4 @@
-[Diagnostics.CodeAnalysis.SuppressMessage(
+﻿[Diagnostics.CodeAnalysis.SuppressMessage(
     'PSReviewUnusedParameter',
     'Summary',
     Justification = 'It is actually used. This is a known issue: https://github.com/PowerShell/PSScriptAnalyzer/issues/1891.')]
@@ -84,7 +84,7 @@ function AddLink
     }
 }
 
-$IssueKey = CreateIssue
-AddLink $IssueKey
-Set-GitHubOutput 'issue-key' $IssueKey
-Set-GitHubOutput 'issue-url' "$($Env:JIRA_BASE_URL.TrimEnd('/'))/browse/$IssueKey"
+$issueKey = CreateIssue
+AddLink $issueKey
+Set-GitHubOutput 'issue-key' $issueKey
+Set-GitHubOutput 'issue-url' "$($Env:JIRA_BASE_URL.TrimEnd('/'))/browse/$issueKey"
