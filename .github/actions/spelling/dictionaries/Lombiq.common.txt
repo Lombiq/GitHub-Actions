@@ -28,6 +28,7 @@ darkmode
 datatable
 DBs
 Deconstruct
+Deque
 dotnet
 Elasticsearch
 EULA
