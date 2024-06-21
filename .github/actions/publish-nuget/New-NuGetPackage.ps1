@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Creates a NuGet package from each project in the sln file in the current directory.
 .DESCRIPTION
@@ -100,7 +100,7 @@ foreach ($project in $projects)
         continue
     }
 
-    $PackageValidationParameters = @(
+    $packageValidationParameters = @(
         "-p:EnablePackageValidation=$EnablePackageValidation"
         "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
     )
@@ -119,7 +119,7 @@ foreach ($project in $projects)
         {
             Write-Output "::warning:: Package version couldn't be added, thus package validation to baseline version won't be done."
             dotnet remove TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
-            $PackageValidationParameters = @(
+            $packageValidationParameters = @(
                 "-p:EnablePackageValidation=$EnablePackageValidation"
             )
         }
@@ -130,7 +130,7 @@ foreach ($project in $projects)
     }
     else
     {
-        $PackageValidationParameters = @(
+        $packageValidationParameters = @(
             "-p:EnablePackageValidation=$EnablePackageValidation"
         )
     }
@@ -140,11 +140,11 @@ foreach ($project in $projects)
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
-        dotnet pack $project -p:NuspecFile="$nuspecFile" @PackParameters @PackageValidationParameters
+        dotnet pack $project -p:NuspecFile="$nuspecFile" @packParameters @packageValidationParameters
     }
     else
     {
-        dotnet pack $project @PackParameters @PackageValidationParameters
+        dotnet pack $project @packParameters @packageValidationParameters
     }
 
     if ($LASTEXITCODE -ne 0)
