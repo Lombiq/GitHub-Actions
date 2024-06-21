@@ -1,4 +1,4 @@
-param(
+﻿param(
     [String[]] $CalledRepoBaseIncludeList,
     [String[]] $AdditionalPatternIncludeList,
     [String[]] $PathIncludeList,
@@ -33,7 +33,7 @@ else
             {
                 Write-Output "$oldline => $newline"
 
-                $filename = $matched.RelativePath($pwd)
+                $filename = $matched.RelativePath($PWD)
                 $linenumber = $matched.LineNumber
                 $title = "GHA Ref pinned to '$ExpectedRef'"
 

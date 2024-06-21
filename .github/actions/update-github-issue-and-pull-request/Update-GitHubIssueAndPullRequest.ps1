@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string] $JiraBaseUrl,
     [string] $GitHubRepository,
     [string] $Branch,
@@ -20,12 +20,12 @@ if ($Branch -NotLike '*issue*')
 
 $Branch -match '(\w+-\d+)' | Out-Null
 
-if ($null -eq $matches)
+if ($null -eq $Matches)
 {
     throw "Issue key not found in the branch name '$Branch'!"
 }
 
-$issueKey = $matches[0]
+$issueKey = $Matches[0]
 $issueLink = "[$issueKey]($jiraBrowseUrl$issuekey)"
 
 if ($Title -NotLike "*$issueKey*")

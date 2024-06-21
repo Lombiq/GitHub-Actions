@@ -1,4 +1,4 @@
-param(
+﻿param(
     [String[]] $CalledRepoBaseIncludeList,
     [String[]] $PathIncludeList,
     [String[]] $FileIncludeList,
@@ -30,7 +30,7 @@ if ($mismatchRefs.Count -gt 0)
 
     foreach ($mismatch in $mismatchRefs)
     {
-        $filename = $mismatch.RelativePath($pwd)
+        $filename = $mismatch.RelativePath($PWD)
         $linenumber = $mismatch.LineNumber
         $title = $mismatch.Line
 

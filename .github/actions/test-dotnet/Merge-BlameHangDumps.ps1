@@ -1,4 +1,4 @@
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'Configuration', Justification = 'The Configuration parameter is in use.')]
+﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'Configuration', Justification = 'The Configuration parameter is in use.')]
 param ($Directory, $Configuration)
 
 $rootDirectory = Resolve-Path $Directory
@@ -24,7 +24,7 @@ function ItemFilter($Item, $TestConfiguration)
 {
     if ($Item.IsContainer)
     {
-        return $False
+        return $false
     }
 
     $allow = (($Item.Name -like 'Sequence_*.xml') -or ($Item.Name -like '*_hangdump.dmp'))
