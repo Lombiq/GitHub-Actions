@@ -113,7 +113,7 @@ runs:
     # This also implicitly restores NuGet dependencies.
     - name: Add Source Link package
       shell: pwsh
-      run: Add-SourceLinkPackage
+      run: dotnet restore
 
     - name: Update package manifest version
       shell: pwsh
