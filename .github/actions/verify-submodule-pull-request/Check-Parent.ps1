@@ -12,6 +12,6 @@ if (-not ($Branch -match '(\w+-\d+)'))
 $titles = gh pr list --repo $Repository --limit 100 --json title --template '{{range .}}{{tablerow .title}}{{end}}'
 
 $issueCode = $Matches[0]
-$lookFor = "${issueCode}:"
+$lookFor = "$($issueCode):"
 if (($titles | Where-Object { $PSItem -and $PSItem.Trim().StartsWith($lookFor) }).Count -gt 0) { exit 0 }
 Set-Failed "Couldn't find any pull request whose title starts with `"$lookFor`" in $Repository. Please create one."
