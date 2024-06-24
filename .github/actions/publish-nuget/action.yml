@@ -124,7 +124,7 @@ runs:
         }
         else
         {
-          dotnet restore
+          dotnet restore -p:NuGetBuild=true
         }
 
     - name: Update package manifest version
