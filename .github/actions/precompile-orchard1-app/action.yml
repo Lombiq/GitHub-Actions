@@ -72,7 +72,7 @@ runs:
       run: nuget restore ${{ inputs.checkout-path }}/${{ inputs.solution-path }}
 
     - name: Publish Precompiled app
-      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/OSOE-580
       with:
         directory: ${{ inputs.checkout-path }}
         verbosity: ${{ inputs.verbosity }}

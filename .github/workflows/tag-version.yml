@@ -87,7 +87,7 @@ jobs:
           "tagname=$tagname" >> $Env:GITHUB_OUTPUT
 
       - name: Set Ref for GitHub Actions and Workflows
-        uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/set-gha-refs@issue/OSOE-580
         with:
           path-include-list: ${{ inputs.path-include-list }}
           file-include-list: ${{ inputs.file-include-list }}

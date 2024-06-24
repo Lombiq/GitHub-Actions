@@ -221,7 +221,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-580
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
