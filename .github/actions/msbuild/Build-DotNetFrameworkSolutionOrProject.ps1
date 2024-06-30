@@ -1,4 +1,4 @@
-param (
+﻿param (
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $TreatWarningsAsErrors,
@@ -6,9 +6,9 @@ param (
     [string] $Version,
     [string] $Switches)
 
-function ConvertTo-Array([string] $rawInput)
+function ConvertTo-Array([string] $RawInput)
 {
-    $rawInput.Replace("`r", '').Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
+    $RawInput.Replace("`r", '').Split("`n") | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem }
 }
 
 nuget restore $SolutionOrProject

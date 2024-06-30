@@ -1,4 +1,4 @@
-[Diagnostics.CodeAnalysis.SuppressMessage(
+﻿[Diagnostics.CodeAnalysis.SuppressMessage(
     'PSReviewUnusedParameter',
     'Summary',
     Justification = 'It is actually used. This is a known issue: https://github.com/PowerShell/PSScriptAnalyzer/issues/1891.')]
@@ -63,7 +63,7 @@ function CreateIssue
 
 function AddLink
 {
-    param($issueKey)
+    param($IssueKey)
 
     $bodyJson = @{
         object = @{
@@ -74,7 +74,7 @@ function AddLink
 
     try
     {
-        Invoke-JiraApiPost "issue/$issueKey/remotelink" $bodyJson
+        Invoke-JiraApiPost "issue/$IssueKey/remotelink" $bodyJson
     }
     catch
     {
