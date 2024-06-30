@@ -231,7 +231,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-580
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration}}
@@ -251,7 +251,7 @@ jobs:
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/OSOE-580
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
 
       - name: Set up Azurite
         if: inputs.set-up-azurite == 'true'
@@ -261,7 +261,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-580
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}

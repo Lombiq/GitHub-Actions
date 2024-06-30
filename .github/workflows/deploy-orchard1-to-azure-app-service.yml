@@ -135,7 +135,7 @@ jobs:
         run: nuget restore ${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
       - name: Publish Precompiled App
-        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/OSOE-580
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
         with:
           solution-or-project-path: Orchard.proj
           verbosity: ${{ inputs.build-verbosity }}
