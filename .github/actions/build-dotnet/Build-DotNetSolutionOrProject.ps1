@@ -62,19 +62,20 @@ Write-Output "Building solution or project with ``dotnet build $SolutionOrProjec
 $errorLines = New-Object 'System.Collections.Generic.List[string]'
 $errorCodes = New-Object 'System.Collections.Generic.List[string]'
 
-$errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
-dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
-    if ($PSItem -notmatch $errorFormat) { return $PSItem }
-
-    ($null, $file, $line, $column, $message) = [regex]::Match($PSItem, $errorFormat, 'Compiled').Groups.Value
-
-    $errorLines.Add($PSItem)
-    if ($message.Contains(':')) { $errorCodes.Add($message.Split(':')[0].Trim()) }
-    if ($noErrorsExpected)
-    {
-        Write-Output "::error:: This is a debug message: file=test/Lombiq.OSOCE.Tests.UI/UITestBase.cs,line=$line,col=$column,title=BuildError"
-        Write-Output "::error::$PSItem"
-        Write-Output "::error file=test/Lombiq.OSOCE.Tests.UI/UITestBase.cs,line=$line,col=$column,title=BuildError::$message"
+if ($noErrorsExpected)
+{
+    dotnet build $SolutionOrProject
+}
+else
+{
+    $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
+    dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
+        if ($PSItem -notmatch $errorFormat) { return $PSItem }
+    
+        ($null, $file, $line, $column, $message) = [regex]::Match($PSItem, $errorFormat, 'Compiled').Groups.Value
+    
+        $errorLines.Add($PSItem)
+        if ($message.Contains(':')) { $errorCodes.Add($message.Split(':')[0].Trim()) }
     }
 }
 
