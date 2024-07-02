@@ -72,6 +72,7 @@ dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
     if ($message.Contains(':')) { $errorCodes.Add($message.Split(':')[0].Trim()) }
     if ($noErrorsExpected)
     {
+        Write-Output "::error:: This is a debug message: file=test/Lombiq.OSOCE.Tests.UI/UITestBase.cs,line=$line,col=$column,title=BuildError"
         Write-Output "::error::$PSItem"
         Write-Output "::error file=test/Lombiq.OSOCE.Tests.UI/UITestBase.cs,line=$line,col=$column,title=BuildError::$message"
     }
