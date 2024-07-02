@@ -71,9 +71,9 @@ else
     $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
     dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
         if ($PSItem -notmatch $errorFormat) { return $PSItem }
-    
+
         ($null, $file, $line, $column, $message) = [regex]::Match($PSItem, $errorFormat, 'Compiled').Groups.Value
-    
+
         $errorLines.Add($PSItem)
         if ($message.Contains(':')) { $errorCodes.Add($message.Split(':')[0].Trim()) }
     }
