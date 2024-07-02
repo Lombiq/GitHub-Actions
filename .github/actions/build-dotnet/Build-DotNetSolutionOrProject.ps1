@@ -64,7 +64,7 @@ $errorCodes = New-Object 'System.Collections.Generic.List[string]'
 
 if ($noErrorsExpected)
 {
-    dotnet build $SolutionOrProject
+    dotnet build $SolutionOrProject @buildSwitches
 }
 else
 {
