@@ -38,7 +38,7 @@ $buildSwitches = ConvertTo-Array @"
 "@
 
 [array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | ForEach-Object { $PSItem.Split(':')[0] } | Sort-Object
-$noErrors = $expectedErrorCodes.Count -eq 0
+$noErrorsExpected = $expectedErrorCodes.Count -eq 0
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
@@ -70,10 +70,10 @@ dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
 
     $errorLines.Add($PSItem)
     if ($message.Contains(':')) { $errorCodes.Add($message.Split(':')[0].Trim()) }
-    if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
+    if ($noErrorsExpected) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
 }
 
-if ($noErrors -and -not $?)
+if ($noErrorsExpected -and -not $?)
 {
     exit 1
 }
