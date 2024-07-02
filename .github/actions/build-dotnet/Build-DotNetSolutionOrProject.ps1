@@ -70,7 +70,11 @@ dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
 
     $errorLines.Add($PSItem)
     if ($message.Contains(':')) { $errorCodes.Add($message.Split(':')[0].Trim()) }
-    if ($noErrorsExpected) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
+    if ($noErrorsExpected)
+    {
+        Write-Output "::error::$PSItem"
+        Write-Output "::error file=$file,line=$line,col=$column::$message"
+    }
 }
 
 if ($noErrorsExpected -and -not $?)
