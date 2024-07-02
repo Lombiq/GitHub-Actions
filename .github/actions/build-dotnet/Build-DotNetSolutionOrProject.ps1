@@ -73,7 +73,7 @@ dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
     if ($noErrorsExpected)
     {
         Write-Output "::error::$PSItem"
-        Write-Output "::error file=test/Lombiq.OSOCE.Tests.UI/UITestBase.cs,line=$line,col=$column::$message"
+        Write-Output "::error file=test/Lombiq.OSOCE.Tests.UI/UITestBase.cs,line=$line,col=$column,title=BuildError::$message"
     }
 }
 
