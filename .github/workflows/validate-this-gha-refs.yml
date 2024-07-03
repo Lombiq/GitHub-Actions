@@ -53,7 +53,7 @@ jobs:
       - name: Get GitHub Actions Item Changes from File Changes
         id: changed-items
         if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group'
-        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-gha-items@issue/OSOE-874
+        uses: Lombiq/GitHub-Actions/.github/actions/get-changed-gha-items@dev
         with:
           file-include-list: '${{ steps.git-diff.outputs.changed-files }}'
 
