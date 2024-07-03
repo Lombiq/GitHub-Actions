@@ -6,11 +6,35 @@ yaml-files:
 ignore: |
   **/node_modules/**
   **/.trunk/**
+  
+extends: default
 
 rules:
-    trailing-spaces: {}
-    key-duplicates: {}
-    quoted-strings: {
-        quote-type: any,
-        required: false
-    }
+    anchors:
+        forbid-duplicated-anchors: true
+        forbid-unused-anchors: true
+    braces: 
+        min-spaces-inside-empty: 0
+        max-spaces-inside-empty: 0
+    brackets:
+        min-spaces-inside-empty: 0
+        max-spaces-inside-empty: 0
+    document-start: 
+        present: false
+    empty-values: enable
+    float-values:
+        forbid-inf: true
+        forbid-nan: true
+        forbid-scientific-notation: true
+        require-numeral-before-decimal: true  
+    indentation:
+        spaces: 4
+        indent-sequences: true
+        check-multi-line-strings: true
+    line-length:
+        max: 120
+        allow-non-breakable-words: true
+        allow-non-breakable-inline-mappings: true
+    quoted-strings:
+        quote-type: single
+        required: only-when-needed
