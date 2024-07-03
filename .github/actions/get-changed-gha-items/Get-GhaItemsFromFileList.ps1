@@ -4,7 +4,18 @@
 
 # Filter actions based on files in action directory.
 [array]$actionFiles = $FileIncludeList | Where-Object -FilterScript {
-    $itemDirectory = (Get-Item $PSItem).Directory.FullName
+    # The try-catch is necessary to not fail on files that are changed but not in the working directory. At least
+    # .gitignore files are like this.
+    try
+    {
+        $item = Get-Item $PSItem -ErrorAction Stop
+        $itemDirectory = $item.Directory.FullName
+    }
+    catch
+    {
+        return $false
+    }
+
     $isInGitHubDir = $itemDirectory -like '*/.github/*' -or $itemDirectory -eq '*/.github'
     if (-not $isInGitHubDir)
     {
