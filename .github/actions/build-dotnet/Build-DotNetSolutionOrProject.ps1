@@ -38,7 +38,7 @@ $buildSwitches = ConvertTo-Array @"
 "@
 
 [array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | ForEach-Object { $PSItem.Split(':')[0] } | Sort-Object
-$noErrors = $expectedErrorCodes.Count -eq 0
+$noErrorsExpected = $expectedErrorCodes.Count -eq 0
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
 {
@@ -62,18 +62,24 @@ Write-Output "Building solution or project with ``dotnet build $SolutionOrProjec
 $errorLines = New-Object 'System.Collections.Generic.List[string]'
 $errorCodes = New-Object 'System.Collections.Generic.List[string]'
 
-$errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
-dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
-    if ($PSItem -notmatch $errorFormat) { return $PSItem }
+if ($noErrorsExpected)
+{
+    dotnet build $SolutionOrProject @buildSwitches
+}
+else
+{
+    $errorFormat = '^(.*)\((\d+),(\d+)\): error (.*)'
+    dotnet build $SolutionOrProject @buildSwitches 2>&1 | ForEach-Object {
+        if ($PSItem -notmatch $errorFormat) { return $PSItem }
 
-    ($null, $file, $line, $column, $message) = [regex]::Match($PSItem, $errorFormat, 'Compiled').Groups.Value
+        ($null, $file, $line, $column, $message) = [regex]::Match($PSItem, $errorFormat, 'Compiled').Groups.Value
 
-    $errorLines.Add($PSItem)
-    if ($message.Contains(':')) { $errorCodes.Add($message.Split(':')[0].Trim()) }
-    if ($noErrors) { Write-Output "::error file=$file,line=$line,col=$column::$message" }
+        $errorLines.Add($PSItem)
+        if ($message.Contains(':')) { $errorCodes.Add($message.Split(':')[0].Trim()) }
+    }
 }
 
-if ($noErrors -and -not $?)
+if ($noErrorsExpected -and -not $?)
 {
     exit 1
 }
