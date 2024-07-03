@@ -28,7 +28,7 @@ rules:
         forbid-scientific-notation: true
         require-numeral-before-decimal: true  
     indentation:
-        spaces: 4
+        spaces: 2
         indent-sequences: true
         check-multi-line-strings: true
     line-length:
