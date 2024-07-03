@@ -20,7 +20,12 @@ rules:
   brackets:
     min-spaces-inside-empty: 0
     max-spaces-inside-empty: 0
-  document-start: 
+  comments:
+    level: error
+    min-spaces-from-content: 1
+  comments-indentation:
+    level: error
+  document-start:
     present: false
   empty-values: enable
   float-values:
@@ -38,4 +43,5 @@ rules:
     quote-type: single
     required: only-when-needed
   truthy:
+    level: error
     check-keys: false
