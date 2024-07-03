@@ -30,8 +30,6 @@ rules:
         require-numeral-before-decimal: true  
     indentation:
         spaces: 2
-        indent-sequences: true
-        check-multi-line-strings: true
     line-length:
         max: 120
         allow-non-breakable-words: true
