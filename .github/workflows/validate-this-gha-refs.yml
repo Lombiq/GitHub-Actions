@@ -67,7 +67,7 @@ jobs:
           github.event_name == 'merge_group'
         uses: Lombiq/GitHub-Actions/.github/actions/get-changed-gha-items@dev
         with:
-          file-include-list: '${{ steps.git-diff.outputs.changed-files }}'
+          file-include-list: ${{ steps.git-diff.outputs.changed-files }}
 
       - name: Prefix File Names with Owner/Repo Name
         id: add-prefix
@@ -123,7 +123,7 @@ jobs:
 
           # Ternary operator syntax available starting in PowerShell 7.0.
           $expectedRef = (
-            $lastReviewApproved -eq 'True' -or 
+            $lastReviewApproved -eq 'True' -or
             $eventName -eq 'merge_group' -or
             ($eventName -eq 'pull_request' -and $mergeQueueApproved -eq 'True')
           ) ? $baseRef : $headRef
@@ -139,7 +139,7 @@ jobs:
           steps.add-prefix.outputs.prefixed-files != '@()'
         uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
         with:
-          called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'
+          called-repo-base-include-list: ${{ steps.add-prefix.outputs.prefixed-files }}
           expected-ref: ${{ steps.determine-ref.outputs.expected-ref }}
 
       - name: Verify GitHub Actions Items Match Expected Ref (Push)
