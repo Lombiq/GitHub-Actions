@@ -27,7 +27,10 @@ rules:
     level: error
   document-start:
     present: false
-  empty-values: enable
+  empty-values:
+    forbid-in-block-mappings: false
+    forbid-in-flow-mappings: true
+    forbid-in-block-sequences: true
   float-values:
     forbid-inf: true
     forbid-nan: true
