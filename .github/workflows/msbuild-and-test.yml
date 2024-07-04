@@ -40,7 +40,7 @@ on:
           different jobs in the same parent workflow calling this one. This is necessary if you build multiple solutions
           (as separate jobs) in the same workflow for these jobs not to conflict with each other.
         type: string
-        default: 'parent-job'
+        default: parent-job
         required: false
       cancel-workflow-on-failure:
         description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
@@ -48,7 +48,7 @@ on:
         default: 'true'
       machine-type:
         type: string
-        default: 'windows-2022'
+        default: windows-2022
         description: >
           The machine type to run the workflow under, e.g. "windows-2022". Needs to be Windows.
       build-directory:
@@ -131,7 +131,7 @@ jobs:
           dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
-          test-configuration: 'Release'
+          test-configuration: Release
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

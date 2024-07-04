@@ -68,7 +68,7 @@ on:
         description: Name of the resource group.
       database-connection-string-name:
         type: string
-        default: 'OrchardCore__ConnectionString'
+        default: OrchardCore__ConnectionString
         description: >
           The name of the root SQL Server database connection string configured as application settings in Azure, under both
           the production and staging slots with slot-specific values. This is typically "OrchardCore__ConnectionString",
@@ -76,7 +76,7 @@ on:
           all tenants' databases. This connection string may use a contained user of the given database.
       master-database-connection-string-name:
         type: string
-        default: 'OrchardCore__ConnectionString-master'
+        default: OrchardCore__ConnectionString-master
         description: >
           The name of the SQL Server database connection string for the master database, configured as application
           settings in Azure, under both the production and staging slots with slot-specific values. This is typically
@@ -85,7 +85,7 @@ on:
           recreate the staging database and scale it up if necessary.
       storage-connection-string-name:
         type: string
-        default: 'OrchardCore__OrchardCore_Media_Azure__ConnectionString'
+        default: OrchardCore__OrchardCore_Media_Azure__ConnectionString
         description: >
           The name of the Azure storage account's blob storage connection string, configured as application settings in
           Azure, under both the production and staging slots with slot-specific values. This is typically

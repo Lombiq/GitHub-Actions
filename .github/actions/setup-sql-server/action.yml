@@ -1,8 +1,8 @@
-﻿name: Set up SQL Server
+name: Set up SQL Server
 description: Sets up SQL Server with Lombiq-recommended defaults.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup
       shell: pwsh

@@ -12,7 +12,7 @@ inputs:
       https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#merge-a-pull-request
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh
@@ -25,8 +25,8 @@ runs:
       if: github.event.pull_request.head.repo.fork == false
       uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
       with:
-        label1: "merge-if-checks-succeed"
-        label2: "merge-and-resolve-jira-issue-if-checks-succeed"
+        label1: merge-if-checks-succeed
+        label2: merge-and-resolve-jira-issue-if-checks-succeed
 
     - name: Merge Pull Request
       if: steps.check-mergeability.outputs.contains-label == 'true'
