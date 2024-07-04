@@ -20,7 +20,7 @@ inputs:
     required: false
   separator:
     description: String to use as a separator for the "globs" input (defaults to newline).
-    default: '\n'
+    default: \n
     required: false
 
 runs:

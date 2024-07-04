@@ -12,25 +12,25 @@ inputs:
     description: Verbosity parameter for msbuild.
   treat-warnings-as-errors:
     required: false
-    default: "true"
+    default: 'true'
     description: If set to "true", warnings produced during the build will be treated as errors and fail the build.
   enable-code-analysis:
     required: false
-    default: "true"
+    default: 'true'
     description: If set to "true", static code analysis is enabled during the build.
   publish-version:
     required: false
-    default: "1.${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}"
+    default: 1.${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}
     description: The value given to `msbuild`'s `-Version` switch.
   msbuild-switches:
     required: false
-    default: ""
+    default: ''
     description: >
       Additional command line switches given to `msbuild`. You must split these into multiple lines, even the parameter
       value.
   solution-or-project-path:
     required: false
-    default: "*.sln"
+    default: '*.sln'
     description: >
       The path of the solution or project file to be built. If you have exactly one .sln file in the current directory
       then this can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be
@@ -52,7 +52,7 @@ runs:
       # v2.0.0
       uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce
       with:
-        vs-version: "[17.3,]"
+        vs-version: '[17.3,]'
         msbuild-architecture: x64
 
     - name: Build and Static Code Analysis

@@ -5,7 +5,7 @@ description: >
 
 outputs:
   last-review-approved:
-    description: "A boolean value indicating if last review is APPROVED."
+    description: A boolean value indicating if last review is APPROVED.
     value: ${{ steps.check-reviews.outputs.last-review-approved }}
 
 runs:
