@@ -89,5 +89,5 @@ runs:
         token: ${{ env.GITHUB_TOKEN }}
         issue-number: ${{ github.event.issue.number }}
         title: ${{ github.event.issue.title }} (${{ steps.create-issue.outputs.issue-key }})
-        body: '${{ github.event.issue.body }}\n\n[Jira issue](${{ steps.create-issue.outputs.issue-url }})'
+        body: ${{ github.event.issue.body }}\n\n[Jira issue](${{ steps.create-issue.outputs.issue-url }})
         update-mode: replace
