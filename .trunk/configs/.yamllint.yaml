@@ -42,6 +42,7 @@ rules:
   quoted-strings:
     quote-type: single
     required: only-when-needed
+    allow-quoted-quotes: true
   truthy:
     level: error
     check-keys: false

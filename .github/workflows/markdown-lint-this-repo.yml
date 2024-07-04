@@ -13,5 +13,5 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@dev
     with:
       globs: '**/*.{md,markdown};!License.md'
-      separator: ';'
+      separator: ;
       fix: true

@@ -13,7 +13,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository (Pull & Approve/Merge PR)
-        if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group'
+        if: |
+          github.event_name == 'pull_request' ||
+          (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') ||
+          github.event_name == 'merge_group'
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           fetch-depth: 0
@@ -31,7 +34,10 @@ jobs:
 
       - name: Determine Diff-Filter for Git File Changes
         id: git-diff-filter
-        if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group'
+        if: |
+          github.event_name == 'pull_request' ||
+          (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') ||
+          github.event_name == 'merge_group'
         shell: pwsh
         run: |
           $eventName = "${{ github.event_name }}"
@@ -43,7 +49,10 @@ jobs:
 
       - name: Get Applicable Git File Changes
         id: git-diff
-        if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group'
+        if: |
+          github.event_name == 'pull_request' ||
+          (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') ||
+          github.event_name == 'merge_group'
         uses: Lombiq/GitHub-Actions/.github/actions/get-changed-files-from-git-diff@dev
         with:
           left-commit: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
@@ -52,14 +61,20 @@ jobs:
 
       - name: Get GitHub Actions Item Changes from File Changes
         id: changed-items
-        if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group'
+        if: |
+          github.event_name == 'pull_request' ||
+          (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') ||
+          github.event_name == 'merge_group'
         uses: Lombiq/GitHub-Actions/.github/actions/get-changed-gha-items@dev
         with:
           file-include-list: '${{ steps.git-diff.outputs.changed-files }}'
 
       - name: Prefix File Names with Owner/Repo Name
         id: add-prefix
-        if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group'
+        if: |
+          github.event_name == 'pull_request' ||
+          (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') ||
+          github.event_name == 'merge_group'
         shell: pwsh
         run: |
           $prefix = "${{ github.repository }}"
@@ -78,7 +93,10 @@ jobs:
 
       - name: Determine Expected Ref for GitHub Actions Files
         id: determine-ref
-        if: github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved')  || github.event_name == 'merge_group'
+        if: |
+          github.event_name == 'pull_request' ||
+          (github.event_name == 'pull_request_review' && github.event.review.state == 'approved')  ||
+          github.event_name == 'merge_group'
         shell: pwsh
         run: |
           $eventName = "${{ github.event_name }}"
@@ -104,13 +122,21 @@ jobs:
           $mergeQueueApproved = "${{ steps.check-merge-queue-adds.outputs.added-to-merge-queue }}"
 
           # Ternary operator syntax available starting in PowerShell 7.0.
-          $expectedRef = ($lastReviewApproved -eq 'True' -or $eventName -eq 'merge_group' -or ($eventName -eq 'pull_request' -and $mergeQueueApproved -eq 'True')) ? $baseRef : $headRef
+          $expectedRef = (
+            $lastReviewApproved -eq 'True' -or 
+            $eventName -eq 'merge_group' -or
+            ($eventName -eq 'pull_request' -and $mergeQueueApproved -eq 'True')
+          ) ? $baseRef : $headRef
 
           $output = "expected-ref=$expectedRef"
           $output >> $env:GITHUB_OUTPUT
 
       - name: Verify GitHub Actions Items Match Expected Ref (Pull & Approve/Merge PR)
-        if: (github.event_name == 'pull_request' || (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') || github.event_name == 'merge_group') && steps.add-prefix.outputs.prefixed-files != '@()'
+        if: |
+          (github.event_name == 'pull_request' ||
+          (github.event_name == 'pull_request_review' && github.event.review.state == 'approved') ||
+          github.event_name == 'merge_group') &&
+          steps.add-prefix.outputs.prefixed-files != '@()'
         uses: Lombiq/GitHub-Actions/.github/actions/verify-gha-refs@dev
         with:
           called-repo-base-include-list: '${{ steps.add-prefix.outputs.prefixed-files }}'

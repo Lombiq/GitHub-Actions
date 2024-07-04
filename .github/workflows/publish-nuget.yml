@@ -45,7 +45,7 @@ on:
         description: If set to "true", a symbol package will be created together with the NuGet package.
       publish-version:
         type: string
-        default: 'USE_GITHUB_REF_NAME'
+        default: USE_GITHUB_REF_NAME
         description: >
           The desired NuGet package version used for publishing. The correct format is "vM.N.O" or
           "vM.N.O-alpha.X.<issue-code>". If not specified, the GITHUB_REF_NAME environment variable is used
