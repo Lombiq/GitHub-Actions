@@ -5,7 +5,7 @@ description: >
   "done-jira-issue-if-checks-succeed" label is.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh
@@ -17,16 +17,16 @@ runs:
       id: check-done
       uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
       with:
-        label1: "done-jira-issue-if-checks-succeed"
-        label2: "dummy"
+        label1: done-jira-issue-if-checks-succeed
+        label2: dummy
 
     - name: Check if Should Resolve
       id: check-resolve
       if: steps.check-done.outputs.contains-label == 'false'
       uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
       with:
-        label1: "resolve-jira-issue-if-checks-succeed"
-        label2: "merge-and-resolve-jira-issue-if-checks-succeed"
+        label1: resolve-jira-issue-if-checks-succeed
+        label2: merge-and-resolve-jira-issue-if-checks-succeed
 
     - name: Transition Jira Issue
       if: steps.check-done.outputs.contains-label == 'true' || steps.check-resolve.outputs.contains-label == 'true'

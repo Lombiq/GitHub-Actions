@@ -6,11 +6,11 @@ description: >
 
 outputs:
   added-to-merge-queue:
-    description: "A boolean value indicating if pull request added to merge queue."
+    description: A boolean value indicating if pull request added to merge queue.
     value: ${{ steps.check-merge-queue-adds.outputs.added-to-merge-queue }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

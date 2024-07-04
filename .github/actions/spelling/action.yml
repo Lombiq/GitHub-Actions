@@ -60,7 +60,7 @@ outputs:
     value: ${{ steps.step-check-spelling.outputs.followup }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

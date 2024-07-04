@@ -14,11 +14,11 @@ inputs:
 
 outputs:
   contains-label:
-    description: "A boolean value indicating whether any of the labels are present."
+    description: A boolean value indicating whether any of the labels are present.
     value: ${{ steps.check-labels.outputs.contains-label }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

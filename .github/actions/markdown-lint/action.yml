@@ -8,7 +8,7 @@ description: >
 inputs:
   config:
     description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
-    default: 'lombiq.markdownlint.json'
+    default: lombiq.markdownlint.json
     required: false
   fix:
     description: Whether to fix issues automatically for the rules that support it (any truthy value enables).
@@ -20,11 +20,11 @@ inputs:
     required: false
   separator:
     description: String to use as a separator for the "globs" input (defaults to newline).
-    default: "\n"
+    default: '\n'
     required: false
 
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - name: Markdown Linting
       # When upgrading, also update Lombiq.NodeJs.Extensions to use the corresponding version of the markdownlint

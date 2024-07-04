@@ -10,7 +10,7 @@ inputs:
     description: The version of the tool to install.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

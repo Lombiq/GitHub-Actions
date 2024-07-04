@@ -16,7 +16,7 @@ inputs:
       is specified, or the repository name. If set to "false", no suffix will be added to Jira issue titles.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

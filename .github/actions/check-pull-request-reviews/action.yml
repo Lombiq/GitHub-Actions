@@ -9,7 +9,7 @@ outputs:
     value: ${{ steps.check-reviews.outputs.last-review-approved }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

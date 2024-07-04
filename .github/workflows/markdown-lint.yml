@@ -30,7 +30,7 @@ on:
       separator:
         description: String to use as a separator for the "globs" input (defaults to newline).
         type: string
-        default: '\n'
+        default: \n
       timeout-minutes:
         type: number
         default: 1

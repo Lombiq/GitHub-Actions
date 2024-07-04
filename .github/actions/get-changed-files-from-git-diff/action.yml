@@ -23,7 +23,7 @@ outputs:
       A PowerShell array of file names from git diff between left-commit and right commit.
     value: ${{ steps.git-diff.outputs.changed-files }}
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup
       shell: pwsh
