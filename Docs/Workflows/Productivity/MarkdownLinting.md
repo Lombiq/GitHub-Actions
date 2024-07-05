@@ -10,7 +10,7 @@ You would typically consume the corresponding GHA workflow for markdown linting 
 jobs:
     markdown-linting:
         name: Markdown Linting
-        uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@issue/OSOE-759
+        uses: Lombiq/GitHub-Actions/.github/workflows/markdown-lint.yml@dev
 ```
 
 The list of input parameters specific to the behavior of `markdownlint` are the the same as its wrapper action and [described in its readme](https://github.com/DavidAnson/markdownlint-cli2-action?tab=readme-ov-file#inputs). The values are passed on directly, but the defaults are changed to use Lombiq's configuration file.

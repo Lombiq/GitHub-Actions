@@ -22,7 +22,7 @@ If the "Checkout" step of the spelling workflow fails stating that the workflow 
 ```yaml
   spelling:
     name: Spelling
-    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@issue/OSOE-759
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
 ```
 
 ### Complete spell-checking workflow example
@@ -39,7 +39,7 @@ on:
 jobs:
   spelling:
     name: Spelling
-    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@issue/OSOE-759
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
     with:
       # Add this parameter to define further dictionary source prefixes, such as a repository with general-purpose dictionaries. Dictionary files from these sources are processed before the default ones, and in the order their prefixes are listed here.
       additional-configuration-source-prefixes: >

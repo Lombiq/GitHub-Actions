@@ -29,7 +29,7 @@ jobs:
 
   spelling:
     name: Spelling
-    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@issue/OSOE-759
+    uses: Lombiq/GitHub-Actions/.github/workflows/spelling.yml@dev
 
   post-pull-request-checks-automation:
     name: Post Pull Request Checks Automation
