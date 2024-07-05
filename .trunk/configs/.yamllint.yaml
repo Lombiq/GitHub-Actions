@@ -6,6 +6,8 @@ yaml-files:
 ignore: |
   **/node_modules/**
   **/.trunk/**
+  *pnpm-lock.yaml
+  *pnpm-lock.yml
   
 # Using the default config as a base, since most rules are well configured there.
 extends: default
