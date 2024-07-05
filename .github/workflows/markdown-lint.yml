@@ -48,7 +48,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Markdown Linting
-        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@issue/OSOE-759
         with:
           config: ${{ inputs.config }}
           fix: ${{ inputs.fix }}
