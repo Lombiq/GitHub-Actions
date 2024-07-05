@@ -23,7 +23,7 @@ runs:
       id: check-mergeability
       # Fork PR runs won't have permissions to remove labels, nor do we want to allow auto-merging them.
       if: github.event.pull_request.head.repo.fork == false
-      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@issue/OSOE-759
       with:
         label1: merge-if-checks-succeed
         label2: merge-and-resolve-jira-issue-if-checks-succeed
@@ -37,7 +37,7 @@ runs:
 
     - name: Remove Label
       if: steps.check-mergeability.outputs.contains-label == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@issue/OSOE-759
       with:
         token: ${{ env.GITHUB_TOKEN }}
         labels: merge-if-checks-succeed

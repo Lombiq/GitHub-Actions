@@ -94,7 +94,7 @@ jobs:
 
       - name: Remove Label
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@issue/OSOE-759
         with:
           token: ${{ env.MERGE_TOKEN }}
           labels: merge-and-resolve-jira-issue-if-checks-succeed
