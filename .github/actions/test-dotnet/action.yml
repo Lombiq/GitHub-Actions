@@ -139,7 +139,8 @@ runs:
     - name: Upload BlameHangDumps
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-759
       if: |
-        failure() && steps.run-tests.outputs.test-count != 0 &&
+        failure() &&
+        steps.run-tests.outputs.test-count != 0 &&
         inputs.blame-hang-timeout != '' &&
         steps.merge-blame-hang-dumps.outputs.dump-count != 0
       with:
