@@ -47,3 +47,4 @@ rules:
     quote-type: single
     required: only-when-needed
     allow-quoted-quotes: true
+  truthy: disable
