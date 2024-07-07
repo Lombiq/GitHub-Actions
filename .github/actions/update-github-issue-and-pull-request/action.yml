@@ -4,7 +4,7 @@ description: |
   assigns the issue to the PR author.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

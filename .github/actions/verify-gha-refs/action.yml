@@ -7,26 +7,27 @@ inputs:
     required: false
     default: '@(".github")'
     description: >
-      PowerShell string array of paths, relative to repository root, to search for GHA files, e.g. '@(".github")' or '@(".github/actions", ".github/workflows")'. The
-      parameter must be a PowerShell string array.
+      PowerShell string array of paths, relative to repository root, to search for GHA files, e.g. '@(".github")' or
+      '@(".github/actions", ".github/workflows")'. The parameter must be a PowerShell string array.
   file-include-list:
     required: false
     default: '@("*.yml","*.yaml")'
     description: >
-      PowerShell string array of file name patterns to include when evaluating GHA files, e.g. '@("*.yml")' or '@("*.yml", "*.yaml")'. The
-      parameter must be a PowerShell string array.
+      PowerShell string array of file name patterns to include when evaluating GHA files, e.g. '@("*.yml")' or
+      '@("*.yml", "*.yaml")'. The parameter must be a PowerShell string array.
   called-repo-base-include-list:
     required: false
     default: '@("${{ github.repository }}")'
     description: >
-      PowerShell string array of repository base URLs to include when evaluating called GHA Workflows and Actions, e.g '@("Lombiq/GitHub-Actions")' or
-      '@("Lombiq/GitHub-Actions", "Lombiq/Open-Source-Orchard-Core-Extensions")'. The parameter must be a PowerShell string array.
+      PowerShell string array of repository base URLs to include when evaluating called GHA Workflows and Actions, e.g
+      '@("Lombiq/GitHub-Actions")' or '@("Lombiq/GitHub-Actions", "Lombiq/Open-Source-Orchard-Core-Extensions")'. The
+      parameter must be a PowerShell string array.
   expected-ref:
     required: false
-    default: '${{ github.ref_name }}'
+    default: ${{ github.ref_name }}
     description: The expected reference value to be used by the called GHA Workflows and Actions.
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup
       shell: pwsh

@@ -7,7 +7,7 @@ inputs:
   current-workflow-id:
     description: The current workflow run's database id.
     required: true
-    default: ""
+    default: ''
 
 outputs:
   is-latest:
@@ -15,7 +15,7 @@ outputs:
     value: ${{ steps.check-current-workflow-equals-latest.outputs.is-latest }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

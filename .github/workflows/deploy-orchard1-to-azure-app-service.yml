@@ -40,7 +40,13 @@ on:
         required: true
 
       MAINTENANCE_USER_NAME:
+        required: true
+        description: >
+          The name of the Orchard user to authenticate the maintenance with. Make sure that the user is in a role that
+          is permitted to start maintenances.
       MAINTENANCE_PASSWORD:
+        required: true
+        description: The password of the Orchard user to authenticate the maintenance with.
 
     inputs:
       cancel-workflow-on-failure:

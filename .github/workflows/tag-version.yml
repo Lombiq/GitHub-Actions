@@ -53,12 +53,12 @@ on:
         type: string
       expected-ref:
         required: false
-        default: '${{ github.ref_name }}'
+        default: ${{ github.ref_name }}
         description: The expected reference value to set for all called GHA Workflows and Actions.
         type: string
       merge-target:
         required: false
-        default: '${{ github.event.repository.default_branch }}'
+        default: ${{ github.event.repository.default_branch }}
         description: >
           The target branch to merge back to after setting the GitHub Actions and Workflows to the version tag. This is
           necessary because otherwise, the auto-generated release notes will include all the changes since the start of
@@ -93,12 +93,12 @@ jobs:
           file-include-list: ${{ inputs.file-include-list }}
           called-repo-base-include-list: ${{ inputs.called-repo-base-include-list }}
           additional-pattern-include-list: ${{ inputs.additional-pattern-include-list }}
-          expected-ref: '${{ steps.determine-tag.outputs.tagname }}'
+          expected-ref: ${{ steps.determine-tag.outputs.tagname }}
 
       - name: Commit and Push Release Branch Changes
         uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5
         with:
-          commit_message: 'Set GitHub Actions/Workflows to tag ${{ steps.determine-tag.outputs.tagname }}'
+          commit_message: Set GitHub Actions/Workflows to tag ${{ steps.determine-tag.outputs.tagname }}
           tagging_message: ${{ steps.determine-tag.outputs.tagname }}
 
       - name: Force Push Tag

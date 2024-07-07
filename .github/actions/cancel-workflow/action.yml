@@ -10,7 +10,7 @@ description: >
 # way to do this.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

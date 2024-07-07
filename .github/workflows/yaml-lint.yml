@@ -21,15 +21,15 @@ on:
         type: string
         default: 'true'
       config-file-path:
-        description: 'Path to the yamllint configuration file'
+        description: Path to the yamllint configuration file
         required: true
         type: string
-        default: '.yamllint.yaml'
+        default: .yamllint.yaml
       search-path:
-        description: 'Path to search for YAML files'
+        description: Path to search for YAML files
         required: true
         type: string
-        default: '.'
+        default: .
 
 jobs:
   yaml-linting:
