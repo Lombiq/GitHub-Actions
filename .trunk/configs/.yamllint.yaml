@@ -47,4 +47,5 @@ rules:
     quote-type: single
     required: only-when-needed
     allow-quoted-quotes: true
+  # Would trip on every "on:" key in GitHub Actions workflows.
   truthy: disable
