@@ -82,8 +82,8 @@ runs:
 
     - name: Update GitHub Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
-      # v3.3.3
-      uses: actions-cool/issues-helper@275328970dbc3bfc3bc43f5fe741bf3638300c0a
+      # v3.6.0
+      uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e
       with:
         actions: update-issue
         token: ${{ env.GITHUB_TOKEN }}
