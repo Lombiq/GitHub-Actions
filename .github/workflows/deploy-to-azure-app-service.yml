@@ -183,6 +183,9 @@ jobs:
             ${{ steps.set-up-runtime-option.outputs.runtime-option }}
             -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Print env vars
+        run: echo "VITE_OPENID_AUTHORITY.. $VITE_OPENID_AUTHORITY"
+
       - name: Publish
         run: |
           dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
