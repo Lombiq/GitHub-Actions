@@ -195,12 +195,12 @@ jobs:
             ${{ steps.set-up-runtime-option.outputs.runtime-option }}
 
       - name: Upload Artifacts
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
-      with:
-        name: Published files
-        path: ${{ inputs.build-directory }}/Published/
-        if-no-files-found: ignore
-        retention-days: 1
+        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+        with:
+          name: Published files
+          path: ${{ inputs.build-directory }}/Published/
+          if-no-files-found: ignore
+          retention-days: 1
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
