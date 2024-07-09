@@ -89,6 +89,7 @@ runs:
   using: composite
   steps:
     - name: Print env vars
+      shell: pwsh
       run: echo "VITE_OPENID_AUTHORITY.. $VITE_OPENID_AUTHORITY"
 
     - name: Setup Scripts
