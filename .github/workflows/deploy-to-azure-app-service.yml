@@ -144,7 +144,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Print env vars
-        run: echo "VITE_OPENID_AUTHORITY.. $VITE_OPENID_AUTHORITY"
+        run: echo "VITE_OPENID_AUTHORITY.. $Env:$VITE_OPENID_AUTHORITY"
 
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev

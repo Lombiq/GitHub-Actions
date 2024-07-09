@@ -90,7 +90,7 @@ runs:
   steps:
     - name: Print env vars
       shell: pwsh
-      run: echo "VITE_OPENID_AUTHORITY.. $VITE_OPENID_AUTHORITY"
+      run: echo "VITE_OPENID_AUTHORITY.. $Env:$VITE_OPENID_AUTHORITY"
 
     - name: Setup Scripts
       shell: pwsh
