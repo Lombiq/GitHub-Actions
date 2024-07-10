@@ -32,10 +32,10 @@ on:
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
         type: string
-        default: "['ubuntu-22.04']"
+        default: '["ubuntu-22.04"]'
         description: >
           Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-          "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
+          '["ubuntu-22.04"]' or '["ubuntu-22.04", "windows-2022"]'.
       dotnet-version:
         type: string
         default: 8.0.301
