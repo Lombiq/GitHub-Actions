@@ -16,7 +16,7 @@ inputs:
       grepping is still possible but a name with spaces must be escaped separately.
   exclude-version-regex:
     required: false
-    default: '\-alpha'
+    default: \-alpha
     description: >
       A regular expression to match package versions that will be skipped during NuGet package consolidation. See the
       dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
@@ -30,7 +30,7 @@ inputs:
       them with a comma.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

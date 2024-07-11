@@ -22,7 +22,7 @@ inputs:
     description: If set to "true", a symbol package will be created together with the NuGet package.
   publish-version:
     required: false
-    default: 'USE_GITHUB_REF_NAME'
+    default: USE_GITHUB_REF_NAME
     description: >
       The desired NuGet package version used for publishing. If not specified, the GITHUB_REF_NAME environment variable
       is used which is suitable if the version is derived from a git tag. If "USE_GITHUB_RUN_NUMBER" is used, then the
@@ -41,7 +41,7 @@ inputs:
     description: If set to "true", the Microsoft.SourceLink.GitHub NuGet package is added to the projects.
 
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh
@@ -69,7 +69,8 @@ runs:
             $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
             if (!($version -match '^\d+\.\d+\.\d+(-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?)?$'))
             {
-                Write-Output "::error::`"v$version`" is invalid. The correct format is `"vM.N.O`" or `"vM.N.O-[alpha|beta|preview|rc]`" with an optional `".X.<issue-code>`" suffix."
+                Write-Output ("::error::`"v$version`" is invalid. The correct format is " +
+                  "`"vM.N.O`" or `"vM.N.O-[alpha|beta|preview|rc]`" with an optional `".X.<issue-code>`" suffix.")
 
                 exit 1
             }

@@ -105,7 +105,7 @@ on:
         description: Name of the resource group.
       web-project-path:
         type: string
-        default: './src/*Web/*.Web.csproj'
+        default: ./src/*Web/*.Web.csproj
         description: >
           The path of the web project file to be processed. The value is given to PowerShell's `Get-ChildItem` cmdlet
           as-is, so grepping is still possible but a name with spaces must be escaped separately.

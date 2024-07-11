@@ -6,24 +6,24 @@ description: >
 # Copied from https://github.com/buildsville/add-remove-label/blob/master/action.yml.
 inputs:
   token:
-    description: 'github token'
+    description: github token
     required: true
     default: ''
   labels:
-    description: 'labels to edit'
+    description: labels to edit
     required: false
     default: ''
   label:
-    description: 'label to edit'
+    description: label to edit
     required: false
     default: ''
   type:
-    description: 'add or remove'
+    description: add or remove
     required: true
     default: ''
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Add/Remove Label
       # v2.0.1

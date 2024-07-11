@@ -10,7 +10,7 @@ inputs:
     description: Path to the directory where Azurite will be started and will store its logs.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Set up Azurite via NPM
       # This needs to run in bash for some reason. Azurite properly starts in PS but still, connections fail.

@@ -18,27 +18,27 @@ inputs:
     required: false
     default: ''
   generateReleaseNotes:
-    description: 'Indicates if release notes should be automatically generated.'
+    description: Indicates if release notes should be automatically generated.
     required: false
     default: 'false'
   tag:
-    description: 'An optional tag for the release. If this is omitted the git ref will be used (if it is a tag).'
+    description: An optional tag for the release. If this is omitted the git ref will be used (if it is a tag).
     required: false
     default: ''
 
 outputs:
   id:
-    description: 'The identifier of the created release.'
+    description: The identifier of the created release.
     value: ${{ steps.create-release.outputs.id }}
   html_url:
-    description: 'The HTML URL of the release.'
+    description: The HTML URL of the release.
     value: ${{ steps.create-release.outputs.html_url }}
   upload_url:
-    description: 'The URL for uploading assets to the release.'
+    description: The URL for uploading assets to the release.
     value: ${{ steps.create-release.outputs.upload_url }}
 
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - name: Create Release
       id: create-release

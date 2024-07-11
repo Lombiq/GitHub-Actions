@@ -22,7 +22,7 @@ on:
           different jobs in the same parent workflow calling this one. This is necessary if you build multiple solutions
           (as separate jobs) in the same workflow for these jobs not to conflict with each other.
         type: string
-        default: 'parent-job'
+        default: parent-job
         required: false
       cancel-workflow-on-failure:
         description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
@@ -161,14 +161,14 @@ on:
       dotnet-consolidation-exclude-version-regex:
         type: string
         required: false
-        default: '\-alpha'
+        default: \-alpha
         description: >
           A regular expression to match package versions that will be skipped during NuGet package consolidation. See
           the dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
       dotnet-consolidation-exclude-project-path:
         type: string
         required: false
-        default: 'src/*.Web/*.csproj'
+        default: src/*.Web/*.csproj
         description: >
           A path expression referring to the projects that should be temporarily removed from the solution before NuGet
           package consolidation. These are restored after the fact by resetting the git repository. The expression is

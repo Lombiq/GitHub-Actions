@@ -21,5 +21,5 @@ $paths | ForEach-Object { New-Item -ItemType Directory -Force $PSItem } | Out-Nu
 Set-GitHubOutput 'paths' ($paths -join '{0}')
 
 Set-GitHubOutput 'cache-enabled' 'true'
-Set-GitHubOutput 'key' "${RestoreKeys}-${Hash}"
+Set-GitHubOutput 'key' "$($RestoreKeys)-$($Hash)"
 Set-GitHubOutput 'restore-keys' $RestoreKeys

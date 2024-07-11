@@ -10,13 +10,13 @@ inputs:
     description: Optional component of the issues being created.
   suffix-issue-titles:
     required: false
-    default: "true"
+    default: true'
     description: >
       If set to "true", Jira issue titles will be suffixed with "in <issue-component>" if the issue-component parameter
       is specified, or the repository name. If set to "false", no suffix will be added to Jira issue titles.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh
@@ -82,12 +82,15 @@ runs:
 
     - name: Update GitHub Issue
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
-      # v3.3.3
-      uses: actions-cool/issues-helper@275328970dbc3bfc3bc43f5fe741bf3638300c0a
+      # v3.6.0
+      uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e
       with:
-        actions: "update-issue"
+        actions: update-issue
         token: ${{ env.GITHUB_TOKEN }}
         issue-number: ${{ github.event.issue.number }}
         title: ${{ github.event.issue.title }} (${{ steps.create-issue.outputs.issue-key }})
-        body: "${{ github.event.issue.body }}\n\n[Jira issue](${{ steps.create-issue.outputs.issue-url }})"
-        update-mode: "replace"
+        body: |
+          ${{ github.event.issue.body }}
+
+          [Jira issue](${{ steps.create-issue.outputs.issue-url }})
+        update-mode: replace

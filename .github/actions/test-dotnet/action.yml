@@ -7,7 +7,7 @@ description: >
 inputs:
   blame-hang-timeout:
     required: false
-    default: ""
+    default: ''
     description: >
       Run the tests in blame mode and collects a hang dump when a test exceeds the given timeout. See
       https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details on available values.
@@ -22,7 +22,7 @@ inputs:
     description: Run the dotnet test process with the given timeout in milliseconds. -1 means no timeout.
   solution-path:
     required: false
-    default: "*.sln"
+    default: '*.sln'
     description: >
       The path of the solution or project file to be built. If you have exactly one .sln file in the current directory
       then this can be omitted. Otherwise make sure to specify it to avoid a "Found more than one solution file in
@@ -39,29 +39,29 @@ inputs:
   test-configuration:
     required: false
     description: Value passed to the --configuration parameter of dotnet test.
-    default: "Debug"
+    default: Debug
   ui-test-parallelism:
     required: false
-    default: "-1"
+    default: '-1'
     description: >
       Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
       MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming from the
       code won't be overridden.
   ui-test-artifact-retention-days:
     required: false
-    default: "7"
+    default: '7'
     description: >
       Duration in days after which the artifact of UI testing (if any) will expire. See
       https://github.com/actions/upload-artifact#retention-period for more details.
   xunit-max-parallel-threads:
     required: false
-    default: "0"
+    default: '0'
     description: >
       Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
       https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh
@@ -138,7 +138,11 @@ runs:
 
     - name: Upload BlameHangDumps
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
-      if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != '' && steps.merge-blame-hang-dumps.outputs.dump-count != 0
+      if: |
+        failure() &&
+        steps.run-tests.outputs.test-count != 0 &&
+        inputs.blame-hang-timeout != '' &&
+        steps.merge-blame-hang-dumps.outputs.dump-count != 0
       with:
         name: ui-test-blame-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/BlameHangDumps/
@@ -160,7 +164,7 @@ runs:
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
         name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
-        path: "${{inputs.build-directory}}/**/*.trx"
+        path: ${{inputs.build-directory}}/**/*.trx
         reporter: dotnet-trx
-        fail-on-error: "false"
-        output-to: "step-summary"
+        fail-on-error: 'false'
+        output-to: step-summary

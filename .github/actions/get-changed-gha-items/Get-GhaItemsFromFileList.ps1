@@ -1,18 +1,29 @@
-param(
+﻿param(
     [String[]] $FileIncludeList
 )
 
 # Filter actions based on files in action directory.
 [array]$actionFiles = $FileIncludeList | Where-Object -FilterScript {
-    $itemDirectory = (Get-Item $PSItem).Directory.FullName
+    # The try-catch is necessary to not fail on files that are changed but not in the working directory. At least
+    # .gitignore files are like this.
+    try
+    {
+        $item = Get-Item $PSItem -ErrorAction Stop
+        $itemDirectory = $item.Directory.FullName
+    }
+    catch
+    {
+        return $false
+    }
+
     $isInGitHubDir = $itemDirectory -like '*/.github/*' -or $itemDirectory -eq '*/.github'
     if (-not $isInGitHubDir)
     {
         return $false
     }
 
-    (Get-Item $PSitem).Directory.GetFiles('action.yml').Count -gt 0 -or
-    (Get-Item $PSitem).Directory.GetFiles('action.yaml').Count -gt 0
+    (Get-Item $PSItem).Directory.GetFiles('action.yml').Count -gt 0 -or
+    (Get-Item $PSItem).Directory.GetFiles('action.yaml').Count -gt 0
 }
 
 # GitHub Actions are called by directory name. Get directory and de-duplicate list.
@@ -22,9 +33,9 @@ param(
 [array]$workflows = $FileIncludeList | Where-Object -FilterScript {
     try
     {
-        (Get-Item $PSitem).BaseName -ne 'action' -and
-            ((Get-Item $PSitem).Extension -eq '.yml' -or
-             (Get-Item $PSitem).Extension -eq '.yaml')
+        (Get-Item $PSItem).BaseName -ne 'action' -and
+            ((Get-Item $PSItem).Extension -eq '.yml' -or
+             (Get-Item $PSItem).Extension -eq '.yaml')
     }
     catch
     {

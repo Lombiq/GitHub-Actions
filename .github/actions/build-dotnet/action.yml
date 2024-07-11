@@ -16,40 +16,40 @@ inputs:
     description: Verbosity parameter for dotnet build.
   enable-code-analysis:
     required: false
-    default: "true"
+    default: 'true'
     description: If set to "true", static code analysis is enabled during the build.
   enable-nuget-caching:
     required: false
-    default: "false"
+    default: 'false'
     description: >
       If set to "true", the NuGet packages will be cached by GitHub. This is faster if you have a lot of NuGet packages,
       but negligible or even slower if you only have a handful.
   enable-npm-caching:
     required: false
-    default: "false"
+    default: 'false'
     description: >
       If set to "true", the NPM packages will be cached by GitHub. This is faster if you have a lot of NPM packages, but
       negligible or even slower if you only have a handful.
   cache-version:
     required: false
-    default: "0"
+    default: '0'
     description: >
       Change this to any other value to alter the cache key, effectively invalidating the latest cache. You can also
       manage cache entries from the UI, see:
       https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/caching-dependencies-to-speed-up-workflows#deleting-cache-entries.
   publish-version:
     required: false
-    default: "1.${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}"
+    default: 1.${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}
     description: The value given to `dotnet build`'s `-Version` switch.
   dotnet-build-switches:
     required: false
-    default: ""
+    default: ''
     description: >
       Additional command line switches given to `dotnet build`. You must split these into multiple lines, even the
       parameter value.
   solution-or-project-path:
     required: false
-    default: "*.sln"
+    default: '*.sln'
     description: >
       The path of the solution or project file to be built. If you have exactly one .sln file in the current directory
       then this can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be
@@ -59,26 +59,26 @@ inputs:
       separately.
   expected-code-analysis-errors:
     required: false
-    default: ""
+    default: ''
     description: >
       If not empty, it indicates that the static code analysis should fail. Then each line should contain one error
       code. The static code analysis should yield these and only these errors. This is ignored if `enable-code-analysis`
       is not "true". You may add a colon and then an explanation of the expected error.
   create-binary-log:
     required: false
-    default: "false"
+    default: 'false'
     description: >
       Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
       https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
   binary-log-artifact-retention-days:
     required: false
-    default: "14"
+    default: '14'
     description: >
       Duration in days after which the artifact of the binary log (if any) will expire. See
       https://github.com/actions/upload-artifact#retention-period for more details.
   warnings-as-errors:
     required: false
-    default: "true"
+    default: 'true'
     description: >
       Whether compiler warnings should be treated as errors during the build process. The default value is "true", the
       compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set to
@@ -86,7 +86,7 @@ inputs:
       fail.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

@@ -9,19 +9,19 @@ inputs:
       When set to "true", the "excludes.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in the
       workspace repository.
     required: false
-    default: "true"
+    default: 'true'
   merge-forbidden-patterns:
     description: >
       When set to "true", the "line_forbidden.patterns" file's contents in Lombiq.GitHub.Actions will be merged into the
       one in the workspace repository.
     required: false
-    default: "true"
+    default: 'true'
   merge-ignore-patterns:
     description: >
       When set to "true", the "patterns.txt" file's contents in Lombiq.GitHub.Actions will be merged into the one in the
       workspace repository.
     required: false
-    default: "true"
+    default: 'true'
   default-dictionaries:
     description: Space delimited list of URLs (or `prefix:`+path) to additional word lists
     required: false
@@ -49,18 +49,18 @@ inputs:
   post-comment:
     description: Flag for if check-spelling should post comment, the default is 1.
     required: false
-    default: "1"
+    default: '1'
   task:
     description: Follow up task for check-spelling, the default is ''.
     required: false
-    default: ""
+    default: ''
 outputs:
   followup:
     description: Check Spelling output for followup.
     value: ${{ steps.step-check-spelling.outputs.followup }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh
@@ -150,7 +150,9 @@ runs:
         $defaultDictionaries = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.default-dictionaries }}'
         $additionalDictionaries = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.additional-dictionaries }}'
 
-        Set-GitHubOutput -Key 'merged-dictionary-list' -Value ((@($additionalDictionaries) + @($defaultDictionaries) | Select-Object -Unique) -join ' ')
+        Set-GitHubOutput -Key 'merged-dictionary-list' -Value `
+            ((@($additionalDictionaries) + @($defaultDictionaries) | `
+            Select-Object -Unique) -join ' ')
 
     - name: Check Spelling
       id: step-check-spelling

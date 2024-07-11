@@ -8,11 +8,11 @@ description: >
 inputs:
   enable-az-ps-session:
     required: false
-    default: "true"
+    default: 'true'
     description: Whether to enable an Az PowerShell session.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Login to Azure
       # v2.1.1

@@ -14,7 +14,7 @@ outputs:
     description: A PowerShell array of GHA item names related to included file list input.
     value: ${{ steps.get-gha-items.outputs.changed-items }}
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup
       shell: pwsh

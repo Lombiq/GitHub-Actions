@@ -13,7 +13,7 @@ inputs:
     description: The parent repository's full name in "{owner}/{repository}" format.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Scripts
       shell: pwsh

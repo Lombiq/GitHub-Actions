@@ -13,7 +13,7 @@ inputs:
       String git commit SHA or blob to compare with left-commit for git diff.
   diff-filter:
     required: false
-    default: 'ACMRT'
+    default: ACMRT
     description: >
       String value for '--diff-filter=' flag when doing 'git diff'. See 'git diff -h'
       for more information.
@@ -23,7 +23,7 @@ outputs:
       A PowerShell array of file names from git diff between left-commit and right commit.
     value: ${{ steps.git-diff.outputs.changed-files }}
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup
       shell: pwsh
