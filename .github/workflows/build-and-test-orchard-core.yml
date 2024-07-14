@@ -217,7 +217,7 @@ jobs:
     steps:
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/NEST-501
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
