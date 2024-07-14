@@ -228,8 +228,9 @@ jobs:
         shell: pwsh
         run: |
           $message = '::warning::Since v10.0.0, the UI Testing Toolbox uses xUnit 2.8.0 and later. This fixes the ' +
-              'behavior of the maxParallelThreads xUnit configuration. Set that instead (see ' +
-              'https://xunit.net/docs/running-tests-in-parallel).'
+              'behavior of the maxParallelThreads xUnit configuration. Set that instead of ui-test-parallelism (see ' +
+              'https://xunit.net/docs/running-tests-in-parallel). The ui-test-parallelism input will be removed in ' +
+              'future versions'.
           Write-Host $message
 
       - name: Checkout
