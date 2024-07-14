@@ -229,7 +229,7 @@ jobs:
         run: |
           $message = '::warning::Since v10.0.0, the UI Testing Toolbox uses xUnit 2.8.0 and later. This fixes the ' +
               'behavior of the maxParallelThreads xUnit configuration. Set that instead of ui-test-parallelism with ' +
-              'xunit-max-parallel-threads' (see https://xunit.net/docs/running-tests-in-parallel). The ' + 
+              'xunit-max-parallel-threads' (see https://xunit.net/docs/running-tests-in-parallel). The ' +
               'ui-test-parallelism input will be removed in a future version'.
           Write-Host $message
 
