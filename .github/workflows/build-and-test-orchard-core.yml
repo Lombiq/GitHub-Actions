@@ -215,6 +215,7 @@ jobs:
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
+      # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/NEST-501

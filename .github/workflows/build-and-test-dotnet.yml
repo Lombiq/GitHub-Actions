@@ -155,6 +155,12 @@ on:
           the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
           to "false", the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the
           build to fail.
+      collect-workflow-telemetry:
+        type: string
+        default: 'true'
+        description: >
+          If "true" (the default), detailed telemetry about the workflow run will be collected with
+          https://github.com/catchpoint/workflow-telemetry-action.
 
 jobs:
   # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call
@@ -186,6 +192,14 @@ jobs:
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
+      # This has to be the first step so it can collect data about the whole workflow run.
+      - name: Collect Workflow Telemetry
+        if: inputs.collect-workflow-telemetry == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/NEST-501
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          comment_on_pr: 'false' # Only displaying the metrics in the job summary
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
