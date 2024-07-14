@@ -63,10 +63,10 @@ runs:
         github_token: ${{ inputs.token }}
         metric_frequency: ${{ inputs.metric_frequency }}
         proc_trace_min_duration: ${{ inputs.proc_trace_min_duration }}
-        proc_trace_sys_enable: ${{ inputs.proc_trace_sys_enable
-        proc_trace_chart_show: ${{ inputs.proc_trace_chart_show
+        proc_trace_sys_enable: ${{ inputs.proc_trace_sys_enable }}
+        proc_trace_chart_show: ${{ inputs.proc_trace_chart_show }}
         proc_trace_chart_max_count: ${{ inputs.proc_trace_chart_max_count }}
-        proc_trace_table_show: ${{ inputs.proc_trace_table_show
+        proc_trace_table_show: ${{ inputs.proc_trace_table_show }}
         comment_on_pr: ${{ inputs.comment_on_pr }}
         job_summary: ${{ inputs.job_summary }}
         theme: ${{ inputs.theme }}
