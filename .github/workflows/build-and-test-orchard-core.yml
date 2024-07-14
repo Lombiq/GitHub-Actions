@@ -223,6 +223,15 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           comment_on_pr: 'false' # Only displaying the metrics in the job summary.
 
+      - name: Display ui-test-parallelism Obsolete Warning
+        if: ${{ inputs.ui-test-parallelism != '-1' }}
+        shell: pwsh
+        run: |
+          $message = '::warning::Since v10.0.0, the UI Testing Toolbox uses xUnit 2.8.0 and later. This fixes the ' +
+              'behavior of the maxParallelThreads xUnit configuration. Set that instead (see ' +
+              'https://xunit.net/docs/running-tests-in-parallel).'
+          Write-Host $message
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
