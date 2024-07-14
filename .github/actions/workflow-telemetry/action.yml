@@ -14,7 +14,9 @@ inputs:
     default: 5
     required: false
   proc_trace_min_duration:
-    description: Puts minimum limit for process execution duration to be traced. Must be a number. Defaults to '-1' which means process duration filtering is not applied.
+    description: >
+      Puts minimum limit for process execution duration to be traced. Must be a number. Defaults to '-1' which means
+      process duration filtering is not applied.
     default: -1
     required: false
   proc_trace_sys_enable:
@@ -26,7 +28,9 @@ inputs:
     default: true
     required: false
   proc_trace_chart_max_count:
-    description: Maximum number of processes to be shown in trace chart (applicable if `proc_trace_chart_show` input is `true`). Must be a number. Defaults to '100'.
+    description: >
+      Maximum number of processes to be shown in trace chart (applicable if `proc_trace_chart_show` input is `true`).
+      Must be a number. Defaults to '100'.
     default: 100
     required: false
   proc_trace_table_show:
@@ -34,11 +38,14 @@ inputs:
     default: false
     required: false
   comment_on_pr:
-    description: Set to `true` to publish the results as comment to the PR (applicable if workflow run is triggered from PR). Defaults to 'true'.
+    description: >
+      Set to `true` to publish the results as comment to the PR (applicable if workflow run is triggered from PR).
+      Defaults to 'true'.
     default: true
     required: false
   job_summary:
-    description: Set to `true` to publish the results as part of the job summary page of the workflow run. Defaults to 'true'.
+    description: >
+      Set to `true` to publish the results as part of the job summary page of the workflow run. Defaults to 'true'.
     default: true
     required: false
   theme:
