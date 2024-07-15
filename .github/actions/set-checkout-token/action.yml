@@ -27,5 +27,5 @@ runs:
       env:
         CHECKOUT_TOKEN: ${{ inputs.checkout-token }}
       run: |
-        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.checkout-token }}"
+        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.token }}"
         Set-GitHubEnv 'CHECKOUT_TOKEN' $checkoutToken
