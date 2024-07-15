@@ -95,6 +95,12 @@ on:
         type: number
         default: 360
         description: Configuration for the timeout-minutes parameter of the workflow. The 360 is GitHub's default.
+      collect-workflow-telemetry:
+        type: string
+        default: 'true'
+        description: >
+          If "true" (the default), detailed telemetry about the workflow run will be collected with
+          https://github.com/catchpoint/workflow-telemetry-action.
 
 jobs:
   build-and-test:
@@ -102,6 +108,14 @@ jobs:
     name: Build and Test
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      # This has to be the first step so it can collect data about the whole workflow run.
+      - name: Collect Workflow Telemetry
+        if: inputs.collect-workflow-telemetry == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/NEST-501
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          comment_on_pr: 'false' # Only displaying the metrics in the job summary.
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
