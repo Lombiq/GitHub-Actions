@@ -34,7 +34,7 @@ runs:
     - name: Set Checkout Token
       uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@issue/NEST-501
       with:
-        token: ${{ inputs.token }}
+        checkout-token: ${{ inputs.token }}
 
     - uses: actions/checkout@v4.1.6
       with:
