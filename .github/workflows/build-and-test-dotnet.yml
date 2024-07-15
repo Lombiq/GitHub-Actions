@@ -197,10 +197,10 @@ jobs:
         if: inputs.collect-workflow-telemetry == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/NEST-501
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/NEST-501
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 

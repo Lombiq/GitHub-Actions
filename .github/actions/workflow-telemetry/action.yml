@@ -58,11 +58,16 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Set Checkout Token
+        uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@issue/NEST-501
+        with:
+          token: ${{ inputs.github_token }}
+
     - name: Collect Workflow Telemetry
       # v2.0.0
       uses: catchpoint/workflow-telemetry-action@94c3c3d9567a0205de6da68a76c428ce4e769af1
       with:
-        github_token: ${{ inputs.github_token }}
+        github_token: ${{ env.CHECKOUT_TOKEN }}
         metric_frequency: ${{ inputs.metric_frequency }}
         proc_trace_min_duration: ${{ inputs.proc_trace_min_duration }}
         proc_trace_sys_enable: ${{ inputs.proc_trace_sys_enable }}

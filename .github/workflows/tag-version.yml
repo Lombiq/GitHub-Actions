@@ -74,7 +74,7 @@ jobs:
         shell: pwsh
     steps:
       - name: Checkout Repository
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/NEST-501
         with:
           token: ${{ secrets.TAG_VERSION_TOKEN }}
 

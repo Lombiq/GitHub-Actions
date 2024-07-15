@@ -1,0 +1,31 @@
+name: Set Checkout Token
+description: >
+  Needed when the workflow calling an action receives the checkout token as a secret, but when that parameter is not
+  supplied, the runner sets the value of that secret to empty string, which is passed down, thus the default value of
+  the parameter will not be applied. This causes an issue for actions/checkout (bug report:
+  https://github.com/actions/runner/issues/924) and workflow-telemetry. Intentionally not documented in Actions.md since
+  it's only meant for internal use.
+
+inputs:
+  checkout-token:
+    required: false
+    default: ${{ github.token }}
+    description: >
+      The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules are
+      used.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+
+    - name: Set Checkout Token
+      shell: pwsh
+      env:
+        CHECKOUT_TOKEN: ${{ inputs.checkout-token }}
+      run: |
+        $checkoutToken = $Env:CHECKOUT_TOKEN ? $Env:CHECKOUT_TOKEN : "${{ github.checkout-token }}"
+        Set-GitHubEnv 'CHECKOUT_TOKEN' $checkoutToken
