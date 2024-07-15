@@ -59,9 +59,9 @@ runs:
   using: composite
   steps:
     - name: Set Checkout Token
-        uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@issue/NEST-501
-        with:
-          token: ${{ inputs.github_token }}
+      uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@issue/NEST-501
+      with:
+        token: ${{ inputs.github_token }}
 
     - name: Collect Workflow Telemetry
       # v2.0.0
