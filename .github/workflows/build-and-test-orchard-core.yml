@@ -221,7 +221,6 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/NEST-501
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          comment_on_pr: 'false' # Only displaying the metrics in the job summary.
 
       - name: Display ui-test-parallelism Obsolete Warning
         if: ${{ inputs.ui-test-parallelism != '-1' }}

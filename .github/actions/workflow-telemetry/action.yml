@@ -3,7 +3,9 @@ description: >
   Runs catchpoint/workflow-telemetry-action. Exists only to centralize which version of the action we use. Intentionally
   not documented in Actions.md since it's only meant for internal use.
 
-# Copied from https://github.com/catchpoint/workflow-telemetry-action/blob/master/action.yml.
+# Copied from https://github.com/catchpoint/workflow-telemetry-action/blob/master/action.yml with code styling and
+# comment_on_pr defaulting to false.
+
 inputs:
   github_token:
     description: GitHub API Access Token
@@ -40,8 +42,8 @@ inputs:
   comment_on_pr:
     description: >
       Set to `true` to publish the results as comment to the PR (applicable if workflow run is triggered from PR).
-      Defaults to 'true'.
-    default: true
+      Defaults to 'false'.
+    default: false
     required: false
   job_summary:
     description: >
