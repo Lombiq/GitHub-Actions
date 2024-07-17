@@ -189,7 +189,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     }
 }
 
-$Env:VSTEST_TESTHOST_SHUTDOWN_TIMEOUT = '10000'
+$Env:VSTEST_TESTHOST_SHUTDOWN_TIMEOUT = '60000'
 
 foreach ($test in $tests)
 {
