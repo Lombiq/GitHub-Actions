@@ -115,6 +115,12 @@ on:
         description: >
           Filter expression for dotnet test. See:
           https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
+      test-artifact-retention-days:
+        type: string
+        default: '7'
+        description: >
+          Duration in days after which the artifacts of testing (e.g. hang dump, diagnostic logs, if any) will expire.
+          See https://github.com/actions/upload-artifact#retention-period for more details.
       xunit-max-parallel-threads:
         type: string
         default: '0'
@@ -248,6 +254,7 @@ jobs:
           solution-path: ${{ inputs.build-solution-path }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
+          artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
           enable-test-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
 
