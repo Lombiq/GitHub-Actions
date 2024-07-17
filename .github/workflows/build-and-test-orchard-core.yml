@@ -136,7 +136,7 @@ on:
           Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
           the MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming
           from the code won't be overridden.
-      ui-test-artifact-retention-days:
+      artifact-retention-days:
         type: string
         default: '7'
         description: >
@@ -293,7 +293,7 @@ jobs:
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
           ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
-          ui-test-artifact-retention-days: ${{ inputs.ui-test-artifact-retention-days }}
+          artifact-retention-days: ${{ inputs.artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
 
       - name: Cancel Workflow on Failure

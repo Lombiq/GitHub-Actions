@@ -47,12 +47,12 @@ inputs:
       Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
       MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming from the
       code won't be overridden.
-  ui-test-artifact-retention-days:
+  artifact-retention-days:
     required: false
     default: '7'
     description: >
-      Duration in days after which the artifact of UI testing (if any) will expire. See
-      https://github.com/actions/upload-artifact#retention-period for more details.
+      Duration in days after which the artifacts of testing (e.g. UI testing failure dump, hang dump, if any) will
+      expire. See https://github.com/actions/upload-artifact#retention-period for more details.
   xunit-max-parallel-threads:
     required: false
     default: '0'
@@ -128,7 +128,7 @@ runs:
         name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/FailureDumps/
         if-no-files-found: ignore
-        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
+        retention-days: ${{ inputs.artifact-retention-days }}
 
     - name: Merge BlameHangDumps
       id: merge-blame-hang-dumps
@@ -147,7 +147,7 @@ runs:
         name: ui-test-blame-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/BlameHangDumps/
         if-no-files-found: ignore
-        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
+        retention-days: ${{ inputs.artifact-retention-days }}
 
     - name: Upload DotnetTestHangDumps
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
@@ -156,7 +156,7 @@ runs:
         name: dotnet-test-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/DotnetTestHangDumps/
         if-no-files-found: ignore
-        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
+        retention-days: ${{ inputs.artifact-retention-days }}
 
     - name: Test Report
       # v15
