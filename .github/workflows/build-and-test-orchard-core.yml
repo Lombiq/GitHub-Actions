@@ -301,7 +301,7 @@ jobs:
           ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
           artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
-          enable-test-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
+          enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
