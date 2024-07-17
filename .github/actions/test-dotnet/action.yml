@@ -137,13 +137,13 @@ runs:
         if-no-files-found: ignore
         retention-days: ${{ inputs.artifact-retention-days }}
 
-    - name: Merge BlameHangDumps
+    - name: Merge Blame Hang Dumps
       id: merge-blame-hang-dumps
       shell: pwsh
       if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != ''
       run: Merge-BlameHangDumps -Directory "${{ inputs.build-directory }}" -Configuration "${{ inputs.test-configuration }}"
 
-    - name: Upload BlameHangDumps
+    - name: Upload Blame Hang Dumps
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       if: |
         failure() &&
@@ -156,7 +156,7 @@ runs:
         if-no-files-found: ignore
         retention-days: ${{ inputs.artifact-retention-days }}
 
-    - name: Upload DotnetTestHangDumps
+    - name: Upload Dotnet Test Hang Dumps
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0 && steps.run-tests.outputs.dotnet-test-hang-dump != 0
       with:
