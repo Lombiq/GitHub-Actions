@@ -148,6 +148,12 @@ on:
         description: >
           Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
           https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
+      enable-test-diagnostic-mode:
+        type: string
+        default: 'false'
+        description: >
+          Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files,
+          to be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
       timeout-minutes:
         type: number
         default: 360
@@ -284,7 +290,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-884
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
@@ -295,6 +301,7 @@ jobs:
           ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
           artifact-retention-days: ${{ inputs.artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
+          enable-test-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

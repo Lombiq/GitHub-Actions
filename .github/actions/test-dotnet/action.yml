@@ -59,6 +59,12 @@ inputs:
     description: >
       Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
       https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
+  enable-diagnostic-mode:
+    required: false
+    default: 'false'
+    description: >
+      Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files, to
+      be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
 
 runs:
   using: composite
@@ -103,6 +109,7 @@ runs:
           Configuration = "${{ inputs.test-configuration }}"
           BlameHangTimeout = "${{ inputs.blame-hang-timeout }}"
           TestProcessTimeout = ${{ inputs.dotnet-test-process-timeout }}
+          EnableDiagnosticMode = $${{ inputs.enable-diagnostic-mode }}
         }
 
         Invoke-SolutionTests @switches
@@ -155,6 +162,16 @@ runs:
       with:
         name: dotnet-test-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/DotnetTestHangDumps/
+        if-no-files-found: ignore
+        retention-days: ${{ inputs.artifact-retention-days }}
+
+    - name: Upload Diagnostic Logs
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      # We don't need additional conditions, because of the "if-no-files-found" setting.
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
+      with:
+        name: dotnet-test-diagnostic-logs-${{ steps.setup.outputs.artifact-name-suffix }}
+        path: ${{ inputs.build-directory }}/DiagnosticLogs/
         if-no-files-found: ignore
         retention-days: ${{ inputs.artifact-retention-days }}
 

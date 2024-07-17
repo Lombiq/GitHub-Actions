@@ -1,4 +1,11 @@
-param ($Solution, $Verbosity, $Filter, $Configuration, $BlameHangTimeout, $TestProcessTimeout)
+param (
+    [string] $Solution,
+    [string] $Verbosity,
+    [string] $Filter,
+    [string] $Configuration,
+    [string] $BlameHangTimeout,
+    [string] $TestProcessTimeout,
+    [boolean] $EnableDiagnosticMode)
 
 # Note that this script will only find tests if they were previously build in Release mode.
 
@@ -39,7 +46,6 @@ $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
 $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($Solution)
 $solutionDirectory = [System.IO.Path]::GetDirectoryName($Solution)
-
 
 Write-Output "Running tests for the $Solution solution."
 
@@ -201,6 +207,7 @@ foreach ($test in $tests)
         '--verbosity', $Verbosity
         $BlameHangTimeout ? ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full') : ''
         $Filter ? '--filter', $Filter : ''
+        $EnableDiagnosticMode ? '--diag DiagnosticLogs/dotnet-test.log' : ''
         $test
     )
 
