@@ -167,8 +167,9 @@ runs:
 
     - name: Upload Diagnostic Logs
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
-      # We don't need additional conditions, because of the "if-no-files-found" setting.
-      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
+      # always() is needed because if the test process hangs and the workflow times out, we still need the diagnostic
+      # logs. We don't need additional conditions, because of the "if-no-files-found" setting.
+      if: always() && steps.run-tests.outputs.test-count != 0
       with:
         name: dotnet-test-diagnostic-logs-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/DiagnosticLogs/
