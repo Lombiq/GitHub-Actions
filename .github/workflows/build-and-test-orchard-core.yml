@@ -224,7 +224,7 @@ jobs:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/NEST-501
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
@@ -234,12 +234,13 @@ jobs:
         run: |
           $message = '::warning::Since v10.0.0, the UI Testing Toolbox uses xUnit 2.8.0 and later. This fixes the ' +
               'behavior of the maxParallelThreads xUnit configuration. Set that instead of ui-test-parallelism with ' +
-              'xunit-max-parallel-threads' (see https://xunit.net/docs/running-tests-in-parallel). The ' +
-              'ui-test-parallelism input will be removed in a future version'.
-          Write-Host $message
+              'xunit-max-parallel-threads (see https://xunit.net/docs/running-tests-in-parallel). The ' +
+              'ui-test-parallelism input will be removed in a future version.'
+
+          Write-Output $message
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/NEST-501
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 

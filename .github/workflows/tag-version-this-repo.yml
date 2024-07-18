@@ -9,7 +9,7 @@ jobs:
   run:
     name: Tag Version Automation
     if: github.event.pusher.name != 'LombiqBot'
-    uses: Lombiq/GitHub-Actions/.github/workflows/tag-version.yml@issue/NEST-501
+    uses: Lombiq/GitHub-Actions/.github/workflows/tag-version.yml@dev
     with:
       additional-pattern-include-list: '@("https://raw.githubusercontent.com/Lombiq/GitHub-Actions/(?<ref>[\w\./-]*)/.github")'
     secrets:

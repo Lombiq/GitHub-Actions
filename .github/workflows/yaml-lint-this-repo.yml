@@ -10,7 +10,7 @@ on:
 jobs:
   yaml-linting:
     name: YAML Linting
-    uses: Lombiq/GitHub-Actions/.github/workflows/yaml-lint.yml@issue/NEST-501
+    uses: Lombiq/GitHub-Actions/.github/workflows/yaml-lint.yml@dev
     with:
       config-file-path: .trunk/configs/.yamllint.yaml
       search-path: .
