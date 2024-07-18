@@ -189,8 +189,6 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
     }
 }
 
-$Env:VSTEST_TESTHOST_SHUTDOWN_TIMEOUT = '60000'
-
 foreach ($test in $tests)
 {
     # This could benefit from grouping, above the level of the potential groups created by the tests (the Lombiq UI
