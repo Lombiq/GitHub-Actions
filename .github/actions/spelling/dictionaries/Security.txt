@@ -1,6 +1,7 @@
 amd
 clickjacking
 nosniff
+openapi
 softwaresecurityproject
 PII
 XSS

@@ -32,10 +32,10 @@ on:
       # https://github.community/t/reusable-workflow-with-strategy-matrix/205676/2.
       machine-types:
         type: string
-        default: "['ubuntu-22.04']"
+        default: '["ubuntu-22.04"]'
         description: >
           Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
-          "['ubuntu-22.04']" or "['ubuntu-22.04', 'windows-2022']".
+          '["ubuntu-22.04"]' or '["ubuntu-22.04", "windows-2022"]'.
       dotnet-version:
         type: string
         default: 8.0.301
@@ -181,6 +181,12 @@ on:
           If "true" (the default), compiler warnings will be treated as errors during the build process. The compiler
           flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set to "false",
           the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the build to fail.
+      collect-workflow-telemetry:
+        type: string
+        default: 'true'
+        description: >
+          If "true" (the default), detailed telemetry about the workflow run will be collected with
+          https://github.com/catchpoint/workflow-telemetry-action.
 
 jobs:
   build-and-test:
@@ -209,6 +215,23 @@ jobs:
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
+      # This has to be the first step so it can collect data about the whole workflow run.
+      - name: Collect Workflow Telemetry
+        if: inputs.collect-workflow-telemetry == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
+        with:
+          github_token: ${{ secrets.CHECKOUT_TOKEN }}
+
+      - name: Display ui-test-parallelism Obsolete Warning
+        if: ${{ inputs.ui-test-parallelism != '-1' }}
+        shell: pwsh
+        run: |
+          $message = '::warning::Since v10.0.0, the UI Testing Toolbox uses xUnit 2.8.0 and later. This fixes the ' +
+              'behavior of the maxParallelThreads xUnit configuration. Set that instead of ui-test-parallelism with ' +
+              'xunit-max-parallel-threads' (see https://xunit.net/docs/running-tests-in-parallel). The ' +
+              'ui-test-parallelism input will be removed in a future version'.
+          Write-Host $message
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
