@@ -114,6 +114,11 @@ on:
         description: >
           If "true", SQL Server Express will be installed and started. This is necessary if the app's UI tests connect
           to an MS SQL Server database.
+      set-up-elasticsearch:
+        type: string
+        default: 'false'
+        description: >
+          If "true", an Elasticsearch instance will be installed and started.
       set-up-azurite:
         type: string
         default: 'false'
@@ -275,6 +280,10 @@ jobs:
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+
+      - name: Set up Elasticsearch
+        if: inputs.set-up-elasticsearch == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@issue/OFFI-56
 
       - name: Set up Azurite
         if: inputs.set-up-azurite == 'true'
