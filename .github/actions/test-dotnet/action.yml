@@ -47,18 +47,24 @@ inputs:
       Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
       MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming from the
       code won't be overridden.
-  ui-test-artifact-retention-days:
+  artifact-retention-days:
     required: false
     default: '7'
     description: >
-      Duration in days after which the artifact of UI testing (if any) will expire. See
-      https://github.com/actions/upload-artifact#retention-period for more details.
+      Duration in days after which the artifacts of testing (e.g. UI testing failure dump, hang dump, if any) will
+      expire. See https://github.com/actions/upload-artifact#retention-period for more details.
   xunit-max-parallel-threads:
     required: false
     default: '0'
     description: >
       Sets the maxParallelThreads configuration in all available xUnit xunit.runner.json configuration files. See
       https://xunit.net/docs/configuration-files#maxParallelThreads for details on available values.
+  enable-diagnostic-mode:
+    required: false
+    default: 'false'
+    description: >
+      Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files, to
+      be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
 
 runs:
   using: composite
@@ -103,6 +109,7 @@ runs:
           Configuration = "${{ inputs.test-configuration }}"
           BlameHangTimeout = "${{ inputs.blame-hang-timeout }}"
           TestProcessTimeout = ${{ inputs.dotnet-test-process-timeout }}
+          EnableDiagnosticMode = $${{ inputs.enable-diagnostic-mode }}
         }
 
         Invoke-SolutionTests @switches
@@ -128,15 +135,15 @@ runs:
         name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/FailureDumps/
         if-no-files-found: ignore
-        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
+        retention-days: ${{ inputs.artifact-retention-days }}
 
-    - name: Merge BlameHangDumps
+    - name: Merge Blame Hang Dumps
       id: merge-blame-hang-dumps
       shell: pwsh
       if: failure() && steps.run-tests.outputs.test-count != 0 && inputs.blame-hang-timeout != ''
       run: Merge-BlameHangDumps -Directory "${{ inputs.build-directory }}" -Configuration "${{ inputs.test-configuration }}"
 
-    - name: Upload BlameHangDumps
+    - name: Upload Blame Hang Dumps
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       if: |
         failure() &&
@@ -147,16 +154,27 @@ runs:
         name: ui-test-blame-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/BlameHangDumps/
         if-no-files-found: ignore
-        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
+        retention-days: ${{ inputs.artifact-retention-days }}
 
-    - name: Upload DotnetTestHangDumps
+    - name: Upload Dotnet Test Hang Dumps
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0 && steps.run-tests.outputs.dotnet-test-hang-dump != 0
       with:
         name: dotnet-test-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/DotnetTestHangDumps/
         if-no-files-found: ignore
-        retention-days: ${{ inputs.ui-test-artifact-retention-days }}
+        retention-days: ${{ inputs.artifact-retention-days }}
+
+    - name: Upload Diagnostic Logs
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      # always() is needed because if the test process hangs and the workflow times out, we still need the diagnostic
+      # logs. We don't need additional conditions, because of the "if-no-files-found" setting.
+      if: always() && steps.run-tests.outputs.test-count != 0
+      with:
+        name: dotnet-test-diagnostic-logs-${{ steps.setup.outputs.artifact-name-suffix }}
+        path: ${{ inputs.build-directory }}/DiagnosticLogs/
+        if-no-files-found: ignore
+        retention-days: ${{ inputs.artifact-retention-days }}
 
     - name: Test Report
       # v15
