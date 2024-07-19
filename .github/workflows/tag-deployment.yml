@@ -1,0 +1,109 @@
+name: Tag Deployment
+on:
+  workflow_call:
+    secrets:
+      TAG_VERSION_TOKEN:
+        required: false
+        description: >
+          An authentication token, like a personal access token (PAT) that gives access to the other repository.
+          This is necessary because the repository that triggered the workflow and the repository that the workflow is
+          running on can be different. (For example: in cases of a swap).
+    inputs:
+      repo_url:
+        default: ${{ github.repository }}
+        required: false
+        type: string
+        description: >
+          The URL of the repository to tag. This is necessary because the repository that triggered the workflow and the
+          repository that the workflow is running on can be different. (For example: in cases of a swap).
+      is_swap:
+        required: false
+        default: false
+        type: boolean
+        description: >
+          Whether this is a swap operation. This will add a tag with {prefix}/latest to the commit that is currently 
+          tagged with the {swap_prefix}/latest tag. This is useful for deployment scenarios where you want to keep 
+          track of the latest deployment and the history of deployments.
+      prefix:
+        required: true
+        type: string
+        description: >
+          Prefix for the tags (e.g., staging or production). This will be used to create tags like
+          `staging/latest` and `staging/2021-01-01-12.34UTC`.
+      swap_prefix:
+        required: false
+        type: string
+        description: >
+          Prefix for looking up the swap tags (e.g., staging). This will be used to look up tags like `staging/latest`
+          to determine the latest commit that was deployed to add a new tag to alongside, like 'production/latest'.
+
+jobs:
+  run:
+    name: Set GitHub Action/Workflow to Version Tag
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout Repository
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          repository: ${{ inputs.repo_url }}
+          token: ${{ secrets.TAG_VERSION_TOKEN }}
+
+      - name: Setup Git Config
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
+      - name: Fetch tags
+        id: fetch-tags
+        run: |
+          git fetch --tags
+
+      - name: Determine timestamp
+        id: determine-timestamp
+        run: |
+          # Get the current timestamp in the format of yyyy-MM-dd-HH.mmUTC - can't use : in tags
+          "timestamp=$(Get-Date -Format 'yyyy-MM-dd-HH.mmUTC')" >> $Env:GITHUB_OUTPUT
+
+      - name: Delete Old prefix/latest tag
+        run: |
+          $latestTag = (git tag -l "${{ inputs.prefix }}/latest")
+          if ($latestTag) 
+          {
+            git tag -d "${{ inputs.prefix }}/latest"
+            git push origin ":refs/tags/${{ inputs.prefix }}/latest"
+          }
+
+      - name: Move Latest Tag (Swap) and Add Timestamp Tag
+        if: inputs.is_swap == true
+        run: |
+          if([string]::IsNullOrEmpty("${{ inputs.swap_prefix }}")) 
+          {
+              throw "Swap prefix not set, exiting"
+          }
+          
+          $tagExists = (git tag -l "${{ inputs.swap_prefix }}/latest")
+          if ([string]::IsNullOrEmpty($tagExists)){
+              throw "No latest tag found for swap prefix"
+          }
+          
+          $latest = (git rev-list -n 1 "${{ inputs.swap_prefix }}/latest")
+          if ($latest) 
+          {
+              git tag -a "${{ inputs.prefix }}/latest" $latest -m "Latest tag for ${{ inputs.prefix }}"
+              git push origin tag "${{ inputs.prefix }}/latest"
+              git tag -a "${{ inputs.prefix }}/${{steps.determine-timestamp.outputs.timestamp}}" $latest -m "Swap tagged at ${{steps.determine-timestamp.outputs.timestamp}}"
+              git push origin tag "${{ inputs.prefix }}/${{steps.determine-timestamp.outputs.timestamp}}"
+          } else {
+              throw "No latest tag found for swap prefix"
+          }
+
+      - name: Tag Latest and add Timestamp Tag
+        if: inputs.is_swap == false
+        run: |
+          git tag "${{ inputs.prefix }}/latest"
+          git push origin tag "${{ inputs.prefix }}/latest"
+          git tag "${{ inputs.prefix }}/${{steps.determine-timestamp.outputs.timestamp}}"
+          git push origin tag "${{ inputs.prefix }}/${{steps.determine-timestamp.outputs.timestamp}}"
