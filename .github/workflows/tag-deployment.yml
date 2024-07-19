@@ -21,8 +21,8 @@ on:
         default: false
         type: boolean
         description: >
-          Whether this is a swap operation. This will add a tag with {prefix}/latest to the commit that is currently 
-          tagged with the {swap_prefix}/latest tag. This is useful for deployment scenarios where you want to keep 
+          Whether this is a swap operation. This will add a tag with {prefix}/latest to the commit that is currently
+          tagged with the {swap_prefix}/latest tag. This is useful for deployment scenarios where you want to keep
           track of the latest deployment and the history of deployments.
       prefix:
         required: true
@@ -70,7 +70,7 @@ jobs:
       - name: Delete Old prefix/latest tag
         run: |
           $latestTag = (git tag -l "${{ inputs.prefix }}/latest")
-          if ($latestTag) 
+          if ($latestTag)
           {
             git tag -d "${{ inputs.prefix }}/latest"
             git push origin ":refs/tags/${{ inputs.prefix }}/latest"
@@ -79,22 +79,23 @@ jobs:
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
         if: inputs.is_swap == true
         run: |
-          if([string]::IsNullOrEmpty("${{ inputs.swap_prefix }}")) 
+          if([string]::IsNullOrEmpty("${{ inputs.swap_prefix }}"))
           {
               throw "Swap prefix not set, exiting"
           }
-          
+
           $tagExists = (git tag -l "${{ inputs.swap_prefix }}/latest")
           if ([string]::IsNullOrEmpty($tagExists)){
               throw "No latest tag found for swap prefix"
           }
-          
+
           $latest = (git rev-list -n 1 "${{ inputs.swap_prefix }}/latest")
-          if ($latest) 
+          if ($latest)
           {
               git tag -a "${{ inputs.prefix }}/latest" $latest -m "Latest tag for ${{ inputs.prefix }}"
               git push origin tag "${{ inputs.prefix }}/latest"
-              git tag -a "${{ inputs.prefix }}/${{steps.determine-timestamp.outputs.timestamp}}" $latest -m "Swap tagged at ${{steps.determine-timestamp.outputs.timestamp}}"
+              $gitMessage = "Swap tagged at ${{steps.determine-timestamp.outputs.timestamp}}"
+              git tag -a "${{ inputs.prefix }}/${{steps.determine-timestamp.outputs.timestamp}}" $latest -m $gitMessage
               git push origin tag "${{ inputs.prefix }}/${{steps.determine-timestamp.outputs.timestamp}}"
           } else {
               throw "No latest tag found for swap prefix"
