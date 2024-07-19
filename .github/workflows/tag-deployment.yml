@@ -103,7 +103,7 @@ jobs:
           }
 
       - name: Create Release
-        uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
         if: inputs.is_swap == true
         with:
           repo: ${{ inputs.repo_url }}
