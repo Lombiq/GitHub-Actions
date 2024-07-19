@@ -3,6 +3,7 @@ on:
   workflow_call:
     secrets:
       TAG_VERSION_TOKEN:
+        default: ${{ github.token }}
         required: false
         description: >
           An authentication token, like a personal access token (PAT) that gives access to the other repository.
@@ -100,6 +101,17 @@ jobs:
           } else {
               throw "No latest tag found for swap prefix"
           }
+
+      - name: Create Release
+        uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
+        if: inputs.is_swap == true
+        with:
+          repo: ${{ inputs.repo_url }}
+          token: ${{ secrets.TAG_VERSION_TOKEN }}
+          tag: ${{ inputs.prefix }}/latest
+          allowUpdates: true
+          generateReleaseNotes: true
+          artifacts: artifacts/*.nupkg, artifacts/*.snupkg
 
       - name: Tag Latest and add Timestamp Tag
         if: inputs.is_swap == false
