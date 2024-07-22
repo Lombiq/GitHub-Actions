@@ -1,3 +1,6 @@
+name: Elasticsearch Setup
+description: Sets up Elasticsearch
+
 - name: Configure sysctl limits
   run: |
     sudo swapoff -a
