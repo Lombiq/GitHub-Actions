@@ -132,6 +132,13 @@ on:
         description: >
           Compiles application assemblies as ReadyToRun (R2R) format. R2R is a form of ahead-of-time (AOT) compilation.
           If ready to run is set to `true` the `runtime` input is needed.
+      tag-prefix:
+        type: string
+        required: false
+        default: ${{ inputs.slot-name }}
+        description: >
+          The prefix to use for the tag. If not set, the slot name will be used as the prefix. The tag will be in the
+          format of "<prefix>/latest" and "<prefix>/<timestamp>".
 
 jobs:
   deploy:
@@ -246,6 +253,33 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
+
+      - name: Fetch tags
+        id: fetch-tags
+        run: |
+          git fetch --tags
+
+      - name: Determine timestamp
+        id: determine-timestamp
+        run: |
+          # Get the current timestamp in the format of yyyy-MM-dd-HH.mmUTC - can't use : in tags
+          "timestamp=$(Get-Date -Format 'yyyy-MM-dd-HH.mmUTC')" >> $Env:GITHUB_OUTPUT
+
+      - name: Delete Old prefix/latest tag
+        run: |
+          $latestTag = (git tag -l '${{ inputs.tag-prefix }}/latest')
+          if ($latestTag)
+          {
+            git tag -d '${{ inputs.tag-prefix }}/latest'
+            git push origin ":refs/tags/${{ inputs.tag-prefix }}/latest"
+          }
+
+      - name: Tag Latest and add Timestamp Tag
+        run: |
+            git tag '${{ inputs.tag-prefix }}/latest'
+            git push origin tag '${{ inputs.tag-prefix }}/latest'
+            git tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
+            git push origin tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

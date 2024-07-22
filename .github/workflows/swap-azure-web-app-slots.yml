@@ -29,6 +29,13 @@ on:
           The ID of the Azure Subscription the resources are under, which will be mapped to the subscription-id
           parameter when calling azure/login. You can look this up e.g. in the Azure Portal under any resource or the
           subscription itself.
+      TAG_DEPLOYMENT_TOKEN:
+          default: ${{ github.token }}
+          required: false
+          description: >
+              An authentication token, like a personal access token (PAT) that gives access to the other repository.
+              This is necessary because the repository that triggered the workflow and the repository that the workflow
+              is running on are different in this case.
 
     inputs:
       cancel-workflow-on-failure:
@@ -69,6 +76,26 @@ on:
         description: >
           ID of the Application Insights resource that the release annotation for the swap should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
+      swap-code-repo:
+        type: string
+        default: ''
+        required: false
+        description: >
+          The repository that hosts the code that will be swapped. This is necessary for adding tags.
+      tag-prefix:
+        type: string
+        default: ${{ inputs.destination-slot-name }}
+        required: false
+        description: >
+          The prefix for the tags that will be added to the swap-code-repo. If not set, the slot name will be used as
+          the prefix. The tag will be in the format of "<prefix>/latest" and "<prefix>/<timestamp>".
+      swap-prefix:
+        type: string
+        default: ${{ inputs.source-slot-name }}
+        required: false
+        description: >
+          The prefix of the deployment tag that we will be looking for in the swap-code-repo. If not set, the source
+          slot name will be used as the prefix.
 
 jobs:
   swap-azure-web-app-slots:
@@ -117,6 +144,77 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
+
+      - name: Checkout Repository
+        if: inputs.swap-code-repo != ''
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+            repository: ${{ inputs.swap-code-repo }}
+            token: ${{ secrets.TAG_DEPLOYMENT_TOKEN }}
+
+      - name: Setup Git Config
+        if: inputs.swap-code-repo != ''
+        run: |
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+
+      - name: Fetch tags
+        if: inputs.swap-code-repo != ''
+        run: |
+            git fetch --tags
+
+      - name: Determine timestamp
+        if: inputs.swap-code-repo != ''
+        id: determine-timestamp
+        run: |
+            # Get the current timestamp in the format of yyyy-MM-dd-HH.mmUTC - can't use : in tags
+            "timestamp=$(Get-Date -Format 'yyyy-MM-dd-HH.mmUTC')" >> $Env:GITHUB_OUTPUT
+
+      - name: Delete Old prefix/latest tag
+        if: inputs.swap-code-repo != ''
+        run: |
+            $latestTag = (git tag -l '${{ inputs.tag-prefix }}/latest')
+            if ($latestTag)
+            {
+              git tag -d '${{ inputs.tag-prefix }}/latest'
+              git push origin ":refs/tags/${{ inputs.tag-prefix }}/latest"
+            }
+
+      - name: Move Latest Tag (Swap) and Add Timestamp Tag
+        if: inputs.swap-code-repo != ''
+        run: |
+            if([string]::IsNullOrEmpty("${{ inputs.tag-prefix }}"))
+            {
+                throw "Tag prefix not set, exiting"
+            }
+
+            $tagExists = (git tag -l "${{ inputs.swap-prefix }}/latest")
+            if ([string]::IsNullOrEmpty($tagExists)){
+                throw "No latest tag found for swap prefix"
+            }
+
+            $latest = (git rev-list -n 1 "${{ inputs.swap-prefix }}/latest")
+            if ($latest)
+            {
+                git tag -a "${{ inputs.tag-prefix }}/latest" $latest -m "Latest tag for ${{ inputs.tag-prefix }}"
+                git push origin tag "${{ inputs.tag-prefix }}/latest"
+                $gitMessage = "Swap tagged at ${{steps.determine-timestamp.outputs.timestamp}}"
+                git tag -a "${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}" $latest -m $gitMessage
+                git push origin tag "${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}"
+            } else {
+                throw "No latest tag found for swap prefix"
+            }
+
+      - name: Create Release
+        uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
+        if: inputs.swap-code-repo != ''
+        with:
+            repo: ${{ inputs.swap-code-repo }}
+            token: ${{ secrets.TAG_DEPLOYMENT_TOKEN }}
+            tag: ${{ inputs.tag-prefix }}/latest
+            allowUpdates: true
+            generateReleaseNotes: true
+            artifacts: artifacts/*.nupkg, artifacts/*.snupkg
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
