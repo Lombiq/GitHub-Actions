@@ -4,6 +4,7 @@ description: Sets up Elasticsearch
 runs:
   steps:
     - name: Configure sysctl limits
+      shell: pwsh
       run: |
         sudo swapoff -a
         sudo sysctl -w vm.swappiness=1
