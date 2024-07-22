@@ -2,6 +2,7 @@ name: Elasticsearch Setup
 description: Sets up Elasticsearch
 
 runs:
+  using: composite
   steps:
     - name: Configure sysctl limits
       shell: pwsh
