@@ -271,15 +271,15 @@ jobs:
           if ($latestTag)
           {
             git tag -d '${{ inputs.tag-prefix }}/latest'
-            git push origin ":refs/tags/${{ inputs.tag-prefix }}/latest"
+            git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
           }
 
       - name: Tag Latest and add Timestamp Tag
         run: |
-            git tag '${{ inputs.tag-prefix }}/latest'
-            git push origin tag '${{ inputs.tag-prefix }}/latest'
-            git tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
-            git push origin tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
+          git tag '${{ inputs.tag-prefix }}/latest'
+          git push origin tag '${{ inputs.tag-prefix }}/latest'
+          git tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
+          git push origin tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

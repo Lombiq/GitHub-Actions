@@ -155,8 +155,8 @@ jobs:
       - name: Setup Git Config
         if: inputs.swap-code-repo != ''
         run: |
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git config user.name "github-actions[bot]"
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git config user.name 'github-actions[bot]'
 
       - name: Fetch tags
         if: inputs.swap-code-repo != ''
@@ -177,31 +177,34 @@ jobs:
             if ($latestTag)
             {
               git tag -d '${{ inputs.tag-prefix }}/latest'
-              git push origin ":refs/tags/${{ inputs.tag-prefix }}/latest"
+              git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
             }
 
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
         if: inputs.swap-code-repo != ''
         run: |
-            if([string]::IsNullOrEmpty("${{ inputs.tag-prefix }}"))
+            if([string]::IsNullOrEmpty('${{ inputs.tag-prefix }}'))
             {
-                throw "Tag prefix not set, exiting"
+                throw 'Tag prefix not set, exiting'
             }
 
-            $tagExists = (git tag -l "${{ inputs.swap-prefix }}/latest")
-            if ([string]::IsNullOrEmpty($tagExists)){
-                throw "No latest tag found for swap prefix"
+            $tagExists = (git tag -l '${{ inputs.swap-prefix }}/latest')
+            if ([string]::IsNullOrEmpty($tagExists))
+            {
+                throw 'No latest tag found for swap prefix'
             }
 
-            $latest = (git rev-list -n 1 "${{ inputs.swap-prefix }}/latest")
+            $latest = (git rev-list -n 1 '${{ inputs.swap-prefix }}/latest')
             if ($latest)
             {
-                git tag -a "${{ inputs.tag-prefix }}/latest" $latest -m "Latest tag for ${{ inputs.tag-prefix }}"
-                git push origin tag "${{ inputs.tag-prefix }}/latest"
-                $gitMessage = "Swap tagged at ${{steps.determine-timestamp.outputs.timestamp}}"
-                git tag -a "${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}" $latest -m $gitMessage
-                git push origin tag "${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}"
-            } else {
+                git tag -a '${{ inputs.tag-prefix }}/latest' $latest -m 'Latest tag for ${{ inputs.tag-prefix }}'
+                git push origin tag '${{ inputs.tag-prefix }}/latest'
+                $gitMessage = 'Swap tagged at ${{steps.determine-timestamp.outputs.timestamp}}'
+                git tag -a '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}' $latest -m $gitMessage
+                git push origin tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
+            }
+            else
+            {
                 throw "No latest tag found for swap prefix"
             }
 
