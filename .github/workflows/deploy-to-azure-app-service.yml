@@ -265,13 +265,13 @@ jobs:
           # Get the current timestamp in the format of yyyy-MM-dd-HH.mmUTC - can't use : in tags
           "timestamp=$(Get-Date -Format 'yyyy-MM-dd-HH.mmUTC')" >> $Env:GITHUB_OUTPUT
 
-      - name: Delete Old prefix/latest tag
+      - name: Delete Old prefix/latest Tag
         run: |
           $latestTag = (git tag -l '${{ inputs.tag-prefix }}/latest')
           if ($latestTag)
           {
-            git tag -d '${{ inputs.tag-prefix }}/latest'
-            git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
+              git tag -d '${{ inputs.tag-prefix }}/latest'
+              git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
           }
 
       - name: Tag Latest and add Timestamp Tag

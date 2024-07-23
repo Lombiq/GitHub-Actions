@@ -176,8 +176,8 @@ jobs:
             $latestTag = (git tag -l '${{ inputs.tag-prefix }}/latest')
             if ($latestTag)
             {
-              git tag -d '${{ inputs.tag-prefix }}/latest'
-              git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
+                git tag -d '${{ inputs.tag-prefix }}/latest'
+                git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
             }
 
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
