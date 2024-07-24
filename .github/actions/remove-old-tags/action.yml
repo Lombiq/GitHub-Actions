@@ -3,21 +3,20 @@ description: >
     Removes the old prefix/latest tag so that a new one can be set.
 
 inputs:
-    tag-prefix:
-        description: >
-            The prefix for the tag we are removing
-        required: true
+  tag-prefix:
+    description: The prefix for the tag we are removing
+    required: true
 
 runs:
-    using: composite
-    steps:
-        - name: Delete latest tag
-          shell: pwsh
-          run: |
-            git fetch --tags
-            $latestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
-            if ($latestTag)
-            {
-              git tag --delete '${{ inputs.tag-prefix }}/latest'
-              git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
-            }
+  using: composite
+  steps:
+    - name: Delete latest tag
+      shell: pwsh
+      run: |
+        git fetch --tags
+        $latestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
+        if ($latestTag)
+        {
+          git tag --delete '${{ inputs.tag-prefix }}/latest'
+          git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
+        }

@@ -160,11 +160,12 @@ jobs:
       - name: Remove old tags
         uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
         with:
-          tag-prefix: '${{ inputs.tag-prefix }}'
+          tag-prefix: ${{ inputs.tag-prefix }}
 
       - name: Create timestamp
         id: create-timestamp
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
+
       - name: Fetch tags
         if: inputs.swap-code-repo != ''
         run: |
