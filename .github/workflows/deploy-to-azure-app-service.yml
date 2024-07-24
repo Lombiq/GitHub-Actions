@@ -138,7 +138,8 @@ on:
         default: ${{ inputs.slot-name }}
         description: >
           The prefix to use for the tag. If not set, the slot name will be used as the prefix. The tag will be in the
-          format of "<prefix>/latest" and "<prefix>/<timestamp>".
+          format of "<prefix>/latest" and "<prefix>/<timestamp>". This is used for tracking what's deployed, where and
+          when by tagging the deployed commit.
 
 jobs:
   deploy:
@@ -254,32 +255,21 @@ jobs:
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
 
-      - name: Fetch tags
-        id: fetch-tags
-        run: |
-          git fetch --tags
+      - name: Remove old tags
+        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
+        with:
+          tag-prefix: '${{ inputs.tag-prefix }}'
 
-      - name: Determine timestamp
-        id: determine-timestamp
-        run: |
-          # Get the current timestamp in the format of yyyy-MM-dd-HH.mmUTC - can't use : in tags
-          "timestamp=$(Get-Date -Format 'yyyy-MM-dd-HH.mmUTC')" >> $Env:GITHUB_OUTPUT
-
-      - name: Delete Old prefix/latest tag
-        run: |
-          $latestTag = (git tag -l '${{ inputs.tag-prefix }}/latest')
-          if ($latestTag)
-          {
-            git tag -d '${{ inputs.tag-prefix }}/latest'
-            git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
-          }
+      - name: Create timestamp
+        id: create-timestamp
+        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
 
       - name: Tag Latest and add Timestamp Tag
         run: |
           git tag '${{ inputs.tag-prefix }}/latest'
           git push origin tag '${{ inputs.tag-prefix }}/latest'
-          git tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
-          git push origin tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
+          git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
+          git push origin tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

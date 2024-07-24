@@ -20,10 +20,18 @@ jobs:
       source-slot-name: Staging
       destination-slot-name: Production
       application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
+      # Defaults to destination-slot-name if not set, used for adding git tags to the deployed commit.
+      tag-prefix: production
+      # Defaults to source-slot-name if not set, used looking up the currently deployed commit by tag.
+      swap-prefix: staging
+      # The repository that hosts the code that will be swapped. This is necessary for adding tags and releases.
+      swap-code-repo: Lombiq/Lombiq-GitHub-Actions 
     secrets:
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
       AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}
       AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID }}
+      # Needs to have access to create tags and releases in the target repository.
+      CODE_REPOSITORY_WRITE_TOKEN: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
 ```
 
 To restrict who can edit or run the Swap workflow, we recommend putting into a separate repository independent of your application code. If you're [on the Enterprise plan, you can add required reviewers](https://github.com/orgs/community/discussions/26262) instead, so that not everyone is able to run a swap who has write access to the repository.
