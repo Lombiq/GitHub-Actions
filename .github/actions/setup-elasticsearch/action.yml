@@ -13,6 +13,6 @@ runs:
         sudo sysctl -w vm.max_map_count=262144
 
     - name: Runs Elasticsearch
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch/elasticsearch@issue/OFFI-56
+      uses: elastic/elastic-github-actions/elasticsearch@a82f8694596aa6f9ce3b556c7a795ee40db626e2
       with:
         stack-version: 7.6.0
