@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        elasticsearch: ["6.8-SNAPSHOT", "7.x-SNAPSHOT", "8.2.0-SNAPSHOT"]
+        elasticsearch: [6.8-SNAPSHOT, 7.x-SNAPSHOT, 8.2.0-SNAPSHOT]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        elasticsearch: ["6.8-SNAPSHOT", "7.x-SNAPSHOT", "8.2.0-SNAPSHOT"]
+        elasticsearch: [6.8-SNAPSHOT, 7.x-SNAPSHOT, 8.2.0-SNAPSHOT]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        elasticsearch: ["6.8-SNAPSHOT", "7.x-SNAPSHOT", "8.2.0-SNAPSHOT"]
+        elasticsearch: [6.8-SNAPSHOT, 7.x-SNAPSHOT, 8.2.0-SNAPSHOT]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        elasticsearch: ["6.8-SNAPSHOT", "7.x-SNAPSHOT", "8.2.0-SNAPSHOT"]
+        elasticsearch: [6.8-SNAPSHOT, 7.x-SNAPSHOT, 8.2.0-SNAPSHOT]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -144,7 +144,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        elasticsearch: [ "7.15.1" ]
+        elasticsearch: [7.15.1]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -174,7 +174,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        elasticsearch: ["8.2.0-SNAPSHOT"]
+        elasticsearch: [8.2.0-SNAPSHOT]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -190,10 +190,9 @@ jobs:
         uses: ./elasticsearch
         with:
           stack-version: ${{ matrix.elasticsearch }}
-          elasticsearch_password: 'changedpassword'
+          elasticsearch_password: changedpassword
 
       - name: Elasticsearch is reachable
         # Use --fail to ensure failure on a 401 (not authorized).
         run: |
           curl --verbose --show-error --fail -k -u elastic:changedpassword https://localhost:9200
-
