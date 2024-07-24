@@ -206,7 +206,7 @@ foreach ($test in $tests)
         '--logger', '''console;verbosity=detailed'''
         '--verbosity', $Verbosity
         $BlameHangTimeout ? ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full') : ''
-        $Filter ? '--filter', $Filter : ''
+        $Filter ? '--filter', "'$Filter'" : ''
         $EnableDiagnosticMode ? '--diag DiagnosticLogs/dotnet-test.log' : ''
         $test
     )
