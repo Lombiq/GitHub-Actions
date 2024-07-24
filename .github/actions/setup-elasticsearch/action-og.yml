@@ -1,0 +1,10 @@
+name: Elasticsearch Setup
+description: Sets up Elasticsearch
+
+runs:
+  using: composite
+  steps:
+    - name: Runs Elasticsearch
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch/elasticsearch@issue/OFFI-56
+      with:
+        stack-version: 7.6.0
