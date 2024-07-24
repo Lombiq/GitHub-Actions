@@ -76,7 +76,7 @@ on:
         description: >
           ID of the Application Insights resource that the release annotation for the swap should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
-      swap-code-repo:
+      app-code-repo:
         type: string
         default: ''
         required: false
@@ -87,7 +87,7 @@ on:
         default: ${{ inputs.destination-slot-name }}
         required: false
         description: >
-          The prefix for the tags that will be added to the swap-code-repo. If not set, the slot name will be used as
+          The prefix for the tags that will be added to the app-code-repo. If not set, the slot name will be used as
           the prefix. The tag will be in the format of "<prefix>/latest" and "<prefix>/<timestamp>". This is used for
           tracking what's deployed, where and when by tagging the deployed commit.
       swap-prefix:
@@ -95,9 +95,9 @@ on:
         default: ${{ inputs.source-slot-name }}
         required: false
         description: >
-          The prefix of the deployment tag that we will be looking for in the swap-code-repo. If not set, the source
+          The prefix of the deployment tag that we will be looking for in the app-code-repo. If not set, the source
           slot name will be used as the prefix. This is used to find the currently deployed commit by its tag in the
-          swap-code-repo.
+          app-code-repo.
 
 jobs:
   swap-azure-web-app-slots:
@@ -147,15 +147,18 @@ jobs:
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
 
-      - name: Checkout Code Repository and Setup Git Config
-        if: inputs.swap-code-repo != ''
+      - name: Checkout Code Repository
+        if: inputs.app-code-repo != ''
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          repository: ${{ inputs.app-code-repo }}
+          token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
+
+      - name: Setup Git Config
+        if: inputs.app-code-repo != ''
         run: |
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git config user.name 'github-actions[bot]'
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-        with:
-          repository: ${{ inputs.swap-code-repo }}
-          token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
 
       - name: Remove old tags
         uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
@@ -167,19 +170,19 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
 
       - name: Fetch tags
-        if: inputs.swap-code-repo != ''
+        if: inputs.app-code-repo != ''
         run: |
             git fetch --tags
 
       - name: Determine timestamp
-        if: inputs.swap-code-repo != ''
+        if: inputs.app-code-repo != ''
         id: determine-timestamp
         run: |
             # Get the current timestamp in the format of yyyy-MM-dd-HH.mmUTC - can't use : in tags
             "timestamp=$(Get-Date -Format 'yyyy-MM-dd-HH.mmUTC')" >> $Env:GITHUB_OUTPUT
 
       - name: Delete Old prefix/latest tag
-        if: inputs.swap-code-repo != ''
+        if: inputs.app-code-repo != ''
         run: |
             $latestTag = (git tag -l '${{ inputs.tag-prefix }}/latest')
             if ($latestTag)
@@ -189,7 +192,7 @@ jobs:
             }
 
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
-        if: inputs.swap-code-repo != ''
+        if: inputs.app-code-repo != ''
         run: |
             if([string]::IsNullOrEmpty('${{ inputs.tag-prefix }}'))
             {
@@ -218,9 +221,9 @@ jobs:
 
       - name: Create Release
         uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
-        if: inputs.swap-code-repo != ''
+        if: inputs.app-code-repo != ''
         with:
-          repo: ${{ inputs.swap-code-repo }}
+          repo: ${{ inputs.app-code-repo }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
           tag: ${{ inputs.tag-prefix }}/latest
           allowUpdates: true

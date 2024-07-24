@@ -25,7 +25,7 @@ jobs:
       # Defaults to source-slot-name if not set, used looking up the currently deployed commit by tag.
       swap-prefix: staging
       # The repository that hosts the code that will be swapped. This is necessary for adding tags and releases.
-      swap-code-repo: Lombiq/Lombiq-GitHub-Actions 
+      app-code-repo: Lombiq/Lombiq-GitHub-Actions 
     secrets:
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
       AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}
