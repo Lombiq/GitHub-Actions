@@ -17,6 +17,6 @@ runs:
         $latestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
         if ($latestTag)
         {
-          git tag --delete '${{ inputs.tag-prefix }}/latest'
-          git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
+            git tag --delete '${{ inputs.tag-prefix }}/latest'
+            git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
         }
