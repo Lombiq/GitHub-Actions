@@ -165,6 +165,27 @@ jobs:
       - name: Create timestamp
         id: create-timestamp
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
+      - name: Fetch tags
+        if: inputs.swap-code-repo != ''
+        run: |
+            git fetch --tags
+
+      - name: Determine timestamp
+        if: inputs.swap-code-repo != ''
+        id: determine-timestamp
+        run: |
+            # Get the current timestamp in the format of yyyy-MM-dd-HH.mmUTC - can't use : in tags
+            "timestamp=$(Get-Date -Format 'yyyy-MM-dd-HH.mmUTC')" >> $Env:GITHUB_OUTPUT
+
+      - name: Delete Old prefix/latest tag
+        if: inputs.swap-code-repo != ''
+        run: |
+            $latestTag = (git tag -l '${{ inputs.tag-prefix }}/latest')
+            if ($latestTag)
+            {
+                git tag -d '${{ inputs.tag-prefix }}/latest'
+                git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
+            }
 
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
         if: inputs.swap-code-repo != ''
