@@ -4,6 +4,7 @@ apikey
 apps
 appsettings
 argb
+aspnet
 atata
 autoplay
 bacpac
@@ -128,6 +129,7 @@ timespan
 timezones
 tls
 toolbars
+traceidentifier
 trumbowyg
 typeparam
 typeparamref
