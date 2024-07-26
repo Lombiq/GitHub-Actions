@@ -121,11 +121,11 @@ runs:
       run: |
         if ('${{ inputs.add-source-link-package }}' -eq 'true')
         {
-          Add-SourceLinkPackage
+            Add-SourceLinkPackage
         }
         else
         {
-          dotnet restore -p:NuGetBuild=true
+            dotnet restore -p:NuGetBuild=true
         }
 
     - name: Update package manifest version
