@@ -290,7 +290,7 @@ jobs:
 
       - name: Set up Elasticsearch
         if: inputs.set-up-elasticsearch == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@issue/OFFI-56-redux
 
       - name: Set up Azurite
         if: inputs.set-up-azurite == 'true'
