@@ -58,6 +58,10 @@ on:
           https://github.com/actions/upload-artifact#retention-period for more details. Note that this only affects the
           retention of the workflow run's artifact, not the artifacts attached to the release created on GitHub; those
           will remain indefinitely.
+      add-source-link-package:
+        type: string
+        default: 'true'
+        description: If set to "true", the Microsoft.SourceLink.GitHub NuGet package is added to the projects.
 
 jobs:
   publish-nuget:
@@ -83,6 +87,7 @@ jobs:
           dotnet-pack-include-symbols: ${{ inputs.dotnet-pack-include-symbols }}
           publish-version: ${{ inputs.publish-version }}
           nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
+          add-source-link-package: ${{ inputs.add-source-link-package }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           API_KEY: ${{ secrets.API_KEY }}
