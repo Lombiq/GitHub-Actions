@@ -35,6 +35,10 @@ inputs:
       https://github.com/actions/upload-artifact#retention-period for more details. Note that this only affects the
       retention of the workflow run's artifact, not the artifacts attached to the release created on GitHub; those will
       remain indefinitely.
+  add-source-link-package:
+    required: false
+    default: 'true'
+    description: If set to "true", the Microsoft.SourceLink.GitHub NuGet package is added to the projects.
 
 runs:
   using: composite
@@ -114,7 +118,15 @@ runs:
     # This also implicitly restores NuGet dependencies.
     - name: Add Source Link package
       shell: pwsh
-      run: Add-SourceLinkPackage
+      run: |
+        if ('${{ inputs.add-source-link-package }}' -eq 'true')
+        {
+            Add-SourceLinkPackage
+        }
+        else
+        {
+            dotnet restore -p:NuGetBuild=true
+        }
 
     - name: Update package manifest version
       shell: pwsh
