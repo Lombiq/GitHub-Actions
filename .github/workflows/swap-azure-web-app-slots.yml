@@ -82,6 +82,12 @@ on:
         required: false
         description: >
           The repository that hosts the code that will be swapped. This is necessary for adding tags.
+      ref:
+        type: string
+        required: false
+        description: >
+          The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults
+          to the reference or SHA for that event. Otherwise, uses the default branch.
       tag-prefix:
         type: string
         default: ${{ inputs.destination-slot-name }}
@@ -152,6 +158,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           repository: ${{ inputs.app-code-repo }}
+          ref: ${{ inputs.ref }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
 
       - name: Setup Git Config
