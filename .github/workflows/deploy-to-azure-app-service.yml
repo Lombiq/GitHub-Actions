@@ -272,7 +272,7 @@ jobs:
 
       - name: Delete Old prefix/latest Tag
         run: |
-          $latestTag = (git tag -l '${{ inputs.tag-prefix }}/latest')
+          $latestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
           if ($latestTag)
           {
               git tag -d '${{ inputs.tag-prefix }}/latest'
