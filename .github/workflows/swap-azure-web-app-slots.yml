@@ -176,13 +176,7 @@ jobs:
         id: create-timestamp
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
 
-      - name: Fetch tags
-        if: inputs.app-code-repo != ''
-        run: |
-            git fetch --tags
-
       - name: Determine timestamp
-        if: inputs.app-code-repo != ''
         id: determine-timestamp
         run: |
             # Get the current timestamp in the format of yyyy-MM-dd-HH.mmUTC - can't use : in tags

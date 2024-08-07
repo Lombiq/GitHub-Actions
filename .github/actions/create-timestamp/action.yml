@@ -1,13 +1,12 @@
-﻿name: create-timestamp
-author: qwerty
+﻿name: Create Timestamp
 description: Create a timestamp in ISO 8601 format for use in tags (replaces ":" with "." for use in git tags).
 runs:
   using: composite
   steps:
-    - name: Get timestamp
+    - name: Get Timestamp
       shell: pwsh
       run: |
-        # Get the current timestamp in the ISO 8601 format but replace ":" with "." because we can't use ":" in tags
+        # Get the current timestamp in the ISO 8601 format but replace ":" with "." because we can't use ":" in tags.
         $timestamp = (Get-Date -Format 'yyyy-MM-ddTHH.mm.ssZ' -AsUTC) -replace ':', '.'
 
 outputs:

@@ -1,4 +1,4 @@
-﻿name: remove-old-tags
+﻿name: Remove Old Tags
 description: >
     Removes the old prefix/latest tag so that a new one can be set.
 
@@ -10,7 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Delete latest tag
+    - name: Delete Latest Tag
       shell: pwsh
       run: |
         git fetch --tags
