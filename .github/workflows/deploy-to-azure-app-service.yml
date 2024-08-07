@@ -282,9 +282,9 @@ jobs:
       - name: Tag Latest and add Timestamp Tag
         run: |
           git tag '${{ inputs.tag-prefix }}/latest'
-          git push origin tag '${{ inputs.tag-prefix }}/latest'
+          git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
           git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
-          git push origin tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
+          git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}/latest'
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

@@ -98,12 +98,11 @@ on:
           tracking what's deployed, where and when by tagging the deployed commit.
       swap-prefix:
         type: string
-        default: ${{ inputs.source-slot-name }}
+        default: 'staging'
         required: false
         description: >
-          The prefix of the deployment tag that we will be looking for in the app-code-repo. If not set, the source
-          slot name will be used as the prefix. This is used to find the currently deployed commit by its tag in the
-          app-code-repo.
+          The prefix of the deployment tag that we will be looking for in the app-code-repo. If not set, 'staging' will
+          be used as the prefix. This is used to find the currently deployed commit by its tag in the app-code-repo.
 
 jobs:
   swap-azure-web-app-slots:
@@ -210,10 +209,10 @@ jobs:
             if ($latest)
             {
                 git tag --annotate '${{ inputs.tag-prefix }}/latest' $latest --message 'Latest tag for ${{ inputs.tag-prefix }}'
-                git push origin tag '${{ inputs.tag-prefix }}/latest'
+                git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
                 $gitMessage = 'Swap tagged at ${{steps.determine-timestamp.outputs.timestamp}}'
                 git tag --annotate '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}' $latest --message $gitMessage
-                git push origin tag '${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
+                git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{steps.determine-timestamp.outputs.timestamp}}'
             }
             else
             {

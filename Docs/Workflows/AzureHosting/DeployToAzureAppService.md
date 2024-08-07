@@ -23,7 +23,7 @@ jobs:
       self-contained: true
       ready-to-run: true
       application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
-      # Defaults to slot-name if not set, used for adding git tags to the deployed commit.
+      # Defaults to 'staging' if not set, used for adding git tags to the deployed commit.
       tag-prefix: staging
     secrets:
       AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
