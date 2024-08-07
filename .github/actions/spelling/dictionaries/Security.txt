@@ -1,5 +1,6 @@
 amd
 clickjacking
+Entra
 nosniff
 openapi
 softwaresecurityproject
