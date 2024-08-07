@@ -284,7 +284,7 @@ jobs:
           git tag '${{ inputs.tag-prefix }}/latest'
           git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
           git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
-          git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}/latest'
+          git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

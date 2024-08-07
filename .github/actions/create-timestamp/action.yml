@@ -4,10 +4,12 @@ runs:
   using: composite
   steps:
     - name: Get Timestamp
+      id: get-timestamp
       shell: pwsh
       run: |
         # Get the current timestamp in the ISO 8601 format but replace ":" with "." because we can't use ":" in tags.
         $timestamp = (Get-Date -Format 'yyyy-MM-ddTHH.mm.ssZ' -AsUTC) -replace ':', '.'
+        $timestamp >> $env:GITHUB_OUTPUT
 
 outputs:
   timestamp:
