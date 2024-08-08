@@ -235,6 +235,10 @@ jobs:
           restart: false
           clean: false
 
+      - name: Create timestamp
+        id: create-timestamp
+        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
+
       - name: Add Azure Application Insights Release Annotation
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
@@ -245,10 +249,6 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
-
-      - name: Create timestamp
-        id: create-timestamp
-        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
 
       - name: Delete Old prefix/latest Tag
         run: |
