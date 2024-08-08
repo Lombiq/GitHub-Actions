@@ -98,7 +98,7 @@ on:
           tracking what's deployed, where and when by tagging the deployed commit.
       swap-prefix:
         type: string
-        default: 'staging'
+        default: staging
         required: false
         description: >
           The prefix of the deployment tag that we will be looking for in the app-code-repo. If not set, 'staging' will

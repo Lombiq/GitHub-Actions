@@ -134,7 +134,7 @@ on:
           If ready to run is set to `true` the `runtime` input is needed.
       tag-prefix:
         type: string
-        default: 'staging'
+        default: staging
         required: false
         description: >
           The prefix to use for the tag. If not set, 'staging' will be used as the prefix. The tag will be in the
