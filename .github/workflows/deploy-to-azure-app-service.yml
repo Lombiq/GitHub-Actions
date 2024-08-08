@@ -241,20 +241,6 @@ jobs:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
 
-      - name: Start Web App Slot
-        run: |
-          Start-AzureWebAppSlot `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.slot-name }}
-
-      - name: Test Web App Slot
-        run: |
-          Test-AzureWebApp `
-            -ResourceGroupName ${{ inputs.resource-group-name }} `
-            -WebAppName ${{ inputs.app-name }} `
-            -SlotName ${{ inputs.slot-name }}
-
       - name: Remove old tags
         uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
         with:
@@ -269,8 +255,8 @@ jobs:
           $latestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
           if ($latestTag)
           {
-              git tag -d '${{ inputs.tag-prefix }}/latest'
-              git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
+            git tag -d '${{ inputs.tag-prefix }}/latest'
+            git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
           }
 
       - name: Tag Latest and add Timestamp Tag
@@ -279,6 +265,20 @@ jobs:
           git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
           git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
           git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
+
+      - name: Start Web App Slot
+        run: |
+          Start-AzureWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
+
+      - name: Test Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.slot-name }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

@@ -8,7 +8,7 @@ runs:
       shell: pwsh
       run: |
         # Get the current timestamp in the ISO 8601 format but replace ":" with "." because we can't use ":" in tags.
-        $timestamp = ((Get-Date).ToUniversalTime().GetDateTimeFormats('s')[0]) -replace ':', '.'
+        $timestamp = ((Get-Date).ToUniversalTime().GetDateTimeFormats('s')[0]) -replace ':', '-'
         echo "timestamp=$timestamp" >> $env:GITHUB_OUTPUT
 
 outputs:
