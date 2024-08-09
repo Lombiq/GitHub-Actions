@@ -205,9 +205,9 @@ jobs:
             {
                 git tag --annotate '${{ inputs.tag-prefix }}/latest' $latest --message 'Latest tag for ${{ inputs.tag-prefix }}'
                 git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
-                $gitMessage = 'Swap tagged at ${{steps.create-timestamp.outputs.timestamp}}'
-                git tag --annotate '${{ inputs.tag-prefix }}/${{steps.create-timestamp.outputs.timestamp}}' $latest --message $gitMessage
-                git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{steps.create-timestamp.outputs.timestamp}}'
+                $gitMessage = 'Swap tagged at ${{ steps.create-timestamp.outputs.timestamp-tag }}'
+                git tag --annotate '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}' $latest --message $gitMessage
+                git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
             }
             else
             {

@@ -264,8 +264,8 @@ jobs:
         run: |
           git tag '${{ inputs.tag-prefix }}/latest'
           git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
-          git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
-          git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp }}'
+          git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
+          git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
 
       - name: Start Web App Slot
         run: |
