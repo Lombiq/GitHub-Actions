@@ -1,5 +1,5 @@
 param (
-    [string] $Solution,
+    [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $Filter,
     [string] $Configuration,
@@ -44,14 +44,14 @@ $connectionString = @(
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionString
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
-$solutionName = [System.IO.Path]::GetFileNameWithoutExtension($Solution)
-$solutionDirectory = [System.IO.Path]::GetDirectoryName($Solution)
+$solutionName = [System.IO.Path]::GetFileNameWithoutExtension($SolutionOrProject)
+$solutionDirectory = [System.IO.Path]::GetDirectoryName($SolutionOrProject)
 
-Write-Output "Running tests for the $Solution solution."
+Write-Output "Running tests for the $SolutionOrProject solution."
 
 Write-Output 'Gathering test projects.'
 
-$tests = dotnet sln $Solution list |
+$tests = dotnet sln $SolutionOrProject list |
     Select-Object -Skip 2 |
     Select-String '\.Tests\.' |
     Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
