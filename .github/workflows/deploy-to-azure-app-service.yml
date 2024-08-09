@@ -244,6 +244,7 @@ jobs:
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+          timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
 
       - name: Remove old tags
         uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
