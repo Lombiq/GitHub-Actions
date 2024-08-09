@@ -67,12 +67,14 @@ $tests = dotnet sln $Solution list |
             "-p:SolutionDir=""$solutionDirectory"""
         )
 
+        $absolutePath = Resolve-Path -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem)
+
         # Without Out-String, Contains() below won't work for some reason.
-        $output = dotnet test @switches $PSItem 2>&1 | Out-String -Width 9999
+        $output = dotnet test @switches $absolutePath 2>&1 | Out-String -Width 9999
 
         if ($LASTEXITCODE -ne 0)
         {
-            Write-Error "::error::dotnet test failed for the project $PSItem with the following output:`n$output"
+            Write-Error "::error::dotnet test failed for the project $absolutePath with the following output:`n$output"
             exit 1
         }
 
