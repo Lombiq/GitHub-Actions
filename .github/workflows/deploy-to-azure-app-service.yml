@@ -240,7 +240,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
 
       - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-861
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
