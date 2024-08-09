@@ -9,9 +9,9 @@ runs:
       run: |
         # Get the current timestamp in the ISO 8601 format but replace ":" with "." because we can't use ":" in tags.
         $timestamp = ((Get-Date).ToUniversalTime().GetDateTimeFormats('s')[0])
-        $timestamp-tag = $timestamp -replace ":", "."
+        $timestampTag = $timestamp -replace ":", "."
         echo "timestamp=$timestamp" >> $env:GITHUB_OUTPUT
-        echo "timestamp-tag=$timestamp-tag" >> $env:GITHUB_OUTPUT
+        echo "timestamp-tag=$timestampTag" >> $env:GITHUB_OUTPUT
 
 outputs:
   timestamp:
