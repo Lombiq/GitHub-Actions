@@ -56,7 +56,9 @@ $tests = dotnet sln $SolutionOrProject list |
     Select-String '\.Tests\.' |
     Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
     Select-String -NotMatch 'Lombiq.Tests.csproj' |
-    Where-Object {
+    ForEach-Object {
+        $absolutePath = Resolve-Path -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem)
+
         # While the test projects are run individually, passing in the solution name and solution dir via the
         # conventional MSBuild properties allows build customization.
         $switches = @(
@@ -67,8 +69,6 @@ $tests = dotnet sln $SolutionOrProject list |
             "-p:SolutionDir=""$solutionDirectory"""
         )
 
-        $absolutePath = Resolve-Path -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem)
-
         # Without Out-String, Contains() below won't work for some reason.
         $output = dotnet test @switches $absolutePath 2>&1 | Out-String -Width 9999
 
@@ -78,7 +78,10 @@ $tests = dotnet sln $SolutionOrProject list |
             exit 1
         }
 
-        -not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available')
+        if (-not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available'))
+        {
+            $absolutePath
+        }
     }
 
 Set-GitHubOutput 'test-count' $tests.Length
