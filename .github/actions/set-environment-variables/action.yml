@@ -1,0 +1,21 @@
+name: Set Environment Variables
+description: >
+  Set environment variables from a JSON string. Intentionally not documented in Actions.md since it's only meant for
+  internal use.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Set Environment Variables
+      shell: pwsh
+      run: |
+        $envVars = ConvertFrom-Json $env:ENVIRONMENT_VARIABLES_JSON
+        foreach ($key in $envVars.PSObject.Properties.Name)
+        {
+            Set-GitHubEnv $key $envVars.$key
+        }
