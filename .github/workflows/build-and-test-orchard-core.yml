@@ -232,7 +232,7 @@ jobs:
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
       - env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
         shell: pwsh
         run: Write-Output $Env:GITHUB_CONTEXT
 
