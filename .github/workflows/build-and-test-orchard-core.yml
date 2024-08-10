@@ -9,7 +9,6 @@ on:
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
       ENVIRONMENT_VARIABLES_JSON:
-        type: string
         required: false
         description: >
           A JSON string containing key-value pairs of environment variables to be set. You can use this to pass in
