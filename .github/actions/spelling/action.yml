@@ -160,7 +160,7 @@ runs:
       # source prefixes" step with the dictionary version tag that belongs to the commit of the release. See
       # https://github.com/check-spelling/check-spelling/blob/v0.0.22/action.yml#L67 for current version.
       # Also update check_extra_dictionaries below as necessary.
-      uses: Lombiq/check-spelling@issue/dev-lombiq # Post-v0.0.22 with actions/cache update.
+      uses: Lombiq/check-spelling@dev-lombiq # Post-v0.0.22 with actions/cache update.
       with:
         check_file_names: 1
         config: ${{ inputs.configuration-path }}
