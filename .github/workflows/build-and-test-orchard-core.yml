@@ -231,11 +231,6 @@ jobs:
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
-      - env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        shell: pwsh
-        run: Write-Output $Env:GITHUB_CONTEXT
-
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
