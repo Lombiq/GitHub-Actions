@@ -59,7 +59,7 @@ runs:
   using: composite
   steps:
     - name: Set Checkout Token
-      uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@issue/LMBQ-178
       with:
         checkout-token: ${{ inputs.github_token }}
 

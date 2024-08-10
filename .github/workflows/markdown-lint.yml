@@ -43,12 +43,12 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/LMBQ-178
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Markdown Linting
-        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@issue/LMBQ-178
         with:
           config: ${{ inputs.config }}
           fix: ${{ inputs.fix }}
@@ -57,6 +57,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/LMBQ-178
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

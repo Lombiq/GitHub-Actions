@@ -128,12 +128,12 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/LMBQ-178
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Enable Node corepack
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/LMBQ-178
 
       # Calling nuget restore separately on the actual solution, because we're passing Orchard.proj to the msbuild
       # action instead to be able to call the Precompiled target.
@@ -141,7 +141,7 @@ jobs:
         run: nuget restore ${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
       - name: Publish Precompiled App
-        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/LMBQ-178
         with:
           solution-or-project-path: Orchard.proj
           verbosity: ${{ inputs.build-verbosity }}
@@ -152,14 +152,14 @@ jobs:
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/LMBQ-178
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/LMBQ-178
 
       - name: Stop Web App Slot
         run: |
@@ -183,7 +183,7 @@ jobs:
 
       - name: Add Azure Application Insights Release Annotation
         if: ${{ inputs.application-insights-resource-id != '' }}
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/LMBQ-178
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
@@ -216,6 +216,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/LMBQ-178
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
