@@ -19,5 +19,6 @@ runs:
         $envVars = ConvertFrom-Json $env:ENVIRONMENT_VARIABLES_JSON
         foreach ($key in $envVars.PSObject.Properties.Name)
         {
+            Write-Output "::add-mask::$($envVars.$key)"
             Set-GitHubEnv $key $envVars.$key
         }
