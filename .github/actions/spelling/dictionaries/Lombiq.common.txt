@@ -48,6 +48,7 @@ hca
 HHmmss
 hotfixes
 idx
+iframes
 iis
 img
 importmap
