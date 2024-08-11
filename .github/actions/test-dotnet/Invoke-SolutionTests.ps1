@@ -97,7 +97,8 @@ else
     exit 1
 }
 
-
+Set-GitHubOutput 'test-count' $tests.Length
+Set-GitHubOutput 'dotnet-test-hang-dump' 0
 
 Write-Output "Starting to execute tests from $($tests.Length) project(s)."
 
