@@ -26,6 +26,11 @@ on:
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
+      ENVIRONMENT_VARIABLES_JSON:
+        required: false
+        description: >
+          A JSON string containing key-value pairs of environment variables to be set. You can use this to pass in
+          arbitrary environment variables that can be used to e.g. customize the build or test execution.
 
     inputs:
       cancel-in-progress-for-this-pr:
@@ -114,6 +119,11 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/LMBQ-178
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
+
+      - name: Set Environment Variables
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@issue/LMBQ-178
+        env:
+          ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/LMBQ-178
