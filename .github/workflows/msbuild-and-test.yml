@@ -56,6 +56,18 @@ on:
         default: windows-2022
         description: >
           The machine type to run the workflow under, e.g. "windows-2022". Needs to be Windows.
+      repository:
+        description: >
+          Repository name with owner to git checkout, if not the current repository. E.g. "Lombiq/GitHub-Actions".
+          Defaults to the current repository.
+        type: string
+        default: ${{ github.repository }}
+      repository-ref:
+        description: >
+          The branch, tag or SHA to checkout. When checking out the repository that triggered the workflow, this
+          defaults to the reference or SHA for that event. Otherwise, uses the default branch.
+        type: string
+        default: ''
       build-directory:
         type: string
         default: .
@@ -128,6 +140,8 @@ jobs:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/LMBQ-178
         with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Enable Node corepack

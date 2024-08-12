@@ -41,6 +41,18 @@ on:
         description: >
           Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
           '["ubuntu-22.04"]' or '["ubuntu-22.04", "windows-2022"]'.
+      repository:
+        description: >
+          Repository name with owner to git checkout, if not the current repository. E.g. "Lombiq/GitHub-Actions".
+          Defaults to the current repository.
+        type: string
+        default: ${{ github.repository }}
+      repository-ref:
+        description: >
+          The branch, tag or SHA to checkout. When checking out the repository that triggered the workflow, this
+          defaults to the reference or SHA for that event. Otherwise, uses the default branch.
+        type: string
+        default: ''
       dotnet-version:
         type: string
         default: 8.0.301
@@ -224,6 +236,8 @@ jobs:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/LMBQ-178
         with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
