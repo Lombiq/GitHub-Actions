@@ -93,7 +93,7 @@ on:
           during the tagging process.
       tag-prefix:
         type: string
-        default: ${{ inputs.destination-slot-name }}
+        default: production
         required: false
         description: >
           The prefix for the tags that will be added to the app-code-repository. If not set, 'production' will be used
