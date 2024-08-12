@@ -20,12 +20,14 @@ jobs:
       source-slot-name: Staging
       destination-slot-name: Production
       application-insights-resource-id: "Azure resource ID of the corresponding AI resource"
-      # Defaults to destination-slot-name if not set, used for adding git tags to the deployed commit.
+      # Defaults to 'production' if not set, used for adding git tags to the deployed commit.
       tag-prefix: production
       # Defaults to 'staging' if not set, used looking up the currently deployed commit by tag.
       swap-prefix: staging
       # The repository that hosts the code that will be swapped. This is necessary for adding tags and releases.
-      app-code-repo: Lombiq/Lombiq-GitHub-Actions 
+      app-code-repository: Lombiq/Lombiq-GitHub-Actions
+      # The branch, tag, or SHA to check out from the app-code-repository.
+      app-code-repository-ref: main
     secrets:
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
       AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}

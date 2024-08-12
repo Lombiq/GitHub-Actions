@@ -235,7 +235,7 @@ jobs:
           restart: false
           clean: false
 
-      - name: Create timestamp
+      - name: Create Timestamp
         id: create-timestamp
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
 
@@ -246,7 +246,7 @@ jobs:
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
           timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
 
-      - name: Remove old tags
+      - name: Remove Old Tags
         uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
@@ -260,7 +260,7 @@ jobs:
             git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
           }
 
-      - name: Tag Latest and add Timestamp Tag
+      - name: Tag Latest and Add Timestamp Tag
         run: |
           git tag '${{ inputs.tag-prefix }}/latest'
           git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'

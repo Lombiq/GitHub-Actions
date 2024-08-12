@@ -13,6 +13,8 @@ runs:
     - name: Delete Latest Tag
       shell: pwsh
       run: |
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git config user.name 'github-actions[bot]'
         git fetch --tags
         $latestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
         if ($latestTag)

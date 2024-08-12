@@ -30,7 +30,6 @@ on:
           parameter when calling azure/login. You can look this up e.g. in the Azure Portal under any resource or the
           subscription itself.
       CODE_REPOSITORY_WRITE_TOKEN:
-        default: ${{ github.token }}
         required: false
         description: >
           An authentication token, like a personal access token (PAT) that gives access to the other repository.
@@ -76,33 +75,38 @@ on:
         description: >
           ID of the Application Insights resource that the release annotation for the swap should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
-      app-code-repo:
+      app-code-repository:
         type: string
         default: ''
         required: false
         description: >
-          The repository that hosts the code that will be swapped. This is necessary for adding tags.
-      ref:
+          The repository that hosts the code that will be swapped during the Azure Web App slot swap process. This is
+          necessary for adding tags to the repository to track the deployment status and history. If not specified,
+          tagging steps will be skipped. Example input: 'organization/repository-name'
+      app-code-repository-ref:
         type: string
         required: false
         description: >
-          The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults
-          to the reference or SHA for that event. Otherwise, uses the default branch.
+          The branch, tag, or SHA to checkout from the specified app-code-repository. When checking out the repository
+          that triggered this workflow, this defaults to the reference or SHA for that event. Otherwise, it uses the
+          default branch of the app-code-repository. This is used to ensure the correct version of the code is used
+          during the tagging process.
       tag-prefix:
         type: string
         default: ${{ inputs.destination-slot-name }}
         required: false
         description: >
-          The prefix for the tags that will be added to the app-code-repo. If not set, the slot name will be used as
-          the prefix. The tag will be in the format of "<prefix>/latest" and "<prefix>/<timestamp>". This is used for
+          The prefix for the tags that will be added to the app-code-repository. If not set, 'production' will be used
+          as the prefix. The tag will be in the format of "<prefix>/latest" and "<prefix>/<timestamp>". This is used for
           tracking what's deployed, where and when by tagging the deployed commit.
       swap-prefix:
         type: string
         default: staging
         required: false
         description: >
-          The prefix of the deployment tag that we will be looking for in the app-code-repo. If not set, 'staging' will
-          be used as the prefix. This is used to find the currently deployed commit by its tag in the app-code-repo.
+          The prefix of the deployment tag that we will be looking for in the app-code-repository. If not set, 'staging'
+          will be used as the prefix. This is used to find the currently deployed commit by its tag in the
+          app-code-repository.
 
 jobs:
   swap-azure-web-app-slots:
@@ -158,26 +162,19 @@ jobs:
             -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Checkout Code Repository
-        if: inputs.app-code-repo != ''
+        if: inputs.app-code-repository != ''
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
-          repository: ${{ inputs.app-code-repo }}
-          ref: ${{ inputs.ref }}
+          repository: ${{ inputs.app-code-repository }}
+          ref: ${{ inputs.app-code-repository-ref }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
 
-      - name: Setup Git Config
-        if: inputs.app-code-repo != ''
-        run: |
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git config user.name 'github-actions[bot]'
-
-      - name: Remove old tags
+      - name: Remove Old Tags
         uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
 
-      - name: Delete Old prefix/latest tag
-        if: inputs.app-code-repo != ''
+      - name: Delete Old prefix/latest Tag
         run: |
             $latestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
             if ($latestTag)
@@ -187,7 +184,7 @@ jobs:
             }
 
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
-        if: inputs.app-code-repo != ''
+        if: inputs.app-code-repository != ''
         run: |
             if([string]::IsNullOrEmpty('${{ inputs.tag-prefix }}'))
             {
@@ -216,9 +213,9 @@ jobs:
 
       - name: Create Release
         uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
-        if: inputs.app-code-repo != ''
+        if: inputs.app-code-repository != ''
         with:
-          repo: ${{ inputs.app-code-repo }}
+          repo: ${{ inputs.app-code-repository }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
           tag: ${{ inputs.tag-prefix }}/latest
           allowUpdates: true
