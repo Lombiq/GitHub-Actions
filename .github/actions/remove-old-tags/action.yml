@@ -4,7 +4,7 @@ description: >
 
 inputs:
   tag-prefix:
-    description: The prefix for the tag we are removing
+    description: The prefix for the tag we are removing.
     required: true
 
 runs:
