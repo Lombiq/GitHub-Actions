@@ -116,7 +116,7 @@ jobs:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-861
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
