@@ -112,7 +112,7 @@ runs:
           EnableDiagnosticMode = $${{ inputs.enable-diagnostic-mode }}
         }
 
-        Invoke-SolutionTests @switches
+        Invoke-SolutionOrProjectTests @switches
 
     # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
