@@ -83,14 +83,6 @@ on:
           The repository that hosts the code that will be swapped during the Azure Web App slot swap process. This is
           necessary for adding tags to the repository to track the deployment status and history. If not specified,
           tagging steps will be skipped. Example input: 'organization/repository-name'
-      app-code-repository-ref:
-        type: string
-        required: false
-        description: >
-          The branch, tag, or SHA to checkout from the specified app-code-repository. When checking out the repository
-          that triggered this workflow, this defaults to the reference or SHA for that event. Otherwise, it uses the
-          default branch of the app-code-repository. This is used to ensure the correct version of the code is used
-          during the tagging process.
       tag-prefix:
         type: string
         default: production
@@ -166,7 +158,6 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           repository: ${{ inputs.app-code-repository }}
-          ref: ${{ inputs.app-code-repository-ref }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
 
       - name: Remove Old Tags
@@ -200,10 +191,9 @@ jobs:
             $latest = (git rev-list -n 1 '${{ inputs.swap-prefix }}/latest')
             if ($latest)
             {
-                git tag --annotate '${{ inputs.tag-prefix }}/latest' $latest --message 'Latest tag for ${{ inputs.tag-prefix }}'
+                git tag '${{ inputs.tag-prefix }}/latest'
                 git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
-                $gitMessage = 'Swap tagged at ${{ steps.create-timestamp.outputs.timestamp-tag }}'
-                git tag --annotate '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}' $latest --message $gitMessage
+                git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
                 git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
             }
             else

@@ -26,8 +26,6 @@ jobs:
       swap-prefix: staging
       # The repository that hosts the code that will be swapped. This is necessary for adding tags and releases.
       app-code-repository: Lombiq/Lombiq-GitHub-Actions
-      # The branch, tag, or SHA to check out from the app-code-repository.
-      app-code-repository-ref: main
     secrets:
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
       AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}

@@ -18,6 +18,13 @@ inputs:
     description: >
       The timestamp to use for the release annotation. If not set then the current time will be used. This can be useful
       when using a single timestamp for multiple actions in a workflow.
+  commit-sha:
+    required: false
+    default: ${{ github.sha }}
+    description: >
+      The commit SHA to include in the release annotation. If not set then the current commit SHA will be used. This is
+      useful in case of a swap deployment where the code repository is different than the repository the action is
+      running in.
 
 runs:
   using: composite
@@ -41,7 +48,7 @@ runs:
             Timestamp = $Env:TIMESTAMP
             ReleaseProperties = @{
               'Commit branch' = '${{ github.head_ref }}'
-              'Commit SHA' = '${{ github.sha }}'
+              'Commit SHA' = '${{ inputs.commit-sha }}'
               'Workflow name' = '${{ github.workflow }}'
               'Workflow run URL' = 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
             }
