@@ -55,7 +55,7 @@ runs:
       if: inputs.repository != ''
       # Using the official checkout action directly, because our wrapper action doesn't have most of the parameters we
       # need here. We only need those parameters for this action though.
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-861
       with:
         repository: ${{ inputs.repository }}
         ref: ${{ inputs.checkout-ref }}
