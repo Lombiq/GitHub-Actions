@@ -39,7 +39,7 @@ runs:
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Install dotnet-consolidate
-      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@issue/LMBQ-178
+      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
         name: dotnet-consolidate
         version: 4.2.0

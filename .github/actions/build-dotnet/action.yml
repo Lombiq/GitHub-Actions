@@ -211,7 +211,7 @@ runs:
         Write-Output ("Solution or project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
 
     - name: Upload MSBuild Binary Log
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/LMBQ-178
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       if: (success() || failure()) && inputs.create-binary-log == 'true'
       with:
         name: build-binary-log-${{ steps.build.outputs.artifact-name-suffix }}.binlog

@@ -246,12 +246,12 @@ jobs:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set Environment Variables
-        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
@@ -267,30 +267,30 @@ jobs:
           Write-Output $message
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
           exclude-project-path: ${{ inputs.dotnet-consolidation-exclude-project-path }}
 
       - name: Enable Node.js corepack
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration}}
@@ -306,25 +306,25 @@ jobs:
 
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
-        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
 
       - name: Set up Elasticsearch
         if: inputs.set-up-elasticsearch == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@dev
 
       - name: Set up Azurite
         if: inputs.set-up-azurite == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
         with:
           location: ${{ inputs.build-directory}}
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
@@ -339,6 +339,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

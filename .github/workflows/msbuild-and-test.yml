@@ -128,31 +128,31 @@ jobs:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set Environment Variables
-        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Enable Node corepack
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       # This is necessary for building Gulp Extensions and test-dotnet.
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
         with:
           directory: ${{ inputs.build-directory }}
           solution-or-project-path: ${{ inputs.solution-or-project-path }}
@@ -162,7 +162,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
         with:
           build-directory: ${{ inputs.build-directory }}
           dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
@@ -172,6 +172,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

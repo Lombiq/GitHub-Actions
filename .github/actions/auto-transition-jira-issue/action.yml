@@ -15,7 +15,7 @@ runs:
 
     - name: Check if Should Done
       id: check-done
-      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@issue/LMBQ-178
+      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
       with:
         label1: done-jira-issue-if-checks-succeed
         label2: dummy
@@ -23,7 +23,7 @@ runs:
     - name: Check if Should Resolve
       id: check-resolve
       if: steps.check-done.outputs.contains-label == 'false'
-      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@issue/LMBQ-178
+      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
       with:
         label1: resolve-jira-issue-if-checks-succeed
         label2: merge-and-resolve-jira-issue-if-checks-succeed
@@ -41,7 +41,7 @@ runs:
         Set-JiraIssueStatus @parameters
 
     - name: Remove Label
-      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@issue/LMBQ-178
+      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
       with:
         token: ${{ env.GITHUB_TOKEN }}
         labels: merge-and-resolve-jira-issue-if-checks-succeed, resolve-jira-issue-if-checks-succeed, done-jira-issue-if-checks-succeed

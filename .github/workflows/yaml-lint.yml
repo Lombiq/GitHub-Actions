@@ -38,18 +38,18 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: YAML Linting
-        uses: Lombiq/GitHub-Actions/.github/actions/yaml-lint@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/yaml-lint@dev
         with:
           config-file-path: ${{ inputs.config-file-path }}
           search-path: ${{ inputs.search-path }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/LMBQ-178
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
