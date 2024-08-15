@@ -11,6 +11,13 @@ on:
       # We can't access org secrets here so they need to be passed in.
       API_KEY:
         required: true
+        description: >
+          The API key to authenticate with the NuGet server when pushing packages.
+      ENVIRONMENT_VARIABLES_JSON:
+        required: false
+        description: >
+          A JSON string containing key-value pairs of environment variables to be set. You can use this to pass in
+          arbitrary environment variables that can be used to e.g. customize the build or test execution.
 
     inputs:
       cancel-workflow-on-failure:
@@ -68,6 +75,11 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Set Environment Variables
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
+        env:
+          ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:

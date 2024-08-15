@@ -1,10 +1,10 @@
 <#
 .Synopsis
-   Local testing script to run the Invoke-SolutionTests script. This needs to be invoked from the solution folder.
+   Local testing script to run the Invoke-SolutionOrProjectTests script. This needs to be invoked from the solution folder.
 #>
 
 $switches = @{
-    Solution = '.\Lombiq.OSOCE.sln'
+    SolutionOrProject = '.\Lombiq.OSOCE.sln'
     Verbosity = 'quiet'
     Filter = ''
     Configuration = 'Debug'
@@ -12,4 +12,4 @@ $switches = @{
     TestProcessTimeout = '600000'
 }
 
-.\tools\Lombiq.GitHub.Actions\.github\actions\test-dotnet\Invoke-SolutionTests.ps1 @switches
+.\tools\Lombiq.GitHub.Actions\.github\actions\test-dotnet\Invoke-SolutionOrProjectTests.ps1 @switches

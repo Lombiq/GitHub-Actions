@@ -7,7 +7,7 @@ runs:
     - name: Setup
       shell: pwsh
       run: |
-        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
 
     - name: Set up SQL Server
       shell: pwsh
