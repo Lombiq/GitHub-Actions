@@ -135,7 +135,7 @@ jobs:
             -SourceSlotName ${{ inputs.source-slot-name }} `
             -DestinationSlotName ${{ inputs.destination-slot-name }}
 
-      - name: Create timestamp
+      - name: Create Timestamp
         id: create-timestamp
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
 

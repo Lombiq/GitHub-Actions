@@ -1,5 +1,8 @@
 ﻿name: Create Timestamp
-description: Create a timestamp in ISO 8601 format for use in tags (replaces ":" with "." for use in git tags).
+description: >
+  Create a timestamp in ISO 8601 format for use in tags (replaces ":" with "." for use in git tags). Intentionally not
+  documented in Actions.md since it's only meant for internal use.
+
 runs:
   using: composite
   steps:
@@ -15,8 +18,8 @@ runs:
 
 outputs:
   timestamp:
-    description: The generated timestamp
+    description: The generated timestamp.
     value: ${{ steps.get-timestamp.outputs.timestamp }}
   timestamp-tag:
-    description: The generated timestamp parsed as a usable git tag
+    description: The generated timestamp parsed as a usable git tag.
     value: ${{ steps.get-timestamp.outputs.timestamp-tag }}
