@@ -8,6 +8,11 @@ on:
         description: >
           The GitHub token to authenticate checkout. Pass in a GitHub personal access token if authenticated submodules
           are used.
+      ENVIRONMENT_VARIABLES_JSON:
+        required: false
+        description: >
+          A JSON string containing key-value pairs of environment variables to be set. You can use this to pass in
+          arbitrary environment variables that can be used to e.g. customize the build or test execution.
 
     inputs:
       cancel-in-progress-for-this-pr:
@@ -36,6 +41,18 @@ on:
         description: >
           Stringified JSON array with the name of the type of machine(s) to run the workflow under, e.g.
           '["ubuntu-22.04"]' or '["ubuntu-22.04", "windows-2022"]'.
+      repository:
+        description: >
+          Repository name with owner to git checkout, if not the current repository. E.g. "Lombiq/GitHub-Actions".
+          Defaults to the current repository.
+        type: string
+        default: ${{ github.repository }}
+      repository-ref:
+        description: >
+          The branch, tag or SHA to checkout. When checking out the repository that triggered the workflow, this
+          defaults to the reference or SHA for that event. Otherwise, uses the default branch.
+        type: string
+        default: ''
       dotnet-version:
         type: string
         default: 8.0.301
@@ -233,6 +250,11 @@ jobs:
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
+      - name: Set Environment Variables
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
+        env:
+          ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
+
       - name: Display ui-test-parallelism Obsolete Warning
         if: ${{ inputs.ui-test-parallelism != '-1' }}
         shell: pwsh
@@ -247,6 +269,8 @@ jobs:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-861
         with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET

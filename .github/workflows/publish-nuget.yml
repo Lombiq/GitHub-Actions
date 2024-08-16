@@ -11,6 +11,13 @@ on:
       # We can't access org secrets here so they need to be passed in.
       API_KEY:
         required: true
+        description: >
+          The API key to authenticate with the NuGet server when pushing packages.
+      ENVIRONMENT_VARIABLES_JSON:
+        required: false
+        description: >
+          A JSON string containing key-value pairs of environment variables to be set. You can use this to pass in
+          arbitrary environment variables that can be used to e.g. customize the build or test execution.
 
     inputs:
       cancel-workflow-on-failure:
@@ -58,12 +65,21 @@ on:
           https://github.com/actions/upload-artifact#retention-period for more details. Note that this only affects the
           retention of the workflow run's artifact, not the artifacts attached to the release created on GitHub; those
           will remain indefinitely.
+      add-source-link-package:
+        type: string
+        default: 'true'
+        description: If set to "true", the Microsoft.SourceLink.GitHub NuGet package is added to the projects.
 
 jobs:
   publish-nuget:
     runs-on: ubuntu-22.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Set Environment Variables
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
+        env:
+          ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-861
         with:
@@ -83,6 +99,7 @@ jobs:
           dotnet-pack-include-symbols: ${{ inputs.dotnet-pack-include-symbols }}
           publish-version: ${{ inputs.publish-version }}
           nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
+          add-source-link-package: ${{ inputs.add-source-link-package }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           API_KEY: ${{ secrets.API_KEY }}

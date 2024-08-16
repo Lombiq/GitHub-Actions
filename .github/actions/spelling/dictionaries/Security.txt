@@ -1,5 +1,7 @@
 amd
 clickjacking
+CORS
+Entra
 nosniff
 openapi
 softwaresecurityproject

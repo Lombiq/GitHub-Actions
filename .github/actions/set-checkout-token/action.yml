@@ -20,7 +20,7 @@ runs:
     - name: Setup Scripts
       shell: pwsh
       run: |
-        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Set Checkout Token
       shell: pwsh

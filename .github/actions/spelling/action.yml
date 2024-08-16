@@ -65,8 +65,8 @@ runs:
     - name: Setup Scripts
       shell: pwsh
       run: |
-        "${{ github.action_path }}" >> $Env:GITHUB_PATH
-        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     # If the configuration path doesn't exist in the workspace, then it means that the workspace repository doesn't have
     # its own spell-checking configuration. In that case we don't need to copy anything, because the configuration files

@@ -1,5 +1,5 @@
 param (
-    [string] $Solution,
+    [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $Filter,
     [string] $Configuration,
@@ -44,40 +44,58 @@ $connectionString = @(
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionString
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
-$solutionName = [System.IO.Path]::GetFileNameWithoutExtension($Solution)
-$solutionDirectory = [System.IO.Path]::GetDirectoryName($Solution)
+if ($SolutionOrProject -like '*.sln')
+{
+    $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($SolutionOrProject)
+    $solutionDirectory = [System.IO.Path]::GetDirectoryName($SolutionOrProject)
 
-Write-Output "Running tests for the $Solution solution."
+    Write-Output "Running tests for the $SolutionOrProject solution."
 
-Write-Output 'Gathering test projects.'
+    Write-Output 'Gathering test projects.'
 
-$tests = dotnet sln $Solution list |
-    Select-Object -Skip 2 |
-    Select-String '\.Tests\.' |
-    Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
-    Select-String -NotMatch 'Lombiq.Tests.csproj' |
-    Where-Object {
-        # While the test projects are run individually, passing in the solution name and solution dir via the
-        # conventional MSBuild properties allows build customization.
-        $switches = @(
-            "--configuration:$Configuration"
-            '--list-tests'
-            "--verbosity:$Verbosity"
-            "-p:SolutionName=""$solutionName"""
-            "-p:SolutionDir=""$solutionDirectory"""
-        )
+    $tests = dotnet sln $SolutionOrProject list |
+        Select-Object -Skip 2 |
+        Select-String '\.Tests\.' |
+        Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
+        Select-String -NotMatch 'Lombiq.Tests.csproj' |
+        ForEach-Object {
+            $absolutePath = Resolve-Path -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem)
 
-        # Without Out-String, Contains() below won't work for some reason.
-        $output = dotnet test @switches $PSItem 2>&1 | Out-String -Width 9999
+            # While the test projects are run individually, passing in the solution name and solution dir via the
+            # conventional MSBuild properties allows build customization.
+            $switches = @(
+                "--configuration:$Configuration"
+                '--list-tests'
+                "--verbosity:$Verbosity"
+                "-p:SolutionName=""$solutionName"""
+                "-p:SolutionDir=""$solutionDirectory"""
+            )
 
-        if ($LASTEXITCODE -ne 0)
-        {
-            Write-Error "::error::dotnet test failed for the project $PSItem with the following output:`n$output"
-            exit 1
+            # Without Out-String, Contains() below won't work for some reason.
+            $output = dotnet test @switches $absolutePath 2>&1 | Out-String -Width 9999
+
+            if ($LASTEXITCODE -ne 0)
+            {
+                Write-Error "::error::dotnet test failed for the project $absolutePath with the following output:`n$output"
+                exit 1
+            }
+
+            if (-not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available'))
+            {
+                $absolutePath
+            }
         }
-
-        -not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available')
-    }
+}
+elseif ($SolutionOrProject -like '*.csproj')
+{
+    Write-Output "Running tests for the $SolutionOrProject project."
+    $tests = @($SolutionOrProject)
+}
+else
+{
+    Write-Error "The $SolutionOrProject is not a solution or project file."
+    exit 1
+}
 
 Set-GitHubOutput 'test-count' $tests.Length
 Set-GitHubOutput 'dotnet-test-hang-dump' 0
@@ -206,7 +224,7 @@ foreach ($test in $tests)
         '--logger', '''console;verbosity=detailed'''
         '--verbosity', $Verbosity
         $BlameHangTimeout ? ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full') : ''
-        $Filter ? '--filter', $Filter : ''
+        $Filter ? '--filter', "'$Filter'" : ''
         $EnableDiagnosticMode ? '--diag DiagnosticLogs/dotnet-test.log' : ''
         $test
     )

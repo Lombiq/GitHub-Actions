@@ -32,7 +32,7 @@ runs:
     - name: Setup Scripts
       shell: pwsh
       run: |
-        "${{ github.action_path }}" >> $Env:GITHUB_PATH
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
 
     - name: Add Azure Application Insights Release Annotation
       shell: pwsh
