@@ -203,11 +203,18 @@ jobs:
                 throw "No latest tag found for swap prefix"
             }
 
+      # Required because the release action takes the repository name and owner as separate inputs.
+      - name: Extract Repository Name
+        if: inputs.app-code-repository != ''
+        run: |
+          $repoName = '${{ inputs.app-code-repository }}'.Split('/')[1]
+          echo "repo_name=$repoName" >> $env:GITHUB_ENV
+
       - name: Create Release
         uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
         if: inputs.app-code-repository != ''
         with:
-          repo: ${{ inputs.app-code-repository }}
+          repo: ${{ env.repo_name }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
           tag: ${{ inputs.tag-prefix }}/latest
           allowUpdates: true
