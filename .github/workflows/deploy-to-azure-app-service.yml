@@ -246,19 +246,10 @@ jobs:
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
           timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
 
-      - name: Remove Old Tags
-        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
+      - name: Remove Old Latest Tags
+        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@issue/OSOE-861
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
-
-      - name: Delete Old prefix/latest Tag
-        run: |
-          $latestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
-          if ($latestTag)
-          {
-            git tag -d '${{ inputs.tag-prefix }}/latest'
-            git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
-          }
 
       - name: Tag Latest and Add Timestamp Tag
         run: |

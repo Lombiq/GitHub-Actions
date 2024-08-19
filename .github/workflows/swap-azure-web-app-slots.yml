@@ -161,19 +161,10 @@ jobs:
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
           submodules: false
 
-      - name: Remove Old Tags
-        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-tags@issue/OSOE-861
+      - name: Remove Old Latest Tags
+        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@issue/OSOE-861
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
-
-      - name: Delete Old prefix/latest Tag
-        run: |
-            $latestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
-            if ($latestTag)
-            {
-                git tag -d '${{ inputs.tag-prefix }}/latest'
-                git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
-            }
 
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
         if: inputs.app-code-repository != ''
@@ -205,18 +196,20 @@ jobs:
 
       # Required because the release action takes the repository name and owner as separate inputs.
       - name: Extract Repository Name
+        id: extract-repo-name
         if: inputs.app-code-repository != ''
         run: |
           $repoName = '${{ inputs.app-code-repository }}'.Split('/')[1]
-          echo "repo_name=$repoName" >> $env:GITHUB_ENV
+          echo "repoName=$repoName" >> $env:GITHUB_OUTPUT
 
       - name: Create Release
         uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
         if: inputs.app-code-repository != ''
         with:
-          repo: ${{ env.repo_name }}
+          repo: ${{ steps.extract-repo-name.outputs.repo_name }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
-          tag: ${{ inputs.tag-prefix }}/latest
+          tag: ${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}
+          releaseName: ${{ steps.create-timestamp.outputs.timestamp }}
           allowUpdates: true
           generateReleaseNotes: true
 

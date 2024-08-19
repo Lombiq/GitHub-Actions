@@ -33,6 +33,10 @@ inputs:
     description: The GitHub token.
     required: false
     default: ${{ github.token }}
+  releaseName:
+    description: An optional name for the release. If this is omitted the tag will be used.
+    required: false
+    default: ''
 
 outputs:
   id:
@@ -59,3 +63,4 @@ runs:
         tag: ${{ inputs.tag }}
         repo: ${{ inputs.repo }}
         token: ${{ inputs.token }}
+        name: ${{ inputs.name }}

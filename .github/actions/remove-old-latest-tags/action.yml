@@ -1,4 +1,4 @@
-﻿name: Remove Old Tags
+﻿name: Remove Old Latest Tags
 description: >
     Removes the old prefix/latest tag so that a new one can be set.
 
