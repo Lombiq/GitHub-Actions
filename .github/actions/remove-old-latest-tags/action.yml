@@ -1,6 +1,7 @@
 ﻿name: Remove Old Latest Tags
 description: >
-    Removes the old prefix/latest tag so that a new one can be set.
+    Removes the old prefix/latest tag so that a new one can be set. Intentionally not documented in Actions.md since
+    it's only meant for internal use.
 
 inputs:
   tag-prefix:

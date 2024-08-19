@@ -3,8 +3,8 @@ description: >
   Runs ncipollo/release-action. Exists only to centralize which version of the action we use. Intentionally not
   documented in Actions.md since it's only meant for internal use.
 
-# Copied from https://github.com/ncipollo/release-action/blob/v1.11.2/action.yml. Formatted to wrap long
-# descriptions. Removed inputs not used by Lombiq GitHub-Actions.
+# Copied from https://github.com/ncipollo/release-action/blob/main/action.yml. Formatted to wrap long descriptions.
+# Removed inputs not used by Lombiq GitHub-Actions.
 inputs:
   allowUpdates:
     description: >
