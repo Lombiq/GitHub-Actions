@@ -200,7 +200,7 @@ jobs:
         if: inputs.app-code-repository != ''
         run: |
           $repoName = '${{ inputs.app-code-repository }}'.Split('/')[1]
-          echo "repoName=$repoName" >> $env:GITHUB_OUTPUT
+          "$Key=$Value" >> $Env:GITHUB_OUTPUT
 
       - name: Create Release
         uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
