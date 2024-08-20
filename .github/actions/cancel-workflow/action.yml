@@ -15,7 +15,7 @@ runs:
     - name: Setup Scripts
       shell: pwsh
       run: |
-        (Resolve-Path "${{ github.action_path }}/../../../Scripts").Path >> $Env:GITHUB_PATH
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Cancel Workflow
       # Fork PRs won't have a token with write access to Actions, thus won't be able to cancel the workflow.
