@@ -63,4 +63,4 @@ runs:
         tag: ${{ inputs.tag }}
         repo: ${{ inputs.repo }}
         token: ${{ inputs.token }}
-        name: ${{ inputs.name }}
+        name: ${{ inputs.releaseName }}
