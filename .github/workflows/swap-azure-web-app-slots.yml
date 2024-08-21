@@ -200,13 +200,13 @@ jobs:
         if: inputs.app-code-repository != ''
         run: |
           $repoName = '${{ inputs.app-code-repository }}'.Split('/')[1]
-          echo "repoName=$repoName" >> $env:GITHUB_OUTPUT
+          "repo-name=$repoName" >> $Env:GITHUB_OUTPUT
 
       - name: Create Release
         uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
         if: inputs.app-code-repository != ''
         with:
-          repo: ${{ steps.extract-repo-name.outputs.repo_name }}
+          repo: ${{ steps.extract-repo-name.outputs.repo-name }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
           tag: ${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}
           releaseName: ${{ steps.create-timestamp.outputs.timestamp }}
