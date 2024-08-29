@@ -139,13 +139,6 @@ jobs:
         id: create-timestamp
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
 
-      - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-861
-        with:
-          release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
-          application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
-          timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
-
       - name: Test Destination Web App Slot
         run: |
           Test-AzureWebApp `
@@ -167,6 +160,7 @@ jobs:
           tag-prefix: ${{ inputs.tag-prefix }}
 
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
+        id: move-latest-tag
         if: inputs.app-code-repository != ''
         run: |
             if([string]::IsNullOrEmpty('${{ inputs.tag-prefix }}'))
@@ -193,8 +187,17 @@ jobs:
             {
                 throw "No latest tag found for swap prefix"
             }
+            "commit-sha=$latest" >> $Env:GITHUB_OUTPUT
 
-      # Required because the release action takes the repository name and owner as separate inputs.
+      - name: Add Azure Application Insights Release Annotation
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-861
+        with:
+            release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
+            application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+            timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
+            commit-sha: ${{ steps.move-latest-tag.outputs.commit-sha }}
+
+        # Required because the release action takes the repository name and owner as separate inputs.
       - name: Extract Repository Name
         id: extract-repo-name
         if: inputs.app-code-repository != ''
