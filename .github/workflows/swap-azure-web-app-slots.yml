@@ -187,6 +187,8 @@ jobs:
             {
                 throw "No latest tag found for swap prefix"
             }
+
+            Write-Output "::notice::The commit from the app code repository with the SHA $latest was swapped out."
             "commit-sha=$latest" >> $Env:GITHUB_OUTPUT
 
       - name: Add Azure Application Insights Release Annotation
