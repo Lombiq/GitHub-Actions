@@ -30,7 +30,7 @@ jobs:
       AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
       AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}
       AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID }}
-      # Needs to have access to create tags and releases in the target repository.
+      # Needs to have access to create tags and releases in the code repository.
       CODE_REPOSITORY_WRITE_TOKEN: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
 ```
 
