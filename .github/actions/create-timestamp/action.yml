@@ -1,0 +1,25 @@
+﻿name: Create Timestamp
+description: >
+  Create a timestamp in ISO 8601 format for use in tags (replaces ":" with "." for use in git tags). Intentionally not
+  documented in Actions.md since it's only meant for internal use.
+
+runs:
+  using: composite
+  steps:
+    - name: Get Timestamp
+      id: get-timestamp
+      shell: pwsh
+      run: |
+        # Get the current timestamp in the ISO 8601 format but replace ":" with "." because we can't use ":" in tags.
+        $timestamp = ((Get-Date).ToUniversalTime().GetDateTimeFormats('s')[0])
+        $timestampTag = $timestamp -replace ":", "-"
+        echo "timestamp=$timestamp" >> $env:GITHUB_OUTPUT
+        echo "timestamp-tag=$timestampTag" >> $env:GITHUB_OUTPUT
+
+outputs:
+  timestamp:
+    description: The generated timestamp.
+    value: ${{ steps.get-timestamp.outputs.timestamp }}
+  timestamp-tag:
+    description: The generated timestamp parsed as a usable git tag.
+    value: ${{ steps.get-timestamp.outputs.timestamp-tag }}

@@ -29,6 +29,12 @@ on:
           The ID of the Azure Subscription the resources are under, which will be mapped to the subscription-id
           parameter when calling azure/login. You can look this up e.g. in the Azure Portal under any resource or the
           subscription itself.
+      CODE_REPOSITORY_WRITE_TOKEN:
+        required: false
+        description: >
+          An authentication token, like a personal access token (PAT) that gives access to the other repository.
+          This is necessary because the repository that triggered the workflow and the repository that the workflow is
+          running on are different in this case.
 
     inputs:
       cancel-workflow-on-failure:
@@ -69,6 +75,30 @@ on:
         description: >
           ID of the Application Insights resource that the release annotation for the swap should be added to.
           This can e.g. be looked up on the Azure Portal under the given AI resource's Overview page -> JSON View.
+      app-code-repository:
+        type: string
+        default: ''
+        required: false
+        description: >
+          The repository that hosts the code that will be swapped during the Azure Web App slot swap process. This is
+          necessary for adding tags to the repository to track the deployment status and history. If not specified,
+          tagging steps will be skipped. Example input: 'organization/repository-name'
+      tag-prefix:
+        type: string
+        default: production
+        required: false
+        description: >
+          The prefix for the tags that will be added to the app-code-repository. If not set, 'production' will be used
+          as the prefix. The tag will be in the format of "<prefix>/latest" and "<prefix>/<timestamp>". This is used for
+          tracking what's deployed, where and when by tagging the deployed commit.
+      swap-prefix:
+        type: string
+        default: staging
+        required: false
+        description: >
+          The prefix of the deployment tag that we will be looking for in the app-code-repository. If not set, 'staging'
+          will be used as the prefix. This is used to find the currently deployed commit by its tag in the
+          app-code-repository.
 
 jobs:
   swap-azure-web-app-slots:
@@ -105,11 +135,9 @@ jobs:
             -SourceSlotName ${{ inputs.source-slot-name }} `
             -DestinationSlotName ${{ inputs.destination-slot-name }}
 
-      - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
-        with:
-          release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
-          application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+      - name: Create Timestamp
+        id: create-timestamp
+        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@dev
 
       - name: Test Destination Web App Slot
         run: |
@@ -117,6 +145,78 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
+
+      - name: Checkout Code Repository
+        if: inputs.app-code-repository != ''
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          repository: ${{ inputs.app-code-repository }}
+          token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
+          submodules: false
+
+      - name: Remove Old Latest Tags
+        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@dev
+        with:
+          tag-prefix: ${{ inputs.tag-prefix }}
+
+      - name: Move Latest Tag (Swap) and Add Timestamp Tag
+        id: move-latest-tag
+        if: inputs.app-code-repository != ''
+        run: |
+            if([string]::IsNullOrEmpty('${{ inputs.tag-prefix }}'))
+            {
+                throw 'Tag prefix not set, exiting'
+            }
+
+            $tagExists = (git tag --list '${{ inputs.swap-prefix }}/latest')
+            if ([string]::IsNullOrEmpty($tagExists))
+            {
+                throw 'No latest tag found for swap prefix'
+            }
+
+            $latest = (git rev-list -n 1 '${{ inputs.swap-prefix }}/latest')
+            if ($latest)
+            {
+                git tag --annotate '${{ inputs.tag-prefix }}/latest' $latest --message 'Latest tag for ${{ inputs.tag-prefix }}'
+                git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
+                $gitMessage = 'Swap tagged at ${{ steps.create-timestamp.outputs.timestamp-tag }}'
+                git tag --annotate '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}' $latest --message $gitMessage
+                git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
+            }
+            else
+            {
+                throw "No latest tag found for swap prefix"
+            }
+
+            Write-Output "::notice::The commit from the app code repository with the SHA $latest was swapped out."
+            "commit-sha=$latest" >> $Env:GITHUB_OUTPUT
+
+      - name: Add Azure Application Insights Release Annotation
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        with:
+          release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
+          application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+          timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
+          commit-sha: ${{ steps.move-latest-tag.outputs.commit-sha }}
+
+      # Required because the release action takes the repository name and owner as separate inputs.
+      - name: Extract Repository Name
+        id: extract-repo-name
+        if: inputs.app-code-repository != ''
+        run: |
+          $repoName = '${{ inputs.app-code-repository }}'.Split('/')[1]
+          "repo-name=$repoName" >> $Env:GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
+        if: inputs.app-code-repository != ''
+        with:
+          repo: ${{ steps.extract-repo-name.outputs.repo-name }}
+          token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
+          tag: ${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}
+          releaseName: ${{ steps.create-timestamp.outputs.timestamp }}
+          allowUpdates: true
+          generateReleaseNotes: true
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

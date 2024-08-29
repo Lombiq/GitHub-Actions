@@ -132,6 +132,14 @@ on:
         description: >
           Compiles application assemblies as ReadyToRun (R2R) format. R2R is a form of ahead-of-time (AOT) compilation.
           If ready to run is set to `true` the `runtime` input is needed.
+      tag-prefix:
+        type: string
+        default: staging
+        required: false
+        description: >
+          The prefix to use for the tag. If not set, 'staging' will be used as the prefix. The tag will be in the
+          format of "<prefix>/latest" and "<prefix>/<timestamp>". This is used for tracking what's deployed, where and
+          when by tagging the deployed commit.
 
 jobs:
   deploy:
@@ -227,11 +235,28 @@ jobs:
           restart: false
           clean: false
 
+      - name: Create Timestamp
+        id: create-timestamp
+        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@dev
+
       - name: Add Azure Application Insights Release Annotation
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+          timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
+
+      - name: Remove Old Latest Tags
+        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@dev
+        with:
+          tag-prefix: ${{ inputs.tag-prefix }}
+
+      - name: Tag Latest and Add Timestamp Tag
+        run: |
+          git tag '${{ inputs.tag-prefix }}/latest'
+          git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
+          git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
+          git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
 
       - name: Start Web App Slot
         run: |
