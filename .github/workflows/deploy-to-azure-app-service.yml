@@ -152,7 +152,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
@@ -237,17 +237,17 @@ jobs:
 
       - name: Create Timestamp
         id: create-timestamp
-        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@dev
 
       - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
           timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
 
       - name: Remove Old Latest Tags
-        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@dev
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
 

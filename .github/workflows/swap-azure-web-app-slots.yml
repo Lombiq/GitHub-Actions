@@ -137,7 +137,7 @@ jobs:
 
       - name: Create Timestamp
         id: create-timestamp
-        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@dev
 
       - name: Test Destination Web App Slot
         run: |
@@ -148,14 +148,14 @@ jobs:
 
       - name: Checkout Code Repository
         if: inputs.app-code-repository != ''
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           repository: ${{ inputs.app-code-repository }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
           submodules: false
 
       - name: Remove Old Latest Tags
-        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@dev
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
 
@@ -192,7 +192,7 @@ jobs:
             "commit-sha=$latest" >> $Env:GITHUB_OUTPUT
 
       - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
         with:
           release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
@@ -208,7 +208,7 @@ jobs:
           "repo-name=$repoName" >> $Env:GITHUB_OUTPUT
 
       - name: Create Release
-        uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
         if: inputs.app-code-repository != ''
         with:
           repo: ${{ steps.extract-repo-name.outputs.repo-name }}

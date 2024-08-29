@@ -74,7 +74,7 @@ jobs:
         shell: pwsh
     steps:
       - name: Checkout Repository
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.TAG_VERSION_TOKEN }}
 
@@ -106,7 +106,7 @@ jobs:
         run: git push --tags --force
 
       - name: Create Release
-        uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-861
+        uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
         # This is to prevent creating releases when pushing tags for issue-specific pre-releases like
         # v4.3.1-alpha.osoe-86.
         if: "!contains(steps.determine-tag.outputs.tagname, '-')"
