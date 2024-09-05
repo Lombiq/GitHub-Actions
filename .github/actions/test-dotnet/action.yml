@@ -114,12 +114,31 @@ runs:
 
         Invoke-SolutionOrProjectTests @switches
 
-    # Note that uploading the failure dumps would fail under Windows if the path were too long, regardless of
+    # Note that uploading the test dumps would fail under Windows if the path were too long, regardless of
     # LongPathsEnabled, see: https://github.com/actions/upload-artifact/issues/309. To get around that we merge all
-    # FailureDumps into the solution root. The following two steps need to be success() || failure() (excluding the
-    # workflow being cancelled), so if there's a failure dump it'll be uploaded even if the tests are ultimately passed
+    # test dumps into the solution root. The following two steps need to be success() || failure() (excluding the
+    # workflow being cancelled), so if there's a test dump it'll be uploaded even if the tests are ultimately passed
     # after retries.
-    # The same is true for the next step as well.
+    # The same is true for the next step, as well as the failure dump logic below.
+    - name: Merge TestDumps
+      shell: pwsh
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
+      run: Merge-TestDumps -Directory "${{ inputs.build-directory }}"
+
+    # Under Windows this can fail with "ENOENT: no such file or directory" if the path is too long, see
+    # https://github.com/actions/upload-artifact/issues/240.
+    - name: Upload UI Testing Artifacts
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      # We don't need additional conditions, because of the "if-no-files-found" setting.
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
+      with:
+        name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
+        path: ${{ inputs.build-directory }}/TestDumps/
+        if-no-files-found: ignore
+        retention-days: ${{ inputs.artifact-retention-days }}
+
+    # The UI Testing Toolbox now has test dumps, generalized from failure dumps. This logic for legacy versions is
+    # included for backwards compatibility.
     - name: Merge FailureDumps
       shell: pwsh
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
