@@ -110,9 +110,41 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Login to Azure
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Initialize PowerShell modules
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+
+      - name: Test Source Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.source-slot-name }}
+
+      - name: Swap Web App Slots
+        run: |
+          Switch-AzWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -Name ${{ inputs.app-name }} `
+            -SourceSlotName ${{ inputs.source-slot-name }} `
+            -DestinationSlotName ${{ inputs.destination-slot-name }}
+
       - name: Create Timestamp
         id: create-timestamp
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@dev
+
+      - name: Test Destination Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Checkout Code Repository
         if: inputs.app-code-repository != ''
@@ -175,6 +207,33 @@ jobs:
 
             Write-Output "::notice::The commit from the app code repository with the SHA $stagingLatest was swapped out."
             "commit-sha=$stagingLatest" >> $Env:GITHUB_OUTPUT
+
+      - name: Add Azure Application Insights Release Annotation
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        with:
+          release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
+          application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+          timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
+          commit-sha: ${{ steps.move-latest-tag.outputs.commit-sha }}
+
+      # Required because the release action takes the repository name and owner as separate inputs.
+      - name: Extract Repository Name
+        id: extract-repo-name
+        if: inputs.app-code-repository != ''
+        run: |
+          $repoName = '${{ inputs.app-code-repository }}'.Split('/')[1]
+          "repo-name=$repoName" >> $Env:GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
+        if: inputs.app-code-repository != ''
+        with:
+          repo: ${{ steps.extract-repo-name.outputs.repo-name }}
+          token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
+          tag: ${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}
+          releaseName: ${{ steps.create-timestamp.outputs.timestamp }}
+          allowUpdates: true
+          generateReleaseNotes: true
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
