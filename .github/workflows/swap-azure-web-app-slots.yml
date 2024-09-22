@@ -155,6 +155,9 @@ jobs:
                     git tag --delete '${{ inputs.tag-prefix }}/latest'
                     git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
 
+                    git tag --delete '${{ inputs.swap-prefix }}/latest'
+                    git push origin ':refs/tags/${{ inputs.swap-prefix }}/latest'
+
                     git tag --annotate '${{ inputs.swap-prefix }}/latest' $productionLatest --message 'Latest tag for ${{ inputs.swap-prefix }}'
                     git push origin 'refs/tags/${{ inputs.swap-prefix }}/latest'
                 }
