@@ -3,8 +3,8 @@ description: >
   Runs ncipollo/release-action. Exists only to centralize which version of the action we use. Intentionally not
   documented in Actions.md since it's only meant for internal use.
 
-# Copied from https://github.com/ncipollo/release-action/blob/v1.11.2/action.yml. Formatted to wrap long
-# descriptions. Removed inputs not used by Lombiq GitHub-Actions.
+# Copied from https://github.com/ncipollo/release-action/blob/main/action.yml. Formatted to wrap long descriptions.
+# Removed inputs not used by Lombiq GitHub-Actions.
 inputs:
   allowUpdates:
     description: >
@@ -23,6 +23,18 @@ inputs:
     default: 'false'
   tag:
     description: An optional tag for the release. If this is omitted the git ref will be used (if it is a tag).
+    required: false
+    default: ''
+  repo:
+    description: Optionally specify the repo where the release should be generated. Defaults to current repo.
+    required: false
+    default: ''
+  token:
+    description: The GitHub token.
+    required: false
+    default: ${{ github.token }}
+  releaseName:
+    description: An optional name for the release. If this is omitted the tag will be used.
     required: false
     default: ''
 
@@ -49,3 +61,6 @@ runs:
         artifacts: ${{ inputs.artifacts }}
         generateReleaseNotes: ${{ inputs.generateReleaseNotes }}
         tag: ${{ inputs.tag }}
+        repo: ${{ inputs.repo }}
+        token: ${{ inputs.token }}
+        name: ${{ inputs.releaseName }}
