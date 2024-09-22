@@ -137,7 +137,7 @@ jobs:
             $tagExists = (git tag --list '${{ inputs.swap-prefix }}/latest')
             if ([string]::IsNullOrEmpty($tagExists))
             {
-                throw 'No latest tag found for swap prefix'
+                throw 'No latest tag found for the swap prefix in the code repo. Note that you can only swap out from the default branch.'
             }
 
             $stagingLatest = (git rev-list --max-count=1 '${{ inputs.swap-prefix }}/latest')
@@ -165,7 +165,7 @@ jobs:
             }
             else
             {
-                throw "No latest tag found for swap prefix"
+                throw 'No latest tag found for the swap prefix in the code repo. Note that you can only swap out from the default branch.'
             }
 
             Write-Output "::notice::The commit from the app code repository with the SHA $stagingLatest was swapped out."
