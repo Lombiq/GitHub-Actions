@@ -121,6 +121,8 @@ jobs:
           repository: ${{ inputs.app-code-repository }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
           submodules: false
+          # We need the full history for the tags, and it's not necessarily the default branch that's swapped out.
+          fetch-depth: 0
 
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
         id: move-latest-tag
@@ -137,7 +139,7 @@ jobs:
             $tagExists = (git tag --list '${{ inputs.swap-prefix }}/latest')
             if ([string]::IsNullOrEmpty($tagExists))
             {
-                throw 'No latest tag found for the swap prefix in the code repo. Note that you can only swap out from the default branch.'
+                throw 'No latest tag found for the swap prefix in the code repo.'
             }
 
             $stagingLatest = (git rev-list --max-count=1 '${{ inputs.swap-prefix }}/latest')
@@ -165,7 +167,7 @@ jobs:
             }
             else
             {
-                throw 'No latest tag found for the swap prefix in the code repo. Note that you can only swap out from the default branch.'
+                throw 'No latest tag found for the swap prefix in the code repo.'
             }
 
             Write-Output "::notice::The commit from the app code repository with the SHA $stagingLatest was swapped out."
