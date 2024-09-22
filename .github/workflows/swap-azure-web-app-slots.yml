@@ -154,11 +154,6 @@ jobs:
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
           submodules: false
 
-      - name: Remove Old Latest Tags
-        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@dev
-        with:
-          tag-prefix: ${{ inputs.tag-prefix }}
-
       - name: Move Latest Tag (Swap) and Add Timestamp Tag
         id: move-latest-tag
         if: inputs.app-code-repository != ''
@@ -168,19 +163,36 @@ jobs:
                 throw 'Tag prefix not set, exiting'
             }
 
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git config user.name 'github-actions[bot]'
+
             $tagExists = (git tag --list '${{ inputs.swap-prefix }}/latest')
             if ([string]::IsNullOrEmpty($tagExists))
             {
                 throw 'No latest tag found for swap prefix'
             }
 
-            $latest = (git rev-list -n 1 '${{ inputs.swap-prefix }}/latest')
-            if ($latest)
+            $stagingLatest = (git rev-list --max-count=1 '${{ inputs.swap-prefix }}/latest')
+            if ($stagingLatest)
             {
-                git tag --annotate '${{ inputs.tag-prefix }}/latest' $latest --message 'Latest tag for ${{ inputs.tag-prefix }}'
+                git fetch --tags
+                $stagingLatestTag = (git tag --list '${{ inputs.tag-prefix }}/latest')
+                if ($stagingLatestTag)
+                {
+                    # Move the staging/latest tag to the commit of production/latest.
+                    $productionLatest = (git rev-list --max-count=1 '${{ inputs.tag-prefix }}/latest')
+
+                    git tag --delete '${{ inputs.tag-prefix }}/latest'
+                    git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
+
+                    git tag --annotate '${{ inputs.swap-prefix }}/latest' $productionLatest --message 'Latest tag for ${{ inputs.swap-prefix }}'
+                    git push origin 'refs/tags/${{ inputs.swap-prefix }}/latest'
+                }
+
+                git tag --annotate '${{ inputs.tag-prefix }}/latest' $stagingLatest --message 'Latest tag for ${{ inputs.tag-prefix }}'
                 git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
                 $gitMessage = 'Swap tagged at ${{ steps.create-timestamp.outputs.timestamp-tag }}'
-                git tag --annotate '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}' $latest --message $gitMessage
+                git tag --annotate '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}' $stagingLatest --message $gitMessage
                 git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
             }
             else
@@ -188,8 +200,8 @@ jobs:
                 throw "No latest tag found for swap prefix"
             }
 
-            Write-Output "::notice::The commit from the app code repository with the SHA $latest was swapped out."
-            "commit-sha=$latest" >> $Env:GITHUB_OUTPUT
+            Write-Output "::notice::The commit from the app code repository with the SHA $stagingLatest was swapped out."
+            "commit-sha=$stagingLatest" >> $Env:GITHUB_OUTPUT
 
       - name: Add Azure Application Insights Release Annotation
         uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
