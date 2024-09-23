@@ -126,6 +126,7 @@ schematron
 screenshot
 screenshots
 sfc
+SFCs
 shm
 shortcode
 shortcodes
