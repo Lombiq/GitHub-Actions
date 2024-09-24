@@ -140,6 +140,9 @@ on:
           The prefix to use for the tag. If not set, 'staging' will be used as the prefix. The tag will be in the
           format of "<prefix>/latest" and "<prefix>/<timestamp>". This is used for tracking what's deployed, where and
           when by tagging the deployed commit.
+      publish-arguments:
+        type: string
+        description: Additional arguments passed to dotnet publish.
 
 jobs:
   deploy:
@@ -201,7 +204,7 @@ jobs:
             --self-contained ${{ inputs.self-contained }} `
             -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
             -p:AzureDeploy=true `
-            ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+            ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}
 
       - name: Compress Publish Package
         run: |
