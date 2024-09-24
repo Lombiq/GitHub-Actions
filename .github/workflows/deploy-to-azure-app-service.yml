@@ -200,6 +200,7 @@ jobs:
             --verbosity ${{ inputs.build-verbosity }} `
             --self-contained ${{ inputs.self-contained }} `
             -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
+            -p:AzureDeploy=true `
             ${{ steps.set-up-runtime-option.outputs.runtime-option }}
 
       - name: Compress Publish Package
