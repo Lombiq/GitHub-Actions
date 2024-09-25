@@ -260,9 +260,16 @@ jobs:
 
       - name: Tag Latest and Add Timestamp Tag
         run: |
+          echo git tag '${{ inputs.tag-prefix }}/latest'
           git tag '${{ inputs.tag-prefix }}/latest'
+          
+          echo git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
           git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
+          
+          echo git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
           git tag '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
+          
+          echo git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
           git push origin 'refs/tags/${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
 
       - name: Start Web App Slot
