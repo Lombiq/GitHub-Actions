@@ -258,13 +258,13 @@ jobs:
           timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
 
       - name: Remove Old Latest Tags
-        if: ${{ inputs.skip-update-latest-tag == 'true' }}
+        if: ${{ inputs.skip-update-latest-tag != 'true' }}
         uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@dev
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
 
       - name: Tag Latest and Add Timestamp Tag
-        if: ${{ inputs.skip-update-latest-tag == 'true' }}
+        if: ${{ inputs.skip-update-latest-tag != 'true' }}
         run: |
           echo git tag '${{ inputs.tag-prefix }}/latest'
           git tag '${{ inputs.tag-prefix }}/latest'
