@@ -192,6 +192,8 @@ jobs:
             ${{ inputs.self-contained }}
             -p:PublishReadyToRun=${{ inputs.ready-to-run }}
             ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+            -p:AzureDeploy=true
+            -p:AzureDeployStage=build
             -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       - name: Publish
@@ -204,6 +206,7 @@ jobs:
             --self-contained ${{ inputs.self-contained }} `
             -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
             -p:AzureDeploy=true `
+            -p:AzureDeployStage=publish `
             ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}
 
       - name: Compress Publish Package
