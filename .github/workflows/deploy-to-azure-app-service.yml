@@ -140,6 +140,13 @@ on:
           The prefix to use for the tag. If not set, 'staging' will be used as the prefix. The tag will be in the
           format of "<prefix>/latest" and "<prefix>/<timestamp>". This is used for tracking what's deployed, where and
           when by tagging the deployed commit.
+      publish-arguments:
+        type: string
+        description: Additional arguments passed to dotnet publish.
+      skip-update-latest-tag:
+        type: string
+        default: 'false'
+        description: If set to "true", the latests tags will not be updated.
 
 jobs:
   deploy:
@@ -189,6 +196,8 @@ jobs:
             ${{ inputs.self-contained }}
             -p:PublishReadyToRun=${{ inputs.ready-to-run }}
             ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+            -p:AzureDeploy=true
+            -p:AzureDeployStage=build
             -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       - name: Publish
@@ -200,7 +209,9 @@ jobs:
             --verbosity ${{ inputs.build-verbosity }} `
             --self-contained ${{ inputs.self-contained }} `
             -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
-            ${{ steps.set-up-runtime-option.outputs.runtime-option }}
+            -p:AzureDeploy=true `
+            -p:AzureDeployStage=publish `
+            ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}
 
       - name: Compress Publish Package
         run: |
@@ -247,11 +258,13 @@ jobs:
           timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
 
       - name: Remove Old Latest Tags
+        if: ${{ inputs.skip-update-latest-tag != 'true' }}
         uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@dev
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
 
       - name: Tag Latest and Add Timestamp Tag
+        if: ${{ inputs.skip-update-latest-tag != 'true' }}
         run: |
           git tag '${{ inputs.tag-prefix }}/latest'
           git push origin 'refs/tags/${{ inputs.tag-prefix }}/latest'
