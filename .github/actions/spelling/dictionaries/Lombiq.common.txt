@@ -28,6 +28,7 @@ contenttype
 corepack
 cref
 cspell
+Cysharp
 darkmode
 datatable
 DBs
@@ -192,3 +193,4 @@ XSS
 xunit
 xxl
 xxxl
+ZString
