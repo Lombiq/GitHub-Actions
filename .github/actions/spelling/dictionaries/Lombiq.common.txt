@@ -28,7 +28,6 @@ contenttype
 corepack
 cref
 cspell
-Cysharp
 darkmode
 datatable
 DBs

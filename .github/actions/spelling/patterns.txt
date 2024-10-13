@@ -29,3 +29,6 @@ sha[0-9]{3}-[0-9a-zA-Z+/]{64}
 
 # Ignore lines that contain the "#spell-check-ignore-line" marker text.
 .*#spell-check-ignore-line.*
+
+# Ignore namespaces in usings as they can contain any random branding.
+^using( static)? [^ ]+$
