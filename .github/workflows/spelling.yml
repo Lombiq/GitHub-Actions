@@ -79,7 +79,7 @@ on:
           Repository with default configuration to use when the workspace repository doesn't have its own configuration.
           The default from Check Spelling is ''.
         type: string
-        default: Lombiq/GitHub-Actions@dev
+        default: Lombiq/GitHub-Actions@issue/OFFI-142
       timeout-minutes:
         type: number
         default: 3
@@ -138,7 +138,7 @@ jobs:
     if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
     steps:
       - name: Comment (PR)
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OFFI-142
         with:
           post-comment: 1
           task: ${{ needs.check-spelling.outputs.followup }}
