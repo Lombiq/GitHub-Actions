@@ -1,4 +1,5 @@
 name: Validate GitHub Actions Refs
+
 on:
   push:
     branches:
