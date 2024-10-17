@@ -1,0 +1,52 @@
+name: Post to X (Twitter)
+
+on:
+  workflow_call:
+    secrets:
+      X_ACCESS_TOKEN:
+        required: true
+        description: >
+          The X (Twitter) API access token, created as documented under
+          https://github.com/twitter-together/action/blob/main/docs/01-create-twitter-app.md.
+      X_ACCESS_TOKEN_SECRET:
+        required: true
+        description: >
+          The X (Twitter) API access token secret, created as documented under
+          https://github.com/twitter-together/action/blob/main/docs/01-create-twitter-app.md.
+      X_API_KEY:
+        required: true
+        description: >
+          The X (Twitter) API key, created as documented under
+          https://github.com/twitter-together/action/blob/main/docs/01-create-twitter-app.md.
+      X_API_KEY_SECRET:
+        required: true
+        description: >
+          The X (Twitter) API key secret, created as documented under
+          https://github.com/twitter-together/action/blob/main/docs/01-create-twitter-app.md.
+
+jobs:
+  preview:
+    name: Preview X (Twitter) Post
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: twitter-together/action@08857009da2aacd9bd08204550ec96e15d76b4da
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  post-to-x:
+    name: Post to X (Twitter)
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'push' && github.ref_name == github.event.repository.default_branch
+    steps:
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+
+      - name: Post
+        uses: twitter-together/action@08857009da2aacd9bd08204550ec96e15d76b4da
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          TWITTER_API_KEY: ${{ secrets.X_API_KEY }}
+          TWITTER_API_SECRET_KEY: ${{ secrets.X_API_KEY_SECRET }}
