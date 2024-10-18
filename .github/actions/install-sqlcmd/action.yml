@@ -13,7 +13,7 @@ runs:
       id: check-sqlcmd
       shell: pwsh
       run: |
-        Set-GitHubOutput 'available' ($null -ne (Get-Command sqlcmd))
+        Set-GitHubOutput 'available' ($null -ne (Get-Command sqlcmd -ErrorAction SilentlyContinue))
 
     - name: Install a SQL Server suite of tools
       uses: shaybentk/mssqlsuite@192fce1fb38a4164d22ed8dba86d8199bb158d0e # v0.0.4
