@@ -1,0 +1,20 @@
+name: Install sqlcmd
+description: Installs the SQL Server command-line tools (https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility).
+
+runs:
+  using: composite
+  steps:
+    - name: Install sqlcmd
+      shell: pwsh
+      run: |
+        if ($Env:RUNNER_OS -eq 'Linux' -and $null -eq (Get-Command sqlcmd -ErrorAction SilentlyContinue))
+        {
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+          add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/24.04/prod.list)"
+          apt-get update
+          apt-get install sqlcmd
+        }
+
+    - name: Display sqlcmd version
+      shell: pwsh
+      run: sqlcmd -?
