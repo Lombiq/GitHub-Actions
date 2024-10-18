@@ -1,25 +1,19 @@
 name: Install sqlcmd
-description: Installs the SQL Server command-line tools (https://aka.ms/sqlpackage).
+description: Installs the SQL Server command-line tools (https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility).
 
 runs:
   using: composite
   steps:
-    - name: Setup Scripts
+    - name: Install sqlcmd
       shell: pwsh
       run: |
-        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
-
-    - name: Check if sqlcmd is installed
-      id: check-sqlcmd
-      shell: pwsh
-      run: |
-        Set-GitHubOutput 'available' ($null -ne (Get-Command sqlcmd -ErrorAction SilentlyContinue))
-
-    - name: Install a SQL Server suite of tools
-      uses: shaybentk/mssqlsuite@192fce1fb38a4164d22ed8dba86d8199bb158d0e # v0.0.4
-      if: steps.check-sqlcmd.outputs.available != 'true'
-      with:
-        install: sqlpackage
+        if ($Env:RUNNER_OS -eq 'Linux' -and $null -eq (Get-Command sqlcmd -ErrorAction SilentlyContinue))
+        {
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+          add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/24.04/prod.list)"
+          apt-get update
+          apt-get install sqlcmd
+        }
 
     - name: Display sqlcmd version
       shell: pwsh
