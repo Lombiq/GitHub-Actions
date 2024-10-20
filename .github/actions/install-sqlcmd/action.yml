@@ -15,7 +15,8 @@ runs:
       run: |
         Set-GitHubOutput 'available' ($null -ne (Get-Command sqlcmd -ErrorAction SilentlyContinue))
 
-    # Source: https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?tabs=ubuntu18-install#18
+    # Source:
+    # https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?tabs=ubuntu18-install#18
     - name: Install sqlcmd on Linux
       if: runner.os == 'Linux' && steps.check-sqlcmd.outputs.available != 'true'
       shell: bash
