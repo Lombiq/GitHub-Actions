@@ -4,6 +4,8 @@ for ($i = 1; $i -le $maxTryCount; $i++)
 {
     Write-Output "Waiting for SQL Server to start. Attempt $i/$maxTryCount."
 
+    # The -C switch is to trust the server certificate, which was added for the process to work on Ubuntu 24.04-based
+    # runners where sqlcmd had to be installed manually. It's not an issue, since the server is running locally.
     if ($Env:RUNNER_OS -eq 'Windows')
     {
         sqlcmd -C -b -S .\SQLEXPRESS -Q 'SELECT @@SERVERNAME as ServerName' 2>&1>$null

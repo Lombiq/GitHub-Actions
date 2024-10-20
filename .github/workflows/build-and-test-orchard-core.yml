@@ -255,13 +255,6 @@ jobs:
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
-      - name: Install sqlcmd
-        uses: Lombiq/GitHub-Actions/.github/actions/install-sqlcmd@issue/INFRA-164
-
-      - name: Set up SQL Server
-        if: inputs.set-up-sql-server == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/INFRA-164
-
       - name: Display ui-test-parallelism Obsolete Warning
         if: ${{ inputs.ui-test-parallelism != '-1' }}
         shell: pwsh
@@ -314,6 +307,10 @@ jobs:
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
         uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
+
+      - name: Set up SQL Server
+        if: inputs.set-up-sql-server == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/INFRA-164
 
       - name: Set up Elasticsearch
         if: inputs.set-up-elasticsearch == 'true'

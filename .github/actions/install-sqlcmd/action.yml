@@ -1,4 +1,4 @@
-name: Install sqlcmd
+name: Install sqlcmd on Linux
 description: Installs the SQL Server command-line tools (https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility).
 
 runs:
