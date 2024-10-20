@@ -26,6 +26,7 @@ runs:
         sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18
         echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
         source ~/.bashrc
+        echo '/opt/mssql-tools18/bin' >> $GITHUB_PATH
 
     - name: Display sqlcmd version
       shell: pwsh
