@@ -15,15 +15,15 @@ runs:
       run: |
         Set-GitHubOutput 'available' ($null -ne (Get-Command sqlcmd -ErrorAction SilentlyContinue))
 
-    # Source: https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?tabs=ubuntu-install#install-tools-on-linux
+    # Source: https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility?view=sql-server-ver16&tabs=go%2Clinux&pivots=cs1-bash#download-and-install-sqlcmd
     - name: Install sqlcmd on Linux
       if: runner.os == 'Linux' && steps.check-sqlcmd.outputs.available != 'true'
       shell: bash
       run: |
         curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
-        add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/22.04/prod.list)" -y
-        apt-get update
-        apt-get install sqlcmd
+        sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/22.04/prod.list)" -y
+        sudo apt-get update
+        sudo apt-get install sqlcmd
 
     - name: Display sqlcmd version
       shell: pwsh
