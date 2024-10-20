@@ -4,15 +4,18 @@ description: Installs the SQL Server command-line tools (https://learn.microsoft
 runs:
   using: composite
   steps:
-    - name: Install sqlcmd
+    # Source: https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?tabs=ubuntu-install#install-tools-on-linux
+    - name: Install sqlcmd on Linux
       shell: pwsh
       run: |
         if ($Env:RUNNER_OS -eq 'Linux' -and $null -eq (Get-Command sqlcmd -ErrorAction SilentlyContinue))
         {
           curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
-          sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/24.04/prod.list)"
+          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
           sudo apt-get update
-          sudo apt-get install sqlcmd
+          sudo apt-get install mssql-tools18 unixodbc-dev -y --force-yes
+          echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
+          source ~/.bashrc
         }
 
     - name: Display sqlcmd version
