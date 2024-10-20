@@ -10,9 +10,9 @@ runs:
         if ($Env:RUNNER_OS -eq 'Linux' -and $null -eq (Get-Command sqlcmd -ErrorAction SilentlyContinue))
         {
           curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
-          add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/24.04/prod.list)"
-          apt-get update
-          apt-get install sqlcmd
+          sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/24.04/prod.list)"
+          sudo apt-get update
+          sudo apt-get install sqlcmd
         }
 
     - name: Display sqlcmd version
