@@ -4,19 +4,28 @@ description: Installs the SQL Server command-line tools (https://learn.microsoft
 runs:
   using: composite
   steps:
-    # Source: https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?tabs=ubuntu-install#install-tools-on-linux
-    - name: Install sqlcmd on Linux
+    - name: Setup Scripts
       shell: pwsh
       run: |
-        if ($Env:RUNNER_OS -eq 'Linux' -and $null -eq (Get-Command sqlcmd -ErrorAction SilentlyContinue))
-        {
-          curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
-          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
-          sudo apt-get update
-          sudo apt-get install mssql-tools18 unixodbc-dev -y --force-yes
-          echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
-          source ~/.bashrc
-        }
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Check if sqlcmd is installed
+      id: check-sqlcmd
+      shell: pwsh
+      run: |
+        Set-GitHubOutput 'available' ($null -ne (Get-Command sqlcmd -ErrorAction SilentlyContinue))
+
+    # Source: https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?tabs=ubuntu-install#install-tools-on-linux
+    - name: Install sqlcmd on Linux
+      if: runner.os == 'Linux' && steps.check-sqlcmd.outputs.available != 'true'
+      shell: bash
+      run: |
+        curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+        curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+        sudo apt-get update
+        sudo apt-get install mssql-tools18 unixodbc-dev -y --force-yes
+        echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
+        source ~/.bashrc
 
     - name: Display sqlcmd version
       shell: pwsh
