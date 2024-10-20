@@ -1,0 +1,33 @@
+name: Install sqlcmd on Linux
+description: Installs the SQL Server command-line tools (https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility).
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Check if sqlcmd is installed
+      id: check-sqlcmd
+      shell: pwsh
+      run: |
+        Set-GitHubOutput 'available' ($null -ne (Get-Command sqlcmd -ErrorAction SilentlyContinue))
+
+    # Source:
+    # https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?tabs=ubuntu18-install#18
+    - name: Install sqlcmd on Linux
+      if: runner.os == 'Linux' && steps.check-sqlcmd.outputs.available != 'true'
+      shell: bash
+      run: |
+        curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+        sudo apt-get update
+        sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18
+        echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
+        source ~/.bashrc
+        echo '/opt/mssql-tools18/bin' >> $GITHUB_PATH
+
+    - name: Display sqlcmd version
+      shell: pwsh
+      run: sqlcmd -?
