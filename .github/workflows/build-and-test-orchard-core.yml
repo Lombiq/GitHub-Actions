@@ -250,8 +250,11 @@ jobs:
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
-      - name: Install sqlcmd
-        uses: Lombiq/GitHub-Actions/.github/actions/install-sqlcmd@issue/INFRA-164
+      # - name: Install sqlcmd
+      #   uses: Lombiq/GitHub-Actions/.github/actions/install-sqlcmd@issue/INFRA-164
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@e5c7151931ca95bad1c6f4190c730ecf8c7dde48 # v3.19
 
       - name: Set Environment Variables
         uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
