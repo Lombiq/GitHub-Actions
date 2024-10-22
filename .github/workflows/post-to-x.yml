@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.event_name == 'pull_request'
     steps:
-      - uses: twitter-together/action@08857009da2aacd9bd08204550ec96e15d76b4da
+      - uses: twitter-together/action@08857009da2aacd9bd08204550ec96e15d76b4da # v3.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -43,7 +43,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
       - name: Post
-        uses: twitter-together/action@08857009da2aacd9bd08204550ec96e15d76b4da
+        uses: twitter-together/action@08857009da2aacd9bd08204550ec96e15d76b4da # v3.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TWITTER_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
