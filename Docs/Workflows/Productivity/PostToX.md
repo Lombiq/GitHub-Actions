@@ -1,6 +1,7 @@
 # Post to X (Twitter)
 
 With the the [Twitter, together! GitHub Actions action](https://github.com/twitter-together/action) you can let people post to an X (Twitter) account with pushes to the default branch (e.g., merged pull requests) of a repository. It's really useful to share the responsibility of posting in a team, especially that of an open-source project where the cost of paid features on X allowing this can't be justified.
+
 This workflow wraps Twitter, together! to make it easier to use, for example:
 
 ```yaml
