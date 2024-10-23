@@ -15,4 +15,3 @@ jobs:
     with:
       additional-dictionaries: |
         cspell:companies/src/companies.txt
-        lombiq-lgha:dictionaries/Lombiq.common.txt
