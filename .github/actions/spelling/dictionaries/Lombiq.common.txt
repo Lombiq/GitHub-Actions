@@ -122,6 +122,7 @@ publishsettings
 pwsh
 regexes
 ruleset
+runtime
 schematron
 screenshot
 screenshots
