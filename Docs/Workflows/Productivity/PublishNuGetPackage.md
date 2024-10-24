@@ -15,14 +15,14 @@ jobs:
     name: Publish to NuGet
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     secrets:
-      apikey: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
+      API_KEY: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
 ```
 
 The _publish.yml_ workflow is triggered on a tag pushed to any branch with the prefix `v` and should contain a [valid version number](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-basics), e.g. `v1.0.1`, which will be extracted and used to version the NuGet packages produced.
 
 There is no configuration required for automated Orchard Core extension manifest versioning, all of the `Manifest.cs` files are looked up, and the existing `Version` properties are updated automatically inside the `Module` or `Theme` definition with the version pushed. Note that the `Version` property should be present and leave the version number on the default value (0.0.1). This is because we don't actually need to keep manifest version changes in the code.
 
-It takes one non-optional secret parameter, `apikey`, the organization API key for pushing to NuGet, and two optional parameters, `source` and `verbosity`. E.g.:
+It takes one non-optional secret parameter, `API_KEY`, the organization API key for pushing to NuGet, and two optional parameters, `source` and `verbosity`. E.g.:
 
 ```yaml
 jobs:
@@ -33,7 +33,7 @@ jobs:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
       verbosity: detailed
     secrets:
-      apikey: ${{ secrets.CLOUDSMITH_NUGET_PUBLISH_API_KEY }}
+      API_KEY: ${{ secrets.CLOUDSMITH_NUGET_PUBLISH_API_KEY }}
 ```
 
 When `source` is not provided, it assumes a default value of pushing to the [Lombiq NuGet feed](https://www.nuget.org/profiles/Lombiq).
