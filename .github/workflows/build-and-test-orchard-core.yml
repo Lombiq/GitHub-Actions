@@ -310,7 +310,7 @@ jobs:
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/INFRA-164
 
       - name: Set up Elasticsearch
         if: inputs.set-up-elasticsearch == 'true'

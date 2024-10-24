@@ -13,6 +13,9 @@ runs:
       shell: pwsh
       run: Initialize-SqlServer
 
+    - name: Install sqlcmd
+      uses: Lombiq/GitHub-Actions/.github/actions/install-sqlcmd@issue/INFRA-164
+
     # Needs to be a separate step, otherwise the Chocolatey installation won't be visible.
     - name: Wait for SQL Server to start
       shell: pwsh

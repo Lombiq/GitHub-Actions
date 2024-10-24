@@ -19,6 +19,7 @@ In addition to the below short explanations, check out the inline documentation 
 
 ## Build tools
 
+- `install-sqlcmd`: Installs the [SQL Server command-line tools](https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility) on Linux runners, which is necessary since the Ubuntu 24.04 runner image no longer includes it.
 - `enable-corepack`: Enables [Node corepack](https://nodejs.org/docs/latest-v16.x/api/corepack.html) so any package manager can be used seamlessly.
 - `setup-sql-server`: Sets up SQL Server with Lombiq-recommended defaults.
 
