@@ -149,7 +149,7 @@ runs:
 
     - name: Enable Node corepack
       if: inputs.enable-corepack == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OFFI-238
 
     - name: Generate nuspec file if needed
       if: hashFiles('ConvertTo-Nuspec.ps1')
