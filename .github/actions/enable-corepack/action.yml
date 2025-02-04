@@ -11,3 +11,7 @@ runs:
       shell: pwsh
       run: |
         corepack enable
+
+        # This is really only necessary to work around the https://github.com/nodejs/corepack/issues/612 corepack issue.
+        # Also see https://github.com/Lombiq/NodeJs-Extensions/issues/120.
+        corepack prepare pnpm@8.15.9+sha1.aa4bc353b5f59fe1f1df5d802ce049ddf7f3c60e --activate
