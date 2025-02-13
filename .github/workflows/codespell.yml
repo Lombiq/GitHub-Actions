@@ -9,6 +9,12 @@ on:
           The GitHub token to authenticate checkout with. Pass in a GitHub personal access token if authenticated
           submodules are used.
 
+    inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
+        type: string
+        default: 'true'
+
 jobs:
   codespell:
     name: Codespell
@@ -21,3 +27,9 @@ jobs:
 
       - name: Run codespell
         uses: Lombiq/GitHub-Actions/.github/actions/codespell@dev
+
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

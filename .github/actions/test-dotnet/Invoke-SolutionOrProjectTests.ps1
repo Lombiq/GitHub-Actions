@@ -113,7 +113,7 @@ function MemDumpProcess($Output, $RootProcess, $DumpRootPath, $Process)
 
     $outputFile = "$DumpRootPath/dotnet-test-hang-dump-$($RootProcess.Id)-$($Process.Parent.Id)_$($Process.Id)"
     $Process | Format-Table Id, SI, Name, Path, @{ Label = 'TotalRunningTime'; Expression = { (Get-Date) - $PSItem.StartTime } } > "$outputFile.log"
-    dotnet-dump collect -p $Process.Id --type Full -o "$outputFile.dmp" 2>&1 >> "$outputFile.log"
+    dotnet-dump collect --process-id $Process.Id --type Full --output "$outputFile.dmp" 2>&1 >> "$outputFile.log"
 }
 
 function MemDumpProcessTree($Output, $RootProcess, $DumpRootPath, $CurrentProcess)

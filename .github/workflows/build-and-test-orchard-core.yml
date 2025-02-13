@@ -157,13 +157,6 @@ on:
         description: >
           Filter expression for dotnet test. See:
           https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
-      ui-test-parallelism:
-        type: string
-        default: '-1'
-        description: >
-          Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and
-          the MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming
-          from the code won't be overridden.
       test-artifact-retention-days:
         type: string
         default: '7'
@@ -261,17 +254,6 @@ jobs:
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
-      - name: Display ui-test-parallelism Obsolete Warning
-        if: ${{ inputs.ui-test-parallelism != '-1' }}
-        shell: pwsh
-        run: |
-          $message = '::warning::Since v10.0.0, the UI Testing Toolbox uses xUnit 2.8.0 and later. This fixes the ' +
-              'behavior of the maxParallelThreads xUnit configuration. Set that instead of ui-test-parallelism with ' +
-              'xunit-max-parallel-threads (see https://xunit.net/docs/running-tests-in-parallel). The ' +
-              'ui-test-parallelism input will be removed in a future version.'
-
-          Write-Output $message
-
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
@@ -339,7 +321,6 @@ jobs:
           solution-path: ${{ inputs.build-solution-path }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
-          ui-test-parallelism: ${{ inputs.ui-test-parallelism }}
           artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
           enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}

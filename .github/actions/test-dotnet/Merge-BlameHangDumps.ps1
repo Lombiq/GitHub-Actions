@@ -28,7 +28,7 @@ function ItemFilter($Item, $TestConfiguration)
     }
 
     $allow = (($Item.Name -like 'Sequence_*.xml') -or ($Item.Name -like '*_hangdump.dmp'))
-    if (-not ($allow -and $TestConfiguration))
+    if (-not $allow -and $TestConfiguration)
     {
         $allow = ($Item.FullName -like "*$(Join-Path 'bin' $TestConfiguration)*" )
     }
@@ -55,5 +55,6 @@ Get-ChildItem $testDirectory.Path -Recurse |
             New-Item -Type Directory -Path $destinationDirectory
         }
 
-        Move-Item -Path $PSItem.FullName -Destination $destinationDirectory
+        # Moving the files would be faster, but the original files might only be readable by the current user.
+        Copy-Item -Path $PSItem.FullName -Destination $destinationDirectory
     }

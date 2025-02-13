@@ -40,13 +40,6 @@ inputs:
     required: false
     description: Value passed to the --configuration parameter of dotnet test.
     default: Debug
-  ui-test-parallelism:
-    required: false
-    default: '-1'
-    description: >
-      Determines how many UI tests will run in parallel. Affects both xUnit's maxParallelThreads configuration and the
-      MaxParallelTests configuration of Lombiq UI Testing Toolbox. If set to "-1" then the configuration coming from the
-      code won't be overridden.
   artifact-retention-days:
     required: false
     default: '7'
@@ -82,14 +75,6 @@ runs:
         Initialize-ArtifactNameSuffix '${{ inputs.build-directory }}'
 
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.xunit-max-parallel-threads }}
-
-        if (${{ inputs.ui-test-parallelism }} -eq -1)
-        {
-            Write-Output "The UI test parallelism configuration isn't overridden."
-            Exit 0
-        }
-
-        Set-GitHubEnv 'Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__MaxParallelTests' ${{ inputs.ui-test-parallelism }}
 
     - name: Install dotnet-dump
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
