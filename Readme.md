@@ -20,7 +20,7 @@ These can be invoked from any other repository's build.
 We at [Lombiq](https://lombiq.com/) also used these workflows for the following projects:
 
 - The new [Lombiq website](https://lombiq.com/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://lombiq.com/blog/how-we-renewed-and-migrated-lombiq-com-from-orchard-1-to-orchard-core)).
-- The new client portal for [WTW](https://www.wtwco.com/) ([see case study](https://lombiq.com/blog/lombiq-s-journey-with-wtw-s-client-portal)).<!-- #spell-check-ignore-line -->
+- The new client portal for [WTW](https://www.wtwco.com/) ([see case study](https://lombiq.com/blog/lombiq-s-journey-with-wtw-s-client-portal)).
 - They also make [DotNest, the Orchard SaaS](https://dotnest.com/) better.
 
 ## Documentation
@@ -55,7 +55,7 @@ To ensure that when changing actions or workflows their references to other acti
 
 To release versions of Lombiq GitHub Actions, and allow consumers to reference a specific version of a reusable workflow or composite action (e.g. `@v1.0.0`), we employ some automation to do this in a consistent and predictable way.
 
-See [issue #284 "Introduce versioning and releases (OSOE-735)"](https://github.com/Lombiq/GitHub-Actions/issues/284) for additional details on why we do this. <!-- #spell-check-ignore-line -->
+See [issue #284 "Introduce versioning and releases (OSOE-735)"](https://github.com/Lombiq/GitHub-Actions/issues/284) for additional details on why we do this.
 
 New versions of Lombiq GitHub Actions are automatically tagged using the [Tag Version (this repo)](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/workflows/tag-version-this-repo.yml) workflow. This workflow is triggered for release branches with a name that matches the `release/**` pattern (e.g. `release/v1.0.0`, `release/v2.1.0-alpha`, etc.).
 
@@ -68,7 +68,7 @@ When you push your new release branch, the following things happen automatically
 3. The [Set GitHub Actions References](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/set-gha-refs/action.yml) action recursively searches all files in the `.github` folder to find each call to a GitHub Action or Workflow contained in this repository.
 4. By default, references to called actions and workflows targeting the release branch (see above) are string replaced with the version name (e.g. `v1.0`).
    - Additionally, the [Set GitHub Actions References](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/set-gha-refs/action.yml) action has a parameter called [additional-pattern-include-list](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/set-gha-refs/action.yml#L24) which allows for replacing `release/v1.0` under special circumstances such as for the [spelling action explicit file reference](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/spelling/action.yml#L133) scenario.
-5. The [stefanzweifel/git-auto-commit-action](https://github.com/stefanzweifel/git-auto-commit-action) action is used to automatically: <!-- #spell-check-ignore-line -->
+5. The [stefanzweifel/git-auto-commit-action](https://github.com/stefanzweifel/git-auto-commit-action) action is used to automatically:
    - Commit the updated files to the `release/v1.0` branch.
    - Create a new git tag using the release name (e.g. `v1.0`).
 6. Tags are force pushed to update the `v1.0` tag if it needs to be updated.

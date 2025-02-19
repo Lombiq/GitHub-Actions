@@ -3,7 +3,7 @@
     'extends': ['github>Lombiq/renovate-config:default.json5'],
     'packageRules': [
         {
-            matchPackageNames: ['azure/webapps-deploy'], // #spell-check-ignore-line
+            matchPackageNames: ['azure/webapps-deploy'],
             matchFileNames: ['.github/workflows/deploy-orchard1-to-azure-app-service.yml'], 
             enabled: false,
         },

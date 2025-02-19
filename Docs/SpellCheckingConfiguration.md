@@ -1,5 +1,8 @@
 # Spell-checking configuration advice
 
+> [!WARNING]  
+> The `spelling` workflow and action are deprecated. We recommend you use the [`codespell` workflow](Workflows/Productivity/Codespell.md) instead, which has a dramatically lower false positive rate.
+
 ## Introduction
 
 Since our spell-checking [action](../.github/actions/spelling/action.yml) and [workflow](../.github/workflows/spelling.yml) are an extension of [check-spelling](https://github.com/check-spelling/check-spelling), make sure that you familiarize yourself with its concepts and configuration options first.
