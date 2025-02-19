@@ -1,7 +1,7 @@
 # Spell-checking configuration advice
 
 > [!WARNING]  
-> The `spelling` workflow and action are deprecated. We recommend you use the [`codespell` workflow](Productivity/Codespell.md) instead, which has a dramatically lower false positive rate.
+> The `spelling` workflow and action are deprecated. We recommend you use the [`codespell` workflow](Workflows/Productivity/Codespell.md) instead, which has a dramatically lower false positive rate.
 
 ## Introduction
 
