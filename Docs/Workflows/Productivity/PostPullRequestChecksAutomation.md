@@ -48,5 +48,6 @@ If you get "Cannot index into a null array." or "gh: Resource not accessible by 
 ```yaml
     permissions:
       actions: read
-      pull-requests: read
+      contents: write
+      pull-requests: write
 ```
