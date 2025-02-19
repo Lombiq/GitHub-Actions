@@ -34,7 +34,6 @@ In addition to the below short explanations, check out the inline documentation 
 - `publish-nuget`: Publishes the content of the current directory as a NuGet package.
 - `update-github-issue-and-pull-request`: Adds the Jira issue key prefix and link to pull requests as well as a Fixes reference to a GitHub issue, if a suitable one is found.
 - `verify-submodule-pull-request`: Assuming that the current repository is a submodule in another repository, this action verifies that a pull request with a matching issue code has been opened there as well.
-- `spelling`: Checks for spelling mistakes in a repository. Check out [this action's own documentation](SpellCheckingConfiguration.md) on how to use it and contribute to the configuration and dictionaries.
 - `yaml-lint`: Checks for linting errors in YAML-files, allowing for an optional configuration file to be used.
 
 ## Azure hosting

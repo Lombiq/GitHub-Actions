@@ -1,5 +1,8 @@
 # Spell-checking
 
+> [!WARNING]  
+> The `spelling` workflow and action are deprecated. We recommend you use the [`codespell` workflow](Codespell.md) instead, which has a dramatically lower false positive rate.
+
 Checks for spelling mistakes in a repository using the [Check Spelling](https://github.com/marketplace/actions/check-spelling) GitHub Action, proxied by the [`spelling` action](../../../.github/actions/spelling/action.yml) in this repository, which has [its own documentation](../../SpellCheckingConfiguration.md) describing the configuration options and contribution guidelines. This documentation is also linked automatically at the end of every spell-checking report of a pull request.
 
 If the "Checkout" step of the spelling workflow fails stating that the workflow can't find the repository, you need `contents` permission. If the "Check Spelling" step fails, but no comment was posted, you need "pull-requests" write permission. Add the following permissions just below `uses`:
