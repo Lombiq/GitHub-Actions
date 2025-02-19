@@ -15,8 +15,7 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 - Workflows with the `cancel-workflow-on-failure` parameter will by default cancel all jobs in the workflow run when the given reusable workflow fails. If this fails with the "HTTP 403: Resource not accessible by integration" error, then add the following permissions to the workflow call:
   ```yaml
   permissions:
-    actions: read
-    pull-requests: read
+    actions: write
   ```
 - When running under a pull request, some of the long-running jobs (for example solution builds and spell-checking) will by default be canceled when a subsequent commit triggers them again. This is based on the [concurrency](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency) feature and governed by the `cancel-in-progress-for-this-pr` parameter.
   - If you have multiple parent workflows running in parallel that both have a job calling the same reusable workflow, make sure that their display names are different from each other, because the `github.workflow` context variable is also used in the construction of the concurrency key to be able to distinguish such jobs.
