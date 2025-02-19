@@ -93,6 +93,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Deprecation Warning
+        shell: pwsh
+        run: Write-Output '::warning::This workflow is deprecated. Use codespell workflow instead.'
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
