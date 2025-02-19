@@ -95,7 +95,7 @@ jobs:
     steps:
       - name: Deprecation Warning
         shell: pwsh
-        run: Write-Output '::warning::This workflow is deprecated. Use codespell workflow instead.'
+        run: Write-Output '::warning::This workflow is deprecated. Use the codespell workflow instead.'
 
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
