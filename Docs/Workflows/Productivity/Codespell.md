@@ -19,7 +19,7 @@ jobs:
 
 ## Configuring codespell in your project
 
-One-off false positives can be ignored by adding `codespell:ignore yourword` to the end of the line (or `codespell:ignore` to ignore the whole line).<!-- #spell-check-ignore-line -->
+One-off false positives can be ignored by adding `codespell:ignore yourword` to the end of the line (or `codespell:ignore` to ignore the whole line).
 
 For complete configuration of codespell, you can override the default configuration of this workflow by placing a _.codespellrc_ file in the root of your repository. On how to use this, see the [codespell documentation](https://github.com/codespell-project/codespell?tab=readme-ov-file#using-a-config-file). The default configuration is [here](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/actions/codespell/setup.cfg).
 
@@ -31,7 +31,7 @@ For complete configuration of codespell, you can override the default configurat
 Useful configuration options to override:
 
 - `ignore-words-list`: These words will be considered correct spelling. E.g.: `ignore-words-list = MySpecialWord, MyOtherSpecialWord`.
-- `ignore-regex`: Words or phrases matching this regex will be ignored. E.g.: `ignore-regex = (<thead|<\/thead>)`.<!-- codespell:ignore thead --><!-- #spell-check-ignore-line -->
+- `ignore-regex`: Words or phrases matching this regex will be ignored. E.g.: `ignore-regex = (<thead|<\/thead>)`.<!-- codespell:ignore thead -->
 - `skip`: Files matching these paths or glob expressions will be skipped. E.g.: `skip = *.txt, */IgnoredPathSegment/*, ./src/Ignored/Folder/*, IgnoredFile.md`.
 
 <!-- textlint-disable doubled-spaces -->
