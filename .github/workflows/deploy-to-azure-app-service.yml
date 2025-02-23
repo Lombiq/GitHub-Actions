@@ -161,18 +161,18 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@renovate/all-dependencies
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@renovate/all-dependencies
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Enable Node corepack
         if: inputs.enable-corepack == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@renovate/all-dependencies
 
       # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
       # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
@@ -184,7 +184,7 @@ jobs:
           "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@renovate/all-dependencies
         with:
           directory: ${{ inputs.build-directory }}
           verbosity: ${{ inputs.build-verbosity }}
@@ -221,14 +221,14 @@ jobs:
           Compress-Archive -Path .\Published\* -DestinationPath .\Published.zip
 
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@renovate/all-dependencies
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@renovate/all-dependencies
 
       - name: Stop Web App Slot
         run: |
@@ -251,10 +251,10 @@ jobs:
 
       - name: Create Timestamp
         id: create-timestamp
-        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@renovate/all-dependencies
 
       - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@renovate/all-dependencies
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
@@ -262,7 +262,7 @@ jobs:
 
       - name: Remove Old Latest Tags
         if: ${{ inputs.skip-update-latest-tag != 'true' }}
-        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@renovate/all-dependencies
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
 
@@ -290,6 +290,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@renovate/all-dependencies
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
