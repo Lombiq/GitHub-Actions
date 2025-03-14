@@ -151,6 +151,7 @@ on:
           Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files,
           to be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
       ui-test-retry-interval-seconds:
+        type: string
         required: false
         default: '30'
         description: >
