@@ -58,6 +58,12 @@ inputs:
     description: >
       Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files, to
       be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
+  ui-test-retry-interval-seconds:
+    required: false
+    default: '30'
+    description: >
+      Interval in seconds to wait between retries of UI tests. Configuring a non-zero interval increases the chance that
+      retries will be successful, due to load on the runner changing.
 
 runs:
   using: composite
@@ -68,13 +74,14 @@ runs:
         '${{ github.action_path }}' >> $Env:GITHUB_PATH
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
-    - name: Setup & Set Test Parallelization
+    - name: Setup & Set Test Parameters
       id: setup
       shell: pwsh
       run: |
         Initialize-ArtifactNameSuffix '${{ inputs.build-directory }}'
 
         Set-XUnitMaxParallelThreads -MaxParallelThreads ${{ inputs.xunit-max-parallel-threads }}
+        Set-GitHubEnv 'Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__RetryIntervalSeconds' ${{ inputs.ui-test-retry-interval-seconds }}
 
     - name: Install dotnet-dump
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev

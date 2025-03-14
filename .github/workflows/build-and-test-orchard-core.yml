@@ -175,6 +175,12 @@ on:
         description: >
           Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files,
           to be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
+      ui-test-retry-interval-seconds:
+        required: false
+        default: '30'
+        description: >
+          Interval in seconds to wait between retries of UI tests. Configuring a non-zero interval increases the chance
+          that retries will be successful, due to load on the runner changing.
       timeout-minutes:
         type: number
         default: 360
@@ -324,6 +330,7 @@ jobs:
           artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
           enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
+          ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
