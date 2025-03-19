@@ -289,7 +289,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
           directory: ${{ inputs.build-directory }}
-          configuration: ${{ inputs.build-configuration}}
+          configuration: ${{ inputs.build-configuration }}
           verbosity: ${{ inputs.build-verbosity }}
           enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
           enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
