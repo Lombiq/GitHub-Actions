@@ -28,6 +28,14 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
+  dump-github-context:
+    runs-on: ubuntu-24.04
+    steps:
+    - env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      shell: pwsh
+      run: Write-Output $Env:GITHUB_CONTEXT
+
   validate-submodule-pull-request:
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
@@ -38,9 +46,6 @@ jobs:
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Debug - Print Head Ref
-        run: echo "Head ref is ${{ github.head_ref }}"
 
       - name: Ensure Parent PR Exists
         if: github.event.pull_request != '' && !startsWith(github.head_ref, 'refs/heads/renovate')
