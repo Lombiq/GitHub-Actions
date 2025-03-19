@@ -95,6 +95,10 @@ on:
         required: true
         type: string
         description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
+      build-configuration:
+        type: string
+        default: Release
+        description: The build configuration to use, e.g. Release (default) or Debug.
       slot-name:
         required: true
         type: string
@@ -207,7 +211,7 @@ jobs:
         run: |
           dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
             --no-build `
-            --configuration Release `
+            --configuration ${{ inputs.build-configuration }} `
             --output '${{ inputs.build-directory }}/Published' `
             --verbosity ${{ inputs.build-verbosity }} `
             --self-contained ${{ inputs.self-contained }} `
