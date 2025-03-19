@@ -58,6 +58,10 @@ on:
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
+      build-configuration:
+        type: string
+        default: Release
+        description: Configuration parameter for dotnet build, e.g. Release (default) or Debug.
       build-verbosity:
         type: string
         default: quiet
@@ -95,10 +99,6 @@ on:
         required: true
         type: string
         description: What you see at the top of the blade on the Azure Portal. Can contain uppercase letters too.
-      build-configuration:
-        type: string
-        default: Release
-        description: The build configuration to use, e.g. Release (default) or Debug.
       slot-name:
         required: true
         type: string
@@ -191,6 +191,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
           directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration }}
           verbosity: ${{ inputs.build-verbosity }}
           enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
           enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
