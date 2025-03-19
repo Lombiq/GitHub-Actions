@@ -9,7 +9,7 @@ inputs:
   configuration:
     required: false
     default: Release
-    description: Configuration parameter for dotnet build (e.g. Debug, Release).
+    description: Configuration parameter for dotnet build, e.g. Release (default) or Debug.
   verbosity:
     required: false
     default: quiet

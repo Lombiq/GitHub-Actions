@@ -31,6 +31,10 @@ on:
         type: string
         default: .
         description: Path to the directory where a solution file can be found.
+      build-configuration:
+        type: string
+        default: Release
+        description: Configuration parameter for dotnet build, e.g. Release (default) or Debug.
       build-verbosity:
         type: string
         default: quiet
@@ -106,9 +110,10 @@ jobs:
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
-          directory: ${{ inputs.build-directory}}
-          verbosity: ${{ inputs.build-verbosity}}
-          enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
+          directory: ${{ inputs.build-directory }}
+          configuration: ${{ inputs.build-configuration }}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
           enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
           enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
           cache-version: ${{ inputs.build-cache-version }}
