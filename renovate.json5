@@ -1,6 +1,6 @@
 {
     '$schema': 'https://docs.renovatebot.com/renovate-schema.json',
-    "extends": ["github>Lombiq/renovate-config:default.json5#issue/NEST-556"]
+    'extends': ['github>Lombiq/renovate-config:default.json5#issue/NEST-556']
     'packageRules': [
         {
             matchPackageNames: ['azure/webapps-deploy'],
