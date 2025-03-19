@@ -28,18 +28,15 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
-  dump-github-context:
-    runs-on: ubuntu-24.04
-    steps:
-    - env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      shell: pwsh
-      run: Write-Output $Env:GITHUB_CONTEXT
-
   validate-submodule-pull-request:
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Dump
+        env:
+         GITHUB_CONTEXT: ${{ toJSON(github) }}
+        shell: pwsh
+        run: Write-Output $Env:GITHUB_CONTEXT
       - name: Update GitHub issue and Pull Request
         if: (github.event_name == 'pull_request_target' || github.event_name == 'pull_request') && github.event.action == 'opened'
         uses: Lombiq/GitHub-Actions/.github/actions/update-github-issue-and-pull-request@dev
