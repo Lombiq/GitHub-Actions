@@ -40,7 +40,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Ensure Parent PR Exists
-        if: github.event.pull_request != ''
+        if: github.event.pull_request != '' && !startsWith(github.head_ref, 'renovate')
         uses: Lombiq/GitHub-Actions/.github/actions/verify-submodule-pull-request@dev
         env:
           GITHUB_TOKEN: ${{ secrets.PARENT_TOKEN != '' && secrets.PARENT_TOKEN || secrets.GITHUB_TOKEN }}
