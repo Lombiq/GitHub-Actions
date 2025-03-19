@@ -106,9 +106,9 @@ jobs:
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
-          directory: ${{ inputs.build-directory}}
-          verbosity: ${{ inputs.build-verbosity}}
-          enable-code-analysis: ${{ inputs.build-enable-code-analysis}}
+          directory: ${{ inputs.build-directory }}
+          verbosity: ${{ inputs.build-verbosity }}
+          enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
           enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
           enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
           cache-version: ${{ inputs.build-cache-version }}
