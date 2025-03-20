@@ -1,7 +1,11 @@
 {
     '$schema': 'https://docs.renovatebot.com/renovate-schema.json',
     'extends': ['github>Lombiq/renovate-config:default.json5'],
-    'packageRules': [
+    extends: [
+        'github>Lombiq/renovate-config:default.json5',
+        'github>Lombiq/Open-Source-Orchard-Core-Extensions:renovate-osoce-submodule.json5',
+    ],
+    packageRules: [
         {
             matchPackageNames: ['azure/webapps-deploy'],
             matchFileNames: ['.github/workflows/deploy-orchard1-to-azure-app-service.yml'], 
