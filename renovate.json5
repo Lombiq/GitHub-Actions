@@ -12,7 +12,7 @@
         },
         {
             // Due to having to update branch references, it's easier to test all dependencies at once.
-            groupName: 'All dependencies',
+            groupName: 'All Dependencies',
             matchUpdateTypes: ['*'],
         },
     ]
