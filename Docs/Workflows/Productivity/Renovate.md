@@ -2,7 +2,7 @@
 
 [Renovate](https://www.mend.io/renovate/) is a tool that updates dependencies automatically. It can update NuGet and NPM packages, GitHub Actions references, Python dependencies, and more.
 
-This workflow wraps the [Renovate GitHub Action](https://github.com/renovatebot/github-action) to make it easier to use, especially in Lombiq projects, like below.
+This workflow wraps the [Renovate GitHub Action](https://github.com/renovatebot/github-action) to make it easier to use, especially in Lombiq projects, like below. During setup, be sure to configure it with a _renovate.json5_ configuration file ([see docs](https://docs.renovatebot.com/configuration-options/)); you can take inspiration from the [shared configuration we use at Lombiq](https://github.com/Lombiq/renovate-config).
 
 > [!IMPORTANT]  
 > Adjust `branches` to refer to the repo's default branch. The `CHECKOUT_TOKEN` should be set up to also enable Renovate to work, see [the docs](https://github.com/renovatebot/github-action?tab=readme-ov-file#token).
