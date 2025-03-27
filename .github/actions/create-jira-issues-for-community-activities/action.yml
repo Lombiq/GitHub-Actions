@@ -102,7 +102,7 @@ runs:
         New-JiraIssue @params
 
     - name: Update GitHub Issue
-      if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && 
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False' &&
           github.event.issue &&
           steps.no-jira-label.outputs.no-jira-community-activity-issue == 'False'
       uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3.6.0
