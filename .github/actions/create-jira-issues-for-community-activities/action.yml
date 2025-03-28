@@ -34,17 +34,38 @@ runs:
         PR_TITLE: ${{ github.event.pull_request.title }}
       shell: pwsh
       run: |
-        $output = "False"
+        $output = 'False'
 
-        if ("${{ github.event.pull_request }}" -ne "")
+        if ('${{ github.event.pull_request }}' -ne '')
         {
-            $output = (Confirm-PullRequestTitle "$Env:PR_TITLE") -or $Env:GITHUB_HEAD_REF -Like "*issue*"
+            $output = (Confirm-PullRequestTitle "$Env:PR_TITLE") -or $Env:GITHUB_HEAD_REF -Like 'issue/*'
         }
 
-        Set-GitHubOutput "is-issue-pr" $output
+        Set-GitHubOutput 'is-issue-pr' $output
+
+    - name: Check for "no-jira-community-activity-issue" Label
+      id: no-jira-label
+      env:
+        PR_LABELS: ${{ toJSON(github.event.pull_request.labels) }}
+      shell: pwsh
+      run: |
+        $output = 'False'
+
+        $labels = $Env:PR_LABELS | ConvertFrom-Json
+
+        foreach ($label in $labels)
+        {
+            if ($label.name -eq 'no-jira-community-activity-issue')
+            {
+                $output = 'True'
+                break
+            }
+        }
+
+        Set-GitHubOutput 'no-jira-community-activity-issue' $output
 
     - name: Create Jira Issue
-      if: steps.issue-related-pr.outputs.is-issue-pr == 'False'
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && steps.no-jira-label.outputs.no-jira-community-activity-issue == 'False'
       id: create-issue
       env:
         # Necessary to pass this via an environment variable, because when assigned directly to a variable in the
@@ -81,7 +102,9 @@ runs:
         New-JiraIssue @params
 
     - name: Update GitHub Issue
-      if: steps.issue-related-pr.outputs.is-issue-pr == 'False' && github.event.issue
+      if: steps.issue-related-pr.outputs.is-issue-pr == 'False' &&
+          github.event.issue &&
+          steps.no-jira-label.outputs.no-jira-community-activity-issue == 'False'
       uses: actions-cool/issues-helper@a610082f8ac0cf03e357eb8dd0d5e2ba075e017e # v3.6.0
       with:
         actions: update-issue
