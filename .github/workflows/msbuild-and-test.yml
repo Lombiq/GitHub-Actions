@@ -94,6 +94,18 @@ on:
         type: string
         default: 'true'
         description: Indicates whether to enable static code analysis during msbuild.
+      build-create-binary-log:
+        type: string
+        default: 'false'
+        description: >
+          Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
+          https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
+      build-binary-log-artifact-retention-days:
+        type: string
+        default: '14'
+        description: >
+          Duration in days after which the artifact of the build's binary log (if any) will expire. See
+          https://github.com/actions/upload-artifact#retention-period for more details.
       dotnet-test-process-timeout:
         required: false
         type: number
@@ -159,6 +171,8 @@ jobs:
           verbosity: ${{ inputs.build-verbosity }}
           treat-warnings-as-errors: ${{ inputs.build-treat-warnings-as-errors }}
           enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
+          binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
 
       - name: Tests
         if: inputs.test-disable == 'false'
