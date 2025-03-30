@@ -99,7 +99,7 @@ runs:
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       if: (success() || failure()) && inputs.create-binary-log == 'true'
       with:
-        name: build-binary-log-${{ steps.build.outputs.artifact-name-suffix }}.binlog
+        name: build-binary-log.binlog
         path: ${{ inputs.directory }}/build.binlog
         if-no-files-found: ignore
         retention-days: ${{ inputs.binary-log-artifact-retention-days }}
