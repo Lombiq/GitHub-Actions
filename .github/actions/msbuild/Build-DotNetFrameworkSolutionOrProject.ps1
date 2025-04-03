@@ -4,7 +4,8 @@
     [string] $TreatWarningsAsErrors,
     [string] $EnableCodeAnalysis,
     [string] $Version,
-    [string] $Switches)
+    [string] $Switches,
+    [boolean] $CreateBinaryLog)
 
 function ConvertTo-Array([string] $RawInput)
 {
@@ -63,6 +64,7 @@ $buildSwitches = $commonSwitches + (ConvertTo-Array @"
     -p:Configuration=Release
     -restore
     -maxCpuCount
+    $($CreateBinaryLog ? '-binaryLogger:build.binlog' : '')
     $Switches
 "@)
 
