@@ -1,0 +1,20 @@
+name: Mirror branch
+description: >
+  Checks out and mirror-pushes a branch to another repository.
+
+inputs:
+  source_branch:
+    description: 'The branch to mirror from the source repository.'
+    required: true
+  target_branch:
+    description: 'The branch to mirror to the target repository.'
+    required: true
+  source_repo:
+    description: 'The source repository to mirror from.'
+    required: true
+  target_repo:
+    description: 'The target repository to mirror to.'
+    required: true
+  github_token:
+    description: 'GitHub token for authentication.'
+    required: true
