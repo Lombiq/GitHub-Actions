@@ -55,7 +55,7 @@ on:
         default: ''
       dotnet-version:
         type: string
-        default: 8.0.301
+        default: 9.0.203
         description: Version of the .NET SDK to set up.
       # This is really only necessary to work around the https://github.com/nodejs/corepack/issues/612 corepack issue.
       # Also see https://github.com/Lombiq/NodeJs-Extensions/issues/120.

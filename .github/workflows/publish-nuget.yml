@@ -33,7 +33,7 @@ on:
         description: The logging verbosity type used by the `dotnet` command.
       dotnet-version:
         type: string
-        default: 8.0.301
+        default: 9.0.203
         description: Version of the .NET SDK to set up.
       timeout-minutes:
         type: number
