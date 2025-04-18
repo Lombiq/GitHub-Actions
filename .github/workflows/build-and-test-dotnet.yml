@@ -55,7 +55,7 @@ on:
         default: ''
       dotnet-version:
         type: string
-        default: 9.0.203
+        default: 8.0.301
         description: Version of the .NET SDK to set up.
       blame-hang-timeout:
         type: string
@@ -248,7 +248,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1098
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 

@@ -46,7 +46,7 @@ on:
         description: The name of the type of machine to run the workflow under.
       dotnet-version:
         type: string
-        default: 9.0.203
+        default: 8.0.301
         description: Version of the .NET SDK to set up.
       # This is really only necessary to work around the https://github.com/nodejs/corepack/issues/612 corepack issue.
       # Also see https://github.com/Lombiq/NodeJs-Extensions/issues/120.
@@ -170,7 +170,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1098
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
