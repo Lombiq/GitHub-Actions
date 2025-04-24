@@ -99,7 +99,7 @@ jobs:
           expected-ref: ${{ steps.determine-tag.outputs.tagname }}
 
       - name: Commit and Push Release Branch Changes
-        uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5.1.0
+        uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5.2.0
         with:
           commit_message: Set GitHub Actions/Workflows to tag ${{ steps.determine-tag.outputs.tagname }}
           tagging_message: ${{ steps.determine-tag.outputs.tagname }}
@@ -133,7 +133,7 @@ jobs:
       - name: Commit and Push Merge Target Changes
         # Same as Create Release above.
         if: "!contains(steps.determine-tag.outputs.tagname, '-')"
-        uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5.1.0
+        uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5.2.0
         with:
           commit_message: Merge remote-tracking branch '${{ inputs.expected-ref }}' into ${{ inputs.merge-target }}
           skip_dirty_check: true
