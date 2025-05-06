@@ -56,8 +56,8 @@ if ($SolutionOrProject -like '*.sln')
     $tests = dotnet sln $SolutionOrProject list |
         Select-Object -Skip 2 |
         Select-String '\.Tests\.' |
-        Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
-        Select-String -NotMatch 'Lombiq.Tests.csproj' |
+        Select-String -notMatch 'Lombiq.Tests.UI.csproj' |
+        Select-String -notMatch 'Lombiq.Tests.csproj' |
         ForEach-Object {
             $absolutePath = Resolve-Path -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem)
 
@@ -158,7 +158,7 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
 
     $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
         $Event.SourceEventArgs.Data | Out-Host
-        $Event.MessageData.HasTestRunSuccessfully = $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -Like '*Test Run Successful.*')
+        $Event.MessageData.HasTestRunSuccessfully = $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -like '*Test Run Successful.*')
     }
 
     $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {

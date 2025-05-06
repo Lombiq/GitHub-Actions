@@ -2,13 +2,13 @@
 $setupCfgPath = 'setup.cfg'
 $codespellRcPath = '.codespellrc'
 
-if (-Not (Test-Path $setupCfgPath))
+if (-not (Test-Path $setupCfgPath))
 {
     Write-Error "The $setupCfgPath file was not found in the current directory."
     exit 1
 }
 
-if (-Not (Test-Path $codespellRcPath))
+if (-not (Test-Path $codespellRcPath))
 {
     Write-Output "A $codespellRcPath file was not found in the current directory. No configuration values will be merged."
     exit

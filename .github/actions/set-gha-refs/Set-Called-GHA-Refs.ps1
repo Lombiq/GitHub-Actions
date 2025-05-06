@@ -27,7 +27,7 @@ else
         foreach ($matched in $matchedRefs)
         {
             $oldline = $matched.Line
-            $newline = $matched.Line -Replace $matched.Matches[0].Groups['ref'].Value, "$ExpectedRef"
+            $newline = $matched.Line -replace $matched.Matches[0].Groups['ref'].Value, "$ExpectedRef"
 
             if ($oldine -ne $newline)
             {
