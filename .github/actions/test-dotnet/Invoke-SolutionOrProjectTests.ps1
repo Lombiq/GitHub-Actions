@@ -56,8 +56,8 @@ if ($SolutionOrProject -like '*.sln')
     $tests = dotnet sln $SolutionOrProject list |
         Select-Object -Skip 2 |
         Select-String '\.Tests\.' |
-        Select-String -notMatch 'Lombiq.Tests.UI.csproj' |
-        Select-String -notMatch 'Lombiq.Tests.csproj' |
+        Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
+        Select-String -NotMatch 'Lombiq.Tests.csproj' |
         ForEach-Object {
             $absolutePath = Resolve-Path -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem)
 

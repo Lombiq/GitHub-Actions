@@ -15,7 +15,7 @@ $originalBody = $Body
 
 if ($Branch -notlike '*issue*')
 {
-    Exit
+    exit
 }
 
 $Branch -match '(\w+-\d+)' | Out-Null
