@@ -12,7 +12,7 @@ Set-GitHubOutput 'dump-count' $dumpCount
 if ($dumpCount -eq 0)
 {
     # No dump files were found. Nothing to do.
-    Exit
+    exit
 }
 
 $dumpDirectory = New-Item -Type Directory -Path $rootDirectory -Name $blameHangDumpsName
