@@ -20,6 +20,13 @@ runs:
     - name: Push current branch to remote
       shell: pwsh
       run: |
+        if ('${{ inputs.remote-repository }}'.ToLower() -eq '${{ github.repository }}'.ToLower())
+        {
+          Write-Output 'Target repository is the current repository, nothing to do.'
+
+          exit
+        }
+
         git remote add target 'https://${{ inputs.push-user-name }}:${{ env.PUSH_PASSWORD }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
         Write-Output 'Target remote added.'
 
@@ -51,6 +58,11 @@ runs:
           git push target
 
           Write-Output "Pushed '$branchName' to target."
+        }
+
+        if ($LASTEXITCODE -ne 0)
+        {
+          exit $LASTEXITCODE
         }
 
         git remote rm target
