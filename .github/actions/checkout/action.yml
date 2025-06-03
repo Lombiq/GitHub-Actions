@@ -26,6 +26,9 @@ inputs:
     description: >
       Whether to checkout submodules - `true` to checkout submodules or `recursive` to recursively checkout submodules.
     default: recursive
+  persist-credentials:
+    description: Whether to configure the token or SSH key with the local git config.
+    default: 'true'
 
 runs:
   using: composite
@@ -48,3 +51,4 @@ runs:
         token: ${{ env.CHECKOUT_TOKEN }}
         path: ${{ inputs.path }}
         fetch-depth: ${{ inputs.fetch-depth }}
+        persist-credentials: ${{ inputs.persist-credentials }}
