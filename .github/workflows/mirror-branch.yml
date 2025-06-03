@@ -4,9 +4,6 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-
 on:
   workflow_call:
     secrets:
@@ -29,7 +26,7 @@ on:
         type: number
         default: 5
         description: Configuration for the timeout-minutes parameter of the workflow.
-      push-user-name:
+      push-username:
         description: >
           The name of the user whose credentials are used to push to the repository. Leave as default when using a PAT.
         type: string
@@ -65,6 +62,6 @@ jobs:
         env:
           PUSH_PASSWORD: ${{ secrets.PUSH_PASSWORD }}
         with:
-          push-user-name: ${{ inputs.push-user-name }}
+          push-username: ${{ inputs.push-username }}
           remote-host: ${{ inputs.remote-host }}
           remote-repository: ${{ inputs.remote-repository }}
