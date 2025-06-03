@@ -1,0 +1,65 @@
+name: Mirror branch to another repository
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout with. Pass in a GitHub personal access token if authenticated
+          submodules are used.
+
+      MIRROR_PUSH_PASSWORD:
+        required: true
+        description: The password or PAT to authenticate with on the target repository.
+
+    inputs:
+      machine-type:
+        type: string
+        default: ubuntu-24.04
+        description: The type of machine to run the workflow on.
+      timeout-minutes:
+        type: number
+        default: 5
+        description: Configuration for the timeout-minutes parameter of the workflow.
+      push-user-name:
+        description: >
+          The name of the user whose credentials are used to push to the repository. Leave as default when using a PAT.
+        type: string
+        default: PersonalAccessToken
+      remote-host:
+        description: The URL host of the target repository. Default is github.com.
+        type: string
+        default: github.com
+      remote-repository:
+        description: The target repository path, e.g. 'Lombiq/Open-Source-Orchard-Core-Extensions'.
+        type: string
+        required: true
+
+jobs:
+  mirror:
+    runs-on: ${{ inputs.machine-type }}
+    name: Checkout and push to target
+    defaults:
+      run:
+        shell: pwsh
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Push to target
+        uses: Lombiq/GitHub-Actions/.github/actions/mirror-branch@issue/OSOE-737
+        env:
+          PUSH_PASSWORD: ${{ secrets.MIRROR_PUSH_PASSWORD }}
+        with:
+          push-user-name: ${{ inputs.push-user-name }}
+          remote-host: ${{ inputs.remote-host }}
+          remote-repository: ${{ inputs.remote-repository }}

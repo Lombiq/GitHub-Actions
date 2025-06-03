@@ -1,20 +1,32 @@
 name: Mirror branch
 description: >
-  Checks out and mirror-pushes a branch to another repository.
+  Pushes the currently checked out branch to another repository.
 
 inputs:
-  source_branch:
-    description: 'The branch to mirror from the source repository.'
+  push-user-name:
+    description: >
+      The name of the user whose credentials are used to push to the repository. Leave as default to use a PAT.
+    default: PersonalAccessToken
+  remote-host:
+    description: The URL host of the target repository. Default is github.com.
+    default: github.com
+  remote-repository:
+    description: The target repository path, e.g. 'Lombiq/Open-Source-Orchard-Core-Extensions'.
     required: true
-  target_branch:
-    description: 'The branch to mirror to the target repository.'
-    required: true
-  source_repo:
-    description: 'The source repository to mirror from.'
-    required: true
-  target_repo:
-    description: 'The target repository to mirror to.'
-    required: true
-  github_token:
-    description: 'GitHub token for authentication.'
-    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Push current branch to remote
+      shell: pwsh
+      run: |
+        git remote add target 'https://${{ inputs.push-user-name }}:${{ env.PUSH_PASSWORD }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
+        get fetch target
+
+        $branchName = git rev-parse --abbrev-ref HEAD
+        if ((git ls-remote --heads target $branchName) -eq $null -or (git log target/$branchName..$branchName) -ne $null)
+        {
+          git push target
+        }
+
+        git remote rm target
