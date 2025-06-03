@@ -13,7 +13,7 @@ on:
           The GitHub token to authenticate checkout with. Pass in a GitHub personal access token if authenticated
           submodules are used.
 
-      MIRROR_PUSH_PASSWORD:
+      PUSH_PASSWORD:
         required: true
         description: The password or PAT to authenticate with on the target repository.
 
@@ -58,7 +58,7 @@ jobs:
       - name: Push to target
         uses: Lombiq/GitHub-Actions/.github/actions/mirror-branch@issue/OSOE-737
         env:
-          PUSH_PASSWORD: ${{ secrets.MIRROR_PUSH_PASSWORD }}
+          PUSH_PASSWORD: ${{ secrets.PUSH_PASSWORD }}
         with:
           push-user-name: ${{ inputs.push-user-name }}
           remote-host: ${{ inputs.remote-host }}

@@ -21,12 +21,37 @@ runs:
       shell: pwsh
       run: |
         git remote add target 'https://${{ inputs.push-user-name }}:${{ env.PUSH_PASSWORD }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
-        get fetch target
+        Write-Output 'Target remote added.'
 
         $branchName = git rev-parse --abbrev-ref HEAD
-        if ((git ls-remote --heads target $branchName) -eq $null -or (git log target/$branchName..$branchName) -ne $null)
+
+        Write-Output "Fetching '$branchName' from target."
+        git fetch target $branchName
+
+        $push = $false
+        if ($LASTEXITCODE -ne 0)
+        {
+          Write-Output "'$branchName' doesn't exist on target."
+
+          $push = $true
+        }
+        elseif ($null -ne (git log target/$branchName..$branchName))
+        {
+          Write-Output "'$branchName' exists on target, but isn't up-to-date."
+
+          $push = $true
+        }
+        else
+        {
+          Write-Output "'$branchName' is up-to-date on target."
+        }
+
+        if ($push)
         {
           git push target
+
+          Write-Output "Pushed '$branchName' to target."
         }
 
         git remote rm target
+        Write-Output 'Target remote removed.'
