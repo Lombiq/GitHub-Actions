@@ -18,13 +18,13 @@ for ($i = 1; $i -le $maxTryCount; $i++)
     if ($?)
     {
         Write-Output 'SQL Server is successfully started.'
-        Exit 0
+        exit 0
     }
 
     if ($i -eq $maxTryCount)
     {
         Write-Error "SQL Server couldn't be started."
-        Exit 1
+        exit 1
     }
 
     Write-Output 'SQL Server is not ready. Waiting 1 second.'

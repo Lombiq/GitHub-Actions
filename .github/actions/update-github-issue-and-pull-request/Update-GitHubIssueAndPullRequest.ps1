@@ -13,9 +13,9 @@ $jiraBrowseUrl = $JiraBaseUrl.TrimEnd('/') + '/browse/'
 $originalTitle = $Title
 $originalBody = $Body
 
-if ($Branch -NotLike '*issue*')
+if ($Branch -notlike '*issue*')
 {
-    Exit
+    exit
 }
 
 $Branch -match '(\w+-\d+)' | Out-Null
@@ -28,20 +28,20 @@ if ($null -eq $Matches)
 $issueKey = $Matches[0]
 $issueLink = "[$issueKey]($jiraBrowseUrl$issuekey)"
 
-if ($Title -NotLike "*$issueKey*")
+if ($Title -notlike "*$issueKey*")
 {
     $Title = $issueKey + ': ' + $Title
 }
 
-if (-Not $Body)
+if (-not $Body)
 {
     $Body = $issueLink
 }
-elseif ($Body -NotLike "*$issueKey*")
+elseif ($Body -notlike "*$issueKey*")
 {
     $Body = $issueLink + "`n" + $Body
 }
-elseif ($Body -NotLike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*")
+elseif ($Body -notlike "*``[$issueKey``]``($jiraBrowseUrl$issuekey``)*")
 {
     $Body = $Body.replace($issueKey, $issueLink)
 }
@@ -57,7 +57,7 @@ if ((gh repo view $GitHubRepository --json hasIssuesEnabled | ConvertFrom-Json).
         $issueNumber = $issueItem -split '\t' | Select-Object -First 1
         $fixesIssue = "Fixes #$issueNumber"
 
-        if ($Body -NotLike "*$fixesIssue*")
+        if ($Body -notlike "*$fixesIssue*")
         {
             $Body = "$Body`n$fixesIssue"
         }

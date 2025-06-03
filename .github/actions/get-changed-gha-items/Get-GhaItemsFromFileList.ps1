@@ -34,8 +34,8 @@
     try
     {
         (Get-Item $PSItem).BaseName -ne 'action' -and
-            ((Get-Item $PSItem).Extension -eq '.yml' -or
-             (Get-Item $PSItem).Extension -eq '.yaml')
+        ((Get-Item $PSItem).Extension -eq '.yml' -or
+        (Get-Item $PSItem).Extension -eq '.yaml')
     }
     catch
     {

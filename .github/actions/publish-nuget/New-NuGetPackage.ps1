@@ -64,9 +64,9 @@ function Get-ProjectProperty
 
 # The last condition wouldn't be necessary if baseline package validation would skip major releases by default, see:
 # https://github.com/dotnet/sdk/issues/40907.
-$shouldDownloadBaseLinePackages = ($EnablePackageValidation -And
-    $PackageValidationBaselineVersion -And
-    -not ($Version -match '-(alpha|beta|preview|rc)[.-]') -And
+$shouldDownloadBaseLinePackages = ($EnablePackageValidation -and
+    $PackageValidationBaselineVersion -and
+    -not ($Version -match '-(alpha|beta|preview|rc)[.-]') -and
     [int]$Version.Split('.')[0] -le [int]$PackageValidationBaselineVersion.Split('.')[0])
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
@@ -76,7 +76,7 @@ foreach ($project in $projects)
     Write-Output "Packing $($project.Name)..."
 
     $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
-    $isPackable = $isPackableProperty -NotLike '*false*'
+    $isPackable = $isPackableProperty -notlike '*false*'
     $isRequired = "$isPackableProperty".Trim() -like 'true'
 
     # Silently skip project if the project file has <IsPackable>false</IsPackable>.
