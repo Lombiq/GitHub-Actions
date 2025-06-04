@@ -55,7 +55,7 @@ runs:
 
         if ($push)
         {
-          git push target
+          git push --mirror target $branchName
 
           Write-Output "Pushed '$branchName' to target."
         }
