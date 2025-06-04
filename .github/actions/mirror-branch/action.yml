@@ -30,8 +30,6 @@ runs:
         git remote add target 'https://${{ env.PUSH_PASSWORD }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
         Write-Output 'Target remote added.'
 
-        git remote -v
-
         $branchName = git rev-parse --abbrev-ref HEAD
 
         Write-Output "Fetching '$branchName' from target."
