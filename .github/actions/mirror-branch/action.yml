@@ -3,10 +3,6 @@ description: >
   Pushes the currently checked out branch to another repository.
 
 inputs:
-  push-username:
-    description: >
-      The name of the user whose credentials are used to push to the repository. Leave as default to use a PAT.
-    default: PersonalAccessToken
   remote-host:
     description: The URL host of the target repository. Default is github.com.
     default: github.com
@@ -27,45 +23,32 @@ runs:
           exit
         }
 
+        # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
 
-        git remote add target 'https://${{ env.PUSH_PASSWORD }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
+        git remote add target 'https://${{ env.MIRROR_TOKEN }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
         Write-Output 'Target remote added.'
 
         $branchName = git rev-parse --abbrev-ref HEAD
 
-        Write-Output "Fetching '$branchName' from target."
         git fetch target $branchName
 
-        $push = $false
-        if ($LASTEXITCODE -ne 0)
-        {
-          Write-Output "'$branchName' doesn't exist on target."
-
-          $push = $true
-        }
-        elseif ($null -ne (git log target/$branchName..$branchName))
-        {
-          Write-Output "'$branchName' exists on target, but isn't up-to-date."
-
-          $push = $true
-        }
-        else
+        $pushLastExitCode = 0
+        if ($LASTEXITCODE -eq 0 -and $null -eq (git log target/$branchName..$branchName))
         {
           Write-Output "'$branchName' is up-to-date on target."
         }
-
-        if ($push)
+        else
         {
           git push target $branchName
-
-          Write-Output "Pushed '$branchName' to target."
-        }
-
-        if ($LASTEXITCODE -ne 0)
-        {
-          exit $LASTEXITCODE
+          
+          $pushLastExitCode = $LASTEXITCODE
         }
 
         git remote rm target
         Write-Output 'Target remote removed.'
+
+        if ($pushLastExitCode -ne 0)
+        {
+          exit $pushLastExitCode
+        }
