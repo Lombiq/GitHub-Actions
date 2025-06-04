@@ -27,6 +27,8 @@ runs:
           exit
         }
 
+        git config --unset-all http.https://github.com/.extraheader
+
         git remote add target 'https://${{ env.PUSH_PASSWORD }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
         Write-Output 'Target remote added.'
 
