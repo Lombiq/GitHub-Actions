@@ -17,10 +17,53 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Mirror current branch to remote
-      uses: yesolutions/mirror-action@1708f16cdb28634fd3ba10c5c79abc91f5578a14 # v0.7.0
-      with:
-        REMOTE: 'https://${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
-        GIT_USERNAME: ${{ inputs.push-username }}
-        GIT_PASSWORD: ${{ env.PUSH_PASSWORD }}
-        PUSH_ALL_REFS: 'false'
+    - name: Push current branch to remote
+      shell: pwsh
+      run: |
+        if ('${{ inputs.remote-repository }}'.ToLower() -eq '${{ github.repository }}'.ToLower())
+        {
+          Write-Output 'Target repository is the current repository, nothing to do.'
+
+          exit
+        }
+
+        git remote add target 'https://${{ inputs.push-username }}:${{ env.PUSH_PASSWORD }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}.git'
+        Write-Output 'Target remote added.'
+
+        $branchName = git rev-parse --abbrev-ref HEAD
+
+        Write-Output "Fetching '$branchName' from target."
+        git fetch target $branchName
+
+        $push = $false
+        if ($LASTEXITCODE -ne 0)
+        {
+          Write-Output "'$branchName' doesn't exist on target."
+
+          $push = $true
+        }
+        elseif ($null -ne (git log target/$branchName..$branchName))
+        {
+          Write-Output "'$branchName' exists on target, but isn't up-to-date."
+
+          $push = $true
+        }
+        else
+        {
+          Write-Output "'$branchName' is up-to-date on target."
+        }
+
+        if ($push)
+        {
+          git push target
+
+          Write-Output "Pushed '$branchName' to target."
+        }
+
+        if ($LASTEXITCODE -ne 0)
+        {
+          exit $LASTEXITCODE
+        }
+
+        git remote rm target
+        Write-Output 'Target remote removed.'
