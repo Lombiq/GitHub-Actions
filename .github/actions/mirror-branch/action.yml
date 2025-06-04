@@ -27,7 +27,7 @@ runs:
           exit
         }
 
-        git remote add target 'https://${{ inputs.push-username }}:${{ env.PUSH_PASSWORD }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}.git'
+        git remote add target 'https://${{ env.PUSH_PASSWORD }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
         Write-Output 'Target remote added.'
 
         $branchName = git rev-parse --abbrev-ref HEAD
