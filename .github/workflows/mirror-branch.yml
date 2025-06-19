@@ -37,6 +37,7 @@ on:
 
 jobs:
   mirror:
+    if: github.event.pusher.name != 'github-actions[bot]'
     runs-on: ${{ inputs.machine-type }}
     name: Checkout and push to target
     defaults:

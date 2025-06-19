@@ -14,6 +14,7 @@ runs:
   using: composite
   steps:
     - name: Push current branch to remote
+      if: github.event.pusher.name != 'github-actions[bot]'
       shell: pwsh
       run: |
         if ('${{ inputs.remote-repository }}'.ToLower() -eq '${{ github.repository }}'.ToLower())
@@ -25,6 +26,10 @@ runs:
 
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
+
+        # Setting credentials to be able to skip push events triggered by mirroring.
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git config user.name 'github-actions[bot]'
 
         git remote add target 'https://${{ env.MIRROR_TOKEN }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
         Write-Output 'Target remote added.'
