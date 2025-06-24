@@ -1,0 +1,29 @@
+name: Set up Node.js
+description: Sets up Node.js with a specific version.
+
+inputs:
+  node-version:
+    required: false
+    default: 20.19.2
+    description: >
+      The Node.js version. Can be a specific version number or other notations, see the documentation of
+      https://github.com/actions/setup-node.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Set up Node.js
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Save Node.js Version Into Environment Variable
+      shell: pwsh
+      run: |
+        $nodeVersion = node --version
+        Set-GitHubEnv 'NODE_VERSION_TO_USE' $nodeVersion
