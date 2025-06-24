@@ -311,41 +311,41 @@ jobs:
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
 
-      # - name: Print configuration summary
-      #   if: inputs.print-config-summary == 'true' && (success() || failure())
-      #   uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
+      - name: Print configuration summary
+        if: inputs.print-config-summary == 'true' && (success() || failure())
+        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
 
-      # - name: Set up SQL Server
-      #   if: inputs.set-up-sql-server == 'true'
-      #   uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+      - name: Set up SQL Server
+        if: inputs.set-up-sql-server == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
 
-      # - name: Set up Elasticsearch
-      #   if: inputs.set-up-elasticsearch == 'true'
-      #   uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@dev
+      - name: Set up Elasticsearch
+        if: inputs.set-up-elasticsearch == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@dev
 
-      # - name: Set up Azurite
-      #   if: inputs.set-up-azurite == 'true'
-      #   uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
-      #   with:
-      #     location: ${{ inputs.build-directory}}
+      - name: Set up Azurite
+        if: inputs.set-up-azurite == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
+        with:
+          location: ${{ inputs.build-directory}}
 
-      # - name: Tests
-      #   if: inputs.test-disable == 'false'
-      #   uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
-      #   with:
-      #     blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
-      #     build-directory: ${{ inputs.build-directory }}
-      #     dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
-      #     solution-path: ${{ inputs.build-solution-path }}
-      #     test-verbosity: ${{ inputs.build-verbosity }}
-      #     test-filter: ${{ inputs.test-filter }}
-      #     artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
-      #     xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
-      #     enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
-      #     ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
+      - name: Tests
+        if: inputs.test-disable == 'false'
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        with:
+          blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
+          build-directory: ${{ inputs.build-directory }}
+          dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
+          solution-path: ${{ inputs.build-solution-path }}
+          test-verbosity: ${{ inputs.build-verbosity }}
+          test-filter: ${{ inputs.test-filter }}
+          artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
+          xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
+          enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
+          ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
 
-      # - name: Cancel Workflow on Failure
-      #   if: failure() && inputs.cancel-workflow-on-failure == 'true'
-      #   uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
