@@ -1,13 +1,70 @@
 name: Set up Node.js
-description: Sets up Node.js with a specific version.
+description: >
+  Sets up Node.js with a specific version exposes the `NODE_VERSION_TO_USE` environment variable with the specific
+  Node.js version that was set up. Intentionally not documented in Actions.md since it's only meant for internal use.
 
 inputs:
   node-version:
     required: false
     default: 20.19.2
     description: >
-      The Node.js version. Can be a specific version number or other notations, see the documentation of
-      https://github.com/actions/setup-node.
+      Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.
+      See the documentation of https://github.com/actions/setup-node.
+  node-version-file:
+    required: false
+    description: >
+      File containing the version Spec of the version to use. Examples: package.json, .nvmrc, .node-version,
+      .tool-versions.
+  architecture:
+    required: false
+    description: >
+      Target architecture for Node to use. Examples: x86, x64. Will use system architecture by default.
+  check-latest:
+    required: false
+    default: false
+    description: >
+      Set this option if you want the action to check for the latest available version that satisfies the
+      version spec.
+  registry-url:
+    required: false
+    description: >
+      Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file,
+      and set up auth to read in from env.NODE_AUTH_TOKEN.
+  scope:
+    required: false
+    description: >
+      Optional scope for authenticating against scoped registries. Will fall back to the repository owner
+      when using the GitHub Packages registry (https://npm.pkg.github.com/).
+  token:
+    required: false
+    description: >
+      Used to pull node distributions from node-versions. Since there's a default, this is typically not
+      supplied by the user. When running this action on github.com, the default value is sufficient.
+      When running on GHES, you can pass a personal access token for github.com if you are experiencing
+      rate limiting.
+    default: ${{ github.server_url == 'https://github.com' && github.token || '' }}
+  cache:
+    required: false
+    description: >
+      Used to specify a package manager for caching in the default directory. Supported values: npm, yarn, pnpm.
+  cache-dependency-path:
+    required: false
+    description: >
+      Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc.
+      Supports wildcards or a list of file names for caching multiple dependencies.
+  always-auth:
+    required: false
+    default: false
+    description: >
+      Set always-auth in npmrc.
+  mirror:
+    required: false
+    description: >
+      Used to specify an alternative mirror to download Node.js binaries from.
+  mirror-token:
+    required: false
+    description: >
+      The token used as Authorization header when fetching from the mirror.
 
 runs:
   using: composite
@@ -21,6 +78,17 @@ runs:
       uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       with:
         node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version-file }}
+        architecture: ${{ inputs.architecture }}
+        check-latest: ${{ inputs.check-latest }}
+        registry-url: ${{ inputs.registry-url }}
+        scope: ${{ inputs.scope }}
+        token: ${{ inputs.token }}
+        cache: ${{ inputs.cache }}
+        cache-dependency-path: ${{ inputs.cache-dependency-path }}
+        always-auth: ${{ inputs.always-auth }}
+        mirror: ${{ inputs.mirror }}
+        mirror-token: ${{ inputs.mirror-token }}
 
     - name: Save Node.js Version Into Environment Variable
       shell: pwsh
