@@ -6,7 +6,7 @@ description: >
 inputs:
   node-version:
     required: false
-    default: 20.19.2
+    default: 22.16.0
     description: >
       Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.
       See the documentation of https://github.com/actions/setup-node.
