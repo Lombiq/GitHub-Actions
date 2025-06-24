@@ -27,6 +27,12 @@ on:
         type: string
         default: 8.0.301
         description: Version of the .NET SDK to set up.
+      node-version:
+        type: string
+        default: 20.19.2
+        description: >
+          The Node.js version. Can be a specific version number or other notations, see the documentation of
+          https://github.com/actions/setup-node.
       timeout-minutes:
         type: number
         default: 15
@@ -66,6 +72,7 @@ jobs:
       cancel-workflow-on-failure: ${{ inputs.cancel-workflow-on-failure }}
       verbosity: ${{ inputs.verbosity }}
       dotnet-version: ${{ inputs.dotnet-version }}
+      node-version: ${{ inputs.node-version }}
       timeout-minutes: ${{ inputs.timeout-minutes }}
       enable-corepack: ${{ inputs.enable-corepack }}
       # NoWarn on NU5104 to not have warnings for prerelease dependencies for non-prerelease versions (see
