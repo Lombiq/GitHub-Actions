@@ -166,6 +166,11 @@ jobs:
           ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
+      - name: Set up Node.js
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1124
+        with:
+          node-version: ${{ inputs.node-version }}
+
       - name: Enable Node corepack
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
@@ -174,11 +179,6 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
-
-      - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1124
-        with:
-          node-version: ${{ inputs.node-version }}
 
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
