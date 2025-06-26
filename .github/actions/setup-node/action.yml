@@ -83,4 +83,5 @@ runs:
       shell: pwsh
       run: |
         $nodeVersion = node --version
+        Write-Output "The actual Node.js version set up is $nodeVersion."
         Set-GitHubEnv 'NODE_VERSION_TO_USE' $nodeVersion
