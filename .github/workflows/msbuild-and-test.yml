@@ -68,6 +68,16 @@ on:
           defaults to the reference or SHA for that event. Otherwise, uses the default branch.
         type: string
         default: ''
+      dotnet-version:
+        type: string
+        default: 8.0.301
+        description: Version of the .NET SDK to set up.
+      node-version:
+        type: string
+        default: 22.16.0
+        description: >
+          The Node.js version. Can be a specific version number or other notations, see the documentation of
+          https://github.com/actions/setup-node.
       build-directory:
         type: string
         default: .
@@ -156,12 +166,19 @@ jobs:
           ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
+      - name: Set up Node.js
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        with:
+          node-version: ${{ inputs.node-version }}
+
       - name: Enable Node corepack
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       # This is necessary for building Gulp Extensions and test-dotnet.
       - name: Set up .NET
         uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev

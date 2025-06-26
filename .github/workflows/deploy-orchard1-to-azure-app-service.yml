@@ -61,6 +61,16 @@ on:
         type: string
         default: windows-2022
         description: The machine type to run the workflow under, e.g. "windows-2022". Needs to be Windows.
+      dotnet-version:
+        type: string
+        default: 8.0.301
+        description: Version of the .NET SDK to set up.
+      node-version:
+        type: string
+        default: 22.16.0
+        description: >
+          The Node.js version. Can be a specific version number or other notations, see the documentation of
+          https://github.com/actions/setup-node.
       build-directory:
         type: string
         default: src
@@ -131,6 +141,16 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
+
+      - name: Set up .NET
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+
+      - name: Set up Node.js
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        with:
+          node-version: ${{ inputs.node-version }}
 
       - name: Enable Node corepack
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
