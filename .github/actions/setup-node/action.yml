@@ -1,6 +1,6 @@
 name: Set up Node.js
 description: >
-  Sets up Node.js with a specific version exposes the `NODE_VERSION_TO_USE` environment variable with the specific
+  Sets up Node.js with a specific version and exposes the `NODE_VERSION_TO_USE` environment variable with the specific
   Node.js version that was set up. Intentionally not documented in Actions.md since it's only meant for internal use.
 
 inputs:
