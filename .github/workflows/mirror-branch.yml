@@ -39,20 +39,19 @@ jobs:
   mirror:
     runs-on: ${{ inputs.machine-type }}
     name: Checkout and push to target
+    if: inputs.remote-repository != github.repository
     defaults:
       run:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
-        if: inputs.remote-repository != github.repository
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
           fetch-depth: 0
 
       - name: Push to target
-        if: inputs.remote-repository != github.repository
         uses: Lombiq/GitHub-Actions/.github/actions/mirror-branch@issue/OSOE-737
         env:
           MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
