@@ -3,20 +3,17 @@ description: >
   Pushes the currently checked out branch to another repository.
 
 inputs:
-  remote-host:
-    description: The URL host of the target repository. Default is github.com.
-    default: github.com
-  remote-repository:
-    description: The target repository path, e.g. 'Lombiq/Open-Source-Orchard-Core-Extensions'.
+  destination-repository:
+    description: The destination repository path, e.g. 'Lombiq/GitHub-Actions'.
     required: true
 
 runs:
   using: composite
   steps:
-    - name: Push current branch to remote
+    - name: Push current branch to 'destination' remote
       shell: pwsh
       run: |
-        if ('${{ inputs.remote-repository }}'.ToLower() -eq '${{ github.repository }}'.ToLower())
+        if ('${{ inputs.destination-repository }}'.ToLower() -eq '${{ github.repository }}'.ToLower())
         {
           Write-Output 'Target repository is the current repository, nothing to do.'
 
@@ -26,29 +23,31 @@ runs:
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
 
-        git remote add target 'https://${{ env.MIRROR_TOKEN }}@${{ inputs.remote-host }}/${{ inputs.remote-repository }}'
+        git remote add destination 'https://${{ env.MIRROR_TOKEN }}@github.com/${{ inputs.destination-repository }}'
         Write-Output 'Target remote added.'
 
         $branchName = git rev-parse --abbrev-ref HEAD
 
-        git fetch target $branchName
+        git fetch destination $branchName
 
         $pushLastExitCode = 0
-        if ($LASTEXITCODE -eq 0 -and $null -eq (git log target/$branchName..$branchName))
+        if ($LASTEXITCODE -eq 0 -and $null -eq (git log destination/$branchName..$branchName))
         {
-          Write-Output "'$branchName' is up-to-date on target."
+          Write-Output "'$branchName' is up-to-date on destination."
         }
         else
         {
-          git push target $branchName
+          git push destination $branchName
           
           $pushLastExitCode = $LASTEXITCODE
         }
-
-        git remote rm target
-        Write-Output 'Target remote removed.'
 
         if ($pushLastExitCode -ne 0)
         {
           exit $pushLastExitCode
         }
+
+    - name: Delete 'destination' remote
+      if: success() || failure()
+      shell: bash
+      run: git remote rm destination
