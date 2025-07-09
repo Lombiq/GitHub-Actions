@@ -104,20 +104,20 @@ runs:
         Set-GitHubOutput 'branch-names' $branchNames
 
     - name: Checkout source repository
-      if: inputs.checkout == 'true' && ${{ steps.find-branches.first-branch-name }} != ''
+      if: inputs.checkout == 'true' && ${{ steps.find-branches.outputs.first-branch-name }} != ''
       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
       with:
         repository: ${{ inputs.source-repository }}
-        ref: ${{ steps.find-branches.first-branch-name }}
+        ref: ${{ steps.find-branches.outputs.first-branch-name }}
         token: ${{ env.SOURCE_REPOSITORY_TOKEN }}
         fetch-depth: 0
 
     - name: Fetch branches and push to destination repository
-      if: ${{ steps.find-branches.first-branch-name }} != ''
+      if: ${{ steps.find-branches.outputs.first-branch-name }} != ''
       shell: pwsh
       run: |
-        $branchNames = '${{ steps.find-branches.branch-names }}'
-        $firstBranchName = '${{ steps.find-branches.first-branch-name }}'
+        $branchNames = '${{ steps.find-branches.outputs.branch-names }}'
+        $firstBranchName = '${{ steps.find-branches.outputs.first-branch-name }}'
         $remainingBranchNames = $branchNames -eq $firstBranchName ? '' : $branchNames.SubString($firstBranchName.Length + 1)
         $checkout = '${{ inputs.checkout }}' -eq 'true'
 
@@ -137,6 +137,6 @@ runs:
         git push destination $branchNames
 
     - name: Delete 'destination' remote
-      if: (success() || failure()) && ${{ steps.find-branches.first-branch-name }} != ''
+      if: (success() || failure()) && ${{ steps.find-branches.outputs.first-branch-name }} != ''
       shell: bash
       run: git remote rm destination
