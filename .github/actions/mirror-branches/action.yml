@@ -119,7 +119,7 @@ runs:
         $branchNames = '${{ steps.find-branches.branch-names }}'
         $firstBranchName = '${{ steps.find-branches.first-branch-name }}'
         $remainingBranchNames = $branchNames -eq $firstBranchName ? '' : $branchNames.SubString($firstBranchName.Length + 1)
-        $checkout = '${{ input.checkout }}' -eq 'true'
+        $checkout = '${{ inputs.checkout }}' -eq 'true'
 
         if ($checkout -and $remainingBranchNames)
         {
