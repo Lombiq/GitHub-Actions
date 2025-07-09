@@ -1,4 +1,4 @@
-name: Mirror branch to another repository
+name: Mirror branches from a repository to another
 
 concurrency:
   group: ${{ github.ref }}
@@ -7,15 +7,15 @@ concurrency:
 on:
   workflow_call:
     secrets:
-      CHECKOUT_TOKEN:
+      SOURCE_REPOSITORY_TOKEN:
         required: false
         description: >
-          The GitHub token to authenticate checkout with. Pass in a GitHub personal access token if authenticated
-          submodules are used.
+          The GitHub token to authenticate checking out the source repository. Pass in a GitHub personal access token if
+          authenticated submodules are used.
 
-      MIRROR_TOKEN:
+      DESTINATION_REPOSITORY_TOKEN:
         required: true
-        description: The PAT to authenticate with on the target repository.
+        description: The PAT to authenticate with on the destination repository.
 
     inputs:
       machine-type:
@@ -26,35 +26,45 @@ on:
         type: number
         default: 5
         description: Configuration for the timeout-minutes parameter of the workflow.
-      remote-host:
-        description: The URL host of the target repository. Default is github.com.
+      source-repository:
+        description: >
+          The repository to mirror branches from, e.g. 'Lombiq/GitHub-Actions'. Default value is the current repository.
         type: string
-        default: github.com
-      remote-repository:
-        description: The target repository path, e.g. 'Lombiq/Open-Source-Orchard-Core-Extensions'.
+        default: ${{ github.repository }}
+      destination-repository:
+        description: The destination repository path, e.g. 'Lombiq/GitHub-Actions'.
         type: string
         required: true
+      branch-names:
+        description: >
+          A space-separated list of branch names to push to the destination repository. Use this parameter when the
+          names of the branches that are outdated on the destination is known and doesn't need to be checked, e.g. when
+          the workflow is triggered by the push event in the source repository. This or the 'branch-regex' parameter
+          must be provided, but not both.
+        type: string
+        default: ''
+      branch-regex:
+        description: >
+          A regex to match the branches of the source repository. Matched branches will be checked against the
+          destination repository to determine if the head commit hashes differ to prevent unnecessary push operations.
+          This or the 'branch-names' parameter must be provided, but not both.
+        type: string
+        default: ''
 
 jobs:
   mirror:
     runs-on: ${{ inputs.machine-type }}
-    name: Checkout and push to target
-    if: inputs.remote-repository != github.repository
-    defaults:
-      run:
-        shell: pwsh
+    name: Checkout and push to destination
+    if: inputs.destination-repository != inputs.source-repository
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
-        with:
-          token: ${{ secrets.CHECKOUT_TOKEN }}
-          fetch-depth: 0
-
-      - name: Push to target
-        uses: Lombiq/GitHub-Actions/.github/actions/mirror-branch@issue/OSOE-737
+      - name: Push to destination
+        uses: Lombiq/GitHub-Actions/.github/actions/mirror-branches@issue/OSOE-737
         env:
-          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+          SOURCE_REPOSITORY_TOKEN: ${{ secrets.SOURCE_REPOSITORY_TOKEN }}
+          DESTINATION_REPOSITORY_TOKEN: ${{ secrets.DESTINATION_REPOSITORY_TOKEN }}
         with:
-          remote-host: ${{ inputs.remote-host }}
-          remote-repository: ${{ inputs.remote-repository }}
+          source-repository: ${{ inputs.source-repository }}
+          destination-repository: ${{ inputs.destination-repository }}
+          branch-names: ${{ inputs.branch-names }}
+          branch-regex: ${{ inputs.branch-regex }}

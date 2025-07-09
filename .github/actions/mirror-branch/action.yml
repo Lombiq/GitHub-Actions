@@ -1,53 +1,142 @@
 name: Mirror branch
 description: >
-  Pushes the currently checked out branch to another repository.
+  Mirrors branches from a repository to another.
 
 inputs:
+  source-repository:
+    description: >
+      The repository's path, e.g. 'Lombiq/GitHub-Actions', to mirror branches from. Override this parameter if it
+      differs from the repository running the workflow, or when you wish to check out a repository different from the
+      current one.
+    default: ${{ github.repository }}
+  checkout:
+    description: >
+      Set to 'false' if the source repository is already checked out with history (not shallow clone). Leaving it on the
+      default value ('true') makes the 'source-repository' parameter required.
+    default: 'true'
   destination-repository:
     description: The destination repository path, e.g. 'Lombiq/GitHub-Actions'.
     required: true
+  branch-names:
+    description: >
+      A space-separated list of branch names to push to the destination repository. Use this parameter when the names of
+      the branches that are outdated on the destination is known and doesn't need to be checked, e.g. when the workflow
+      is triggered by the push event in the source repository. This or the 'branch-regex' parameter must be
+      provided, but not both.
+    default: ''
+  branch-regex:
+    description: >
+      A regex to match the branches of the source repository. Matched branches will be checked against the destination
+      repository to determine if the head commit hashes differ to prevent unnecessary push operations. This or the
+      'branch-names' parameter must be provided, but not both.
+    default: ''
 
 runs:
   using: composite
   steps:
-    - name: Push current branch to 'destination' remote
+    - name: Parameter validation
       shell: pwsh
       run: |
-        if ('${{ inputs.destination-repository }}'.ToLower() -eq '${{ github.repository }}'.ToLower())
+        if ((-not '${{ inputs.branch-names }}' -and -not '${{ inputs.branch-regex }}') -or
+          ('${{ inputs.branch-names }}' -and '${{ inputs.branch-regex }}'))
         {
-          Write-Output 'Target repository is the current repository, nothing to do.'
+          throw 'Exactly one of the ''branch-names'' or ''branch-regex'' parameters is required.'
+        }
 
-          exit
+        if ('${{ inputs.checkout }}' -eq 'true' -and -not '${{ inputs.source-repository }}' -match '^[^/]+/[^/]+$')
+        {
+          throw 'Checkout is enabled, so a valid source repository path must be provided too.'
+        }
+
+        if ('${{ inputs.source-repository }}'.ToLower() -eq '${{ inputs.destination-repository }}'.ToLower())
+        {
+          throw 'The source and the destination repositories cannot be the same.'
+        }
+
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Find branches to mirror
+      id: find-branches
+      shell: pwsh
+      run: |
+        $branchNames = '${{ inputs.branch-names }}'
+        $branchRegex = '${{ inputs.branch-regex }}'
+
+        if ($branchRegex)
+        {
+          $acceptHeader = 'Accept: application/vnd.github+json'
+          $apiHeader = 'X-GitHub-Api-Version: 2022-11-28'
+          $sourceAuthenticationHeader = 'Authorization: Bearer ${{ env.SOURCE_REPOSITORY_TOKEN }}'
+          $destinationAuthenticationHeader = 'Authorization: Bearer ${{ env.DESTINATION_REPOSITORY_TOKEN }}'
+
+          $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
+          $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
+
+          $sourceBranches = gh api -H $acceptHeader -H $apiHeader -H $sourceAuthenticationHeader /repos/${{ inputs.source-repository }}/branches
+          $sourceBranches | ConvertFrom-Json | ForEach-Object { $sourceBranchHashes[$PSItem.name] = $PSItem.commit.sha }
+
+          $destinationBranches = gh api -H $acceptHeader -H $apiHeader -H $destinationAuthenticationHeader /repos/${{ inputs.destination-repository }}/branches
+          $destinationBranches | ConvertFrom-Json | ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha }
+
+          $apiBranchNames = @()
+          foreach ($key in $sourceBranchHashes.Keys)
+          {
+              if ((-not $destinationBranchHashes.ContainsKey($key) -or $sourceBranchHashes[$key] -ne $destinationBranchHashes[$key]) -and
+                $key -match $branchRegex)
+              {
+                $apiBranchNames += $key
+              }
+          }
+
+          if (-not $apiBranchNames)
+          {
+            Write-Warning 'The branch regex didn''t find any matching branches or all the branches are up-to-date.'
+          }
+
+          $branchNames = $apiBranchNames -join ' '
+        }
+
+        Set-GitHubOutput 'first-branch-name' ($branchNames -split ' ')[0]
+        Set-GitHubOutput 'branch-names' $branchNames
+
+    - name: Checkout source repository
+      if: inputs.checkout == 'true' && ${{ steps.find-branches.first-branch-name }} != ''
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      with:
+        repository: ${{ inputs.source-repository }}
+        ref: ${{ steps.find-branches.first-branch-name }}
+        token: ${{ env.SOURCE_REPOSITORY_TOKEN }}
+        fetch-depth: 0
+
+    - name: Fetch branches and push to destination repository
+      if: ${{ steps.find-branches.first-branch-name }} != ''
+      shell: pwsh
+      run: |
+        $branchNames = '${{ steps.find-branches.branch-names }}'
+        $firstBranchName = '${{ steps.find-branches.first-branch-name }}'
+        $remainingBranchNames = $branchNames -eq $firstBranchName ? '' : $branchNames.SubString($firstBranchName.Length + 1)
+        $checkout = '${{ input.checkout }}' -eq 'true'
+
+        if ($checkout -and $remainingBranchNames)
+        {
+          git fetch origin $remainingBranchNames
+        }
+        else if (-not $checkout)
+        {
+          git fetch origin $branchNames
         }
 
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
 
-        git remote add destination 'https://${{ env.MIRROR_TOKEN }}@github.com/${{ inputs.destination-repository }}'
-        Write-Output 'Target remote added.'
-
-        $branchName = git rev-parse --abbrev-ref HEAD
-
-        git fetch destination $branchName
-
-        $pushLastExitCode = 0
-        if ($LASTEXITCODE -eq 0 -and $null -eq (git log destination/$branchName..$branchName))
-        {
-          Write-Output "'$branchName' is up-to-date on destination."
-        }
-        else
-        {
-          git push destination $branchName
-          
-          $pushLastExitCode = $LASTEXITCODE
-        }
-
-        if ($pushLastExitCode -ne 0)
-        {
-          exit $pushLastExitCode
-        }
+        git remote add destination 'https://${{ env.DESTINATION_REPOSITORY_TOKEN }}@github.com/${{ inputs.destination-repository }}'
+        git push destination $branchNames
 
     - name: Delete 'destination' remote
-      if: success() || failure()
+      if: (success() || failure()) && ${{ steps.find-branches.first-branch-name }} != ''
       shell: bash
       run: git remote rm destination
