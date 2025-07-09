@@ -125,7 +125,7 @@ runs:
         {
           git fetch origin $remainingBranchNames
         }
-        else if (-not $checkout)
+        elseif (-not $checkout)
         {
           git fetch origin $branchNames
         }
