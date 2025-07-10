@@ -21,15 +21,15 @@ inputs:
     description: >
       A space-separated list of branch names to push to the destination repository. Use this parameter when the names of
       the branches that are outdated on the destination is known and doesn't need to be checked, e.g. when the workflow
-      is triggered by the push event in the source repository. This or the 'branch-regex' parameter must be
-      provided, but not both.
+      is triggered by the push event in the source repository. This parameter takes precedence over 'branch-names' when
+      not empty.
     default: ''
   branch-regex:
     description: >
       A regex to match the branches of the source repository. Matched branches will be checked against the destination
-      repository to determine if the head commit hashes differ to prevent unnecessary push operations. This or the
-      'branch-names' parameter must be provided, but not both.
-    default: ''
+      repository to determine if the head commit hashes differ to prevent unnecessary push operations. Default value
+      matches any branch.
+    default: '.+'
 
 runs:
   using: composite
@@ -37,10 +37,9 @@ runs:
     - name: Parameter validation
       shell: pwsh
       run: |
-        if ((-not '${{ inputs.branch-names }}' -and -not '${{ inputs.branch-regex }}') -or
-          ('${{ inputs.branch-names }}' -and '${{ inputs.branch-regex }}'))
+        if (-not '${{ inputs.branch-names }}' -and -not '${{ inputs.branch-regex }}')
         {
-          throw 'Exactly one of the ''branch-names'' or ''branch-regex'' parameters is required.'
+          throw 'At least one of the ''branch-names'' and ''branch-regex'' parameters must be non-empty.'
         }
 
         if ('${{ inputs.checkout }}' -eq 'true' -and -not '${{ inputs.source-repository }}' -match '^[^/]+/[^/]+$')
@@ -61,7 +60,7 @@ runs:
 
     - name: Fetch source branches
       id: fetch-source-branches
-      if: inputs.branch-regex != ''
+      if: inputs.branch-names == ''
       shell: pwsh
       env:
         GH_TOKEN: ${{ env.SOURCE_REPOSITORY_TOKEN }}
@@ -72,7 +71,7 @@ runs:
 
     - name: Fetch destination branches
       id: fetch-destination-branches
-      if: inputs.branch-regex != ''
+      if: inputs.branch-names == ''
       shell: pwsh
       env:
         GH_TOKEN: ${{ env.DESTINATION_REPOSITORY_TOKEN }}
@@ -88,7 +87,7 @@ runs:
         $branchNames = '${{ inputs.branch-names }}'
         $branchRegex = '${{ inputs.branch-regex }}'
 
-        if ($branchRegex)
+        if (-not $branchNames)
         {
           $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
           $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
