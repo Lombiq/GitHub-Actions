@@ -133,25 +133,19 @@ runs:
       shell: pwsh
       run: |
         $refNames = '${{ steps.find-branches.outputs.branch-names }}' -split ' ' |
-          Select-Object { $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
+          ForEach-Object { $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
 
         # Fetch branches from source repository. If the repository is checked out in this action, then we know for sure
         # that the first branch is already fetched.
         $fetchRefNames = '${{ inputs.checkout }}' -eq 'true' ? $refNames[1..($refNames.Count - 1)] : $refNames
-        foreach ($ref in $fetchRefNames)
-        {
-          git fetch origin "$($ref):$($ref)"
-        }
+        $fetchRefNames | ForEach-Object { git fetch origin "$($PSItem):$($PSItem)" }
 
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
 
         git remote add destination 'https://${{ env.DESTINATION_REPOSITORY_TOKEN }}@github.com/${{ inputs.destination-repository }}'
         
-        foreach ($ref in $refNames)
-        {
-          git push destination "$($ref):$($ref)"
-        }
+        $refNames | ForEach-Object { git push destination "$($PSItem):$($PSItem)" }
 
     - name: Delete 'destination' remote
       if: (success() || failure()) && steps.find-branches.outputs.first-branch-name != ''
