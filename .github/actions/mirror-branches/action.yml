@@ -141,6 +141,7 @@ runs:
         
         $branchNames | ForEach-Object {
           $ref = $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem"
+          git fetch origin "$($ref):$($ref)"
           git push destination "$($ref):$($ref)"
         }
 
