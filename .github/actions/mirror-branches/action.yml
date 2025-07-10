@@ -140,7 +140,7 @@ runs:
         git remote add destination 'https://${{ env.DESTINATION_REPOSITORY_TOKEN }}@github.com/${{ inputs.destination-repository }}'
         
         $branchNames | ForEach-Object {
-          $ref = $branchName -like 'refs/heads/*' ? $PSItem : "refs/heads/$branchName"
+          $ref = $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem"
           git push destination "$($ref):$($ref)"
         }
 
