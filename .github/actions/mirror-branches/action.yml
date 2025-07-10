@@ -120,7 +120,7 @@ runs:
         Set-GitHubOutput 'branch-names' $branchNames
 
     - name: Checkout source repository
-      if: inputs.checkout == 'true' && ${{ steps.find-branches.outputs.first-branch-name }} != ''
+      if: inputs.checkout == 'true' && steps.find-branches.outputs.first-branch-name != ''
       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
       with:
         repository: ${{ inputs.source-repository }}
@@ -129,23 +129,31 @@ runs:
         fetch-depth: 0
 
     - name: Fetch branches and push to destination repository
-      if: ${{ steps.find-branches.outputs.first-branch-name }} != ''
+      if: steps.find-branches.outputs.first-branch-name != ''
       shell: pwsh
       run: |
-        $branchNames = '${{ steps.find-branches.outputs.branch-names }}' -split ' '
+        $refNames = '${{ steps.find-branches.outputs.branch-names }}' -split ' ' |
+          Select-Object { $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
+
+        # Fetch branches from source repository. If the repository is checked out in this action, then we know for sure
+        # that the first branch is already fetched.
+        $fetchRefNames = '${{ inputs.checkout }}' -eq 'true' ? $refNames[1..($refNames.Count - 1)] : $refNames
+        foreach ($ref in $fetchRefNames)
+        {
+          git fetch origin "$($ref):$($ref)"
+        }
 
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
 
         git remote add destination 'https://${{ env.DESTINATION_REPOSITORY_TOKEN }}@github.com/${{ inputs.destination-repository }}'
         
-        $branchNames | ForEach-Object {
-          $ref = $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem"
-          git fetch origin "$($ref):$($ref)"
+        foreach ($ref in $refNames)
+        {
           git push destination "$($ref):$($ref)"
         }
 
     - name: Delete 'destination' remote
-      if: (success() || failure()) && ${{ steps.find-branches.outputs.first-branch-name }} != ''
+      if: (success() || failure()) && steps.find-branches.outputs.first-branch-name != ''
       shell: bash
       run: git remote rm destination
