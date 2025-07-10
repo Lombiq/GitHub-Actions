@@ -68,7 +68,15 @@ runs:
       run: |
         $acceptHeader = 'Accept: application/vnd.github+json'
         $apiHeader = 'X-GitHub-Api-Version: 2022-11-28'
-        Set-GitHubOutput 'source-branches' (gh api -H $acceptHeader -H $apiHeader /repos/${{ inputs.source-repository }}/branches)
+        $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
+
+        gh api -H $acceptHeader -H $apiHeader /repos/${{ inputs.source-repository }}/branches |
+          ConvertFrom-Json |
+          Where-Object { $PSItem.name -match '${{ inputs.branch-regex }}' } |
+          ForEach-Object { $sourceBranchHashes[$PSItem.name] = $PSItem.commit.sha } |
+          ConvertTo-Json
+
+        Set-GitHubOutput 'source-branches' $sourceBranchHashes
 
     - name: Fetch destination branches
       id: fetch-destination-branches
@@ -79,7 +87,15 @@ runs:
       run: |
         $acceptHeader = 'Accept: application/vnd.github+json'
         $apiHeader = 'X-GitHub-Api-Version: 2022-11-28'
-        Set-GitHubOutput 'destination-branches' (gh api -H $acceptHeader -H $apiHeader /repos/${{ inputs.destination-repository }}/branches)
+        $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
+
+        gh api -H $acceptHeader -H $apiHeader /repos/${{ inputs.destination-repository }}/branches |
+          ConvertFrom-Json |
+          Where-Object { $PSItem.name -match '${{ inputs.branch-regex }}' } |
+          ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha } |
+          ConvertTo-Json
+
+        Set-GitHubOutput 'destination-branches' $destinationBranchHashes
 
     - name: Find branches to mirror
       id: find-branches
@@ -90,20 +106,13 @@ runs:
 
         if ($branchRegex)
         {
-          $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
-          $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
-
-          $sourceBranches = '${{ steps.fetch-source-branches.outputs.source-branches }}'
-          $sourceBranches | ConvertFrom-Json | ForEach-Object { $sourceBranchHashes[$PSItem.name] = $PSItem.commit.sha }
-
-          $destinationBranches = '${{ steps.fetch-destination-branches.outputs.destination-branches }}'
-          $destinationBranches | ConvertFrom-Json | ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha }
+          $sourceBranchHashes = '${{ steps.fetch-source-branches.outputs.source-branches }}' | ConvertFrom-Json
+          $destinationBranchHashes = '${{ steps.fetch-destination-branches.outputs.destination-branches }}' | ConvertFrom-Json
 
           $apiBranchNames = @()
           foreach ($key in $sourceBranchHashes.Keys)
           {
-              if ((-not $destinationBranchHashes.ContainsKey($key) -or $sourceBranchHashes[$key] -ne $destinationBranchHashes[$key]) -and
-                $key -match $branchRegex)
+              if (-not $destinationBranchHashes.ContainsKey($key) -or $sourceBranchHashes[$key] -ne $destinationBranchHashes[$key])
               {
                 $apiBranchNames += $key
               }
@@ -150,10 +159,4 @@ runs:
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
 
-        git remote add destination 'https://${{ env.DESTINATION_REPOSITORY_TOKEN }}@github.com/${{ inputs.destination-repository }}'
-        git push destination $branchNames
-
-    - name: Delete 'destination' remote
-      if: (success() || failure()) && ${{ steps.find-branches.outputs.first-branch-name }} != ''
-      shell: bash
-      run: git remote rm destination
+        git push 'https://${{ env.DESTINATION_REPOSITORY_TOKEN }}@github.com/${{ inputs.destination-repository }}' $branchNames
