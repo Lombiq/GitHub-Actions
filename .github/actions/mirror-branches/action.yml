@@ -20,7 +20,7 @@ inputs:
   branch-names:
     description: >
       A space-separated list of branch names to push to the destination repository. Use this parameter when the names of
-      the branches that are outdated on the destination is known and doesn't need to be checked, e.g. when the workflow
+      the branches that are outdated on the destination are known and doesn't need to be checked, e.g. when the workflow
       is triggered by the push event in the source repository. This parameter takes precedence over 'branch-names' when
       not empty.
     default: ''
