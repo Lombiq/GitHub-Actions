@@ -7,15 +7,15 @@ concurrency:
 on:
   workflow_call:
     secrets:
-      SOURCE_REPOSITORY_TOKEN:
+      SOURCE_TOKEN:
         required: false
         description: >
-          The GitHub token to authenticate checking out the source repository. Pass in a GitHub personal access token if
+          Optional PAT to fetch the source repository's branches from the GitHub API and for checkout. Requried when
           authenticated submodules are used.
 
-      DESTINATION_REPOSITORY_TOKEN:
+      DESTINATION_TOKEN:
         required: true
-        description: The PAT to authenticate with on the destination repository.
+        description: Required PAT to fetch the destination repository's branches and to push to it.
 
     inputs:
       machine-type:
@@ -60,11 +60,10 @@ jobs:
     steps:
       - name: Push to destination
         uses: Lombiq/GitHub-Actions/.github/actions/mirror-branches@issue/OSOE-737
-        env:
-          SOURCE_REPOSITORY_TOKEN: ${{ secrets.SOURCE_REPOSITORY_TOKEN }}
-          DESTINATION_REPOSITORY_TOKEN: ${{ secrets.DESTINATION_REPOSITORY_TOKEN }}
         with:
           source-repository: ${{ inputs.source-repository }}
+          source-token: ${{ secrets.SOURCE_TOKEN }}
           destination-repository: ${{ inputs.destination-repository }}
+          destination-token: ${{ secrets.DESTINATION_TOKEN }}
           branch-names: ${{ inputs.branch-names }}
           branch-regex: ${{ inputs.branch-regex }}

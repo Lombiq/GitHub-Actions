@@ -9,6 +9,9 @@ inputs:
       differs from the repository running the workflow, or when you wish to check out a repository different from the
       current one.
     default: ${{ github.repository }}
+  source-token:
+    description: Optional PAT to fetch the source repository's branches from the GitHub API and for checkout.
+    default: ${{ github.token }}
   checkout:
     description: >
       Set to 'false' if the source repository is already checked out with history (not shallow clone). Leaving it on the
@@ -17,13 +20,16 @@ inputs:
   destination-repository:
     description: The destination repository path, e.g. 'Lombiq/GitHub-Actions'.
     required: true
+  destination-token:
+    description: >
+      Required PAT to fetch the destination repository's branches and to push to it.
+    required: true
   branch-names:
     description: >
       A space-separated list of branch names to push to the destination repository. Use this parameter when the names of
       the branches that are outdated on the destination are known and doesn't need to be checked, e.g. when the workflow
       is triggered by the push event in the source repository. This parameter takes precedence over 'branch-names' when
       not empty.
-    default: ''
   branch-regex:
     description: >
       A regex to match the branches of the source repository. Matched branches will be checked against the destination
@@ -63,7 +69,7 @@ runs:
       if: inputs.branch-names == ''
       shell: pwsh
       env:
-        GH_TOKEN: ${{ env.SOURCE_REPOSITORY_TOKEN }}
+        GH_TOKEN: ${{ inputs.source-token }}
       run: |
         $acceptHeader = 'Accept: application/vnd.github+json'
         $apiHeader = 'X-GitHub-Api-Version: 2022-11-28'
@@ -74,7 +80,7 @@ runs:
       if: inputs.branch-names == ''
       shell: pwsh
       env:
-        GH_TOKEN: ${{ env.DESTINATION_REPOSITORY_TOKEN }}
+        GH_TOKEN: ${{ inputs.destination-token }}
       run: |
         $acceptHeader = 'Accept: application/vnd.github+json'
         $apiHeader = 'X-GitHub-Api-Version: 2022-11-28'
@@ -125,7 +131,7 @@ runs:
       with:
         repository: ${{ inputs.source-repository }}
         ref: ${{ steps.find-branches.outputs.first-branch-name }}
-        token: ${{ env.SOURCE_REPOSITORY_TOKEN }}
+        token: ${{ inputs.source-token }}
         fetch-depth: 0
 
     - name: Fetch branches and push to destination repository
@@ -143,7 +149,7 @@ runs:
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
 
-        git remote add destination 'https://${{ env.DESTINATION_REPOSITORY_TOKEN }}@github.com/${{ inputs.destination-repository }}'
+        git remote add destination 'https://${{ inputs.destination-token }}@github.com/${{ inputs.destination-repository }}'
         
         $refNames | ForEach-Object { git push destination "$($PSItem):$($PSItem)" }
 
