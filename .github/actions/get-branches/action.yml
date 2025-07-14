@@ -44,6 +44,6 @@ runs:
             $page++
         } while ($response.Count -eq $pageSize)        
         
-        Set-GitHubOutput 'branches' ($allBranches | ConvertTo-Json -Depth 9)
+        Set-GitHubOutput 'branches' ($allBranches | ConvertTo-Json -Depth 9 -Compress)
 
         Write-Output "Found $($allBranches.Count) branches in the '${{ inputs.repository }}' repository." >> $env:GITHUB_STEP_SUMMARY
