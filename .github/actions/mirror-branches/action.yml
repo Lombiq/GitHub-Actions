@@ -97,28 +97,40 @@ runs:
           $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
           $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
 
-          $sourceBranches = '${{ steps.get-source-branches.outputs.branches }}'
-          $sourceBranches | ConvertFrom-Json | ForEach-Object { $sourceBranchHashes[$PSItem.name] = $PSItem.commit.sha }
+          '${{ steps.get-source-branches.outputs.branches }}' | ConvertFrom-Json |
+            ForEach-Object { $sourceBranchHashes[$PSItem.name] = $PSItem.commit.sha }
 
-          $destinationBranches = '${{ steps.get-destination-branches.outputs.branches }}'
-          $destinationBranches | ConvertFrom-Json | ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha }
-
-          $apiBranchNames = @()
-          foreach ($key in $sourceBranchHashes.Keys)
+          if (-not $sourceBranchHashes)
           {
-              if ((-not $destinationBranchHashes.ContainsKey($key) -or $sourceBranchHashes[$key] -ne $destinationBranchHashes[$key]) -and
-                $key -match $branchRegex)
+            Write-Error '::error::Source repository ''${{ inputs.repository }}'' has no branches!'
+            exit 1
+          }
+
+          $matchingSourceBranchNames = $allBranches | Select-Object -ExpandProperty 'name' | Where-Object { $PSItem -match $branchRegex }
+          if (-not $matchingSourceBranchNames)
+          {
+            Write-Error '::error::There are no branches in ''${{ inputs.repository }}'' matching ''${{ inputs.branch-regex }}''!'
+            exit 1
+          }
+
+          '${{ steps.get-destination-branches.outputs.branches }}' | ConvertFrom-Json |
+            ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha }
+
+          $mirroringBranchNames = @()
+          foreach ($branch in matchingSourceBranchNames)
+          {
+              if (-not $destinationBranchHashes.ContainsKey($branch) -or $sourceBranchHashes[$branch] -ne $destinationBranchHashes[$branch])
               {
-                $apiBranchNames += $key
+                $mirroringBranchNames += $branch
               }
           }
 
-          if (-not $apiBranchNames)
+          if (-not $mirroringBranchNames)
           {
-            Write-Warning 'The branch regex didn''t find any matching branches or all the branches are up-to-date.'
+            Write-Warning '::warning::The branch regex didn''t find any matching branches or all the branches are up-to-date.'
           }
 
-          $branchNames = $apiBranchNames -join ' '
+          $branchNames = $mirroringBranchNames -join ' '
         }
 
         Set-GitHubOutput 'first-branch-name' ($branchNames -split ' ')[0]

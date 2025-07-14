@@ -44,11 +44,12 @@ runs:
             $page++
         } while ($response.Count -eq $pageSize)
 
-        if (-not $allBranches)
+        if ($allBranches)
         {
-          throw '''${{ inputs.repository }}'' has no branches!'
+          Write-Output "::notice::Found $($allBranches.Count) branches in '${{ inputs.repository }}'."
+          Set-GitHubOutput 'branches' ($allBranches | ConvertTo-Json -Depth 9 -Compress)
         }
-
-        Set-GitHubOutput 'branches' ($allBranches | ConvertTo-Json -Depth 9 -Compress)
-
-        Write-Output "::notice::Found $($allBranches.Count) branches in the '${{ inputs.repository }}' repository."
+        else
+        {
+          Write-Warning '::warning::''${{ inputs.repository }}'' has no branches!'
+        }
