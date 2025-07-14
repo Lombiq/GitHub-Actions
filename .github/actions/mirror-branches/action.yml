@@ -120,7 +120,7 @@ runs:
             ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha }
 
           $mirroringBranchNames = @()
-          foreach ($branch in matchingSourceBranchNames)
+          foreach ($branch in $matchingSourceBranchNames)
           {
               if (-not $destinationBranchHashes.ContainsKey($branch) -or $sourceBranchHashes[$branch] -ne $destinationBranchHashes[$branch])
               {
