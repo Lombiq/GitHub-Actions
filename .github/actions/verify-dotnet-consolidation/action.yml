@@ -22,7 +22,7 @@ inputs:
       dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
   exclude-project-path:
     required: false
-    default: 'src/*.Web/*.csproj'
+    default: ''src/*.Web/*.csproj''
     description: >
       A path expression referring to the projects that should be temporarily removed from the solution before NuGet
       package consolidation. These are restored after the fact by resetting the git repository. The expression is passed
