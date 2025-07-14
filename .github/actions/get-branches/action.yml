@@ -10,7 +10,7 @@ inputs:
     default: ${{ github.token }}
 
 outputs:
-  changed-items:
+  branches:
     description: >
       A JSON-string holding information about all the branches of the repository, see:
       https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#list-branches
@@ -42,8 +42,13 @@ runs:
             $response = gh api -H $acceptHeader -H $apiHeader "/repos/${{ inputs.repository }}/branches?per_page=$pageSize&page=$page" | ConvertFrom-Json
             $allBranches += $response
             $page++
-        } while ($response.Count -eq $pageSize)        
-        
+        } while ($response.Count -eq $pageSize)
+
+        if (-not $allBranches)
+        {
+          throw '''${{ inputs.repository }}'' has no branches!'
+        }
+
         Set-GitHubOutput 'branches' ($allBranches | ConvertTo-Json -Depth 9 -Compress)
 
-        Write-Output "Found $($allBranches.Count) branches in the '${{ inputs.repository }}' repository." >> $env:GITHUB_STEP_SUMMARY
+        Write-Output "::notice::Found $($allBranches.Count) branches in the '${{ inputs.repository }}' repository."
