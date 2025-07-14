@@ -51,6 +51,6 @@ runs:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
       run: |
         $solutionPath = (Get-Item '${{ inputs.solution-path }}').FullName;
-        $excludedProjects = ${{ inputs.exclude-project-path }} | ForEach-Object { (Get-Item $PSItem  -ErrorAction Ignore).FullName }
+        $excludedProjects = ${{ inputs.exclude-project-path }} -Split ',' | ForEach-Object { (Get-Item $PSItem  -ErrorAction Ignore).FullName }
 
         Test-DotnetPackageConsolidation -SolutionPath $solutionPath -ExcludedProjects $excludedProjects
