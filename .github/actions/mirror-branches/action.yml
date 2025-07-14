@@ -105,12 +105,13 @@ runs:
             exit 1
           }
 
-          $matchingSourceBranchNames = $allBranches | Select-Object -ExpandProperty 'name' | Where-Object { $PSItem -match $branchRegex }
+          $matchingSourceBranchNames = $sourceBranchHashes.Keys | Where-Object { $PSItem -match $branchRegex }
           if ($matchingSourceBranchNames)
           {
             Write-Output ("::notice::Found $($matchingSourceBranchNames.Count) matching branches in '${{ inputs.source-repository }}':`n" +
-              ($matchingSourceBranchNames -join ", "))
+              ($matchingSourceBranchNames -join ', '))
           }
+          else
           {
             Write-Error '::error::There are no branches in ''${{ inputs.source-repository }}'' matching ''${{ inputs.branch-regex }}''!'
             exit 1
@@ -128,15 +129,19 @@ runs:
               }
           }
 
-          if (-not $mirroringBranchNames)
+          if ($mirroringBranchNames)
+          {
+            $branchNames = $mirroringBranchNames -join ', '
+            Write-Output ("::notice::Found $($mirroringBranchNames.Count) branches that need updating in '${{ inputs.destination-repository }}':`n" +
+              $branchNames)
+          }
+          else
           {
             Write-Output '::notice::All the matched branches are up-to-date in ''${{ inputs.destination-repository }}''.'
-          }
-
-          $branchNames = $mirroringBranchNames -join ' '
+          }          
         }
 
-        Set-GitHubOutput 'first-branch-name' ($branchNames -split ' ')[0]
+        Set-GitHubOutput 'first-branch-name' ($branchNames -split ', ')[0]
         Set-GitHubOutput 'branch-names' $branchNames
 
     - name: Checkout source repository
@@ -152,7 +157,7 @@ runs:
       if: steps.find-branches.outputs.first-branch-name != ''
       shell: pwsh
       run: |
-        $refNames = '${{ steps.find-branches.outputs.branch-names }}' -split ' ' |
+        $refNames = '${{ steps.find-branches.outputs.branch-names }}' -split ', ' |
           ForEach-Object { $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
 
         # Fetch branches from source repository. If the repository is checked out in this action, then we know for sure
