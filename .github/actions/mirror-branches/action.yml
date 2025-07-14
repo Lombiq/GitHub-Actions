@@ -1,6 +1,5 @@
 name: Mirror branch
-description: >
-  Mirrors branches from a repository to another.
+description: Mirrors branches from a repository to another.
 
 inputs:
   source-repository:
