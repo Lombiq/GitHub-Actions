@@ -1,0 +1,49 @@
+name: Get branches
+description: Fetches information from the GitHub API about the branches in a repository.
+
+inputs:
+  repository:
+    description: The repository's path, e.g. 'Lombiq/GitHub-Actions'.
+    default: ${{ github.repository }}
+  api-token:
+    description: Optional access token or PAT to authenticate with the GitHub API.
+    default: ${{ github.token }}
+
+outputs:
+  changed-items:
+    description: >
+      A JSON-string holding information about all the branches of the repository, see:
+      https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#list-branches
+    value: ${{ steps.get-branches.outputs.branches }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Get branch information
+      id: get-branches
+      shell: pwsh
+      env:
+        GH_TOKEN: ${{ inputs.api-token }}
+      run: |
+        $acceptHeader = 'Accept: application/vnd.github+json'
+        $apiHeader = 'X-GitHub-Api-Version: 2022-11-28'
+
+        $allBranches = @()
+        $pageSize = 100
+        $page = 0
+        do
+        {
+            $response = gh api -H $acceptHeader -H $apiHeader "/repos/${{ inputs.repository }}/branches?per_page=$pageSize&page=$page" | ConvertFrom-Json
+            $allBranches += $response
+            $page++
+        } while ($response.Count -eq $pageSize)        
+        
+        Set-GitHubOutput 'branches' ($allBranches | ConvertTo-Json -Depth 9)
+
+        Write-Output "Found $($allBranches.Count) branches in the '${{ inputs.repository }}' repository." >> $env:GITHUB_STEP_SUMMARY

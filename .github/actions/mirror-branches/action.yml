@@ -47,6 +47,11 @@ runs:
         {
           throw 'At least one of the ''branch-names'' and ''branch-regex'' parameters must be non-empty.'
         }
+        
+        if (-not '${{ inputs.branch-names }}' -and -not '${{ inputs.source-repository }}')
+        {
+          throw 'The ''branch-regex'' parameter used, so the source repository path must be provided too.'
+        }
 
         if ('${{ inputs.checkout }}' -eq 'true' -and -not '${{ inputs.source-repository }}' -match '^[^/]+/[^/]+$')
         {
@@ -67,24 +72,18 @@ runs:
     - name: Fetch source branches
       id: fetch-source-branches
       if: inputs.branch-names == ''
-      shell: pwsh
-      env:
-        GH_TOKEN: ${{ inputs.source-token }}
-      run: |
-        $acceptHeader = 'Accept: application/vnd.github+json'
-        $apiHeader = 'X-GitHub-Api-Version: 2022-11-28'
-        Set-GitHubOutput 'source-branches' (gh api -H $acceptHeader -H $apiHeader /repos/${{ inputs.source-repository }}/branches)
+      uses: Lombiq/GitHub-Actions/.github/actions/get-branches@issue/OSOE-737
+      with:
+        repository: ${{ inputs.source-repository }}
+        api-token: ${{ inputs.source-token }}
 
     - name: Fetch destination branches
       id: fetch-destination-branches
       if: inputs.branch-names == ''
-      shell: pwsh
-      env:
-        GH_TOKEN: ${{ inputs.destination-token }}
-      run: |
-        $acceptHeader = 'Accept: application/vnd.github+json'
-        $apiHeader = 'X-GitHub-Api-Version: 2022-11-28'
-        Set-GitHubOutput 'destination-branches' (gh api -H $acceptHeader -H $apiHeader /repos/${{ inputs.destination-repository }}/branches)
+      uses: Lombiq/GitHub-Actions/.github/actions/get-branches@issue/OSOE-737
+      with:
+        repository: ${{ inputs.destination-repository }}
+        api-token: ${{ inputs.destination-token }}
 
     - name: Find branches to mirror
       id: find-branches
