@@ -47,7 +47,7 @@ runs:
         {
           throw 'At least one of the ''branch-names'' and ''branch-regex'' parameters must be non-empty.'
         }
-        
+
         if (-not '${{ inputs.branch-names }}' -and -not '${{ inputs.source-repository }}')
         {
           throw 'The ''branch-regex'' parameter used, so the source repository path must be provided too.'
@@ -69,16 +69,16 @@ runs:
         '${{ github.action_path }}' >> $Env:GITHUB_PATH
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
-    - name: Fetch source branches
-      id: fetch-source-branches
+    - name: Get source branches
+      id: get-source-branches
       if: inputs.branch-names == ''
       uses: Lombiq/GitHub-Actions/.github/actions/get-branches@issue/OSOE-737
       with:
         repository: ${{ inputs.source-repository }}
         api-token: ${{ inputs.source-token }}
 
-    - name: Fetch destination branches
-      id: fetch-destination-branches
+    - name: Get destination branches
+      id: get-destination-branches
       if: inputs.branch-names == ''
       uses: Lombiq/GitHub-Actions/.github/actions/get-branches@issue/OSOE-737
       with:
@@ -97,10 +97,10 @@ runs:
           $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
           $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
 
-          $sourceBranches = '${{ steps.fetch-source-branches.outputs.source-branches }}'
+          $sourceBranches = '${{ steps.get-source-branches.outputs.branches }}'
           $sourceBranches | ConvertFrom-Json | ForEach-Object { $sourceBranchHashes[$PSItem.name] = $PSItem.commit.sha }
 
-          $destinationBranches = '${{ steps.fetch-destination-branches.outputs.destination-branches }}'
+          $destinationBranches = '${{ steps.get-destination-branches.outputs.branches }}'
           $destinationBranches | ConvertFrom-Json | ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha }
 
           $apiBranchNames = @()
@@ -149,7 +149,7 @@ runs:
         git config --unset-all http.https://github.com/.extraheader
 
         git remote add destination 'https://${{ inputs.destination-token }}@github.com/${{ inputs.destination-repository }}'
-        
+
         $refNames | ForEach-Object { git push destination "$($PSItem):$($PSItem)" }
 
     - name: Delete 'destination' remote
