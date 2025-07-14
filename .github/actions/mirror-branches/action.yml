@@ -101,14 +101,18 @@ runs:
 
           if (-not $sourceBranchHashes)
           {
-            Write-Error '::error::Source repository ''${{ inputs.repository }}'' has no branches!'
+            Write-Error '::error::Source repository ''${{ inputs.source-repository }}'' has no branches!'
             exit 1
           }
 
           $matchingSourceBranchNames = $allBranches | Select-Object -ExpandProperty 'name' | Where-Object { $PSItem -match $branchRegex }
-          if (-not $matchingSourceBranchNames)
+          if ($matchingSourceBranchNames)
           {
-            Write-Error '::error::There are no branches in ''${{ inputs.repository }}'' matching ''${{ inputs.branch-regex }}''!'
+            Write-Output ("::notice::Found $($matchingSourceBranchNames.Count) matching branches in '${{ inputs.source-repository }}':`n" +
+              ($matchingSourceBranchNames -join ", "))
+          }
+          {
+            Write-Error '::error::There are no branches in ''${{ inputs.source-repository }}'' matching ''${{ inputs.branch-regex }}''!'
             exit 1
           }
 
@@ -126,7 +130,7 @@ runs:
 
           if (-not $mirroringBranchNames)
           {
-            Write-Warning '::warning::The branch regex didn''t find any matching branches or all the branches are up-to-date.'
+            Write-Output '::notice::All the matched branches are up-to-date in ''${{ inputs.destination-repository }}''.'
           }
 
           $branchNames = $mirroringBranchNames -join ' '
