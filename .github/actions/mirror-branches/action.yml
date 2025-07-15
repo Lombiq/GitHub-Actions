@@ -101,7 +101,7 @@ runs:
 
           if ($sourceBranchHashes.Count -eq 0)
           {
-            Write-Error '::error::Source repository ''${{ inputs.source-repository }}'' has no branches!'
+            Write-Output '::error::Source repository ''${{ inputs.source-repository }}'' has no branches!'
             exit 1
           }
 
@@ -113,7 +113,7 @@ runs:
           }
           else
           {
-            Write-Error "::error::There are no branches in '${{ inputs.source-repository }}' matching '$branchRegex'!"
+            Write-Output "::error::There are no branches in '${{ inputs.source-repository }}' matching '$branchRegex'!"
             exit 1
           }
 
@@ -138,7 +138,7 @@ runs:
           else
           {
             Write-Output '::notice::All the matched branches are up-to-date in ''${{ inputs.destination-repository }}''.'
-          }          
+          }
         }
 
         Set-GitHubOutput 'first-branch-name' ($branchNames -split ', ')[0]
