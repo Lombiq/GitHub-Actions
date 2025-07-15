@@ -6,7 +6,8 @@ inputs:
     description: The repository's path, e.g. 'Lombiq/GitHub-Actions'.
     default: ${{ github.repository }}
   api-token:
-    description: Optional PAT to authenticate with the GitHub API. Not needed when the source repository is public.
+    description: PAT to authenticate with the GitHub API.
+    required: true
 
 outputs:
   branches:
