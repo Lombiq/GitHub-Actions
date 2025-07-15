@@ -10,8 +10,8 @@ on:
       SOURCE_TOKEN:
         required: false
         description: >
-          Optional PAT to fetch the source repository's branches from the GitHub API and for checkout. Requried when
-          authenticated submodules are used.
+          Optional PAT to fetch the source repository's branches from the GitHub API and for checkout. Not needed when
+          the source repository is public.
 
       DESTINATION_TOKEN:
         required: true

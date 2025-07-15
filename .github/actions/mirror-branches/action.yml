@@ -9,8 +9,9 @@ inputs:
       current one.
     default: ${{ github.repository }}
   source-token:
-    description: Optional PAT to fetch the source repository's branches from the GitHub API and for checkout.
-    default: ${{ github.token }}
+    description: >
+      Optional PAT to fetch the source repository's branches from the GitHub API and for checkout. Not needed when the
+      source repository is public.
   checkout:
     description: >
       Set to 'false' if the source repository is already checked out with history (not shallow clone). Leaving it on the
