@@ -167,31 +167,19 @@ runs:
       if: steps.find-branches.outputs.first-branch-name != ''
       shell: pwsh
       run: |
-        $branchRefNames = [System.Collections.Generic.Dictionary[string, string]]::new()
-        $branchNames = '${{ steps.find-branches.outputs.branch-names }}' -split ','
-        $branchNames | ForEach-Object { $branchRefNames[$PSItem] = $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
+        $refNames = '${{ steps.find-branches.outputs.branch-names }}' -split ',' |
+          ForEach-Object { $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
 
-        # Fetching branches from the source repository. If the repository is checked out in this action, then we know
-        # for sure that the first branch is already fetched, so skip that.
-        $fetchRefNames = '${{ inputs.checkout }}' -eq 'true' ? $branchRefNames.Values[1..($branchRefNames.Count - 1)] : $branchRefNames.Values
-        $fetchRefNames | ForEach-Object { git fetch origin "$($PSItem):$($PSItem)" }
+        # Fetch branches from source repository. If the repository is checked out in this action, then we know for sure
+        # that the first branch is already fetched.
+        $fetchRefNames = '${{ inputs.checkout }}' -eq 'true' ? $refNames[1..($refNames.Count - 1)] : $refNames
 
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
 
         git remote add destination 'https://${{ inputs.destination-token }}@github.com/${{ inputs.destination-repository }}'
 
-        foreach ($branch in $branchRefNames.Keys)
-        {
-          if ((git log origin/$branch..destination/$branch) -eq '')
-          {
-            Write-Output "$branch is already up to date."
-            continue
-          }
-
-          $ref = $branchRefNames[$branch]
-          git push destination "$($ref):$($ref)"
-        }
+        $refNames | ForEach-Object { git push destination "$($PSItem):$($PSItem)" }
 
     - name: Delete 'destination' remote
       if: (success() || failure()) && steps.find-branches.outputs.first-branch-name != ''
