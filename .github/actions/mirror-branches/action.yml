@@ -43,8 +43,8 @@ runs:
     - name: Parameter validation
       shell: pwsh
       run: |
-        $branchNames = '${{ inputs.branch-names }}'
-        $branchRegex = '${{ inputs.branch-regex }}'
+        $branchNames = '${{ inputs.branch-names }}'.Trim()
+        $branchRegex = '${{ inputs.branch-regex }}'.Trim()
         $sourceRepository = '${{ inputs.source-repository }}'
         $destinationRepository = '${{ inputs.destination-repository }}'
         $checkout = '${{ inputs.checkout }}' -eq 'true'
@@ -101,10 +101,7 @@ runs:
         if (-not $branchNames)
         {
           $sourceRepository = '${{ inputs.source-repository }}'
-          $destinationRepository = '${{ inputs.destination-repository }}'
-
           $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
-          $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
 
           '${{ steps.get-source-branches.outputs.branches }}' | ConvertFrom-Json |
             ForEach-Object { $sourceBranchHashes[$PSItem.name] = $PSItem.commit.sha }
@@ -126,6 +123,9 @@ runs:
             Write-Output "::error::There are no branches in '$sourceRepository' matching '$branchRegex'!"
             exit 1
           }
+          
+          $destinationRepository = '${{ inputs.destination-repository }}'
+          $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
 
           '${{ steps.get-destination-branches.outputs.branches }}' | ConvertFrom-Json |
             ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha }
@@ -141,9 +141,8 @@ runs:
 
           if ($mirroringBranchNames.Count -gt 0)
           {
-            $branchNames = $mirroringBranchNames -join ','
-            Write-Output ("::notice::Found $($mirroringBranchNames.Count) branches in '$destinationRepository' to be updated: " +
-              ($mirroringBranchNames -join ', '))
+            $branchNames = $mirroringBranchNames -join ', '
+            Write-Output "::notice::Found $($mirroringBranchNames.Count) branches in '$destinationRepository' to be updated: $branchNames"
           }
           else
           {
@@ -151,8 +150,9 @@ runs:
           }
         }
 
-        Set-GitHubOutput 'first-branch-name' ($branchNames -split ',')[0]
-        Set-GitHubOutput 'branch-names' $branchNames
+        $processedBranchNames = $branchNames -split ',' | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem -ne '' }
+        Set-GitHubOutput 'first-branch-name' $processedBranchNames[0]
+        Set-GitHubOutput 'branch-names' (processedBranchNames -join ',')
 
     - name: Checkout source repository
       if: inputs.checkout == 'true' && steps.find-branches.outputs.first-branch-name != ''
