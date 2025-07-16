@@ -20,15 +20,16 @@ inputs:
     required: true
   branch-names:
     description: >
-      A comma-separated list of branch names to push to the destination repository. Use this parameter when the
-      names of the branches that are outdated on the destination are known, e.g. 'github.ref' when the workflow is
-      triggered by the push event in the source repository. This parameter takes precedence over 'branch-names' when not
-      empty.
+      A comma-separated list of branch names to push to the destination repository. Use this parameter when the names of
+      the branches that are outdated on the destination are known, e.g. 'github.ref' when the workflow is triggered by
+      the push event in the source repository. This parameter takes precedence over 'branch-regex' when not empty.
+      Example: 'dev, feature/test, issue/TEST-1234'.
   branch-regex:
     description: >
       A regex to match the branches of the source repository. Matching branches' head commit hashes will be compared
       between the source and destination repository using the GitHub API to prevent unnecessary push operations. Default
-      value matches any branch.
+      value matches any branch. Example: '^dev$|^issue\/.+$' mirrors the 'dev' branch and the ones starting with
+      'issue/'.
     default: '.+'
 
 runs:
@@ -38,7 +39,7 @@ runs:
       shell: pwsh
       run: |
         $branchNames = '${{ inputs.branch-names }}'.Trim()
-        $branchRegex = '${{ inputs.branch-regex }}'
+        $branchRegex = '${{ inputs.branch-regex }}'.Trim()
         $sourceRepository = '${{ inputs.source-repository }}'
         $destinationRepository = '${{ inputs.destination-repository }}'
 
@@ -89,8 +90,8 @@ runs:
       id: find-branches
       shell: pwsh
       run: |
-        $branchNames = '${{ inputs.branch-names }}'
-        $branchRegex = '${{ inputs.branch-regex }}'
+        $branchNames = '${{ inputs.branch-names }}'.Trim()
+        $branchRegex = '${{ inputs.branch-regex }}'.Trim()
 
         $branchNameList = @()
         if ($branchNames)
