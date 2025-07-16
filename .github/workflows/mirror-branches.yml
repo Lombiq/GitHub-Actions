@@ -38,12 +38,11 @@ on:
         required: true
       branch-names:
         description: >
-          A space-separated list of branch names to push to the destination repository. Use this parameter when the
-          names of the branches that are outdated on the destination are known and doesn't need to be checked, e.g. when
-          the workflow is triggered by the push event in the source repository. This parameter takes precedence over
-          'branch-names' when not empty.
+          A comma-separated list of branch names to push to the destination repository. Use this parameter when the
+          names of the branches that are outdated on the destination are known, e.g. 'github.ref' when the workflow is
+          triggered by the push event in the source repository. This parameter takes precedence over 'branch-names' when
+          not empty.
         type: string
-        default: ''
       branch-regex:
         description: >
           A regex to match the branches of the source repository. Matching branches' head commit hashes will be compared

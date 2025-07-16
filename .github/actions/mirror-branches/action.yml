@@ -26,10 +26,10 @@ inputs:
     required: true
   branch-names:
     description: >
-      A space-separated list of branch names to push to the destination repository. Use this parameter when the names of
-      the branches that are outdated on the destination are known and doesn't need to be checked, e.g. when the workflow
-      is triggered by the push event in the source repository. This parameter takes precedence over 'branch-names' when
-      not empty.
+      A comma-separated list of branch names to push to the destination repository. Use this parameter when the
+      names of the branches that are outdated on the destination are known, e.g. 'github.ref' when the workflow is
+      triggered by the push event in the source repository. This parameter takes precedence over 'branch-names' when not
+      empty.
   branch-regex:
     description: >
       A regex to match the branches of the source repository. Matching branches' head commit hashes will be compared
@@ -43,22 +43,28 @@ runs:
     - name: Parameter validation
       shell: pwsh
       run: |
-        if (-not '${{ inputs.branch-names }}' -and -not '${{ inputs.branch-regex }}')
+        $branchNames = '${{ inputs.branch-names }}'
+        $branchRegex = '${{ inputs.branch-regex }}'
+        $sourceRepository = '${{ inputs.source-repository }}'
+        $destinationRepository = '${{ inputs.destination-repository }}'
+        $checkout = '${{ inputs.checkout }}' -eq 'true'
+
+        if (-not $branchNames -and -not $branchRegex)
         {
           throw 'At least one of the ''branch-names'' and ''branch-regex'' parameters must be non-empty.'
         }
 
-        if (-not '${{ inputs.branch-names }}' -and -not '${{ inputs.source-repository }}')
+        if (-not $branchNames -and -not $sourceRepository -match '^[^/]+/[^/]+$')
         {
           throw 'The ''branch-regex'' parameter used, so the source repository path must be provided too.'
         }
 
-        if ('${{ inputs.checkout }}' -eq 'true' -and -not '${{ inputs.source-repository }}' -match '^[^/]+/[^/]+$')
+        if ($checkout -and -not $sourceRepository -match '^[^/]+/[^/]+$')
         {
           throw 'Checkout is enabled, so a valid source repository path must be provided too.'
         }
 
-        if ('${{ inputs.source-repository }}'.ToLower() -eq '${{ inputs.destination-repository }}'.ToLower())
+        if ($sourceRepository.ToLower() -eq $destinationRepository.ToLower())
         {
           throw 'The source and the destination repositories cannot be the same.'
         }
@@ -94,6 +100,9 @@ runs:
 
         if (-not $branchNames)
         {
+          $sourceRepository = '${{ inputs.source-repository }}'
+          $destinationRepository = '${{ inputs.destination-repository }}'
+
           $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
           $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
 
@@ -102,19 +111,19 @@ runs:
 
           if ($sourceBranchHashes.Count -eq 0)
           {
-            Write-Output '::error::Source repository ''${{ inputs.source-repository }}'' has no branches!'
+            Write-Output "::error::Source repository '$sourceRepository' has no branches!"
             exit 1
           }
 
           $matchingSourceBranchNames = $sourceBranchHashes.Keys | Where-Object { $PSItem -match $branchRegex }
           if ($matchingSourceBranchNames.Count -gt 0)
           {
-            Write-Output ("::notice::Found $($matchingSourceBranchNames.Count) branches in '${{ inputs.source-repository }}' matching " +
-              "'$branchRegex': " + ($matchingSourceBranchNames -join ', '))
+            Write-Output ("::notice::Found $($matchingSourceBranchNames.Count) branches in '$sourceRepository' matching '$branchRegex': " +
+              ($matchingSourceBranchNames -join ', '))
           }
           else
           {
-            Write-Output "::error::There are no branches in '${{ inputs.source-repository }}' matching '$branchRegex'!"
+            Write-Output "::error::There are no branches in '$sourceRepository' matching '$branchRegex'!"
             exit 1
           }
 
@@ -132,17 +141,17 @@ runs:
 
           if ($mirroringBranchNames.Count -gt 0)
           {
-            $branchNames = $mirroringBranchNames -join ', '
-            Write-Output ("::notice::Found $($mirroringBranchNames.Count) branches in '${{ inputs.destination-repository }}' to be updated: " +
-              $branchNames)
+            $branchNames = $mirroringBranchNames -join ','
+            Write-Output ("::notice::Found $($mirroringBranchNames.Count) branches in '$destinationRepository' to be updated: " +
+              ($mirroringBranchNames -join ', '))
           }
           else
           {
-            Write-Output '::notice::All the matched branches are up-to-date in ''${{ inputs.destination-repository }}''.'
+            Write-Output "::notice::All the matched branches are up-to-date in '$destinationRepository'."
           }
         }
 
-        Set-GitHubOutput 'first-branch-name' ($branchNames -split ', ')[0]
+        Set-GitHubOutput 'first-branch-name' ($branchNames -split ',')[0]
         Set-GitHubOutput 'branch-names' $branchNames
 
     - name: Checkout source repository
@@ -158,12 +167,13 @@ runs:
       if: steps.find-branches.outputs.first-branch-name != ''
       shell: pwsh
       run: |
-        $refNames = '${{ steps.find-branches.outputs.branch-names }}' -split ', ' |
-          ForEach-Object { $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
+        $branchRefNames = [System.Collections.Generic.Dictionary[string, string]]::new()
+        $branchNames = '${{ steps.find-branches.outputs.branch-names }}' -split ','
+        $branchNames | ForEach-Object { $branchRefNames[$PSItem] = $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
 
-        # Fetch branches from source repository. If the repository is checked out in this action, then we know for sure
-        # that the first branch is already fetched.
-        $fetchRefNames = '${{ inputs.checkout }}' -eq 'true' ? $refNames[1..($refNames.Count - 1)] : $refNames
+        # Fetching branches from the source repository. If the repository is checked out in this action, then we know
+        # for sure that the first branch is already fetched, so skip that.
+        $fetchRefNames = '${{ inputs.checkout }}' -eq 'true' ? $branchRefNames.Values[1..($branchRefNames.Count - 1)] : $branchRefNames.Values
         $fetchRefNames | ForEach-Object { git fetch origin "$($PSItem):$($PSItem)" }
 
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
@@ -171,7 +181,17 @@ runs:
 
         git remote add destination 'https://${{ inputs.destination-token }}@github.com/${{ inputs.destination-repository }}'
 
-        $refNames | ForEach-Object { git push destination "$($PSItem):$($PSItem)" }
+        foreach ($branch in $branchRefNames.Keys)
+        {
+          if ((git log origin/$branch..destination/$branch) -eq '')
+          {
+            Write-Output "$branch is already up to date."
+            continue
+          }
+
+          $ref = $branchRefNames[$branch]
+          git push destination "$($ref):$($ref)"
+        }
 
     - name: Delete 'destination' remote
       if: (success() || failure()) && steps.find-branches.outputs.first-branch-name != ''
