@@ -28,7 +28,8 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow.
       source-repository:
         description: >
-          The repository to mirror branches from, e.g. 'Lombiq/GitHub-Actions'. Default value is the current repository.
+          The repository to mirror branches from, e.g. 'Lombiq/GitHub-Actions'. Default value is the repository running
+          the workflow.
         type: string
         default: ${{ github.repository }}
       destination-repository:
@@ -45,8 +46,8 @@ on:
         default: ''
       branch-regex:
         description: >
-          A regex to match the branches of the source repository. Matched branches will be checked against the
-          destination repository to determine if the head commit hashes differ to prevent unnecessary push operations.
+          A regex to match the branches of the source repository. Matching branches' head commit hashes will be compared
+          between the source and destination repository using the GitHub API to prevent unnecessary push operations.
           Default value matches any branch.
         type: string
         default: '.+'

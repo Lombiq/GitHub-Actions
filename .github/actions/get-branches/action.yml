@@ -3,7 +3,8 @@ description: Fetches information from the GitHub API about the branches in a rep
 
 inputs:
   repository:
-    description: The repository's path, e.g. 'Lombiq/GitHub-Actions'.
+    description: >
+      The repository's path, e.g. 'Lombiq/GitHub-Actions'. Default value is the repository running the workflow.
     default: ${{ github.repository }}
   api-token:
     description: PAT to authenticate with the GitHub API.

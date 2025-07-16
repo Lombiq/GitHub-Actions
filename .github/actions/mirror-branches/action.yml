@@ -32,9 +32,9 @@ inputs:
       not empty.
   branch-regex:
     description: >
-      A regex to match the branches of the source repository. Matched branches will be checked against the destination
-      repository to determine if the head commit hashes differ to prevent unnecessary push operations. Default value
-      matches any branch.
+      A regex to match the branches of the source repository. Matching branches' head commit hashes will be compared
+      between the source and destination repository using the GitHub API to prevent unnecessary push operations. Default
+      value matches any branch.
     default: '.+'
 
 runs:
