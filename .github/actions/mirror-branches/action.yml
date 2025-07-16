@@ -98,7 +98,12 @@ runs:
         $branchNames = '${{ inputs.branch-names }}'
         $branchRegex = '${{ inputs.branch-regex }}'
 
-        if (-not $branchNames)
+        $branchNameList = @()
+        if ($branchNames)
+        {
+          $branchNameList = $branchNames -split ',' | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem -ne '' }
+        }
+        else
         {
           $sourceRepository = '${{ inputs.source-repository }}'
           $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
@@ -123,26 +128,24 @@ runs:
             Write-Output "::error::There are no branches in '$sourceRepository' matching '$branchRegex'!"
             exit 1
           }
-          
+
           $destinationRepository = '${{ inputs.destination-repository }}'
           $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
 
           '${{ steps.get-destination-branches.outputs.branches }}' | ConvertFrom-Json |
             ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha }
 
-          $mirroringBranchNames = @()
           foreach ($branch in $matchingSourceBranchNames)
           {
               if (-not $destinationBranchHashes.ContainsKey($branch) -or $sourceBranchHashes[$branch] -ne $destinationBranchHashes[$branch])
               {
-                $mirroringBranchNames += $branch
+                $branchNameList += $branch
               }
           }
 
-          if ($mirroringBranchNames.Count -gt 0)
+          if ($branchNameList.Count -gt 0)
           {
-            $branchNames = $mirroringBranchNames -join ', '
-            Write-Output "::notice::Found $($mirroringBranchNames.Count) branches in '$destinationRepository' to be updated: $branchNames"
+            Write-Output "::notice::Found $($branchNameList.Count) branches in '$destinationRepository' to be updated: $($branchNameList -join ', ')"
           }
           else
           {
@@ -150,9 +153,8 @@ runs:
           }
         }
 
-        $processedBranchNames = $branchNames -split ',' | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem -ne '' }
-        Set-GitHubOutput 'first-branch-name' $processedBranchNames[0]
-        Set-GitHubOutput 'branch-names' ($processedBranchNames -join ',')
+        Set-GitHubOutput 'first-branch-name' $branchNameList[0]
+        Set-GitHubOutput 'branch-names' ($branchNameList -join ',')
 
     - name: Checkout source repository
       if: inputs.checkout == 'true' && steps.find-branches.outputs.first-branch-name != ''
