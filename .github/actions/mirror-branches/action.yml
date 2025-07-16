@@ -10,12 +10,7 @@ inputs:
   source-token:
     description: >
       Optional PAT to fetch the source repository's branches from the GitHub API and for checkout. Not needed when the
-      'branch-names' parameter is used while the source repository is public.
-  checkout:
-    description: >
-      Set to 'false' if the source repository is already checked out with history (not shallow clone). Leaving it on the
-      default value ('true') makes the 'source-repository' parameter required.
-    default: 'true'
+      source repository is public.
   destination-repository:
     description: The destination repository path, e.g. 'Lombiq/GitHub-Actions'.
     required: true
@@ -43,24 +38,23 @@ runs:
       shell: pwsh
       run: |
         $branchNames = '${{ inputs.branch-names }}'.Trim()
-        $branchRegex = '${{ inputs.branch-regex }}'.Trim()
+        $branchRegex = '${{ inputs.branch-regex }}'
         $sourceRepository = '${{ inputs.source-repository }}'
         $destinationRepository = '${{ inputs.destination-repository }}'
-        $checkout = '${{ inputs.checkout }}' -eq 'true'
 
         if (-not $branchNames -and -not $branchRegex)
         {
           throw 'At least one of the ''branch-names'' and ''branch-regex'' parameters must be non-empty.'
         }
 
-        if (-not $branchNames -and -not $sourceRepository -match '^[^/]+/[^/]+$')
+        if (-not $sourceRepository -match '^[^/]+/[^/]+$')
         {
-          throw 'The ''branch-regex'' parameter used, so the source repository path must be provided too.'
+          throw 'Please provide a valid source repository path.'
         }
 
-        if ($checkout -and -not $sourceRepository -match '^[^/]+/[^/]+$')
+        if (-not $destinationRepository -match '^[^/]+/[^/]+$')
         {
-          throw 'Checkout is enabled, so a valid source repository path must be provided too.'
+          throw 'Please provide a valid destination repository path.'
         }
 
         if ($sourceRepository.ToLower() -eq $destinationRepository.ToLower())
@@ -157,7 +151,6 @@ runs:
         Set-GitHubOutput 'branch-names' ($branchNameList -join ',')
 
     - name: Checkout source repository
-      if: inputs.checkout == 'true' && steps.find-branches.outputs.first-branch-name != ''
       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
       with:
         repository: ${{ inputs.source-repository }}
@@ -172,10 +165,8 @@ runs:
         $refNames = '${{ steps.find-branches.outputs.branch-names }}' -split ',' |
           ForEach-Object { $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
 
-        # Fetch branches from source repository. If the repository is checked out in this action, then we know for sure
-        # that the first branch is already fetched.
-        $fetchRefNames = '${{ inputs.checkout }}' -eq 'true' ? $refNames[1..($refNames.Count - 1)] : $refNames
-        $fetchRefNames | ForEach-Object { git fetch origin "$($PSItem):$($PSItem)" }
+        # Fetch branches from source repository except the first one, which is already fetched with the checkout.
+        $refNames[1..($refNames.Count - 1)] | ForEach-Object { git fetch origin "$($PSItem):$($PSItem)" }
 
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
