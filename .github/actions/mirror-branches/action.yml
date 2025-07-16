@@ -152,7 +152,7 @@ runs:
 
         $processedBranchNames = $branchNames -split ',' | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem -ne '' }
         Set-GitHubOutput 'first-branch-name' $processedBranchNames[0]
-        Set-GitHubOutput 'branch-names' (processedBranchNames -join ',')
+        Set-GitHubOutput 'branch-names' ($processedBranchNames -join ',')
 
     - name: Checkout source repository
       if: inputs.checkout == 'true' && steps.find-branches.outputs.first-branch-name != ''
