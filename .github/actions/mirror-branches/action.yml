@@ -4,9 +4,8 @@ description: Mirrors branches from a repository to another.
 inputs:
   source-repository:
     description: >
-      The repository's path, e.g. 'Lombiq/GitHub-Actions', to mirror branches from. Override this parameter if it
-      differs from the repository running the workflow, or when you wish to check out a repository different from the
-      current one.
+      The repository's path, e.g. 'Lombiq/GitHub-Actions', to mirror branches from. Default value is the repository
+      running the workflow.
     default: ${{ github.repository }}
   source-token:
     description: >
@@ -81,7 +80,8 @@ runs:
       uses: Lombiq/GitHub-Actions/.github/actions/get-branches@issue/OSOE-737
       with:
         repository: ${{ inputs.source-repository }}
-        api-token: ${{ inputs.source-token }}
+        # When empty, source token falls back to destination token, which still works for a public source repository.
+        api-token: ${{ inputs.source-token == '' && inputs.destination-token || inputs.source-token }}
 
     - name: Get destination branches
       id: get-destination-branches
