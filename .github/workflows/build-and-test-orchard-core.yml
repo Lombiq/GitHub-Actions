@@ -325,7 +325,7 @@ jobs:
 
       - name: Set up Azurite
         if: inputs.set-up-azurite == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@issue/OSOE-1144
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
         with:
           location: ${{ inputs.build-directory}}
 
