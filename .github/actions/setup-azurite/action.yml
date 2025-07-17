@@ -14,7 +14,8 @@ runs:
   steps:
     - name: Set up Azurite via NPM
       # This needs to run in bash for some reason. Azurite properly starts in PS but still, connections fail.
+      # --skipApiVersionCheck is needed to avoid issues with API version mismatches between Azurite and the Azure SDKs.
       shell: bash
       run: |
-        npm install -g azurite
-        azurite --silent --location ${{inputs.location}}/azurite --debug ${{inputs.location}}/azurite/debug.log &
+        npm install --global azurite
+        azurite --silent --skipApiVersionCheck --location ${{inputs.location}}/azurite --debug ${{inputs.location}}/azurite/debug.log &
