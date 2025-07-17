@@ -113,7 +113,7 @@ runs:
         $matchingSourceBranchNames = $sourceBranchHashes.Keys | Where-Object { $PSItem -match $branchRegex }
         if ($matchingSourceBranchNames.Count -gt 0)
         {
-          Write-Output ("::notice::Found $($matchingSourceBranchNames.Count) branches in '$sourceRepository' matching '$branchRegex': " +
+          Write-Output ("::notice::Found $($matchingSourceBranchNames.Count) branches in '$sourceRepository' (source) matching '$branchRegex': " +
             ($matchingSourceBranchNames -join ', '))
         }
         else
@@ -139,7 +139,7 @@ runs:
 
         if ($mirroringBranchNames.Count -gt 0)
         {
-          Write-Output ("::notice::Found $($mirroringBranchNames.Count) branches in '$destinationRepository' to be updated: " +
+          Write-Output ("::notice::Found $($mirroringBranchNames.Count) branches in '$destinationRepository' (destination) to be updated: " +
             ($mirroringBranchNames -join ', '))
         }
         else
