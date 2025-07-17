@@ -21,8 +21,8 @@ inputs:
   branch-names:
     description: >
       A comma-separated list of branch names to push to the destination repository. Use this parameter when the names of
-      the branches that are outdated on the destination are known, e.g. 'github.ref' when the workflow is triggered by
-      the push event in the source repository. This parameter takes precedence over 'branch-regex' when not empty.
+      the branches that are outdated on the destination are known, e.g. 'github.ref_name' when the workflow is triggered
+      by the push event in the source repository. This parameter takes precedence over 'branch-regex' when not empty.
       Example: 'dev, feature/test, issue/TEST-1234'.
   branch-regex:
     description: >

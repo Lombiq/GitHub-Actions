@@ -39,9 +39,9 @@ on:
       branch-names:
         description: >
           A comma-separated list of branch names to push to the destination repository. Use this parameter when the
-          exact names of the branches to mirror are known, e.g. 'github.ref' when the workflow is triggered by the push
-          event in the source repository. This parameter takes precedence over 'branch-regex' when not empty. Example:
-          'dev, feature/test, issue/TEST-1234'.
+          exact names of the branches to mirror are known, e.g. 'github.ref_name' when the workflow is triggered by the
+          push event in the source repository. This parameter takes precedence over 'branch-regex' when not empty.
+          Example: 'dev, feature/test, issue/TEST-1234'.
         type: string
       branch-regex:
         description: >
