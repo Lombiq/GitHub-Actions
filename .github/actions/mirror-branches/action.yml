@@ -151,6 +151,7 @@ runs:
         Set-GitHubOutput 'branch-names' ($mirroringBranchNames -join ',')
 
     - name: Checkout source repository
+      if: steps.find-branches.outputs.first-branch-name != ''
       uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
       with:
         repository: ${{ inputs.source-repository }}
