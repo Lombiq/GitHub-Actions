@@ -31,6 +31,7 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 ## GitHub automation
 
 - [Create Jira issues for community activities](Workflows/GitHubAutomation/CreateJiraIssuesForCommunityActivities.md)
+- [Mirror branches](Workflows/GitHubAutomation/MirrorBranches.md)
 - [Post-pull request checks automation](Workflows/GitHubAutomation/PostPullRequestChecksAutomation.md)
 - [Validate NuGet Publish](Workflows/GitHubAutomation/ValidateNugetPublish.md)
 - [Validate pull request](Workflows/GitHubAutomation/ValidatePullRequest.md)
