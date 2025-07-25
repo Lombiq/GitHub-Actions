@@ -28,18 +28,21 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 - [Build and Test .NET solution](Workflows/BuildDotNetCoreOrchardCore/BuildAndTestDotNetSolution.md)
 - [Build and Test Orchard Core solution](Workflows/BuildDotNetCoreOrchardCore/BuildAndTestOrchardCoreSolution.md)
 
-## Productivity
+## GitHub automation
 
-- [Codespell](Workflows/Productivity/Codespell.md)
-- [Create Jira issues for community activities](Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md)
-- [Markdown linting](Workflows/Productivity/MarkdownLinting.md)
-- [Post-pull request checks automation](Workflows/Productivity/PostPullRequestChecksAutomation.md)
-- [Publish NuGet package](Workflows/Productivity/PublishNuGetPackage.md)
-- [Renovate](Workflows/Productivity/Renovate.md)
-- [Validate NuGet Publish](Workflows/Productivity/ValidateNugetPublish.md)
-- [Validate pull request](Workflows/Productivity/ValidatePullRequest.md)
-- [Validate submodule](Workflows/Productivity/ValidateSubmodule.md)
-- [YAML linting](Workflows/Productivity/YamlLinting.md)
+- [Create Jira issues for community activities](Workflows/GitHubAutomation/CreateJiraIssuesForCommunityActivities.md)
+- [Post-pull request checks automation](Workflows/GitHubAutomation/PostPullRequestChecksAutomation.md)
+- [Validate NuGet Publish](Workflows/GitHubAutomation/ValidateNugetPublish.md)
+- [Validate pull request](Workflows/GitHubAutomation/ValidatePullRequest.md)
+- [Validate submodule](Workflows/GitHubAutomation/ValidateSubmodule.md)
+
+## Developer tools
+
+- [Codespell](Workflows/DeveloperTools/Codespell.md)
+- [Markdown linting](Workflows/DeveloperTools/MarkdownLinting.md)
+- [Publish NuGet package](Workflows/DeveloperTools/PublishNuGetPackage.md)
+- [Renovate](Workflows/DeveloperTools/Renovate.md)
+- [YAML linting](Workflows/DeveloperTools/YamlLinting.md)
 
 ## Azure hosting
 
