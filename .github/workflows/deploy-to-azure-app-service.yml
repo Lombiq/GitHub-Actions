@@ -48,6 +48,12 @@ on:
         type: string
         default: 8.0.301
         description: Version of the .NET SDK to set up.
+      node-version:
+        type: string
+        default: 22.16.0
+        description: >
+          The Node.js version. Can be a specific version number or other notations, see the documentation of
+          https://github.com/actions/setup-node.
       # This is really only necessary to work around the https://github.com/nodejs/corepack/issues/612 corepack issue.
       # Also see https://github.com/Lombiq/NodeJs-Extensions/issues/120.
       enable-corepack:
@@ -174,6 +180,11 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
+      - name: Set up Node.js
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        with:
+          node-version: ${{ inputs.node-version }}
+
       - name: Enable Node corepack
         if: inputs.enable-corepack == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
@@ -243,7 +254,7 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@2fdd5c3ebb4e540834e86ecc1f6fdcd5539023ee # v3.0.2
+        uses: azure/webapps-deploy@e8d44d20a4b02f733385c4755aca052069eeb988 # v3.0.5
         with:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}

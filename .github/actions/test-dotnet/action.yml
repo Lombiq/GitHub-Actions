@@ -124,7 +124,7 @@ runs:
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
-        name: ui-test-failure-dump-${{ steps.setup.outputs.artifact-name-suffix }}
+        name: ui-test-test-dump-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ inputs.build-directory }}/TestDumps/
         if-no-files-found: ignore
         retention-days: ${{ inputs.artifact-retention-days }}
