@@ -1,7 +1,12 @@
 name: Mirror branches from a repository to another
 
 concurrency:
-  group: ${{ github.ref }}
+  group: |
+    ${{
+      inputs.branch-names == ''
+        && format('from_{0}_mirror_{1}_to_{2}', inputs.source-repository, inputs.branch-regex, inputs.destination-repository)
+        || format('from_{0}_mirror_{1}_to_{2}', inputs.source-repository, inputs.branch-names, inputs.destination-repository)
+    }}
   cancel-in-progress: true
 
 on:
