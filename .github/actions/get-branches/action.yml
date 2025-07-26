@@ -40,7 +40,9 @@ runs:
         $page = 0
         do
         {
-            $response = gh api -H $acceptHeader -H $apiHeader "/repos/${{ inputs.repository }}/branches?per_page=$pageSize&page=$page" | ConvertFrom-Json
+            $response = gh api -H $acceptHeader -H $apiHeader "/repos/${{ inputs.repository }}/branches?per_page=$pageSize&page=$page" |
+              ConvertFrom-Json
+
             $allBranches += $response
             $page++
         } while ($response.Count -eq $pageSize)

@@ -30,7 +30,7 @@ inputs:
       between the source and destination repository using the GitHub API to prevent unnecessary push operations. Default
       value matches any branch. Example: '^dev$|^issue\/.+$' mirrors the 'dev' branch and the ones starting with
       'issue/'.
-    default: '.+'
+    default: .+
 
 runs:
   using: composite

@@ -55,7 +55,7 @@ on:
           Default value matches any branch. Example: '^dev$|^issue\/.+$' mirrors the 'dev' branch and the ones starting
           with 'issue/'.
         type: string
-        default: '.+'
+        default: .+
 
 jobs:
   mirror:
