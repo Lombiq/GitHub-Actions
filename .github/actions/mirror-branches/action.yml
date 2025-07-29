@@ -88,67 +88,15 @@ runs:
       id: find-branches
       shell: pwsh
       run: |
-        $branchNames = '${{ inputs.branch-names }}'.Trim()
-        $branchRegex = '${{ inputs.branch-regex }}'.Trim()
-
-        if ($branchNames)
-        {
-          $branchNameList = $branchNames -split ',' | ForEach-Object { $PSItem.Trim() } | Where-Object { $PSItem -ne '' }
-          $branchNameRegexes = $branchNameList | ForEach-Object { "^$($PSItem.Replace('/', '\/'))$" }
-          $branchRegex = $branchNameRegexes -join '|'
+        $params = @{
+            BranchNames = '${{ inputs.branch-names }}'
+            BranchRegex = '${{ inputs.branch-regex }}'
+            SourceRepository = '${{ inputs.source-repository }}'
+            SourceBranchesJson = '${{ steps.get-source-branches.outputs.branches }}'
+            DestinationRepository = '${{ inputs.destination-repository }}'
+            DestinationBranchesJson = '${{ steps.get-destination-branches.outputs.branches }}'
         }
-
-        $sourceRepository = '${{ inputs.source-repository }}'
-        $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
-
-        '${{ steps.get-source-branches.outputs.branches }}' | ConvertFrom-Json |
-          ForEach-Object { $sourceBranchHashes[$PSItem.name] = $PSItem.commit.sha }
-
-        if ($sourceBranchHashes.Count -eq 0)
-        {
-          Write-Output "::error::Source repository '$sourceRepository' has no branches!"
-          exit 1
-        }
-
-        $matchingSourceBranchNames = $sourceBranchHashes.Keys | Where-Object { $PSItem -match $branchRegex }
-        if ($matchingSourceBranchNames.Count -gt 0)
-        {
-          Write-Output ("::notice::Found $($matchingSourceBranchNames.Count) branches in '$sourceRepository' (source) matching '$branchRegex': " +
-            ($matchingSourceBranchNames -join ', '))
-        }
-        else
-        {
-          Write-Output "::error::There are no branches in '$sourceRepository' matching '$branchRegex'!"
-          exit 1
-        }
-
-        $destinationRepository = '${{ inputs.destination-repository }}'
-        $destinationBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::new()
-
-        '${{ steps.get-destination-branches.outputs.branches }}' | ConvertFrom-Json |
-          ForEach-Object { $destinationBranchHashes[$PSItem.name] = $PSItem.commit.sha }
-
-        $mirroringBranchNames = @()
-        foreach ($branch in $matchingSourceBranchNames)
-        {
-            if (-not $destinationBranchHashes.ContainsKey($branch) -or $sourceBranchHashes[$branch] -ne $destinationBranchHashes[$branch])
-            {
-              $mirroringBranchNames += $branch
-            }
-        }
-
-        if ($mirroringBranchNames.Count -gt 0)
-        {
-          Write-Output ("::notice::Found $($mirroringBranchNames.Count) branches in '$destinationRepository' (destination) to be updated: " +
-            ($mirroringBranchNames -join ', '))
-        }
-        else
-        {
-          Write-Output "::notice::All the matched branches are up-to-date in '$destinationRepository'."
-        }
-
-        Set-GitHubOutput 'first-branch-name' $mirroringBranchNames[0]
-        Set-GitHubOutput 'branch-names' ($mirroringBranchNames -join ',')
+        Find-BranchesToMirror @params
 
     - name: Checkout source repository
       if: steps.find-branches.outputs.first-branch-name != ''
