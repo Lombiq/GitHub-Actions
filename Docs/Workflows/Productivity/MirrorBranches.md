@@ -47,6 +47,8 @@ Mirroring branches on a schedule and manual trigger with the workflow running in
 
 Note that this workflow doesn't necessarily need to be in either the source or destination repository; in that case the job's condition regarding the repository need to be omitted.
 
+If you run a one-way mirror that includes the default branch of the source repository and the mirroring workflow is contained in the destination repository (e.g. you use the mirroring workflow to automatically update your fork of a public SDK), then the destination repository should have a different default branch (where the workflow is added) than the source.
+
 ```yaml
 name: Mirror from client
 
