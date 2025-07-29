@@ -115,7 +115,7 @@ runs:
         $refNames = $mirroringBranchNames -split ',' | ForEach-Object { $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
 
         # Fetch branches from source repository except the first one, which is already fetched with the checkout.
-        $refNames[1..($refNames.Count - 1)] | ForEach-Object { git fetch origin "$($PSItem):$($PSItem)" }
+        # $refNames[1..($refNames.Count - 1)] | ForEach-Object { git fetch origin "$($PSItem):$($PSItem)" }
 
         # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
         git config --unset-all http.https://github.com/.extraheader
