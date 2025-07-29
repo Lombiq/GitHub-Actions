@@ -45,22 +45,22 @@ runs:
 
         if (-not $branchNames -and -not $branchRegex)
         {
-          throw 'At least one of the ''branch-names'' and ''branch-regex'' parameters must be non-empty.'
+            throw 'At least one of the ''branch-names'' and ''branch-regex'' parameters must be non-empty.'
         }
 
         if (-not $sourceRepository -match '^[^/]+/[^/]+$')
         {
-          throw 'Please provide a valid source repository path.'
+            throw 'Please provide a valid source repository path.'
         }
 
         if (-not $destinationRepository -match '^[^/]+/[^/]+$')
         {
-          throw 'Please provide a valid destination repository path.'
+            throw 'Please provide a valid destination repository path.'
         }
 
         if ($sourceRepository.ToLower() -eq $destinationRepository.ToLower())
         {
-          throw 'The source and the destination repositories cannot be the same.'
+            throw 'The source and the destination repositories cannot be the same.'
         }
 
     - name: Setup Scripts
