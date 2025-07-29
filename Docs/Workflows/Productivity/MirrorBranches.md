@@ -5,7 +5,7 @@ The `mirror-branches` workflow and action allow synchronizing changes from one r
 ## Configuring your consumer workflow
 
 - Authentication is required through a Personal Access Token (PAT) for the destination repository, and also for the source repository unless it's public.
-- Classic PATs require the `repo` and `workflow` scopes. Fine-grained PATs require read or write access (depending on whether it's used only as a source and/or destination with destination requiring write access) to `Contents` and `Workflows`.
+- Classic PATs require the `repo` and `workflow` scopes. Fine-grained PATs require read or write access (depending on whether it's used only for the source and/or destination with the latter requiring write access) to `Contents` and `Workflows`.
 - When the following conditions are met:
     1. You mirror changes to and from a repository.
     2. One of the workflows is triggered by the push event and is running in the source or destination repositories.
