@@ -96,7 +96,10 @@ runs:
             DestinationRepository = '${{ inputs.destination-repository }}'
             DestinationBranchesJson = '${{ steps.get-destination-branches.outputs.branches }}'
         }
-        Find-BranchesToMirror @params
+        $branches = Find-BranchesToMirror @params
+
+        Set-GitHubOutput 'first-branch-name' $branches[0]
+        Set-GitHubOutput 'branch-names' ($branches -join ',')
 
     - name: Checkout source repository
       if: steps.find-branches.outputs.first-branch-name != ''
