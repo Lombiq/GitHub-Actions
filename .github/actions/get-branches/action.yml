@@ -49,10 +49,10 @@ runs:
 
         if ($allBranches)
         {
-          Write-Output "::notice::Found $($allBranches.Count) branches in '${{ inputs.repository }}'."
-          Set-GitHubOutput 'branches' ($allBranches | ConvertTo-Json -Depth 9 -Compress)
+            Write-Output "::notice::Found $($allBranches.Count) branches in '${{ inputs.repository }}'."
+            Set-GitHubOutput 'branches' ($allBranches | ConvertTo-Json -Depth 9 -Compress)
         }
         else
         {
-          Write-Output '::warning::''${{ inputs.repository }}'' has no branches!'
+            Write-Output '::warning::''${{ inputs.repository }}'' has no branches!'
         }
