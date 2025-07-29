@@ -64,7 +64,7 @@ jobs:
     if: inputs.destination-repository != inputs.source-repository
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      - name: Push to destination
+      - name: Mirror branches
         uses: Lombiq/GitHub-Actions/.github/actions/mirror-branches@issue/OSOE-737
         with:
           source-repository: ${{ inputs.source-repository }}
