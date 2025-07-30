@@ -58,4 +58,5 @@ else
     Write-Output "::notice::All the matched branches are up-to-date in '$DestinationRepository'."
 }
 
-return $mirroringBranchNames
+Set-GitHubOutput 'first-branch-name' $mirroringBranchNames[0]
+Set-GitHubOutput 'branch-names' ($mirroringBranchNames -join ',')
