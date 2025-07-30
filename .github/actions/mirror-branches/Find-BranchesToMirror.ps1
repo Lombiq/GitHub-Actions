@@ -21,19 +21,19 @@ $sourceBranchHashes = [System.Collections.Generic.Dictionary[string, string]]::n
 $SourceBranchesJson | ConvertFrom-Json | ForEach-Object { $sourceBranchHashes[$PSItem.name] = $PSItem.commit.sha }
 if ($sourceBranchHashes.Count -eq 0)
 {
-    Write-Error "::error::Source repository '$SourceRepository' has no branches!"
+    Write-Output "::error::Source repository '$SourceRepository' has no branches!"
     exit 1
 }
 
 $matchingSourceBranchNames = $sourceBranchHashes.Keys | Where-Object { $PSItem -match $BranchRegex }
 if ($matchingSourceBranchNames.Count -gt 0)
 {
-    Write-Information ("::notice::Found $($matchingSourceBranchNames.Count) branches in '$SourceRepository' (source) matching '$BranchRegex': " +
+    Write-Output ("::notice::Found $($matchingSourceBranchNames.Count) branches in '$SourceRepository' (source) matching '$BranchRegex': " +
         ($matchingSourceBranchNames -join ', '))
 }
 else
 {
-    Write-Error "::error::There are no branches in '$SourceRepository' matching '$BranchRegex'!"
+    Write-Output "::error::There are no branches in '$SourceRepository' matching '$BranchRegex'!"
     exit 1
 }
 
@@ -50,12 +50,12 @@ foreach ($branch in $matchingSourceBranchNames)
 
 if ($mirroringBranchNames.Count -gt 0)
 {
-    Write-Information ("::notice::Found $($mirroringBranchNames.Count) branches in '$DestinationRepository' (destination) to be updated: " +
+    Write-Output ("::notice::Found $($mirroringBranchNames.Count) branches in '$DestinationRepository' (destination) to be updated: " +
         ($mirroringBranchNames -join ', '))
 }
 else
 {
-    Write-Information "::notice::All the matched branches are up-to-date in '$DestinationRepository'."
+    Write-Output "::notice::All the matched branches are up-to-date in '$DestinationRepository'."
 }
 
 return $mirroringBranchNames
