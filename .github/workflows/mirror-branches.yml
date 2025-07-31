@@ -85,5 +85,5 @@ jobs:
           FAILURE_NOTIFICATION_TEAMS_WEBHOOK: ${{ secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK }}
         with:
           webhook: ${{ secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK }}
-          title: Mirror from ${{ inputs.source-repository }} to {{ inputs.destination-repository }} failed!
+          title: Mirror from ${{ inputs.source-repository }} to ${{ inputs.destination-repository }} failed!
           style: attention
