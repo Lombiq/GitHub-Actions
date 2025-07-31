@@ -24,7 +24,7 @@ on:
 
       FAILURE_NOTIFICATION_TEAMS_WEBHOOK:
         required: false
-        description: A Microsoft Teams webhook URL to send a notification when the mirror fails.
+        description: An optional webhook URL to send a notification to a Microsoft Teams channel when the mirror fails.
 
     inputs:
       machine-type:
