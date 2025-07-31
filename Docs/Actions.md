@@ -32,6 +32,7 @@ In addition to the below short explanations, check out the inline documentation 
 - `create-jira-issues-for-community-activities`: Creates Jira issues for community activities happening on GitHub, like issues, discussions, and pull requests being opened. Pull requests are only taken into account if they're not already related to a Jira issue (by starting their title with a Jira issue key).
 - `get-branches`: Fetches information about all the branches in a repository from the GitHub API.
 - `markdown-lint`: Checks for linting errors in markdown files, allowing for an optional configuration file to be used. Based on the [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2-action) action.
+- `notify-teams`: A wrapper for https://github.com/carriquiry-g/ms-teams-notification that can send a notification to a Microsoft Teams channel using a webhook.
 - `publish-nuget`: Publishes the content of the current directory as a NuGet package.
 - `update-github-issue-and-pull-request`: Adds the Jira issue key prefix and link to pull requests as well as a Fixes reference to a GitHub issue, if a suitable one is found.
 - `verify-submodule-pull-request`: Assuming that the current repository is a submodule in another repository, this action verifies that a pull request with a matching issue code has been opened there as well.

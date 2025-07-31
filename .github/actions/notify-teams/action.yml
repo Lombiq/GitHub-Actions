@@ -1,0 +1,33 @@
+name: Microsoft Teams notification
+description: >
+  A wrapper for https://github.com/carriquiry-g/ms-teams-notification that can send a notification to a Microsoft Teams
+  channel using a webhook.
+
+inputs:
+  webhook:
+    description: Microsoft Teams webhook URL. See the wrapped action's Readme for instructions on generating one.
+    required: true
+  title:
+    description: The title of the notification sent.
+    required: true
+  style:
+    description: Style of notification sent. See the wrapped action's Readme for possible values.
+    default: default
+  timezone:
+    description: Optional timezone name for the message timestamp, e.g. 'Europe/Budapest'. Defaults to UTC.
+  verbose-logging:
+    description: Enable verbose logging.
+    default: false
+
+runs:
+  using: composite
+  steps:
+    - name: Send Microsoft Teams notification
+      uses: carriquiry-g/ms-teams-notification@3688398d3feb0f78d9924428924216fe6d371668 # v2.0.0
+      with:
+        token: ${{ github.token }}
+        ms-teams-webhook-uri: ${{ inputs.webhook }}
+        notification-summary: ${{ inputs.title }}
+        notification-style: ${{ inputs.style }}
+        timezone: ${{ inputs.timezone }}
+        verbose-logging: ${{ inputs.verbose-logging }}
