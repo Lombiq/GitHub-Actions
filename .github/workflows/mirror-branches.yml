@@ -79,9 +79,11 @@ jobs:
           branch-regex: ${{ inputs.branch-regex }}
 
       - name: Send Microsoft Teams failure notification
-        if: failure() && secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK != ''
+        if: failure() && env.FAILURE_NOTIFICATION_TEAMS_WEBHOOK != ''
         uses: Lombiq/GitHub-Actions/.github/actions/notify-teams@issue/OSOE-737
+        env:
+          FAILURE_NOTIFICATION_TEAMS_WEBHOOK: ${{ secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK }}
         with:
           webhook: ${{ secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK }}
-          title: Mirror from ${{ inputs.destination-repository }} to {{ inputs.source-repository }} failed!
+          title: Mirror from ${{ inputs.source-repository }} to {{ inputs.destination-repository }} failed!
           style: attention
