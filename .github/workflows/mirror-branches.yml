@@ -22,6 +22,10 @@ on:
         required: true
         description: Required PAT to fetch the destination repository's branches and to push to it.
 
+      FAILURE_NOTIFICATION_TEAMS_WEBHOOK:
+        required: false
+        description: A Microsoft Teams webhook URL to send a notification when the mirror fails.
+
     inputs:
       machine-type:
         type: string
@@ -61,7 +65,7 @@ jobs:
   mirror:
     runs-on: ${{ inputs.machine-type }}
     name: Mirror branches
-    if: inputs.destination-repository != inputs.source-repository
+    if: inputs.source-repository != inputs.destination-repository
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Mirror branches
@@ -73,3 +77,11 @@ jobs:
           destination-token: ${{ secrets.DESTINATION_TOKEN }}
           branch-names: ${{ inputs.branch-names }}
           branch-regex: ${{ inputs.branch-regex }}
+
+      - name: Send Microsoft Teams failure notification
+        if: failure() and secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK != ''
+        uses: Lombiq/GitHub-Actions/.github/actions/notify-teams@issue/OSOE-737
+        with:
+          webhook: ${{ secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK }}
+          title: Mirror from ${{ inputs.destination-repository }} to {{ inputs.source-repository }} failed!
+          style: attention
