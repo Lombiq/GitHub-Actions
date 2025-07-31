@@ -25,7 +25,7 @@ runs:
     - name: Send Microsoft Teams notification
       uses: carriquiry-g/ms-teams-notification@3688398d3feb0f78d9924428924216fe6d371668 # v2.0.0
       with:
-        token: ${{ github.token }}
+        github-token: ${{ github.token }}
         ms-teams-webhook-uri: ${{ inputs.webhook }}
         notification-summary: ${{ inputs.title }}
         notification-style: ${{ inputs.style }}
