@@ -17,7 +17,7 @@ inputs:
     description: Optional timezone name for the message timestamp, e.g. 'Europe/Budapest'. Defaults to UTC.
   verbose-logging:
     description: Enable verbose logging.
-    default: false
+    default: 'false'
 
 runs:
   using: composite
