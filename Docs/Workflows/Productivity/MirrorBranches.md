@@ -19,12 +19,17 @@ The `mirror-branches` workflow and action allow synchronizing changes from one r
 
 ### 1. Mirror 'dev-lombiq' branch on push from current repository
 
-This workflow is a one-way mirror of the 'dev-lombiq' branch from the current repository (Lombiq/Client-Project) to another one. Notice the condition added to the job to make sure that the workflow only runs in this repository and the condition not to run when the push event is triggered by 'LombiqBot', which is important when you apply the second example too to these repositories.
+This workflow is a one-way mirror of the specified branches (`dev-lombiq` in the example) from the current repository (Lombiq/Client-Project) to another one.
+
+Manual trigger will mirror the selected branch. If you want to keep the manual trigger, but restrict the mirrored branches to the same one(s) specified in the push trigger, list them for the `branch-names` parameter instead of `${{ github.ref_name }}` or use the `branch-regex` parameter instead of `branch-names`.
+
+Notice the condition added to the job to make sure that the workflow only runs in this repository and the condition not to run when the push event is triggered by 'LombiqBot', which is important when you apply the second example too to these repositories. In that case, replace 'LombiqBot' with the user name of the owner of PAT you use to mirror changes into this repository.
 
 ```yaml
 name: Mirror to client
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev-lombiq
@@ -56,7 +61,7 @@ name: Mirror from client
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'  # Runs every hour.
+    - cron: '0 0 * * *' # Once every day.
 
 jobs:
   mirror-from-other:
