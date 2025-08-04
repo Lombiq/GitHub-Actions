@@ -119,13 +119,16 @@ runs:
         $mirroringBranchNames -split ',' | ForEach-Object { $refNames += $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
 
         # Fetch branches from source repository except the first one, which is already fetched with the checkout.
-        $refNames[1..($refNames.Count - 1)] | ForEach-Object {
-            git fetch origin "$($PSItem):$($PSItem)"
+        if ($refNames.Count -gt 1)
+        {
+            $refNames[1..($refNames.Count - 1)] | ForEach-Object {
+                git fetch origin "$($PSItem):$($PSItem)"
 
-            if ($LASTEXITCODE -ne 0)
-            {
-                Write-Output "::error::Failed to fetch '$PSItem' from '$sourceRepository'!"
-                exit $LASTEXITCODE
+                if ($LASTEXITCODE -ne 0)
+                {
+                    Write-Output "::error::Failed to fetch '$PSItem' from '$sourceRepository'!"
+                    exit $LASTEXITCODE
+                }
             }
         }
 
