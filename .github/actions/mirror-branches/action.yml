@@ -150,4 +150,8 @@ runs:
     - name: Delete 'destination' remote
       if: (success() || failure()) && steps.find-branches.outputs.first-branch-name != ''
       shell: bash
-      run: if (git remote | Select-String -Pattern '^destination$') { git remote rm destination }
+      run: |
+        if (git remote | Select-String -Pattern '^destination$')
+        {
+            git remote rm destination
+        }
