@@ -114,15 +114,12 @@ runs:
         $sourceRepository = '${{ inputs.source-repository }}'
         $destinationRepository = '${{ inputs.destination-repository }}'
         $mirroringBranchNames = '${{ steps.find-branches.outputs.branch-names }}'
-        $refNames = $mirroringBranchNames -split ',' | ForEach-Object { $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
 
-        Write-Output "mirroringBranchNames:`n$mirroringBranchNames"
-        Write-Output "refNames:`n$refNames"
+        $refNames = @()
+        $mirroringBranchNames -split ',' | ForEach-Object { $refNames += $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
 
         # Fetch branches from source repository except the first one, which is already fetched with the checkout.
         $refNames[1..($refNames.Count - 1)] | ForEach-Object {
-            Write-Output "Fetching '$PSItem'."
-
             git fetch origin "$($PSItem):$($PSItem)"
 
             if ($LASTEXITCODE -ne 0)
