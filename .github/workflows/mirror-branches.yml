@@ -1,0 +1,90 @@
+name: Mirror branches from a repository to another
+
+concurrency:
+  group: |
+    ${{
+      inputs.branch-names == ''
+        && format('from_{0}_mirror_{1}_to_{2}', inputs.source-repository, inputs.branch-regex, inputs.destination-repository)
+        || format('from_{0}_mirror_{1}_to_{2}', inputs.source-repository, inputs.branch-names, inputs.destination-repository)
+    }}
+  cancel-in-progress: true
+
+on:
+  workflow_call:
+    secrets:
+      SOURCE_TOKEN:
+        required: false
+        description: >
+          Optional PAT to fetch the source repository's branches from the GitHub API and for checkout. Not needed when
+          the source repository is public.
+
+      DESTINATION_TOKEN:
+        required: true
+        description: Required PAT to fetch the destination repository's branches and to push to it.
+
+      FAILURE_NOTIFICATION_TEAMS_WEBHOOK:
+        required: false
+        description: An optional webhook URL to send a notification to a Microsoft Teams channel when the mirror fails.
+
+    inputs:
+      machine-type:
+        type: string
+        default: ubuntu-24.04
+        description: The type of machine to run the workflow on.
+      timeout-minutes:
+        type: number
+        default: 5
+        description: Configuration for the timeout-minutes parameter of the workflow.
+      source-repository:
+        description: >
+          The repository to mirror branches from, e.g. 'Lombiq/GitHub-Actions'. Default value is the repository running
+          the workflow.
+        type: string
+        default: ${{ github.repository }}
+      destination-repository:
+        description: The destination repository path, e.g. 'Lombiq/GitHub-Actions'.
+        type: string
+        required: true
+      branch-names:
+        description: >
+          A comma-separated list of branch names to push to the destination repository. Use this parameter when the
+          exact names of the branches to mirror are known, e.g. 'github.ref_name' when the workflow is triggered by the
+          push event in the source repository. This parameter takes precedence over 'branch-regex' when not empty.
+          Example: 'dev, feature/test, issue/TEST-1234'.
+        type: string
+      branch-regex:
+        description: >
+          A regex to match the branches of the source repository. Matching branches' head commit hashes will be compared
+          between the source and destination repository using the GitHub API to prevent unnecessary push operations.
+          Default value matches any branch. Example: '^dev$|^issue\/.+$' mirrors the 'dev' branch and the ones starting
+          with 'issue/'.
+        type: string
+        default: .+
+
+jobs:
+  mirror:
+    runs-on: ${{ inputs.machine-type }}
+    name: Mirror branches
+    if: inputs.source-repository != inputs.destination-repository
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+      - name: Mirror branches
+        uses: Lombiq/GitHub-Actions/.github/actions/mirror-branches@dev
+        with:
+          source-repository: ${{ inputs.source-repository }}
+          source-token: ${{ secrets.SOURCE_TOKEN }}
+          destination-repository: ${{ inputs.destination-repository }}
+          destination-token: ${{ secrets.DESTINATION_TOKEN }}
+          branch-names: ${{ inputs.branch-names }}
+          branch-regex: ${{ inputs.branch-regex }}
+
+      - name: Send Microsoft Teams failure notification
+        if: failure() && env.FAILURE_NOTIFICATION_TEAMS_WEBHOOK != ''
+        uses: Lombiq/GitHub-Actions/.github/actions/notify-teams@dev
+        env:
+          # This is added only to be able to use it in the step's run condition.
+          FAILURE_NOTIFICATION_TEAMS_WEBHOOK: ${{ secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK }}
+        with:
+          webhook: ${{ secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK }}
+          title: Mirror from ${{ inputs.source-repository }} to ${{ inputs.destination-repository }} failed!
+          style: attention

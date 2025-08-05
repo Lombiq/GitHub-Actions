@@ -1,0 +1,157 @@
+name: Mirror branches
+description: Mirrors branches from a repository to another.
+
+inputs:
+  source-repository:
+    description: >
+      The repository's path, e.g. 'Lombiq/GitHub-Actions', to mirror branches from. Default value is the repository
+      running the workflow.
+    default: ${{ github.repository }}
+  source-token:
+    description: >
+      Optional PAT to fetch the source repository's branches from the GitHub API and for checkout. Not needed when the
+      source repository is public.
+  destination-repository:
+    description: The destination repository path, e.g. 'Lombiq/GitHub-Actions'.
+    required: true
+  destination-token:
+    description: >
+      Required PAT to fetch the destination repository's branches and to push to it.
+    required: true
+  branch-names:
+    description: >
+      A comma-separated list of branch names to push to the destination repository. Use this parameter when the names of
+      the branches that are outdated on the destination are known, e.g. 'github.ref_name' when the workflow is triggered
+      by the push event in the source repository. This parameter takes precedence over 'branch-regex' when not empty.
+      Example: 'dev, feature/test, issue/TEST-1234'.
+  branch-regex:
+    description: >
+      A regex to match the branches of the source repository. Matching branches' head commit hashes will be compared
+      between the source and destination repository using the GitHub API to prevent unnecessary push operations. Default
+      value matches any branch. Example: '^dev$|^issue\/.+$' mirrors the 'dev' branch and the ones starting with
+      'issue/'.
+    default: .+
+
+runs:
+  using: composite
+  steps:
+    - name: Parameter validation
+      shell: pwsh
+      run: |
+        $branchNames = '${{ inputs.branch-names }}'.Trim()
+        $branchRegex = '${{ inputs.branch-regex }}'.Trim()
+        $sourceRepository = '${{ inputs.source-repository }}'
+        $destinationRepository = '${{ inputs.destination-repository }}'
+
+        if (-not $branchNames -and -not $branchRegex)
+        {
+            throw 'At least one of the ''branch-names'' and ''branch-regex'' parameters must be non-empty.'
+        }
+
+        if (-not $sourceRepository -match '^[^/]+/[^/]+$')
+        {
+            throw 'Please provide a valid source repository path.'
+        }
+
+        if (-not $destinationRepository -match '^[^/]+/[^/]+$')
+        {
+            throw 'Please provide a valid destination repository path.'
+        }
+
+        if ($sourceRepository.ToLower() -eq $destinationRepository.ToLower())
+        {
+            throw 'The source and the destination repositories cannot be the same.'
+        }
+
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Get source branches
+      id: get-source-branches
+      uses: Lombiq/GitHub-Actions/.github/actions/get-branches@dev
+      with:
+        repository: ${{ inputs.source-repository }}
+        # When empty, source token falls back to destination token, which still works for a public source repository.
+        api-token: ${{ inputs.source-token == '' && inputs.destination-token || inputs.source-token }}
+
+    - name: Get destination branches
+      id: get-destination-branches
+      uses: Lombiq/GitHub-Actions/.github/actions/get-branches@dev
+      with:
+        repository: ${{ inputs.destination-repository }}
+        api-token: ${{ inputs.destination-token }}
+
+    - name: Find branches to mirror
+      id: find-branches
+      shell: pwsh
+      run: |
+        $params = @{
+            BranchNames = '${{ inputs.branch-names }}'
+            BranchRegex = '${{ inputs.branch-regex }}'
+            SourceRepository = '${{ inputs.source-repository }}'
+            SourceBranchesJson = '${{ steps.get-source-branches.outputs.branches }}'
+            DestinationRepository = '${{ inputs.destination-repository }}'
+            DestinationBranchesJson = '${{ steps.get-destination-branches.outputs.branches }}'
+        }
+        Find-BranchesToMirror @params
+
+    - name: Checkout source repository
+      if: steps.find-branches.outputs.first-branch-name != ''
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      with:
+        repository: ${{ inputs.source-repository }}
+        ref: ${{ steps.find-branches.outputs.first-branch-name }}
+        token: ${{ inputs.source-token }}
+        fetch-depth: 0
+
+    - name: Fetch branches and push to destination repository
+      if: steps.find-branches.outputs.first-branch-name != ''
+      shell: pwsh
+      run: |
+        $sourceRepository = '${{ inputs.source-repository }}'
+        $destinationRepository = '${{ inputs.destination-repository }}'
+        $mirroringBranchNames = '${{ steps.find-branches.outputs.branch-names }}'
+
+        $refNames = @()
+        $mirroringBranchNames -split ',' | ForEach-Object { $refNames += $PSItem -like 'refs/heads/*' ? $PSItem : "refs/heads/$PSItem" }
+
+        # Fetch branches from source repository except the first one, which is already fetched with the checkout.
+        if ($refNames.Count -gt 1)
+        {
+            $refNames[1..($refNames.Count - 1)] | ForEach-Object {
+                git fetch origin "$($PSItem):$($PSItem)"
+
+                if ($LASTEXITCODE -ne 0)
+                {
+                    Write-Output "::error::Failed to fetch '$PSItem' from '$sourceRepository'!"
+                    exit $LASTEXITCODE
+                }
+            }
+        }
+
+        # Removing extra authentication header that interferes with the PAT: https://stackoverflow.com/a/69979203
+        git config --unset-all http.https://github.com/.extraheader
+
+        git remote add destination "https://${{ inputs.destination-token }}@github.com/$destinationRepository"
+
+        $refNames | ForEach-Object {
+            git push destination "$($PSItem):$($PSItem)"
+
+            if ($LASTEXITCODE -ne 0)
+            {
+                Write-Output "::error::Failed to push '$PSItem' to '$destinationRepository'!"
+                exit $LASTEXITCODE
+            }
+        }
+
+    - name: Delete 'destination' remote
+      if: (success() || failure()) && steps.find-branches.outputs.first-branch-name != ''
+      shell: pwsh
+      run: |
+        if (git remote | Select-String -Pattern '^destination$')
+        {
+            git remote rm destination
+        }
