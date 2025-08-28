@@ -198,7 +198,6 @@ jobs:
 
                     git tag --annotate '${{ inputs.swap-prefix }}/latest' $productionLatest --message 'Latest tag for ${{ inputs.swap-prefix }}'
                     git push origin 'refs/tags/${{ inputs.swap-prefix }}/latest'
-                    
                 }
 
                 git tag --annotate '${{ inputs.tag-prefix }}/latest' $stagingLatest --message 'Latest tag for ${{ inputs.tag-prefix }}'
