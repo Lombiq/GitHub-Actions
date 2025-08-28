@@ -184,6 +184,12 @@ jobs:
                     # Move the staging/latest tag to the commit of production/latest.
                     $productionLatest = (git rev-list --max-count=1 '${{ inputs.tag-prefix }}/latest')
 
+                    $productionTimestampTag = (git tag --list '${{ inputs.tag-prefix }}/*' --contains $productionLatest | `
+                      Where-Object { $PSItem -match '^${{ inputs.tag-prefix }}/' -and $PSItem -ne '${{ inputs.tag-prefix }}/latest' } | `
+                      Sort-Object | Select-Object -First 1)
+
+                    "old-production-timestamp-tag=$productionTimestampTag" >> $Env:GITHUB_OUTPUT
+
                     git tag --delete '${{ inputs.tag-prefix }}/latest'
                     git push origin ':refs/tags/${{ inputs.tag-prefix }}/latest'
 
@@ -193,7 +199,6 @@ jobs:
                     git tag --annotate '${{ inputs.swap-prefix }}/latest' $productionLatest --message 'Latest tag for ${{ inputs.swap-prefix }}'
                     git push origin 'refs/tags/${{ inputs.swap-prefix }}/latest'
                     
-                    "old-production-latest-commit=$productionLatest" >> $Env:GITHUB_OUTPUT
                 }
 
                 git tag --annotate '${{ inputs.tag-prefix }}/latest' $stagingLatest --message 'Latest tag for ${{ inputs.tag-prefix }}'
@@ -218,6 +223,8 @@ jobs:
       #     timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
       #     commit-sha: ${{ steps.move-latest-tag.outputs.commit-sha }}
 
+      # Using the GitHub CLI for this because ncipollo/release-action doesn't support specifying the start tag:
+      # https://github.com/ncipollo/release-action/issues/542.
       - name: Create Release
         if: inputs.app-code-repository != ''
         env:
@@ -230,12 +237,12 @@ jobs:
               '--generate-notes'
           )
 
-          $productionLatestCommit = '${{ steps.move-latest-tag.outputs.old-production-latest-commit }}'
+          $oldProductionTimestampTag = '${{ steps.move-latest-tag.outputs.old-production-timestamp-tag }}'
 
-          if ($productionLatestCommit)
+          if ($oldProductionTimestampTag)
           {
               $releaseArgs += '--notes-start-tag'
-              $releaseArgs += $productionLatestCommit
+              $releaseArgs += $oldProductionTimestampTag
           }
 
           gh release create @releaseArgs
