@@ -245,7 +245,7 @@ jobs:
               $releaseArgs += $oldProductionTimestampTag
           }
 
-          #gh release create @releaseArgs
+          gh release create @releaseArgs
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
