@@ -110,41 +110,41 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
-      # - name: Login to Azure
-      #   uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
-      #   env:
-      #     AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
-      #     AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}
-      #     AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID }}
+      - name: Login to Azure
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID }}
 
-      # - name: Initialize PowerShell modules
-      #   uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+      - name: Initialize PowerShell modules
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
-      # - name: Test Source Web App Slot
-      #   run: |
-      #     Test-AzureWebApp `
-      #       -ResourceGroupName ${{ inputs.resource-group-name }} `
-      #       -WebAppName ${{ inputs.app-name }} `
-      #       -SlotName ${{ inputs.source-slot-name }}
+      - name: Test Source Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.source-slot-name }}
 
-      # - name: Swap Web App Slots
-      #   run: |
-      #     Switch-AzWebAppSlot `
-      #       -ResourceGroupName ${{ inputs.resource-group-name }} `
-      #       -Name ${{ inputs.app-name }} `
-      #       -SourceSlotName ${{ inputs.source-slot-name }} `
-      #       -DestinationSlotName ${{ inputs.destination-slot-name }}
+      - name: Swap Web App Slots
+        run: |
+          Switch-AzWebAppSlot `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -Name ${{ inputs.app-name }} `
+            -SourceSlotName ${{ inputs.source-slot-name }} `
+            -DestinationSlotName ${{ inputs.destination-slot-name }}
 
       - name: Create Timestamp
         id: create-timestamp
         uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@dev
 
-      # - name: Test Destination Web App Slot
-      #   run: |
-      #     Test-AzureWebApp `
-      #       -ResourceGroupName ${{ inputs.resource-group-name }} `
-      #       -WebAppName ${{ inputs.app-name }} `
-      #       -SlotName ${{ inputs.destination-slot-name }}
+      - name: Test Destination Web App Slot
+        run: |
+          Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }}
 
       - name: Checkout Code Repository
         if: inputs.app-code-repository != ''
@@ -215,13 +215,13 @@ jobs:
             Write-Output "::notice::The commit from the app code repository with the SHA $stagingLatest was swapped out."
             "commit-sha=$stagingLatest" >> $Env:GITHUB_OUTPUT
 
-      # - name: Add Azure Application Insights Release Annotation
-      #   uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
-      #   with:
-      #     release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
-      #     application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
-      #     timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
-      #     commit-sha: ${{ steps.move-latest-tag.outputs.commit-sha }}
+      - name: Add Azure Application Insights Release Annotation
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        with:
+          release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
+          application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
+          timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
+          commit-sha: ${{ steps.move-latest-tag.outputs.commit-sha }}
 
       # Using the GitHub CLI for this because ncipollo/release-action doesn't support specifying the start tag:
       # https://github.com/ncipollo/release-action/issues/542.
