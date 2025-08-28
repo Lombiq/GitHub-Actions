@@ -226,11 +226,19 @@ jobs:
           $productionLatestCommit = '${{ steps.move-latest-tag.outputs.old-production-latest-commit }}'
             $notesStartTag = $productionLatestCommit ? "--notes-start-tag $productionLatestCommit" : ''
           
-          gh release create '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}' `
-            --repo '${{ inputs.app-code-repository }}' `
-            --title '${{ steps.create-timestamp.outputs.timestamp }}' `
-            --generate-notes `
-            $notesStartTag
+            $releaseArgs = @(
+                '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
+                '--repo', '${{ inputs.app-code-repository }}'
+                '--title', '${{ steps.create-timestamp.outputs.timestamp }}'
+                '--generate-notes'
+            )
+
+            if ($notesStartTag)
+            {
+               $releaseArgs += $notesStartTag
+            }
+
+            gh release create @releaseArgs
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
