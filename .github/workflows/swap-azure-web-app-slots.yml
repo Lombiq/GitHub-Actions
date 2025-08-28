@@ -192,6 +192,8 @@ jobs:
 
                     git tag --annotate '${{ inputs.swap-prefix }}/latest' $productionLatest --message 'Latest tag for ${{ inputs.swap-prefix }}'
                     git push origin 'refs/tags/${{ inputs.swap-prefix }}/latest'
+                    
+                    "old-production-latest-commit=$productionLatest" >> $Env:GITHUB_OUTPUT
                 }
 
                 git tag --annotate '${{ inputs.tag-prefix }}/latest' $stagingLatest --message 'Latest tag for ${{ inputs.tag-prefix }}'
@@ -216,24 +218,19 @@ jobs:
           timestamp: ${{ steps.create-timestamp.outputs.timestamp }}
           commit-sha: ${{ steps.move-latest-tag.outputs.commit-sha }}
 
-      # Required because the release action takes the repository name and owner as separate inputs.
-      - name: Extract Repository Name
-        id: extract-repo-name
-        if: inputs.app-code-repository != ''
-        run: |
-          $repoName = '${{ inputs.app-code-repository }}'.Split('/')[1]
-          "repo-name=$repoName" >> $Env:GITHUB_OUTPUT
-
       - name: Create Release
-        uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
         if: inputs.app-code-repository != ''
-        with:
-          repo: ${{ steps.extract-repo-name.outputs.repo-name }}
-          token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
-          tag: ${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}
-          releaseName: ${{ steps.create-timestamp.outputs.timestamp }}
-          allowUpdates: true
-          generateReleaseNotes: true
+        env:
+          GH_TOKEN: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
+        run: |
+          $productionLatestCommit = '${{ steps.move-latest-tag.outputs.old-production-latest-commit }}'
+            $notesStartTag = $productionLatestCommit ? "--notes-start-tag $productionLatestCommit" : ''
+          
+          gh release create '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}' `
+            --repo '${{ inputs.app-code-repository }}' `
+            --title '${{ steps.create-timestamp.outputs.timestamp }}' `
+            --generate-notes `
+            $notesStartTag
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
