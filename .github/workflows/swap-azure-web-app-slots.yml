@@ -223,22 +223,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
         run: |
+          $releaseArgs = @(
+              '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
+              '--repo', '${{ inputs.app-code-repository }}'
+              '--title', '${{ steps.create-timestamp.outputs.timestamp }}'
+              '--generate-notes'
+          )
+
           $productionLatestCommit = '${{ steps.move-latest-tag.outputs.old-production-latest-commit }}'
-            $notesStartTag = $productionLatestCommit ? "--notes-start-tag $productionLatestCommit" : ''
-          
-            $releaseArgs = @(
-                '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
-                '--repo', '${{ inputs.app-code-repository }}'
-                '--title', '${{ steps.create-timestamp.outputs.timestamp }}'
-                '--generate-notes'
-            )
 
-            if ($notesStartTag)
-            {
-               $releaseArgs += $notesStartTag
-            }
+          if ($productionLatestCommit)
+          {
+              $releaseArgs += '--notes-start-tag'
+              $releaseArgs += $productionLatestCommit
+          }
 
-            gh release create @releaseArgs
+          gh release create @releaseArgs
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
