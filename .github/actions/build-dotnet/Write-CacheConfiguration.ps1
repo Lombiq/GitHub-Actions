@@ -1,4 +1,5 @@
-﻿param($IsNuget, $IsNpm, $RestoreKeys, $Hash)
+﻿[Diagnostics.CodeAnalysis.SuppressMessage('PSAvoidUsingPositionalParameters', '', Justification = 'False positive for npm.')]
+param($IsNuget, $IsNpm, $RestoreKeys, $Hash)
 
 function Invoke-Maybe($Block) { try { Invoke-Command -ScriptBlock $Block } catch { return } }
 
