@@ -117,7 +117,7 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
       - name: Publish to NuGet
-        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/INFRA-168
         with:
           source: ${{ inputs.source }}
           verbosity: ${{ inputs.verbosity }}
