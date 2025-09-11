@@ -59,8 +59,8 @@ on:
         description: Configuration for the timeout-minutes parameter of the workflow. 360 is GitHub's default.
       machine-type:
         type: string
-        default: windows-2022
-        description: The machine type to run the workflow under, e.g. "windows-2022". Needs to be Windows.
+        default: windows-2025
+        description: The machine type to run the workflow under, e.g. "windows-2025". Needs to be Windows.
       dotnet-version:
         type: string
         default: 8.0.301

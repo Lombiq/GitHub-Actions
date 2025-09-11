@@ -53,9 +53,9 @@ on:
         default: 'true'
       machine-type:
         type: string
-        default: windows-2022
+        default: windows-2025
         description: >
-          The machine type to run the workflow under, e.g. "windows-2022". Needs to be Windows.
+          The machine type to run the workflow under, e.g. "windows-2025". Needs to be Windows.
       repository:
         description: >
           Repository name with owner to git checkout, if not the current repository. E.g. "Lombiq/GitHub-Actions".
