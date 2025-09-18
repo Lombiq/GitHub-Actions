@@ -16,7 +16,7 @@ runs:
   using: composite
   steps:
     - name: Run Renovate
-      uses: renovatebot/github-action@6927a58a017ee9ac468a34a5b0d2a9a9bd45cac3 # v43.0.11
+      uses: renovatebot/github-action@f8af9272cd94a4637c29f60dea8731afd3134473 # v43.0.12
       env:
         RENOVATE_REPOSITORIES: ${{ github.repository }}
         LOG_LEVEL: ${{ inputs.log-level }}
