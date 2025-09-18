@@ -44,6 +44,11 @@ inputs:
     description: >
       Used to specify a package manager for caching in the default directory. Supported values: npm, yarn,
       pnpm.
+  package-manager-cache:
+    description: >
+      Set to false to disable automatic caching based on the package manager field in package.json. By default,
+      caching is enabled if the package manager field is present.
+    default: true
   cache-dependency-path:
     description: >
       Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc. Supports wildcards or
@@ -66,6 +71,7 @@ runs:
     - name: Set up Node.js
       uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
       with:
+        always-auth: ${{ inputs.always-auth }}
         node-version: ${{ inputs.node-version }}
         node-version-file: ${{ inputs.node-version-file }}
         architecture: ${{ inputs.architecture }}
@@ -74,8 +80,8 @@ runs:
         scope: ${{ inputs.scope }}
         token: ${{ inputs.token }}
         cache: ${{ inputs.cache }}
+        package-manager-cache: ${{ inputs.package-manager-cache }}
         cache-dependency-path: ${{ inputs.cache-dependency-path }}
-        always-auth: ${{ inputs.always-auth }}
         mirror: ${{ inputs.mirror }}
         mirror-token: ${{ inputs.mirror-token }}
 
