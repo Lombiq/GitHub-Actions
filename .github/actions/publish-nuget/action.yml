@@ -241,6 +241,17 @@ runs:
             Write-Output "::notice::Dry run mode: Package created successfully but will not be published."
         }
 
+    - name: Push with dotnet
+      if: inputs.dry-run != 'true'
+      shell: pwsh
+      run: |
+        if ([string]::IsNullOrWhiteSpace($Env:API_KEY))
+        {
+            Write-Output "::error::API_KEY is missing or empty."
+            exit 1
+        }
+        dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
+
     - name: Publish Artifacts
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       with:
