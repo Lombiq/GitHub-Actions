@@ -33,6 +33,13 @@ on:
         description: >
           The Node.js version. Can be a specific version number or other notations, see the documentation of
           https://github.com/actions/setup-node.
+      node-package-manager-cache:
+        type: string
+        default: 'false'
+        description: >
+          Set to true to enable automatic caching based on the package manager field in package.json. By default,
+          caching is disabled for this workflow (which is different from the underlying action's default behavior), to
+          improve stability and backwards compatibility.
       timeout-minutes:
         type: number
         default: 15
@@ -73,6 +80,7 @@ jobs:
       verbosity: ${{ inputs.verbosity }}
       dotnet-version: ${{ inputs.dotnet-version }}
       node-version: ${{ inputs.node-version }}
+      node-package-manager-cache: ${{ inputs.node-package-manager-cache }}
       timeout-minutes: ${{ inputs.timeout-minutes }}
       enable-corepack: ${{ inputs.enable-corepack }}
       # NoWarn on NU5104 to not have warnings for prerelease dependencies for non-prerelease versions (see

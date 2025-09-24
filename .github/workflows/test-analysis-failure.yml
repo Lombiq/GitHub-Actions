@@ -33,6 +33,13 @@ on:
         description: >
           The Node.js version. Can be a specific version number or other notations, see the documentation of
           https://github.com/actions/setup-node.
+      node-package-manager-cache:
+        type: string
+        default: 'false'
+        description: >
+          Set to true to enable automatic caching based on the package manager field in package.json. By default,
+          caching is disabled for this workflow (which is different from the underlying action's default behavior), to
+          improve stability and backwards compatibility.
       # This is really only necessary to work around the https://github.com/nodejs/corepack/issues/612 corepack issue.
       # Also see https://github.com/Lombiq/NodeJs-Extensions/issues/120.
       enable-corepack:
@@ -99,6 +106,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
         with:
           node-version: ${{ inputs.node-version }}
+          package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Enable Node corepack
         if: inputs.enable-corepack == 'true'
