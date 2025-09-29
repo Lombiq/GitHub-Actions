@@ -86,7 +86,7 @@ jobs:
 
       - name: Automatically Transition Jira issue
         if: steps.check-steps-should-run.outputs.is-latest != 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/auto-transition-jira-issue@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/auto-transition-jira-issue@issue/LEAD-103
         env:
           GITHUB_TOKEN: ${{ env.MERGE_TOKEN }}
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
