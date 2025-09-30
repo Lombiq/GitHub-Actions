@@ -64,19 +64,19 @@ function CreateIssue
     try
     {
         $issueDetails = Invoke-JiraApiGet "issue/$($response.key)"
-        
+
         if ($issueDetails.fields.priority.iconUrl)
         {
             $iconUrl = $issueDetails.fields.priority.iconUrl
             if ($iconUrl -match '^(https?://[^/]+)')
             {
-                $issueUrl = "$($matches[1])/browse/$($response.key)"
+                $issueUrl = "$($Matches[1])/browse/$($response.key)"
             }
         }
     }
     catch
     {
-        Write-Warning "Failed to fetch issue details from Jira API. Falling back to constructed URL."
+        Write-Warning 'Failed to fetch issue details from Jira API. Falling back to constructed URL.'
     }
 
     if (-not $issueUrl)
@@ -85,7 +85,7 @@ function CreateIssue
         # URL when using service accounts, that's why we only use it as a fallback.
         $issueUrl = "$($Env:JIRA_BASE_URL.TrimEnd('/'))/browse/$($response.key)"
     }
-    
+
     @{
         Key = $response.key
         Url = $issueUrl
