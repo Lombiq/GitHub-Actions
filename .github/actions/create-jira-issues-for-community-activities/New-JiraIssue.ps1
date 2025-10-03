@@ -58,7 +58,38 @@ function CreateIssue
         exit 1
     }
 
-    $response.key
+    # The "self" field in the response won't contain a public URL (but an API one) when the issue is created with a
+    # service account. Neither will most of the fields in the response of GET-ting the issue. So, trying to extract it
+    # from fields.priority.iconUrl.
+    try
+    {
+        $issueDetails = Invoke-JiraApiGet "issue/$($response.key)"
+
+        if ($issueDetails.fields.priority.iconUrl)
+        {
+            $iconUrl = $issueDetails.fields.priority.iconUrl
+            if ($iconUrl -match '^(https?://[^/]+)')
+            {
+                $issueUrl = "$($Matches[1])/browse/$($response.key)"
+            }
+        }
+    }
+    catch
+    {
+        Write-Warning 'Failed to fetch issue details from Jira API. Falling back to constructed URL.'
+    }
+
+    if (-not $issueUrl)
+    {
+        # Fallback to constructed URL if we couldn't extract it from the issue details. JIRA_BASE_URL won't be a public
+        # URL when using service accounts, that's why we only use it as a fallback.
+        $issueUrl = "$($Env:JIRA_BASE_URL.TrimEnd('/'))/browse/$($response.key)"
+    }
+
+    @{
+        Key = $response.key
+        Url = $issueUrl
+    }
 }
 
 function AddLink
@@ -84,7 +115,7 @@ function AddLink
     }
 }
 
-$issueKey = CreateIssue
-AddLink $issueKey
-Set-GitHubOutput 'issue-key' $issueKey
-Set-GitHubOutput 'issue-url' "$($Env:JIRA_BASE_URL.TrimEnd('/'))/browse/$issueKey"
+$issue = CreateIssue
+AddLink $issue.Key
+Set-GitHubOutput 'issue-key' $issue.Key
+Set-GitHubOutput 'issue-url' $issue.Url
