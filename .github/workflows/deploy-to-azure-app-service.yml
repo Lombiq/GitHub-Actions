@@ -261,7 +261,24 @@ jobs:
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
 
+      # With Linux App Services, this fails the first time despite the deployment actually successfully completing, see
+      # https://github.com/Azure/webapps-deploy/issues/362. Quickly rerunning it below works around this.
       - name: Deploy to Azure App Service
+        id: deploy-to-azure
+        continue-on-error: true
+        uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d # v3.0.6
+        with:
+          app-name: ${{ inputs.app-name }}
+          slot-name: ${{ inputs.slot-name }}
+          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+          package: ${{ inputs.build-directory }}/Published.zip
+          # For docs on the below configs see https://github.com/Azure/webapps-deploy/releases/tag/v3.0.0.
+          type: zip
+          restart: false
+          clean: false
+
+      - name: Deploy to Azure App Service (Retry)
+        if: steps.deploy-to-azure.outcome == 'failure'
         uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d # v3.0.6
         with:
           app-name: ${{ inputs.app-name }}
