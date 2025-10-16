@@ -261,7 +261,7 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/OSOE-1169
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
 
       - name: Stop Web App Slot
         run: |
