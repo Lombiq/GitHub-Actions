@@ -69,7 +69,7 @@ runs:
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Set up Node.js
-      uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+      uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
       with:
         always-auth: ${{ inputs.always-auth }}
         node-version: ${{ inputs.node-version }}
