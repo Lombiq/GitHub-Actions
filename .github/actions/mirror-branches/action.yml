@@ -71,7 +71,7 @@ runs:
 
     - name: Get source branches
       id: get-source-branches
-      uses: Lombiq/GitHub-Actions/.github/actions/get-branches@issue/OSOE-1169
+      uses: Lombiq/GitHub-Actions/.github/actions/get-branches@dev
       with:
         repository: ${{ inputs.source-repository }}
         # When empty, source token falls back to destination token, which still works for a public source repository.
@@ -79,7 +79,7 @@ runs:
 
     - name: Get destination branches
       id: get-destination-branches
-      uses: Lombiq/GitHub-Actions/.github/actions/get-branches@issue/OSOE-1169
+      uses: Lombiq/GitHub-Actions/.github/actions/get-branches@dev
       with:
         repository: ${{ inputs.destination-repository }}
         api-token: ${{ inputs.destination-token }}
@@ -100,7 +100,7 @@ runs:
 
     - name: Checkout source repository
       if: steps.find-branches.outputs.first-branch-name != ''
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1169
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
       with:
         repository: ${{ inputs.source-repository }}
         ref: ${{ steps.find-branches.outputs.first-branch-name }}
