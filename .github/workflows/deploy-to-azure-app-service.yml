@@ -104,6 +104,14 @@ on:
           Change this to any other value to alter the cache key, effectively invalidating the latest cache. This is an
           alternative to clearing the cache manually, see
           https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#managing-caches.
+      build-warnings-as-errors:
+        type: string
+        default: 'true'
+        description: >
+          Whether compiler warnings should be treated as errors during the build process. The default value is "true",
+          the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
+          to "false", the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the
+          build to fail.
       timeout-minutes:
         type: number
         default: 360
@@ -217,6 +225,7 @@ jobs:
           enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
           cache-version: ${{ inputs.build-cache-version }}
           solution-or-project-path: ${{ inputs.web-project-path }}
+          warnings-as-errors: ${{ inputs.build-warnings-as-errors }}
           # Arguments need to be separated into newlines: https://stackoverflow.com/a/59077879/16192320
           dotnet-build-switches: |
             --self-contained
