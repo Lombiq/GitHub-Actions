@@ -61,8 +61,6 @@ on:
           Set to true to enable automatic caching based on the package manager field in package.json. By default,
           caching is disabled for this workflow (which is different from the underlying action's default behavior), to
           improve stability and backwards compatibility.
-      # This is really only necessary to work around the https://github.com/nodejs/corepack/issues/612 corepack issue.
-      # Also see https://github.com/Lombiq/NodeJs-Extensions/issues/120.
       enable-corepack:
         type: string
         default: 'false'
