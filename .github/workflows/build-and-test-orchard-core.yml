@@ -300,7 +300,7 @@ jobs:
 
       - name: Enable Node.js corepack
         if: inputs.enable-corepack == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-1010
 
       - name: Build and Static Code Analysis
         uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
