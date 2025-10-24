@@ -10,8 +10,6 @@ inputs:
     required: false
     default: minimal
     description: The logging verbosity type used by the `dotnet` command.
-  # This is really only necessary to work around the https://github.com/nodejs/corepack/issues/612 corepack issue.
-  # Also see https://github.com/Lombiq/NodeJs-Extensions/issues/120.
   enable-corepack:
     type: string
     default: 'false'

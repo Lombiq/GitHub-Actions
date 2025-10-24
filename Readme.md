@@ -47,6 +47,12 @@ For .NET workflows, the default .NET SDK version we should provide is a concrete
 
 We can still choose to update to a more recent patch version, but only deliberately.
 
+### Default Node.js version
+
+.NET build workflows install the latest Active Long-Term Support (LTS) version of Node.js by default, but the version is configurable. You can check out the [Node.js release schedule](https://nodejs.org/en/about/previous-releases) to see which version is the latest Active LTS at any given time.
+
+Build workflows also enable [corepack](https://github.com/nodejs/corepack) to allow using Node.js package managers other than NPM. This behavior will be disabled when upgrading to Node.js v26 since that version [won't contain corepack anymore](https://github.com/nodejs/node/issues/50963#issuecomment-2746471823).
+
 ### Reference validation
 
 To ensure that when changing actions or workflows their references to other actions/workflows are up-to-date (i.e. instead of `@dev` they reference each other with `@current-branch`) the [Validate GitHub Actions Refs workflow](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/workflows/validate-this-gha-refs.yml) will fail if references are incorrect. This is the case also if after a pull request approve that references don't point to the target branch; before merging, that should be fixed, otherwise merging via the merge queue will fail.

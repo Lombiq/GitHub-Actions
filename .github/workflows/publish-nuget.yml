@@ -37,7 +37,7 @@ on:
         description: Version of the .NET SDK to set up.
       node-version:
         type: string
-        default: 22.16.0
+        default: 24.10.0
         description: >
           The Node.js version. Can be a specific version number or other notations, see the documentation of
           https://github.com/actions/setup-node.
@@ -52,8 +52,6 @@ on:
         type: number
         default: 15
         description: Configuration for the timeout-minutes parameter of the workflow. 360 is GitHub's default.
-      # This is really only necessary to work around the https://github.com/nodejs/corepack/issues/612 corepack issue.
-      # Also see https://github.com/Lombiq/NodeJs-Extensions/issues/120.
       enable-corepack:
         type: string
         default: 'false'
