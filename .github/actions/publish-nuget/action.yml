@@ -147,7 +147,7 @@ runs:
 
     - name: Enable Node corepack
       if: inputs.enable-corepack == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-1010
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Generate nuspec file if needed
       if: hashFiles('ConvertTo-Nuspec.ps1')

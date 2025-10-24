@@ -194,14 +194,14 @@ jobs:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1010
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
         with:
           node-version: ${{ inputs.node-version }}
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Enable Node corepack
         if: inputs.enable-corepack == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-1010
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
       # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
