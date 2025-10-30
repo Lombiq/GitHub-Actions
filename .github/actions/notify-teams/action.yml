@@ -23,7 +23,7 @@ runs:
   using: composite
   steps:
     - name: Send Microsoft Teams notification
-      uses: carriquiry-g/ms-teams-notification@3688398d3feb0f78d9924428924216fe6d371668 # v2.0.0
+      uses: carriquiry-g/ms-teams-notification@5b1b4bb4e2b964f8990de0b5903e79becf417be4 # v2.1.0
       with:
         github-token: ${{ github.token }}
         ms-teams-webhook-uri: ${{ inputs.webhook }}
