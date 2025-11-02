@@ -43,13 +43,15 @@ This project is developed by [Lombiq Technologies](https://lombiq.com/). Commerc
 
 ### Default .NET version
 
-For .NET workflows, the default .NET SDK version we should provide is a concrete patch version of the latest Long-Term Support (LTS) .NET major version (the even-numbered ones, like 8), the most recent one at the time of updating .NET support (e.g., to `8.0.301` when .NET 8 is the latest LTS version). We need to pin the .NET SDK to a specific version like this to avoid unexpected build changes that patch version updates bring (which happens if the version is specified as e.g. `8.0.x`). See [this issue](https://github.com/dotnet/roslyn/issues/73639) for more context.
+For .NET workflows, the default .NET SDK version we should provide is a concrete patch version of the latest Long-Term Support (LTS) .NET major version (the even-numbered ones, like 8), the most recent one at the time of upgrading .NET support (e.g., to `8.0.301` when .NET 8 is the latest LTS version). We need to pin the .NET SDK to a specific version like this to avoid unexpected build changes that patch version updates bring (which happens if the version is specified as e.g. `8.0.x`). See [this issue](https://github.com/dotnet/roslyn/issues/73639) for more context.
 
-We can still choose to update to a more recent patch version, but only deliberately.
+We can still choose to update to a more recent patch version, but only deliberately. This can happen if the newer version has critical fixes that we deem necessary for the vast majority of applications.
 
 ### Default Node.js version
 
-.NET build workflows install the latest Active Long-Term Support (LTS) version of Node.js by default, but the version is configurable. You can check out the [Node.js release schedule](https://nodejs.org/en/about/previous-releases) to see which version is the latest Active LTS at any given time.
+.NET build workflows install the Active Long-Term Support (LTS) version of Node.js by default, the latest one at the time of upgrading the Node.js version. This version is configurable. This is then pinned to a concrete patch version to make builds repeatable. You can check out the [Node.js release schedule](https://nodejs.org/en/about/previous-releases) to see which version is the latest Active LTS at any given time.
+
+We can still choose to update to a more recent patch version, but only deliberately. This can happen if the newer version has critical fixes that we deem necessary for the vast majority of applications.
 
 Build workflows also enable [corepack](https://github.com/nodejs/corepack) to allow using Node.js package managers other than NPM. This behavior will be disabled when upgrading to Node.js v26 since that version [won't contain corepack anymore](https://github.com/nodejs/node/issues/50963#issuecomment-2746471823).
 
