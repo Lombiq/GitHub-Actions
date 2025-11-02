@@ -55,7 +55,7 @@ on:
         default: ''
       dotnet-version:
         type: string
-        default: 8.0.301
+        default: 8.0.318
         description: Version of the .NET SDK to set up.
       node-version:
         type: string

@@ -63,7 +63,7 @@ on:
         description: The machine type to run the workflow under, e.g. "windows-2025". Needs to be Windows.
       dotnet-version:
         type: string
-        default: 8.0.301
+        default: 8.0.318
         description: Version of the .NET SDK to set up.
       node-version:
         type: string
