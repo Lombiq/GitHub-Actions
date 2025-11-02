@@ -4,7 +4,7 @@ description: Sets up the .NET SDK.
 inputs:
   dotnet-version:
     required: false
-    default: 8.0.301
+    default: 8.0.318
     description: Version of the .NET SDK to set up.
 
 runs:
