@@ -64,11 +64,13 @@ runs:
   using: composite
   steps:
     - name: Setup Scripts
+      if: inputs.node-version != 'none'
       shell: pwsh
       run: |
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Set up Node.js
+      if: inputs.node-version != 'none'
       uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
       with:
         always-auth: ${{ inputs.always-auth }}
@@ -86,6 +88,7 @@ runs:
         mirror-token: ${{ inputs.mirror-token }}
 
     - name: Save Node.js Version Into Environment Variable
+      if: inputs.node-version != 'none'
       shell: pwsh
       run: |
         $nodeVersion = node --version
