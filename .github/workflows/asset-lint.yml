@@ -9,52 +9,82 @@ on:
           The GitHub token to authenticate checkout with. Pass in a GitHub personal access token if authenticated
           submodules are used.
 
-    # When updating defaults here also update them in the `markdown-lint` action.
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'true'
-      config:
+      scripts:
+        description: |
+          Information about the projects where JavaScript linting should occur. Can be in two formats:
+          - A comma separated list of relative paths to the project directories. These are the paths where a package.json
+            file could be, if desired. If there is no package.json on the provided path, the default one from this
+            repository is copied and the default asset subpath (./Assets/Scripts) is assumed. Using this approach, you have
+            to copy the assets to their final path (in ./wwwroot) using a different method, for example using the Copy
+            task in MSBuild.
+          - JSON object where the property names are the relative paths to the project directory where the package.json
+            file would be. For each path, a new package.json file is created from the template in this repository and then
+            the value of the property is placed into the $.nodejsExtensions path in the project file.
+        type: string
+        default: ''
+      styles-scss:
+        description: Information about the projects where SCSS linting should occur. Has the same format as the "scripts" input above.
+        type: string
+        default: ''
+      styles-css:
+        description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
+        type: string
+        default: ''
+      lint-markdown:
+        description: Indicates if Markdown files should be linted in this repository.
+        type: string
+        default: 'true'
+      markdown-config:
         description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
         type: string
         default: .github/actions/markdown-lint/lombiq.markdownlint.json
-      fix:
+      markdown-fix:
         description: Whether to fix issues automatically for the rules that support it (any truthy value enables).
         type: string
         default: ''
-      globs:
+      markdown-globs:
         description: Glob expression(s) of files to lint (newline-delimited).
         type: string
         default: '**/*.{md,markdown}'
-      separator:
+      markdown-separator:
         description: String to use as a separator for the "globs" input (defaults to newline).
         type: string
         default: \n
-      timeout-minutes:
-        type: number
-        # Sometimes the job is slow to start, so we have to factor in that.
-        default: 3
-        description: Configuration for the timeout-minutes parameter of the workflow.
 
 jobs:
-  markdown-linting:
-    name: Markdown Linting
+  lint:
+    name: Lint Scripts, Styles, and Texts
     runs-on: ubuntu-24.04
-    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
+      - name: Set up Node.js
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+
+      - name: Run Linter
+        uses: Lombiq/NodeJs-Extensions/.github/actions/lint@dev
+        with:
+          scripts: ${{ inputs.scripts }}
+          styles-scss: ${{ inputs.styles-scss }}
+          styles-css: ${{ inputs.styles-css }}
+          lint-markdown: 'false'
+
       - name: Markdown Linting
+        if: inputs.lint-markdown == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@dev
         with:
-          config: ${{ inputs.config }}
-          fix: ${{ inputs.fix }}
-          globs: ${{ inputs.globs }}
-          separator: ${{ inputs.separator }}
+          config: ${{ inputs.markdown-config }}
+          fix: ${{ inputs.markdown-fix }}
+          globs: ${{ inputs.markdown-globs }}
+          separator: ${{ inputs.markdown-separator }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
