@@ -1,0 +1,80 @@
+name: Lint Scripts, Styles, and Texts
+description: Lint JavaScript, Sass, and CSS files
+
+inputs:
+  scripts:
+    required: false
+    default: ''
+    description: |
+      Information about the projects where JavaScript linting should occur. Can be in two formats:
+      - A comma separated list of relative paths to the project directories. These are the paths where a package.json
+        file could be, if desired. If there is no package.json on the provided path, the default one from this
+        repository is copied and the default asset subpath (./Assets/Scripts) is assumed. Using this approach, you have
+        to copy the assets to their final path (in ./wwwroot) using a different method, for example using the Copy
+        task in MSBuild.
+      - JSON object where the property names are the relative paths to the project directory where the package.json
+        file would be. For each path, a new package.json file is created from the template in this repository and then
+        the value of the property is placed into the $.nodejsExtensions path in the project file.
+  styles-scss:
+    required: false
+    default: ''
+    description: Information about the projects where SCSS linting should occur. Has the same format as the "scripts" input above.
+  styles-css:
+    required: false
+    default: ''
+    description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Environment
+      id: set-up-environment
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+
+        $nodeJsExtensionsPath = $(Resolve-Path '${{ github.action_path }}/../../../Lombiq.NodeJs.Extensions').Path
+        Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$nodeJsExtensionsPath"
+        "LOMBIQ_NODEJS_EXTENSIONS=$nodeJsExtensionsPath" >> $Env:GITHUB_ENV
+        "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS=true" >> $Env:GITHUB_ENV
+        "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS_ROOT=$PWD" >> $Env:GITHUB_ENV
+        "LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR=true" >> $Env:GITHUB_ENV
+
+        # Read the packageManager from the package.json to be able to provide it to the pnpm setup action. While it can
+        # read it from the file, it can't access the file when the lint workflow is run from a parent workflow.
+        $packageJsonPath = Join-Path -Path $nodeJsExtensionsPath -ChildPath 'package.json'
+        $packageJsonContent = Get-Content -Path $packageJsonPath -Raw | ConvertFrom-Json -AsHashTable
+        $packageManager = $packageJsonContent['packageManager']
+        $pnpmVersion = $packageManager.Split('@')[1]
+        Write-Output "PNPM version in Node.js Extensions: $pnpmVersion"
+
+        "pnpm-version=$pnpmVersion" >> $Env:GITHUB_OUTPUT
+
+    # Relying on corepack, and also running pnpm setup is not enough, PNPM operations will fail while telling to run
+    # pnpm setup. Manually setting up PNPM_HOME and adding it to PATH didn't help either. So, using this action.
+    - name: Set up PNPM
+      uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      with:
+        version: ${{ steps.set-up-environment.outputs.pnpm-version }}
+
+    - name: Install Dependencies
+      shell: pwsh
+      run: |
+        cd $Env:LOMBIQ_NODEJS_EXTENSIONS
+
+        pnpm install --prefer-offline --no-frozen-lockfile
+        pnpm link --global
+
+    - name: Execute Linting
+      shell: pwsh
+      run: |
+        $libraryPath = $Env:LOMBIQ_NODEJS_EXTENSIONS
+
+        Invoke-NodeJsLinter -LibraryPath $libraryPath -Type scripts -Paths '${{ inputs.scripts }}'
+        Invoke-NodeJsLinter -LibraryPath $libraryPath -Type styles -Paths '${{ inputs.styles-scss }}'
+        Invoke-NodeJsLinter -LibraryPath $libraryPath -Type styles-css -Paths '${{ inputs.styles-css }}'
+
+        if (Test-Path github.error)
+        {
+            exit 1
+        }

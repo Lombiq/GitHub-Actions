@@ -70,12 +70,11 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
 
       - name: Run Linter
-        uses: Lombiq/NodeJs-Extensions/.github/actions/lint@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@issue/OSOE-1185
         with:
           scripts: ${{ inputs.scripts }}
           styles-scss: ${{ inputs.styles-scss }}
           styles-css: ${{ inputs.styles-css }}
-          lint-markdown: 'false'
 
       - name: Markdown Linting
         if: inputs.lint-markdown == 'true'
