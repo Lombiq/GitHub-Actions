@@ -27,12 +27,8 @@ on:
             the value of the property is placed into the $.nodejsExtensions path in the project file.
         type: string
         default: ''
-      styles-scss:
-        description: Information about the projects where SCSS linting should occur. Has the same format as the "scripts" input above.
-        type: string
-        default: ''
-      styles-css:
-        description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
+      styles:
+        description: A comma-separated list of the project paths where CSS linting should occur.
         type: string
         default: ''
       lint-markdown:
@@ -73,8 +69,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@issue/OSOE-1185
         with:
           scripts: ${{ inputs.scripts }}
-          styles-scss: ${{ inputs.styles-scss }}
-          styles-css: ${{ inputs.styles-css }}
+          styles: ${{ inputs.styles }}
 
       - name: Markdown Linting
         if: inputs.lint-markdown == 'true'
