@@ -35,4 +35,4 @@ runs:
         $GitHubActionPath = '${{ github.action_path }}'
         $StylesString = '${{ inputs.styles }}'
 
-        Invoke-NodeJsLinter -StylesString $StylesString
+        Invoke-Linter -StylesString $StylesString
