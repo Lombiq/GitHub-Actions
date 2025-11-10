@@ -65,7 +65,7 @@ jobs:
       - name: Set up Node.js
         uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
 
-      - name: Run Linter
+      - name: Lint Scripts and Styles
         uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@issue/OSOE-1185
         with:
           scripts: ${{ inputs.scripts }}
