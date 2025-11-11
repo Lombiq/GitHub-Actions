@@ -69,7 +69,7 @@ jobs:
 
       - name: Markdown Linting
         if: inputs.lint-markdown == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@issue/OSOE-1185
         with:
           fix: ${{ inputs.markdown-fix }}
           globs: ${{ inputs.markdown-globs }}
