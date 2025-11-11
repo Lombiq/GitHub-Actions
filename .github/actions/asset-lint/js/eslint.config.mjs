@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
@@ -6,7 +7,62 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import onlyWarn from 'eslint-plugin-only-warn';
 
+const maxLenConfig = ["warn", 150, 2, {
+    ignoreUrls: true,
+    ignoreComments: false,
+    ignoreRegExpLiterals: false,
+    ignoreStrings: false,
+    ignoreTemplateLiterals: false,
+}];
+
+const indentConfig = ["warn", 4, {
+    SwitchCase: 1,
+    VariableDeclarator: 1,
+    outerIIFEBody: 1,
+
+    FunctionDeclaration: {
+        parameters: 1,
+        body: 1,
+    },
+
+    FunctionExpression: {
+        parameters: 1,
+        body: 1,
+    },
+
+    CallExpression: {
+        arguments: 1,
+    },
+
+    ArrayExpression: 1,
+    ObjectExpression: 1,
+    ImportDeclaration: 1,
+    flatTernaryExpressions: false,
+
+    ignoredNodes: [
+        "JSXElement",
+        "JSXElement > *",
+        "JSXAttribute",
+        "JSXIdentifier",
+        "JSXNamespacedName",
+        "JSXMemberExpression",
+        "JSXSpreadAttribute",
+        "JSXExpressionContainer",
+        "JSXOpeningElement",
+        "JSXClosingElement",
+        "JSXFragment",
+        "JSXOpeningFragment",
+        "JSXClosingFragment",
+        "JSXText",
+        "JSXEmptyExpression",
+        "JSXSpreadChild",
+    ],
+
+    ignoreComments: false,
+}];
+
 const lombiqConfig = defineConfig([{
+    name: "Lombiq custom configuration",
     plugins: {
         "only-warn": onlyWarn,
     },
@@ -17,18 +73,13 @@ const lombiqConfig = defineConfig([{
             ...globals.browser,
         },
 
-        ecmaVersion: 2020,
+        ecmaVersion: 2024,
         sourceType: "script",
     },
 
     rules: {
-        "max-len": ["warn", 150, 2, {
-            ignoreUrls: true,
-            ignoreComments: false,
-            ignoreRegExpLiterals: false,
-            ignoreStrings: false,
-            ignoreTemplateLiterals: false,
-        }],
+        "@stylistic/max-len": maxLenConfig,
+        "max-len": maxLenConfig,
 
         "brace-style": ["warn", "stroustrup", {
             allowSingleLine: true,
@@ -101,51 +152,8 @@ const lombiqConfig = defineConfig([{
             enforceForRenamedProperties: false,
         }],
 
-        indent: ["warn", 4, {
-            SwitchCase: 1,
-            VariableDeclarator: 1,
-            outerIIFEBody: 1,
-
-            FunctionDeclaration: {
-                parameters: 1,
-                body: 1,
-            },
-
-            FunctionExpression: {
-                parameters: 1,
-                body: 1,
-            },
-
-            CallExpression: {
-                arguments: 1,
-            },
-
-            ArrayExpression: 1,
-            ObjectExpression: 1,
-            ImportDeclaration: 1,
-            flatTernaryExpressions: false,
-
-            ignoredNodes: [
-                "JSXElement",
-                "JSXElement > *",
-                "JSXAttribute",
-                "JSXIdentifier",
-                "JSXNamespacedName",
-                "JSXMemberExpression",
-                "JSXSpreadAttribute",
-                "JSXExpressionContainer",
-                "JSXOpeningElement",
-                "JSXClosingElement",
-                "JSXFragment",
-                "JSXOpeningFragment",
-                "JSXClosingFragment",
-                "JSXText",
-                "JSXEmptyExpression",
-                "JSXSpreadChild",
-            ],
-
-            ignoreComments: false,
-        }],
+        "@stylistic/indent": indentConfig,
+        "indent": indentConfig,
 
         "func-names": ["warn", "as-needed"],
         "no-alert": "off",
@@ -160,7 +168,7 @@ const lombiqConfig = defineConfig([{
         }],
 
         "function-call-argument-newline": ["warn", "consistent"],
-        strict: ["warn", "safe"],
+        "strict": ["warn", "never"],
         "import/no-extraneous-dependencies": "off",
         "no-warning-comments": "warn",
         "no-constant-binary-expression": "warn",
@@ -188,7 +196,6 @@ const jsConfig = [
   plugins.importX,
   // Airbnb Base Recommended Config
   ...configs.base.recommended,
-  ...lombiqConfig,
 ];
 
 const nodeConfig = [
@@ -198,6 +205,10 @@ const nodeConfig = [
   ...configs.node.recommended,
 ];
 
+const custom = fs.existsSync('eslint.custom.mjs')
+    ? await import('./eslint.custom.mjs')
+    : [];
+
 export default [
   // Ignore .gitignore files/folder in eslint
   { ignores },
@@ -205,4 +216,8 @@ export default [
   ...jsConfig,
   // Node Config
   ...nodeConfig,
+  // Our custom config, based on Lombiq.NodeJs.Extensions.
+  ...lombiqConfig,
+  // Additional custom configuration in the solution root.
+  ...custom,
 ];
