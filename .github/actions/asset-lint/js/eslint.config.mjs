@@ -13,6 +13,12 @@ const lombiqConfig = defineConfig([{
         "only-warn": onlyWarn,
     },
 
+    settings: {
+        node: {
+            version : ">=24.0.0"
+        },
+    },
+
     languageOptions: {
         globals: {
             ...globals.jquery,
@@ -175,8 +181,9 @@ const lombiqConfig = defineConfig([{
     },
 }]);
 
-// Forwards compatibility for Stylistic for rules that exist with or without the "@stylistic/" prefix.
 const lombiqRules = lombiqConfig[0].rules;
+
+// Forwards compatibility for Stylistic for rules that exist with or without the "@stylistic/" prefix.
 [
   'brace-style',
   'comma-dangle',
