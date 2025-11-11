@@ -35,10 +35,6 @@ on:
         description: Indicates if Markdown files should be linted in this repository.
         type: string
         default: 'true'
-      markdown-config:
-        description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
-        type: string
-        default: .github/actions/markdown-lint/lombiq.markdownlint.json
       markdown-fix:
         description: Whether to fix issues automatically for the rules that support it (any truthy value enables).
         type: string
@@ -75,7 +71,6 @@ jobs:
         if: inputs.lint-markdown == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@dev
         with:
-          config: ${{ inputs.markdown-config }}
           fix: ${{ inputs.markdown-fix }}
           globs: ${{ inputs.markdown-globs }}
           separator: ${{ inputs.markdown-separator }}
