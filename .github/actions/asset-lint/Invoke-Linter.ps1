@@ -45,7 +45,8 @@ if ($scripts.Count -gt 0)
     {
         $relativePath = Resolve-Path -Path $pair.Project -Relative -RelativeBasePath $PWD
 
-        npx -y eslint $pair.Glob --max-warnings 0 || Write-GitHubError -Type JavaScript -RelativePath $relativePath
+        npx -y eslint $pair.Glob --max-warnings 0 ||
+            Write-GitHubError -Type JavaScript -RelativePath $relativePath
     }
 
     # Clean up copied files. The -Force switch is needed to remove hidden items (i.e. dotfiles in Unix).
@@ -72,7 +73,8 @@ if ($styles.Count -gt 0)
     {
         $relativePath = Resolve-Path -Path $pair.Project -Relative -RelativeBasePath $basePath
 
-        npx -y stylelint $pair.Glob || Write-GitHubError -Type CSS -RelativePath $relativePath
+        npx -y stylelint $pair.Glob --ignore-path (Join-Path $basePath .gitignore) ||
+            Write-GitHubError -Type CSS -RelativePath $relativePath
     }
 
     # Reset location and clean up temporary files.

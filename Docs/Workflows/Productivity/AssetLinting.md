@@ -57,3 +57,16 @@ JavaScript configuration files:
 
 - eslint.config.mjs: The main configuration file for ESLint. It is not recommended to override this file.
 - eslint.custom.mjs: If this file exists, it's loaded in by the the workflow's _eslint.config.mjs_ at the highest precedence. In other words you can override rules or other settings here while still extending the main Lombiq ESLint config file.
+
+## How to Run Locally
+
+1. Check out this repository in your local machine. 
+2. Open PowerShell in the root directory of the repository you want to lint.
+3. Type `path-to-GHA/.github/actions/asset-lint/Invoke-Linter.ps1 -ScriptsString relative/path/to/project -StylesString relative/path/to/project`. You can omit either switches if you don't want to lint both.
+
+```pwsh
+.../Open-Source-Orchard-Core-Extensions/tools/Lombiq.GitHub.Actions/.github/actions/asset-lint/Invoke-Linter.ps1 -ScriptsString src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/js -StylesString src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/css
+```
+
+> [!TIP]
+> Add the _path-to-GHA/.github/actions/asset-lint_ directory to your execution path so you can use `Invoke-Linter` like a regular command.
