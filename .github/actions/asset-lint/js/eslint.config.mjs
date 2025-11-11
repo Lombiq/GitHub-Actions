@@ -171,7 +171,7 @@ const lombiqConfig = defineConfig([{
         "import/no-extraneous-dependencies": "off",
         "no-warning-comments": "warn",
         "no-constant-binary-expression": "warn",
-        "import/no-unresolved": "off",
+        "import-x/no-unresolved": "off",
     },
 }]);
 
@@ -182,8 +182,6 @@ const lombiqRules = lombiqConfig[0].rules;
   'comma-dangle',
   'function-call-argument-newline',
   'function-paren-newline',
-  'import/no-extraneous-dependencies',
-  'import/no-unresolved',
   'indent',
   'linebreak-style',
   'max-len',
