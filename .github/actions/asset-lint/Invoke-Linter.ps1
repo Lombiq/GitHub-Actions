@@ -7,23 +7,20 @@ $basePath = $PWD.Path
 function ConvertTo-PathAndGlob([string] $InputString, [string] $DefaultGlob)
 {
     $InputString.split(',') |
-        Where-Object { $PsItem.Trim() } |
+        Where-Object { $PSItem.Trim() } |
         ForEach-Object {
-            $pairs = $PsItem -split ':'
+            $pairs = $PSItem -split ':'
             $project = Join-Path -Path $basePath -ChildPath $pairs[0].Trim()
             $glob = $pairs.Count -eq 1 ? $DefaultGlob : $pairs[1].Trim()
 
-            [pscustomobject] @{
-                Project = $project;
-                Glob = (Join-Path $project $glob)
-            }
+            [pscustomobject] @{ Project = $project; Glob = (Join-Path $project $glob) }
         }
 }
 
-function Init-Npm($CopyFrom)
+function Initialize-Npm($CopyFrom)
 {
-    $copiedItems = Get-ChildItem (Join-Path $PSScriptRoot $CopyFrom) -Force | 
-        Where-Object { -not (Test-Path $PsItem.Name) } |
+    $copiedItems = Get-ChildItem (Join-Path $PSScriptRoot $CopyFrom) -Force |
+        Where-Object { -not (Test-Path $PSItem.Name) } |
         Copy-Item -Destination . -PassThru
     npm install | Write-Information -InformationAction Continue
 
@@ -40,7 +37,7 @@ function Write-GitHubError($Type, $RelativePath)
 $scripts = ConvertTo-PathAndGlob -InputString $ScriptsString -DefaultGlob 'wwwroot/js'
 if ($scripts.Count -gt 0)
 {
-    $copiedItems = Init-Npm -CopyFrom js
+    $copiedItems = Initialize-Npm -CopyFrom js
 
     foreach ($pair in $scripts)
     {
@@ -62,7 +59,7 @@ if ($styles.Count -gt 0)
     New-Item -ItemType Directory -Path $temporaryDirectoryPath
     Push-Location $temporaryDirectoryPath
 
-    Init-Npm -CopyFrom css
+    Initialize-Npm -CopyFrom css
 
     foreach ($pair in $styles)
     {
