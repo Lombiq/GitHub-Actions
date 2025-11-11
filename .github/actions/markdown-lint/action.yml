@@ -8,7 +8,7 @@ description: >
 inputs:
   config:
     description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
-    default: "${{ github.action_path }}/lombiq.markdownlint.json"
+    default: ${{ github.action_path }}/lombiq.markdownlint.json
     required: false
   fix:
     description: Whether to fix issues automatically for the rules that support it (any truthy value enables).
