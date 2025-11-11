@@ -7,60 +7,6 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import onlyWarn from 'eslint-plugin-only-warn';
 
-const maxLenConfig = ["warn", 150, 2, {
-    ignoreUrls: true,
-    ignoreComments: false,
-    ignoreRegExpLiterals: false,
-    ignoreStrings: false,
-    ignoreTemplateLiterals: false,
-}];
-
-const indentConfig = ["warn", 4, {
-    SwitchCase: 1,
-    VariableDeclarator: 1,
-    outerIIFEBody: 1,
-
-    FunctionDeclaration: {
-        parameters: 1,
-        body: 1,
-    },
-
-    FunctionExpression: {
-        parameters: 1,
-        body: 1,
-    },
-
-    CallExpression: {
-        arguments: 1,
-    },
-
-    ArrayExpression: 1,
-    ObjectExpression: 1,
-    ImportDeclaration: 1,
-    flatTernaryExpressions: false,
-
-    ignoredNodes: [
-        "JSXElement",
-        "JSXElement > *",
-        "JSXAttribute",
-        "JSXIdentifier",
-        "JSXNamespacedName",
-        "JSXMemberExpression",
-        "JSXSpreadAttribute",
-        "JSXExpressionContainer",
-        "JSXOpeningElement",
-        "JSXClosingElement",
-        "JSXFragment",
-        "JSXOpeningFragment",
-        "JSXClosingFragment",
-        "JSXText",
-        "JSXEmptyExpression",
-        "JSXSpreadChild",
-    ],
-
-    ignoreComments: false,
-}];
-
 const lombiqConfig = defineConfig([{
     name: "Lombiq custom configuration",
     plugins: {
@@ -73,13 +19,23 @@ const lombiqConfig = defineConfig([{
             ...globals.browser,
         },
 
-        ecmaVersion: 2024,
-        sourceType: "script",
+        ecmaVersion: 2020,
+        sourceType: "module",
+
+        parserOptions: {
+            ecmaVersion: 2020,
+            sourceType: "module",
+        }
     },
 
     rules: {
-        "@stylistic/max-len": maxLenConfig,
-        "max-len": maxLenConfig,
+        "max-len": ["warn", 150, 2, {
+            ignoreUrls: true,
+            ignoreComments: false,
+            ignoreRegExpLiterals: false,
+            ignoreStrings: false,
+            ignoreTemplateLiterals: false,
+        }],
 
         "brace-style": ["warn", "stroustrup", {
             allowSingleLine: true,
@@ -152,8 +108,51 @@ const lombiqConfig = defineConfig([{
             enforceForRenamedProperties: false,
         }],
 
-        "@stylistic/indent": indentConfig,
-        "indent": indentConfig,
+        "indent": ["warn", 4, {
+            SwitchCase: 1,
+            VariableDeclarator: 1,
+            outerIIFEBody: 1,
+
+            FunctionDeclaration: {
+                parameters: 1,
+                body: 1,
+            },
+
+            FunctionExpression: {
+                parameters: 1,
+                body: 1,
+            },
+
+            CallExpression: {
+                arguments: 1,
+            },
+
+            ArrayExpression: 1,
+            ObjectExpression: 1,
+            ImportDeclaration: 1,
+            flatTernaryExpressions: false,
+
+            ignoredNodes: [
+                "JSXElement",
+                "JSXElement > *",
+                "JSXAttribute",
+                "JSXIdentifier",
+                "JSXNamespacedName",
+                "JSXMemberExpression",
+                "JSXSpreadAttribute",
+                "JSXExpressionContainer",
+                "JSXOpeningElement",
+                "JSXClosingElement",
+                "JSXFragment",
+                "JSXOpeningFragment",
+                "JSXClosingFragment",
+                "JSXText",
+                "JSXEmptyExpression",
+                "JSXSpreadChild",
+            ],
+
+            ignoreComments: false,
+        }],
 
         "func-names": ["warn", "as-needed"],
         "no-alert": "off",
@@ -175,6 +174,25 @@ const lombiqConfig = defineConfig([{
         "import/no-unresolved": "off",
     },
 }]);
+
+// Forwards compatibility for Stylistic for rules that exist with or without the "@stylistic/" prefix.
+const lombiqRules = lombiqConfig[0].rules;
+[
+  'brace-style',
+  'comma-dangle',
+  'function-call-argument-newline',
+  'function-paren-newline',
+  'import/no-extraneous-dependencies',
+  'import/no-unresolved',
+  'indent',
+  'linebreak-style',
+  'max-len',
+  'no-alert',
+  'operator-linebreak',
+  'prefer-template',
+  'wrap-iife',
+]
+    .forEach((key) => lombiqRules["@stylistic/" + key] = lombiqRules[key]);
 
 const ignores = [
   '**/bin',
