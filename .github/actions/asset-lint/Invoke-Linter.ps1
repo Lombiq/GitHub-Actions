@@ -3,6 +3,7 @@ param (
     [string] $StylesString = '')
 
 $basePath = $PWD.Path
+$watchdogFileName = 'asset-linting-failed'
 
 function ConvertTo-PathAndGlob([string] $InputString, [string] $DefaultGlob)
 {
@@ -32,6 +33,7 @@ function Write-GitHubError($Type, $RelativePath)
     # We have a single error notification and don't try to format the individual linter warnings as GitHub
     # notifications, because if the file points to a submodule then the message won't appear in the run summary.
     Write-Output "::error::$Type linting has failed for project `"$RelativePath`". Please check the log for details!"
+    Out-File -FilePath $watchdogFileName
 }
 
 $scripts = ConvertTo-PathAndGlob -InputString $ScriptsString -DefaultGlob 'wwwroot/js'
@@ -71,4 +73,9 @@ if ($styles.Count -gt 0)
     # Reset location and clean up temporary files.
     Pop-Location
     Remove-Item -Path $temporaryDirectoryPath -Recurse -Force
+}
+
+if (Test-Path $watchdogFileName) {
+    Remove-Item $watchdogFileName
+    exit 1
 }
