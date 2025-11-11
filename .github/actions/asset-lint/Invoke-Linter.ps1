@@ -75,7 +75,8 @@ if ($styles.Count -gt 0)
     Remove-Item -Path $temporaryDirectoryPath -Recurse -Force
 }
 
-if (Test-Path $watchdogFileName) {
+if (Test-Path $watchdogFileName)
+{
     Remove-Item $watchdogFileName
     exit 1
 }
