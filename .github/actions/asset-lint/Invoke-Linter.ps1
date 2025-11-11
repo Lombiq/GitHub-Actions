@@ -30,20 +30,23 @@ function Init-Npm($CopyFrom)
     return $copiedItems
 }
 
-$scripts = ConvertTo-PathAndGlob -InputString $ScriptsString -DefaultGlob 'wwwroot/js/**'
+function Write-GitHubError($Type, $RelativePath)
+{
+    # We have a single error notification and don't try to format the individual linter warnings as GitHub
+    # notifications, because if the file points to a submodule then the message won't appear in the run summary.
+    Write-Output "::error::$Type linting has failed for project `"$RelativePath`". Please check the log for details!"
+}
+
+$scripts = ConvertTo-PathAndGlob -InputString $ScriptsString -DefaultGlob 'wwwroot/js'
 if ($scripts.Count -gt 0)
 {
     $copiedItems = Init-Npm -CopyFrom js
-    Write-Error ($copiedItems -join ', ')
 
     foreach ($pair in $scripts)
     {
         $relativePath = Resolve-Path -Path $pair.Project -Relative -RelativeBasePath $PWD
 
-        # We don't try to format the individual warnings as GitHub notifications, because if the file points to a
-        # submodule then it won't appear in the summary.
-        npx -y eslint $pair.Glob || 
-            Write-Output "::error::JavaScript linting has failed for project `"$relativePath`". Please check the log for details!"
+        npx -y eslint $pair.Glob || Write-GitHubError -Type JavaScript -RelativePath $relativePath
     }
 
     # Clean up copied files. The -Force switch is needed to remove hidden items (i.e. dotfiles in Unix).
@@ -65,8 +68,7 @@ if ($styles.Count -gt 0)
     {
         $relativePath = Resolve-Path -Path $pair.Project -Relative -RelativeBasePath $basePath
 
-        npx -y stylelint $pair.Glob || 
-            Write-Output "::error::CSS linting has failed for project `"$relativePath`". Please check the log for details!"
+        npx -y stylelint $pair.Glob || Write-GitHubError -Type CSS -RelativePath $relativePath
     }
 
     # Reset location and clean up temporary files.
