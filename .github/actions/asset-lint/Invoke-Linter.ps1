@@ -46,7 +46,7 @@ if ($scripts.Count -gt 0)
     {
         $relativePath = Resolve-Path -Path $pair.Project -Relative -RelativeBasePath $PWD
 
-        npx -y eslint $pair.Glob || Write-GitHubError -Type JavaScript -RelativePath $relativePath
+        npx -y eslint $pair.Glob --max-warnings 0 || Write-GitHubError -Type JavaScript -RelativePath $relativePath
     }
 
     # Clean up copied files. The -Force switch is needed to remove hidden items (i.e. dotfiles in Unix).
