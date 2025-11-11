@@ -46,7 +46,10 @@ on:
       markdown-globs:
         description: Glob expression(s) of files to lint (newline-delimited).
         type: string
-        default: '**/*.{md,markdown}'
+        default: >
+          **/*.{md,markdown}
+          !node_modules
+          !License.md
       markdown-separator:
         description: String to use as a separator for the "globs" input (defaults to newline).
         type: string
@@ -65,12 +68,6 @@ jobs:
       - name: Set up Node.js
         uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
 
-      - name: Lint Scripts and Styles
-        uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@issue/OSOE-1185
-        with:
-          scripts: ${{ inputs.scripts }}
-          styles: ${{ inputs.styles }}
-
       - name: Markdown Linting
         if: inputs.lint-markdown == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@issue/OSOE-1185
@@ -79,6 +76,12 @@ jobs:
           fix: ${{ inputs.markdown-fix }}
           globs: ${{ inputs.markdown-globs }}
           separator: ${{ inputs.markdown-separator }}
+
+      - name: Lint Scripts and Styles
+        uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@issue/OSOE-1185
+        with:
+          scripts: ${{ inputs.scripts }}
+          styles: ${{ inputs.styles }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
