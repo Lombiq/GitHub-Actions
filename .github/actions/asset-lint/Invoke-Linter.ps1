@@ -4,11 +4,6 @@ param (
 
 $basePath = $PWD.Path
 
-# Create a new temporary directory for storing dependencies.
-$temporaryDirectoryPath = (New-TemporaryFile).FullName
-Remove-Item -Path $temporaryDirectoryPath -Force
-New-Item -ItemType Directory -Path $temporaryDirectoryPath
-
 function ConvertTo-PathAndGlob([string] $InputString, [string] $DefaultGlob)
 {
     $InputString.split(',') |
@@ -25,24 +20,25 @@ function ConvertTo-PathAndGlob([string] $InputString, [string] $DefaultGlob)
         }
 }
 
-function Push-TempNpm($CopyFrom)
+function Init-Npm($CopyFrom)
 {
-    Push-Location $temporaryDirectoryPath
-    npm init -y
-    Get-ChildItem (Join-Path $PSScriptRoot $CopyFrom) -Force | ForEach-Object { Copy-Item $PsItem . }
-    npm install
+    $copiedItems = Get-ChildItem (Join-Path $PSScriptRoot $CopyFrom) -Force | 
+        Where-Object { -not (Test-Path $PsItem.Name) } |
+        Copy-Item -Destination . -PassThru
+    npm install | Write-Information -InformationAction Continue
+
+    return $copiedItems
 }
 
-function Get-RelativePath($Path) { Resolve-Path -Path $Path -Relative -RelativeBasePath $basePath }
-
-$scripts = ConvertTo-PathAndGlob -InputString $ScriptsString -DefaultGlob '**/*.js'
+$scripts = ConvertTo-PathAndGlob -InputString $ScriptsString -DefaultGlob 'wwwroot/js/**'
 if ($scripts.Count -gt 0)
 {
-    Push-TempNpm -CopyFrom js -Packages @('stylelint-config-standard')
+    $copiedItems = Init-Npm -CopyFrom js
+    Write-Error ($copiedItems -join ', ')
 
     foreach ($pair in $scripts)
     {
-        $relativePath = Get-RelativePath -Path $pair.Project
+        $relativePath = Resolve-Path -Path $pair.Project -Relative -RelativeBasePath $PWD
 
         # We don't try to format the individual warnings as GitHub notifications, because if the file points to a
         # submodule then it won't appear in the summary.
@@ -50,24 +46,30 @@ if ($scripts.Count -gt 0)
             Write-Output "::error::JavaScript linting has failed for project `"$relativePath`". Please check the log for details!"
     }
 
-    Pop-Location
+    # Clean up copied files. The -Force switch is needed to remove hidden items (i.e. dotfiles in Unix).
+    $copiedItems | Remove-Item -Force
 }
 
 $styles = ConvertTo-PathAndGlob -InputString $StylesString -DefaultGlob '**/*.css'
 if ($styles.Count -gt 0)
 {
-    Push-TempNpm -CopyFrom css -Packages @('stylelint-config-standard')
+    # Create a new temporary directory for storing dependencies.
+    $temporaryDirectoryPath = (New-TemporaryFile).FullName
+    Remove-Item -Path $temporaryDirectoryPath -Force
+    New-Item -ItemType Directory -Path $temporaryDirectoryPath
+    Push-Location $temporaryDirectoryPath
+
+    Init-Npm -CopyFrom css
 
     foreach ($pair in $styles)
     {
-        $relativePath = Get-RelativePath -Path $pair.Project
+        $relativePath = Resolve-Path -Path $pair.Project -Relative -RelativeBasePath $basePath
 
         npx -y stylelint $pair.Glob || 
             Write-Output "::error::CSS linting has failed for project `"$relativePath`". Please check the log for details!"
     }
 
+    # Reset location and clean up temporary files.
     Pop-Location
+    Remove-Item -Path $temporaryDirectoryPath -Recurse -Force
 }
-
-# Clear out temporary files.
-Remove-Item -Path $temporaryDirectoryPath -Recurse -Force
