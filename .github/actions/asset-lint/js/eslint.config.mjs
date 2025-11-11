@@ -168,6 +168,14 @@ const lombiqConfig = defineConfig([{
     },
 }]);
 
+const ignores = [
+  '**/bin',
+  '**/vendor/**/*.js',
+  '**/vendor/**/*.cjs',
+  '**/vendor/**/*.mjs',
+  ...(fs.existsSync('.eslintignore') ? includeIgnoreFile(path.resolve('.', '.eslintignore')).ignores : []),
+];
+
 const jsConfig = [
   // ESLint Recommended Rules
   {
@@ -191,8 +199,8 @@ const nodeConfig = [
 ];
 
 export default [
-  // Ignore .eslintignore files/folder in eslint
-  includeIgnoreFile(path.resolve('.', '.eslintignore')),
+  // Ignore .gitignore files/folder in eslint
+  { ignores },
   // Javascript Config
   ...jsConfig,
   // Node Config
