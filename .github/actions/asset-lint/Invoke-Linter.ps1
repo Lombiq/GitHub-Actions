@@ -62,6 +62,11 @@ if ($styles.Count -gt 0)
     Push-Location $temporaryDirectoryPath
 
     Initialize-Npm -CopyFrom css
+    @('.stylelintignore', 'stylelint.config.mjs') |
+        ForEach-Object { Join-Path $basePath $PSItem } |
+        Where-Object { Test-Path $PSItem } |
+        Get-Item |
+        Copy-Item .
 
     foreach ($pair in $styles)
     {

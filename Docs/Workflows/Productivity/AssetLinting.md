@@ -43,3 +43,17 @@ This will lint the files in _wwwroot/js_ and _wwwwroot/css_ respectively. If you
 ```
 
 For descriptions of the workflow inputs, see [the workflow file](../../../.github/workflows/asset-lint.yml).
+
+## Configuration
+
+You can override the following configuration files by having their counterpart in your repository root:
+
+CSS configuration files:
+
+- .stylelintignore: A _.gitignore_ style file where you can list excludes for Stylelint.
+- stylelint.config.mjs: The main configuration file for Stylelint.
+
+JavaScript configuration files:
+
+- eslint.config.mjs: The main configuration file for ESLint. It is not recommended to override this file.
+- eslint.custom.mjs: If this file exists, it's loaded in by the the workflow's _eslint.config.mjs_ at the highest precedence. In other words you can override rules or other settings here while still extending the main Lombiq ESLint config file.
