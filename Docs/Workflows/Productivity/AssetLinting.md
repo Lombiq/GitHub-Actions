@@ -60,7 +60,7 @@ JavaScript configuration files:
 
 ## How to Run Locally
 
-1. Check out this repository in your local machine. 
+1. Check out this repository in your local machine.
 2. Open PowerShell in the root directory of the repository you want to lint.
 3. Type `path-to-GHA/.github/actions/asset-lint/Invoke-Linter.ps1 -ScriptsString relative/path/to/project -StylesString relative/path/to/project`. You can omit either switches if you don't want to lint both.
 
