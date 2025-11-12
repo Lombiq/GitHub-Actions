@@ -31,7 +31,7 @@ jobs:
             src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
 ```
 
-This will lint the files in _wwwroot/js_ and _wwwwroot/css_ respectively. If you need linting in a different directory, you can also append `:{relativ path or glob pattern}` after each project directory path. For example to lint scripts in the project root:
+This will lint the files in _wwwroot/js_ and _wwwwroot/css_ respectively. If you need linting in a different directory, you can also append `:{relative path or glob pattern}` after each project directory path. For example to lint scripts in the project root:
 
 ```yaml
     asset-linting:
