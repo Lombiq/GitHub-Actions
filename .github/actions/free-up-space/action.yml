@@ -15,6 +15,12 @@ runs:
         # Remove Android SDK, which is huge, typically 8-12 GB.
         sudo rm -rf /usr/local/lib/android
 
+        # Remove all unused Docker images.
+        sudo docker image prune --all --force
+
+        # Remove unused build cache.
+        sudo docker builder prune --all
+
     - name: Free up Space Windows
       shell: pwsh
       if: runner.os == 'Windows'
@@ -44,3 +50,8 @@ runs:
         # Remove other large caches and temp files.
         Remove-Item -Path "$Env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
 
+        # Remove all unused Docker images.
+        docker image prune --all --force
+
+        # Remove unused build cache.
+        docker builder prune --all --force
