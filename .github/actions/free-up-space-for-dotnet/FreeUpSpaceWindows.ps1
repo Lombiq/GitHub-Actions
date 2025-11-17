@@ -1,0 +1,49 @@
+$initialSpace = (Get-PSDrive C).Free
+
+# NOT removing superseded Windows component store files, because this takes 1-2 minutes and is thus too slow.
+# Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
+
+# Remove Android SDK, which is huge, typically 8-12 GB.
+if ($Env:ANDROID_HOME)
+{
+    Remove-Item -Path "$Env:ANDROID_HOME" -Recurse -Force -ErrorAction SilentlyContinue
+}
+
+$extraAndroidPaths = @(
+    "$Env:LOCALAPPDATA\Android",
+    'C:\Android'
+)
+
+foreach ($path in $extraAndroidPaths)
+{
+    if (Test-Path $path)
+    {
+        Remove-Item $path -Recurse -Force -ErrorAction SilentlyContinue
+    }
+}
+
+# Remove other large caches and temp files.
+Remove-Item -Path "$Env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+# Remove all unused Docker images.
+docker image prune --all --force
+
+# Remove unused build cache.
+docker builder prune --all --force
+
+# Remove Java (JDKs).
+Remove-Item -Path 'C:\hostedtoolcache\windows\Java_*' -Recurse -Force -ErrorAction SilentlyContinue
+
+# Remove Swift toolchain.
+Remove-Item -Path 'C:\Program Files\Swift' -Recurse -Force -ErrorAction SilentlyContinue
+
+# Remove Haskell (GHC).
+Remove-Item -Path "$Env:LOCALAPPDATA\Programs\stack" -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -Path 'C:\ProgramData\chocolatey\lib\ghc' -Recurse -Force -ErrorAction SilentlyContinue
+
+# Remove Julia.
+Remove-Item -Path 'C:\hostedtoolcache\windows\Julia' -Recurse -Force -ErrorAction SilentlyContinue
+
+$finalSpace = (Get-PSDrive C).Free
+$freedSpace = [math]::Round(($finalSpace - $initialSpace) / 1GB, 2)
+Write-Output "Freed up approximately $freedSpace GB of disk space."
