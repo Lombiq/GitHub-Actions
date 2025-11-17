@@ -1,6 +1,6 @@
 $initialSpace = (Get-PSDrive -PSProvider FileSystem |
-    Where-Object { $PSItem.Used -ne $null } |
-    Measure-Object -Property Free -Sum).Sum
+                Where-Object { $PSItem.Used -ne $null } |
+                Measure-Object -Property Free -Sum).Sum
 
 # NOT removing superseded Windows component store files, because this takes 1-2 minutes and is thus too slow.
 # Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
@@ -47,7 +47,7 @@ Remove-Item -Path 'C:\ProgramData\chocolatey\lib\ghc' -Recurse -Force -ErrorActi
 Remove-Item -Path 'C:\hostedtoolcache\windows\Julia' -Recurse -Force -ErrorAction SilentlyContinue
 
 $finalSpace = (Get-PSDrive -PSProvider FileSystem |
-    Where-Object { $PSItem.Used -ne $null } |
-    Measure-Object -Property Free -Sum).Sum
+               Where-Object { $PSItem.Used -ne $null } |
+               Measure-Object -Property Free -Sum).Sum
 $freedSpace = [math]::Round(($finalSpace - $initialSpace) / 1GB, 2)
 Write-Output "Freed up approximately $freedSpace GB of storage space."
