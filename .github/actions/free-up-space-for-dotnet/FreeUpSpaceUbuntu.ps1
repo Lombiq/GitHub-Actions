@@ -11,11 +11,11 @@ sudo apt-get clean
 # Remove Android SDK.
 sudo rm -rf /usr/local/lib/android
 
-# Remove all unused Docker images.
-sudo docker image prune --all --force
+# We can't remove all unused Docker images since that would also remove images from prepared images.
+# sudo docker image prune --all --force
 
 # We can't remove the unused build cache since that would also remove the Elasticsearch build cache (used in the Set up
-# Elasticsearch step).
+# Elasticsearch step) and any possible caches from prepared images.
 # sudo docker builder prune --all --force
 
 # Remove Java (JDKs).

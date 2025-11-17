@@ -27,13 +27,12 @@ foreach ($path in $extraAndroidPaths)
 # Remove other large caches and temp files.
 Remove-Item -Path "$Env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
 
-# Remove all unused Docker images.
-docker image prune --all --force
+# We can't remove all unused Docker images since that would also remove images from prepared images.
+# docker image prune --all --force
 
 # We can't remove the unused build cache since that would also remove the Elasticsearch build cache (used in the Set up
-# Elasticsearch step).
+# Elasticsearch step) and any possible caches from prepared images.
 # docker builder prune --all --force
-# Remove unused build cache.
 
 # Remove Java (JDKs).
 Remove-Item -Path 'C:\hostedtoolcache\windows\Java_*' -Recurse -Force -ErrorAction SilentlyContinue
