@@ -46,4 +46,4 @@ Remove-Item -Path 'C:\hostedtoolcache\windows\Julia' -Recurse -Force -ErrorActio
 
 $finalSpace = (Get-PSDrive C).Free
 $freedSpace = [math]::Round(($finalSpace - $initialSpace) / 1GB, 2)
-Write-Output "Freed up approximately $freedSpace GB of disk space."
+Write-Output "Freed up approximately $freedSpace GB of storage space."
