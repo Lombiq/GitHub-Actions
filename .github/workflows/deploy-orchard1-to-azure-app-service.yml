@@ -144,6 +144,9 @@ jobs:
         shell: pwsh
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Free up Space
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space@issue/OSOE-1194
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
