@@ -61,6 +61,13 @@ on:
         type: string
         default: windows-2025
         description: The machine type to run the workflow under, e.g. "windows-2025". Needs to be Windows.
+      free-up-space:
+        type: string
+        default: 'false'
+        description: >
+          Frees up storage space on the runner by deleting files unnecessary for .NET projects. Since it takes time and
+          can break prepared images, this is disabled by default. Enable it if the workflow fails with errors suggesting
+          that the runner has insufficient storage space.
       dotnet-version:
         type: string
         default: 8.0.318
@@ -145,6 +152,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Free up Space
+        if: inputs.free-up-space == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@issue/OSOE-1194
 
       - name: Checkout
