@@ -9,6 +9,11 @@ runs:
       shell: pwsh
       if: runner.os == 'Linux'
       run: |
+        $initialSpace = (df / |
+          Select-Object -Skip 1 |
+          ForEach-Object { $PSItem.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)[3] } |
+          Select-Object -First 1)
+
         # Remove the local cache of downloaded packages but don't remove installed software.
         sudo apt-get clean
 
@@ -33,10 +38,19 @@ runs:
         # Remove Julia.
         sudo rm -rf /usr/local/julia*
 
+        $finalSpace = (df / |
+          Select-Object -Skip 1 |
+          ForEach-Object { $PSItem.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)[3] } |
+          Select-Object -First 1)
+        $freedSpace = [math]::Round(($finalSpace - $initialSpace) / 1GB, 2)
+        Write-Output "Freed up approximately $freedSpace GB of disk space."
+
     - name: Free up Space Windows
       shell: pwsh
       if: runner.os == 'Windows'
       run: |
+        $initialSpace = (Get-PSDrive C).Free
+
         # NOT removing superseded Windows component store files, because this takes 1-2 minutes and is thus too slow.
         # Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
 
@@ -80,3 +94,7 @@ runs:
 
         # Remove Julia.
         Remove-Item -Path 'C:\hostedtoolcache\windows\Julia' -Recurse -Force -ErrorAction SilentlyContinue
+
+        $finalSpace = (Get-PSDrive C).Free
+        $freedSpace = [math]::Round(($finalSpace - $initialSpace) / 1GB, 2)
+        Write-Output "Freed up approximately $freedSpace GB of disk space."
