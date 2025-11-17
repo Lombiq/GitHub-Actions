@@ -1,4 +1,4 @@
-name: Free up Space
+name: Free up Space for .NET
 description: >
   Frees up storage space on the runner by deleting files unnecessary for .NET projects.
 

@@ -7,6 +7,7 @@ In addition to the below short explanations, check out the inline documentation 
 ## .NET Core and Orchard Core builds
 
 - `build-dotnet`: Builds all .NET solutions or projects in the given directory with optional static code analysis.
+- `free-up-space-for-dotnet`: Frees up storage space on the runner by deleting files unnecessary for .NET projects.
 - `install-dotnet-tool`: Installs a tool globally into the .NET CLI by its name and version number.
 - `setup-dotnet`: Sets up the .NET SDK.
 - `verify-dotnet-consolidation`: Verifies that the NuGet packages of a .NET solution are consolidated, i.e. the same version of a given package is used in all projects.
@@ -19,7 +20,6 @@ In addition to the below short explanations, check out the inline documentation 
 
 ## Build tools
 
-- `free-up-space`: Frees up storage space on the runner by deleting files unnecessary for .NET projects.
 - `install-sqlcmd`: Installs the [SQL Server command-line tools](https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility) on Linux runners, which is necessary since the Ubuntu 24.04 runner image no longer includes it.
 - `enable-corepack`: Enables [Node corepack](https://nodejs.org/docs/latest-v16.x/api/corepack.html) so any package manager can be used seamlessly.
 - `setup-sql-server`: Sets up SQL Server with Lombiq-recommended defaults.
