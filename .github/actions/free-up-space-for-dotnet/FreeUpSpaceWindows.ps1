@@ -30,8 +30,10 @@ Remove-Item -Path "$Env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
 # Remove all unused Docker images.
 docker image prune --all --force
 
+# We can't remove the unused build cache since that would also remove the Elasticsearch build cache (used in the Set up
+# Elasticsearch step).
+# docker builder prune --all --force
 # Remove unused build cache.
-docker builder prune --all --force
 
 # Remove Java (JDKs).
 Remove-Item -Path 'C:\hostedtoolcache\windows\Java_*' -Recurse -Force -ErrorAction SilentlyContinue

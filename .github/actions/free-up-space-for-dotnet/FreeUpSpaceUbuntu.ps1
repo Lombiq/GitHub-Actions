@@ -14,8 +14,9 @@ sudo rm -rf /usr/local/lib/android
 # Remove all unused Docker images.
 sudo docker image prune --all --force
 
-# Remove unused build cache.
-sudo docker builder prune --all --force
+# We can't remove the unused build cache since that would also remove the Elasticsearch build cache (used in the Set up
+# Elasticsearch step).
+# sudo docker builder prune --all --force
 
 # Remove Java (JDKs).
 sudo rm -rf /usr/lib/jvm
