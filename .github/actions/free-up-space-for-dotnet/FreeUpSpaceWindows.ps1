@@ -3,7 +3,7 @@ $initialSpace = (Get-PSDrive C).Free
 # NOT removing superseded Windows component store files, because this takes 1-2 minutes and is thus too slow.
 # Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
 
-# Remove Android SDK, which is huge, typically 8-12 GB.
+# Remove Android SDK.
 if ($Env:ANDROID_HOME)
 {
     Remove-Item -Path "$Env:ANDROID_HOME" -Recurse -Force -ErrorAction SilentlyContinue
