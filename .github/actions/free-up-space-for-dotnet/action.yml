@@ -48,7 +48,7 @@ runs:
 
         $extraAndroidPaths = @(
             "$Env:LOCALAPPDATA\Android",
-            "C:\Android"
+            'C:\Android'
         )
 
         foreach ($path in $extraAndroidPaths)
@@ -69,14 +69,14 @@ runs:
         docker builder prune --all --force
 
         # Remove Java (JDKs).
-        Remove-Item -Path "C:\hostedtoolcache\windows\Java_*" -Recurse -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path 'C:\hostedtoolcache\windows\Java_*' -Recurse -Force -ErrorAction SilentlyContinue
 
         # Remove Swift toolchain.
-        Remove-Item -Path "C:\Program Files\Swift" -Recurse -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path 'C:\Program Files\Swift' -Recurse -Force -ErrorAction SilentlyContinue
 
         # Remove Haskell (GHC).
         Remove-Item -Path "$Env:LOCALAPPDATA\Programs\stack" -Recurse -Force -ErrorAction SilentlyContinue
-        Remove-Item -Path "C:\ProgramData\chocolatey\lib\ghc" -Recurse -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path 'C:\ProgramData\chocolatey\lib\ghc' -Recurse -Force -ErrorAction SilentlyContinue
 
         # Remove Julia.
-        Remove-Item -Path "C:\hostedtoolcache\windows\Julia" -Recurse -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path 'C:\hostedtoolcache\windows\Julia' -Recurse -Force -ErrorAction SilentlyContinue
