@@ -34,7 +34,7 @@ $finalSpace = (df / |
     Select-Object -Skip 1 |
     ForEach-Object { $PSItem.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)[3] } |
     Select-Object -First 1)
-$freedSpace = [math]::Round(($finalSpace - $initialSpace) / 1GB, 2)
+$freedSpace = [math]::Round(($finalSpace - $initialSpace) / 1024 / 1024, 2)
 Write-Output "Freed up approximately $freedSpace GB of disk space."
 
 df -h
