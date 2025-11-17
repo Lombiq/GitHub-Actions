@@ -37,8 +37,8 @@ runs:
       shell: pwsh
       if: runner.os == 'Windows'
       run: |
-        # Remove superseded Windows component store files.
-        Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
+        # NOT removing superseded Windows component store files, because this takes 1-2 minutes and is thus too slow.
+        # Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
 
         # Remove Android SDK, which is huge, typically 8-12 GB.
         if ($Env:ANDROID_HOME)
