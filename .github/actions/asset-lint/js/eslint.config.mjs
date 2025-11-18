@@ -178,6 +178,7 @@ const lombiqConfig = defineConfig([{
         "no-warning-comments": "warn",
         "no-constant-binary-expression": "warn",
         "import-x/no-unresolved": "off",
+        "n/no-unsupported-features/node-builtins": "off",
     },
 }]);
 
