@@ -1,0 +1,21 @@
+name: Free up Space for .NET
+description: >
+  Frees up storage space on the runner by deleting files unnecessary for .NET projects.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+
+    - name: Free up Space Ubuntu
+      shell: pwsh
+      if: runner.os == 'Linux'
+      run: FreeUpSpaceUbuntu.ps1
+
+    - name: Free up Space Windows
+      shell: pwsh
+      if: runner.os == 'Windows'
+      run: FreeUpSpaceWindows.ps1
