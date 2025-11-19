@@ -31,6 +31,13 @@ on:
         type: string
         default: minimal
         description: The logging verbosity type used by the `dotnet` command.
+      free-up-space:
+        type: string
+        default: 'false'
+        description: >
+          Frees up storage space on the runner by deleting files unnecessary for .NET projects. Since it takes time and
+          can break prepared images, this is disabled by default. Enable it if the workflow fails with errors suggesting
+          that the runner has insufficient storage space.
       dotnet-version:
         type: string
         default: 8.0.318
@@ -105,6 +112,10 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
+
+      - name: Free up Space
+        if: inputs.free-up-space == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
 
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
