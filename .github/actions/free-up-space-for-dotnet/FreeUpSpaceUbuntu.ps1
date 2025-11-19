@@ -1,5 +1,5 @@
 $rootDrive = (Get-PSDrive /)[0]
-$initialSpace = $rootDrive.Free 
+$initialSpace = $rootDrive.Free
 
 df --human-readable
 
