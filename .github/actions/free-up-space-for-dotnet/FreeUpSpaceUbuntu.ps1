@@ -1,7 +1,5 @@
-$initialSpace = (df / |
-        Select-Object -Skip 1 |
-        ForEach-Object { $PSItem.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)[3] } |
-        Measure-Object -Sum).Sum
+$rootDrive = (Get-PSDrive /)[0]
+$initialSpace = $rootDrive.Free 
 
 df --human-readable
 
@@ -34,9 +32,6 @@ sudo rm -rf /usr/local/julia*
 
 df --human-readable
 
-$finalSpace = (df / |
-        Select-Object -Skip 1 |
-        ForEach-Object { $PSItem.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)[3] } |
-        Measure-Object -Sum).Sum
-$freedSpace = [math]::Round(($finalSpace - $initialSpace) / 1024 / 1024, 2)
+$finalSpace = $rootDrive.Free
+$freedSpace = [math]::Round(($finalSpace - $initialSpace) / 1GB, 2)
 Write-Output "Freed up approximately $freedSpace GB of storage space."
