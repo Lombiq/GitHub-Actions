@@ -6,8 +6,11 @@ df --human-readable
 # Remove the local cache of downloaded packages but don't remove installed software.
 sudo apt-get clean
 
+# Not using Remove-Item instead of rm in the below commands because using sudo with pwsh commands is awkward via
+# sudo pwsh -Command 'pwsh command'. And sudo is necessary.
+
 # Remove Android SDK.
-sudo Remove-Item -Recurse -Force /usr/local/lib/android
+sudo rm -rf /usr/local/lib/android
 
 # We can't remove all unused Docker images since that would also remove the Elasticsearch image (used in the Set up
 # Elasticsearch step) and any possible Docker images from prepared runner images.
@@ -18,17 +21,17 @@ sudo Remove-Item -Recurse -Force /usr/local/lib/android
 # sudo docker builder prune --all --force
 
 # Remove Java (JDKs).
-sudo Remove-Item -Recurse -Force /usr/lib/jvm
+sudo rm -rf /usr/lib/jvm
 
 # Remove Swift toolchain.
-sudo Remove-Item -Recurse -Force /usr/share/swift
+sudo rm -rf /usr/share/swift
 
 # Remove Haskell (GHC).
-sudo Remove-Item -Recurse -Force /opt/ghc
-sudo Remove-Item -Recurse -Force /usr/local/.ghcup
+sudo rm -rf /opt/ghc
+sudo rm -rf /usr/local/.ghcup
 
 # Remove Julia.
-sudo Remove-Item -Recurse -Force /usr/local/julia*
+sudo rm -rf /usr/local/julia*
 
 df --human-readable
 
