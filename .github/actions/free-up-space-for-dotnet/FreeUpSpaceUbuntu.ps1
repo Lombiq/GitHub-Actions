@@ -6,7 +6,7 @@ $initialSpace = (df / |
 df --human-readable
 
 # Remove the local cache of downloaded packages but don't remove installed software.
-apt-get clean
+sudo apt-get clean
 
 # Remove Android SDK.
 Remove-Item -Recurse -Force /usr/local/lib/android
