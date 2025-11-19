@@ -262,7 +262,7 @@ jobs:
 
       - name: Free up Space
         if: inputs.free-up-space == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@issue/OSOE-1194
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
 
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
