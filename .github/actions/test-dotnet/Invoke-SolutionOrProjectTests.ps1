@@ -44,7 +44,7 @@ $connectionString = @(
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionString
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
-if ($SolutionOrProject -like '*.sln')
+if ($SolutionOrProject -like '*.sln' -or $SolutionOrProject -like '*.slnx')
 {
     $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($SolutionOrProject)
     $solutionDirectory = [System.IO.Path]::GetDirectoryName($SolutionOrProject)

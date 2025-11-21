@@ -10,7 +10,7 @@ inputs:
     description: Path to the directory where a solution file can be found.
   solution-path:
     required: false
-    default: '*.sln'
+    default: '*.slnx, *.sln'
     description: >
       The path of the solution file to be processed. The value is given to PowerShell's `Get-Item` cmdlet as-is, so
       grepping is still possible but a name with spaces must be escaped separately.
@@ -50,7 +50,7 @@ runs:
       env:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
       run: |
-        $solutionPath = (Get-Item '${{ inputs.solution-path }}').FullName;
+        $solutionPath = (Get-Item ${{ inputs.solution-path }}).FullName;
         $excludedProjects = (Get-Item ${{ inputs.exclude-project-path }} -ErrorAction Ignore).FullName
 
         Test-DotnetPackageConsolidation -SolutionPath $solutionPath -ExcludedProjects $excludedProjects

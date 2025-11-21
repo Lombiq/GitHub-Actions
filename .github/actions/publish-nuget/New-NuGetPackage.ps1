@@ -69,7 +69,7 @@ $shouldDownloadBaseLinePackages = ($EnablePackageValidation -and
     -not ($Version -match '-(alpha|beta|preview|rc)[.-]') -and
     [int]$Version.Split('.')[0] -le [int]$PackageValidationBaselineVersion.Split('.')[0])
 
-$projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
+$projects = ((Test-Path *.slnx) -or (Test-Path *.sln)) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
 {

@@ -97,9 +97,9 @@ on:
         description: Configuration parameter for dotnet build (e.g. Debug, Release).
       build-solution-path:
         type: string
-        default: '*.sln'
+        default: '*.slnx, *.sln'
         description: >
-          The path of the solution or project file to be built. If there's exactly one .sln file in the build directory
+          The path of the solution or project file to be built. If there's exactly one .slnx or .sln file in the build directory
           then this can be omitted. For further information, see the documentation of the build-dotnet action.
       build-verbosity:
         type: string
@@ -297,7 +297,7 @@ jobs:
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-1189
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
