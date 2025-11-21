@@ -16,7 +16,10 @@ inputs:
     required: false
   globs:
     description: Glob expression(s) of files to lint (newline-delimited).
-    default: '**/*.{md,markdown}'
+    default: >
+      **/*.{md,markdown}
+      !node_modules
+      !License.md
     required: false
   separator:
     description: String to use as a separator for the "globs" input (defaults to newline).
@@ -26,19 +29,24 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Setup
+      shell: pwsh
+      run: |
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+        # Copy the default configuration file so it's accessible without path complications.
+        if (-not (Test-Path lombiq.markdownlint.json))
+        {
+          Copy-Item '${{ github.action_path }}/lombiq.markdownlint.json' .
+        }
+
     - name: Markdown Linting
-      # When upgrading, also update Lombiq.NodeJs.Extensions to use the corresponding version of the markdownlint
-      # package.
       uses: DavidAnson/markdownlint-cli2-action@30a0e04f1870d58f8d717450cc6134995f993c63 # v21.0.0
       with:
         config: ${{ inputs.config }}
         fix: ${{ inputs.fix }}
         globs: ${{ inputs.globs }}
         separator: ${{ inputs.separator }}
-
-    - name: Setup Scripts
-      shell: pwsh
-      run: (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Copy files updated by markdown-lint automatic fixes
       if: inputs.fix == 'true'

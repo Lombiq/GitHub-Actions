@@ -30,6 +30,7 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 
 ## Productivity
 
+- [Asset linting](Workflows/Productivity/AssetLinting.md)
 - [Codespell](Workflows/Productivity/Codespell.md)
 - [Create Jira issues for community activities](Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md)
 - [Markdown linting](Workflows/Productivity/MarkdownLinting.md)
