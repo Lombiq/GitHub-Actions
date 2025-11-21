@@ -2,7 +2,18 @@
 
 This workflow uses `eslint` and `stylelint` to validate your JavaScript and CSS files. It also invokes our [Markdown Linting](MarkdownLinting.md) workflow.
 
-You would typically consume workflow by passing a comma-separated list of the project paths where scripts or styles are to be linted:
+If you just want to lint all _.css_, _.js_, and _.md_ files in your repository, then nothing to configure, simply do this:
+
+```yaml
+...
+
+jobs:
+    asset-linting:
+        name: Asset Linting
+        uses: Lombiq/GitHub-Actions/.github/workflows/asset-lint.yml@dev
+```
+
+If you want to instead be opt-in, then you'd typically consume the workflow by passing in a comma-separated list of the project paths where scripts or styles are to be linted:
 
 ```yaml
 ...
@@ -31,7 +42,7 @@ jobs:
             src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
 ```
 
-This will lint the files in _wwwroot/js_ and _wwwwroot/css_ respectively. If you need linting in a different directory, you can also append `:{relative path or glob pattern}` after each project directory path. For example to lint scripts in the project root:
+This will lint the files in _wwwroot/js_ and _wwwwroot/css_ folders under the given folders, respectively. If you need linting in a different directory, you can also append `:{relative path or glob pattern}` after each project directory path. For example to lint scripts in the project root:
 
 ```yaml
     asset-linting:
@@ -42,7 +53,7 @@ This will lint the files in _wwwroot/js_ and _wwwwroot/css_ respectively. If you
             src/Libraries/Lombiq.EInvoiceValidator/Lombiq.EInvoiceValidator : .
 ```
 
-For descriptions of the workflow inputs, see [the workflow file](../../../.github/workflows/asset-lint.yml).
+For descriptions of all of the workflow inputs, see [the workflow file](../../../.github/workflows/asset-lint.yml).
 
 ## Configuration
 
