@@ -205,6 +205,7 @@ const ignores = [
   '**/vendor/**/*.js',
   '**/vendor/**/*.cjs',
   '**/vendor/**/*.mjs',
+  '**/eslint.*.mjs',
   ...(fs.existsSync('.eslintignore') ? includeIgnoreFile(path.resolve('.', '.eslintignore')).ignores : []),
 ];
 
