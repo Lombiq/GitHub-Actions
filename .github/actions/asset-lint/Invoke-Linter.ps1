@@ -36,6 +36,18 @@ function Write-GitHubError($Type, $RelativePath)
     Out-File -FilePath $watchdogFileName
 }
 
+function Invoke-Npx()
+{
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSAvoidUsingPositionalParameters',
+        '',
+        Justification='False positive on Windows.')]
+    param($Package, $ProjectAndGlob, $Type, $Parameters)
+
+    $relativePath = Resolve-Path -Path $ProjectAndGlob.Project -Relative -RelativeBasePath $basePath
+    npx -y $Package $ProjectAndGlob.Glob @Parameters || Write-GitHubError -Type $Type -RelativePath $relativePath
+}
+
 $scripts = ConvertTo-PathAndGlob -InputString $ScriptsString -DefaultGlob 'wwwroot/js'
 if ($scripts.Count -gt 0)
 {
@@ -43,9 +55,8 @@ if ($scripts.Count -gt 0)
 
     foreach ($pair in $scripts)
     {
-        $relativePath = Resolve-Path -Path $pair.Project -Relative -RelativeBasePath $PWD
-
-        npx -y eslint $pair.Glob --max-warnings 0 || Write-GitHubError -Type JavaScript -RelativePath $relativePath
+        $parameters = @('--max-warnings', '0')
+        Invoke-Npx -Package eslint -ProjectAndGlob $pair -Type JavaScript -Parameters $parameters
     }
 
     # Clean up copied files. The -Force switch is needed to remove hidden items (i.e. dotfiles in Unix).
@@ -70,9 +81,8 @@ if ($styles.Count -gt 0)
 
     foreach ($pair in $styles)
     {
-        $relativePath = Resolve-Path -Path $pair.Project -Relative -RelativeBasePath $basePath
-
-        npx -y stylelint $pair.Glob --ignore-path (Join-Path $basePath .gitignore) || Write-GitHubError -Type CSS -RelativePath $relativePath
+        $parameters = @('--ignore-path', (Join-Path $basePath .gitignore))
+        Invoke-Npx -Package stylelint -ProjectAndGlob $pair -Type CSS -Parameters $parameters
     }
 
     # Reset location and clean up temporary files.
