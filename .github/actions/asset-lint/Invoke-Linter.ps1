@@ -41,7 +41,7 @@ function Invoke-Npx()
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
         'PSAvoidUsingPositionalParameters',
         '',
-        Justification='False positive on Windows.')]
+        Justification = 'False positive on Windows.')]
     param($Package, $ProjectAndGlob, $Type, $Parameters)
 
     $relativePath = Resolve-Path -Path $ProjectAndGlob.Project -Relative -RelativeBasePath $basePath
