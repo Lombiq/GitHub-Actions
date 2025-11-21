@@ -93,7 +93,7 @@ on:
         description: Configuration parameter for dotnet build, e.g. Release (default) or Debug.
       build-solution-path:
         type: string
-        default: '*.slnx, *.sln'
+        default: '*.sln*'
         description: >
           The path of the solution or project file to be built. If there's exactly one .slnx or .sln file in the build directory
           then this can be omitted. For further information, see the documentation of the build-dotnet action.
