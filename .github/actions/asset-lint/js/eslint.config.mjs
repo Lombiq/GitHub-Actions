@@ -231,7 +231,7 @@ const nodeConfig = [
 ];
 
 const custom = fs.existsSync('eslint.custom.mjs')
-    ? await import('./eslint.custom.mjs')
+    ? (await import('./eslint.custom.mjs')).default
     : [];
 
 export default [
