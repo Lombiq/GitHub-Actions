@@ -1,6 +1,6 @@
 # Asset Linting
 
-This workflow uses `eslint` and `stylelint` to validate your JavaScript and CSS files. It also invokes our [Markdown Linting](MarkdownLinting.md) workflow.
+This workflow uses `eslint` and `stylelint` to validate your JavaScript, CSS and Markdown files.
 
 If you just want to lint all _.css_, _.js_, and _.md_ files in your repository, then nothing to configure, simply do this:
 
@@ -13,7 +13,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/workflows/asset-lint.yml@dev
 ```
 
-If you want to instead be opt-in, then you'd typically consume the workflow by passing in a comma-separated list of the project paths where scripts or styles are to be linted:
+If you want to opt-in instead, then you'd typically consume the workflow by passing in a comma-separated list of the project paths where scripts, styles, or texts are to be linted:
 
 ```yaml
 ...
@@ -37,6 +37,20 @@ jobs:
             src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor,
             src/Modules/Lombiq.Privacy/Lombiq.Privacy,
             src/Modules/Lombiq.UIKit/Lombiq.UIKit,
+            src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core,
+            src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native,
+            src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
+        texts: >-
+            src/Modules/Lombiq.ChartJs/Lombiq.ChartJs.Samples,
+            src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors,
+            src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors.Samples,
+            src/Modules/Lombiq.DataTables/Lombiq.DataTables,
+            src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
+            src/Modules/Lombiq.Hosting.Tenants/Lombiq.Hosting.Tenants.Maintenance,
+            src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor,
+            src/Modules/Lombiq.Privacy/Lombiq.Privacy,
+            src/Modules/Lombiq.UIKit/Lombiq.UIKit,
+            src/Modules/Lombiq.Walkthroughs/Lombiq.Walkthroughs,
             src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core,
             src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native,
             src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
@@ -68,6 +82,13 @@ JavaScript configuration files:
 
 - eslint.config.mjs: The main configuration file for ESLint. It is not recommended to override this file.
 - eslint.custom.mjs: If this file exists, it's loaded in by the the workflow's _eslint.config.mjs_ at the highest precedence. In other words you can override rules or other settings here while still extending the main Lombiq ESLint config file.
+
+Markdown configuration files:
+
+- .markdownlint-cli2.mjs: The main configuration file for [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2?tab=readme-ov-file#configuration).
+- .markdownlintignore: A file of newline separated glob expressions used to ignore items in the project when running markdownlint.
+- .textlintignore: The same but for textlint.
+- .textlintrc.js: The main configuration file for [textlint](https://textlint.org/docs/configuring/).
 
 ## How to Run Locally
 
