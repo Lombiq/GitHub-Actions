@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 
-// eslint-disable n/no-sync -- This script would not benefit from async.
 export default {
+    // eslint-disable-next-line n/no-sync -- This script would not benefit from async.
     ignores: fs
         .readFileSync('.markdownlintignore', 'utf8')
         .split('\n')
