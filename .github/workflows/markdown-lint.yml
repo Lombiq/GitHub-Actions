@@ -1,4 +1,4 @@
-# DEPRECATED! Use asset-lint instead, that lints Markdown files with both markdownlint and textlint.
+# DEPRECATED! Use asset-lint instead. It lints Markdown files with markdownlint and textlint too.
 name: Markdown Linting
 
 on:
@@ -49,7 +49,7 @@ jobs:
       - name: Deprecation Warning
         shell: pwsh
         run: |
-          Write-Output '::warning::This workflow is deprecated. Use asset-lint instead, that lints Markdown files with both markdownlint and textlint.'
+          Write-Output '::warning::This workflow is deprecated. Use asset-lint instead. It lints Markdown files with markdownlint and textlint too.'
 
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev

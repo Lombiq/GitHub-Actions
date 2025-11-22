@@ -1,4 +1,4 @@
-# DEPRECATED! Use asset-lint instead, that lints Markdown files with both markdownlint and textlint.
+# DEPRECATED! Use asset-lint instead. It lints Markdown files with markdownlint and textlint too.
 name: Markdown Linting
 description: >
   Lints markdown files by wrapping the markdownlint-cli2 action
