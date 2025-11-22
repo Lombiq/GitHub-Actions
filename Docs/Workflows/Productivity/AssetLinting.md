@@ -90,6 +90,9 @@ Markdown configuration files:
 - .textlintignore: The same but for textlint.
 - .textlintrc.js: The main configuration file for [textlint](https://textlint.org/docs/configuring/).
 
+> [!TIP]
+> You can disable rules in textlint using the "comments" filter, which is installed by default. Read more about it in [the package's readme](https://github.com/textlint/textlint-filter-rule-comments).
+
 ## How to Run Locally
 
 1. Check out this repository in your local machine.
@@ -97,7 +100,7 @@ Markdown configuration files:
 3. Type `path-to-GHA/.github/actions/asset-lint/Invoke-Linter.ps1 -ScriptsString relative/path/to/project -StylesString relative/path/to/project`. You can omit either switches if you don't want to lint both.
 
 ```pwsh
-.../Open-Source-Orchard-Core-Extensions/tools/Lombiq.GitHub.Actions/.github/actions/asset-lint/Invoke-Linter.ps1 -ScriptsString src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/js -StylesString src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/css
+.../Open-Source-Orchard-Core-Extensions/tools/Lombiq.GitHub.Actions/.github/actions/asset-lint/Invoke-Linter.ps1 -ScriptsString src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/js -StylesString src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/css -TextsString .
 ```
 
 > [!TIP]
