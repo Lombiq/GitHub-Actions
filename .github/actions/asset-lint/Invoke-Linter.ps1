@@ -3,7 +3,6 @@ param (
     [string] $StylesString = '',
     [string] $TextsString = '')
 
-$basePath = $PWD.Path
 $watchdogFileName = 'asset-linting-failed'
 
 function ConvertTo-PathAndGlob([string] $InputString, [string] $DefaultGlob)
@@ -12,10 +11,10 @@ function ConvertTo-PathAndGlob([string] $InputString, [string] $DefaultGlob)
         Where-Object { $PSItem.Trim() } |
         ForEach-Object {
             $pairs = $PSItem -split ':'
-            $project = Join-Path -Path $basePath -ChildPath $pairs[0].Trim()
+            $project = Join-Path -Path $PWD -ChildPath $pairs[0].Trim()
             $glob = $pairs.Count -eq 1 ? $DefaultGlob : $pairs[1].Trim()
 
-            [pscustomobject] @{ Project = $project; Glob = (Join-Path $project $glob) }
+            [pscustomobject] @{ Project = $project; Glob = $glob }
         }
 }
 
@@ -79,18 +78,14 @@ if ($styles.Count -gt 0)
 }
 
 $texts = ConvertTo-PathAndGlob -InputString $TextsString -DefaultGlob '**/*.{md,markdown}'
-echo $texts.Count, $texts
 if ($texts.Count -gt 0)
 {
     $copiedItems = Initialize-Npm -CopyFrom md
 
     foreach ($pair in $texts)
     {
-        $parameters = @()
-        Invoke-Npx -Package markdownlint-cli2 -ProjectAndGlob $pair -Type 'Markdown (markdownlint-cli2)' -Parameters $parameters
-
-        $parameters = @()
-        Invoke-Npx -Package textlint -ProjectAndGlob $pair -Type 'Markdown (textlint)' -Parameters $parameters
+        Invoke-Npx -Package markdownlint-cli2 -ProjectAndGlob $pair -Type 'Markdown (markdownlint-cli2)'
+        Invoke-Npx -Package textlint -ProjectAndGlob $pair -Type 'Markdown (textlint)'
     }
 
     $copiedItems | Remove-Item -Force
