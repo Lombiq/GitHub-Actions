@@ -13,6 +13,10 @@ inputs:
     required: false
     default: .:**/*.css
     description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
+  texts:
+    required: false
+    default: .:**/*.{md,markdown}
+    description: Information about the projects where Markdown linting should occur. Has the same format as the "scripts" input above.
 
 runs:
   using: composite
@@ -26,4 +30,4 @@ runs:
     - name: Execute Linting
       shell: pwsh
       run: |
-        Invoke-Linter -ScriptsString '${{ inputs.scripts }}' -StylesString '${{ inputs.styles }}'
+        Invoke-Linter -ScriptsString '${{ inputs.scripts }}' -StylesString '${{ inputs.styles }}' -TextsString '${{ inputs.texts }}'

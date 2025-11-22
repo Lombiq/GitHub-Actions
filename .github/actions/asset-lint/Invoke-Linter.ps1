@@ -1,6 +1,7 @@
 param (
     [string] $ScriptsString = '',
-    [string] $StylesString = '')
+    [string] $StylesString = '',
+    [string] $TextsString = '')
 
 $basePath = $PWD.Path
 $watchdogFileName = 'asset-linting-failed'
@@ -72,6 +73,24 @@ if ($styles.Count -gt 0)
     {
         $parameters = @('--ignore-path', (Join-Path $basePath .gitignore))
         Invoke-Npx -Package stylelint -ProjectAndGlob $pair -Type CSS -Parameters $parameters
+    }
+
+    $copiedItems | Remove-Item -Force
+}
+
+$texts = ConvertTo-PathAndGlob -InputString $TextsString -DefaultGlob '**/*.{md,markdown}'
+echo $texts.Count, $texts
+if ($texts.Count -gt 0)
+{
+    $copiedItems = Initialize-Npm -CopyFrom md
+
+    foreach ($pair in $texts)
+    {
+        $parameters = @()
+        Invoke-Npx -Package markdownlint-cli2 -ProjectAndGlob $pair -Type 'Markdown (markdownlint-cli2)' -Parameters $parameters
+
+        $parameters = @()
+        Invoke-Npx -Package textlint -ProjectAndGlob $pair -Type 'Markdown (textlint)' -Parameters $parameters
     }
 
     $copiedItems | Remove-Item -Force

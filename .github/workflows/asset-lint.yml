@@ -25,21 +25,10 @@ on:
         description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
         type: string
         default: .:**/*.css
-      lint-markdown:
-        description: Indicates if Markdown files should be linted in this repository.
+      texts:
+        description: Information about the projects where Markdown linting should occur. Has the same format as the "scripts" input above.
         type: string
-        default: 'true'
-      markdown-config:
-        description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").
-        type: string
-        default: lombiq.markdownlint.json
-      markdown-globs:
-        description: Glob expression(s) of files to lint (newline-delimited).
-        type: string
-        default: >
-          **/*.{md,markdown}
-          !node_modules
-          !License.md
+        default: .:**/*.{md,markdown}
 
 jobs:
   lint:
@@ -59,13 +48,7 @@ jobs:
         with:
           scripts: ${{ inputs.scripts }}
           styles: ${{ inputs.styles }}
-
-      - name: Markdown Linting
-        if: inputs.lint-markdown == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@dev
-        with:
-          config: ${{ inputs.markdown-config }}
-          globs: ${{ inputs.markdown-globs }}
+          texts: ${{ inputs.texts }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
