@@ -66,18 +66,7 @@ if ($scripts.Count -gt 0)
 $styles = ConvertTo-PathAndGlob -InputString $StylesString -DefaultGlob '**/*.css'
 if ($styles.Count -gt 0)
 {
-    # Create a new temporary directory for storing dependencies.
-    $temporaryDirectoryPath = (New-TemporaryFile).FullName
-    Remove-Item -Path $temporaryDirectoryPath -Force
-    New-Item -ItemType Directory -Path $temporaryDirectoryPath
-    Push-Location $temporaryDirectoryPath
-
-    Initialize-Npm -CopyFrom css
-    @('.stylelintignore', 'stylelint.config.mjs') |
-        ForEach-Object { Join-Path $basePath $PSItem } |
-        Where-Object { Test-Path $PSItem } |
-        Get-Item |
-        Copy-Item .
+    $copiedItems = Initialize-Npm -CopyFrom css
 
     foreach ($pair in $styles)
     {
@@ -85,9 +74,7 @@ if ($styles.Count -gt 0)
         Invoke-Npx -Package stylelint -ProjectAndGlob $pair -Type CSS -Parameters $parameters
     }
 
-    # Reset location and clean up temporary files.
-    Pop-Location
-    Remove-Item -Path $temporaryDirectoryPath -Recurse -Force
+    $copiedItems | Remove-Item -Force
 }
 
 if (Test-Path $watchdogFileName)
