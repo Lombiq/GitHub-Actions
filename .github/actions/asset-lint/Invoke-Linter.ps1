@@ -70,8 +70,7 @@ if ($styles.Count -gt 0)
 
     foreach ($pair in $styles)
     {
-        $parameters = @('--ignore-path', (Join-Path $basePath .gitignore))
-        Invoke-Npx -Package stylelint -ProjectAndGlob $pair -Type CSS -Parameters $parameters
+        Invoke-Npx -Package stylelint -ProjectAndGlob $pair -Type CSS
     }
 
     $copiedItems | Remove-Item -Force
