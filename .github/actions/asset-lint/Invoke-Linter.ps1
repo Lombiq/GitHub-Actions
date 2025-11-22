@@ -7,7 +7,7 @@ $watchdogFileName = 'asset-linting-failed'
 
 function ConvertTo-PathAndGlob([string] $InputString, [string] $DefaultGlob)
 {
-    $InputString.split(',') |
+    $InputString.split(';') |
         Where-Object { $PSItem.Trim() } |
         ForEach-Object {
             $pairs = $PSItem -split ':'
