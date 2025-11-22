@@ -33,7 +33,6 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 - [Asset linting](Workflows/Productivity/AssetLinting.md)
 - [Codespell](Workflows/Productivity/Codespell.md)
 - [Create Jira issues for community activities](Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md)
-- [Markdown linting](Workflows/Productivity/MarkdownLinting.md)
 - [Mirror branches](Workflows/Productivity/MirrorBranches.md)
 - [Post-pull request checks automation](Workflows/Productivity/PostPullRequestChecksAutomation.md)
 - [Publish NuGet package](Workflows/Productivity/PublishNuGetPackage.md)

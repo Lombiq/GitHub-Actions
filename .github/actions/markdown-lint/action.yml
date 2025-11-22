@@ -1,10 +1,9 @@
+# DEPRECATED! Use asset-lint instead, that lints Markdown files with both markdownlint and textlint.
 name: Markdown Linting
 description: >
   Lints markdown files by wrapping the markdownlint-cli2 action
   (https://github.com/DavidAnson/markdownlint-cli2-action).
 
-# When updating defaults here also update them in the `markdown-lint` workflow. These parameters are passed on directly
-# to the markdownlint-cli2 action, see: https://github.com/DavidAnson/markdownlint-cli2-action/blob/main/action.yml.
 inputs:
   config:
     description: Path to a file to use for the base configuration object (defaults to "lombiq.markdownlint.json").

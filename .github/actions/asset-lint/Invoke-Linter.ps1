@@ -7,6 +7,11 @@ $watchdogFileName = 'asset-linting-failed'
 
 function ConvertTo-PathAndGlob([string] $InputString, [string] $DefaultGlob)
 {
+    if ($InputString -eq 'false')
+    {
+        return @()
+    }
+
     $InputString.split(';') |
         Where-Object { $PSItem.Trim() } |
         ForEach-Object {
