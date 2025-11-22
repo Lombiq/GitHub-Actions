@@ -4,14 +4,14 @@ description: Lint JavaScript and CSS files
 inputs:
   scripts:
     required: false
-    default: ''
+    default: .:.
     description: |
       Information about the projects where JavaScript linting should occur. It's a comma separated list of the project
       paths. Optionally, each list item can be in the "{project path}:{glob pattern}" format as well, if you don't
       want to target all files in the project directory.
   styles:
     required: false
-    default: ''
+    default: .:**/*.css
     description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
 
 runs:
