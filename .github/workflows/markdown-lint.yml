@@ -1,3 +1,4 @@
+# DEPRECATED! Use asset-lint instead. It lints Markdown files with markdownlint and textlint too.
 name: Markdown Linting
 
 on:
@@ -9,7 +10,6 @@ on:
           The GitHub token to authenticate checkout with. Pass in a GitHub personal access token if authenticated
           submodules are used.
 
-    # When updating defaults here also update them in the `markdown-lint` action.
     inputs:
       cancel-workflow-on-failure:
         description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
@@ -46,6 +46,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
+      - name: Deprecation Warning
+        shell: pwsh
+        run: |
+          Write-Output '::warning::This workflow is deprecated. Use asset-lint instead. It lints Markdown files with markdownlint and textlint too.'
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:

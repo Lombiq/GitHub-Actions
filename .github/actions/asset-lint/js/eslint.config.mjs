@@ -202,9 +202,9 @@ const lombiqRules = lombiqConfig[0].rules;
 
 const ignores = [
   '**/bin',
-  '**/vendor/**/*.js',
-  '**/vendor/**/*.cjs',
-  '**/vendor/**/*.mjs',
+  '**/vendors/**/*.js',
+  '**/vendors/**/*.cjs',
+  '**/vendors/**/*.mjs',
   '**/eslint.*.mjs',
   ...(fs.existsSync('.eslintignore') ? includeIgnoreFile(path.resolve('.', '.eslintignore')).ignores : []),
 ];

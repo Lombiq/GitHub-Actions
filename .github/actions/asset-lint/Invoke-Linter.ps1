@@ -1,20 +1,25 @@
 param (
     [string] $ScriptsString = '',
-    [string] $StylesString = '')
+    [string] $StylesString = '',
+    [string] $TextsString = '')
 
-$basePath = $PWD.Path
 $watchdogFileName = 'asset-linting-failed'
 
 function ConvertTo-PathAndGlob([string] $InputString, [string] $DefaultGlob)
 {
-    $InputString.split(',') |
+    if ($InputString -eq 'false')
+    {
+        return @()
+    }
+
+    $InputString.split(';') |
         Where-Object { $PSItem.Trim() } |
         ForEach-Object {
             $pairs = $PSItem -split ':'
-            $project = Join-Path -Path $basePath -ChildPath $pairs[0].Trim()
+            $project = Join-Path -Path $PWD -ChildPath $pairs[0].Trim()
             $glob = $pairs.Count -eq 1 ? $DefaultGlob : $pairs[1].Trim()
 
-            [pscustomobject] @{ Project = $project; Glob = (Join-Path $project $glob) }
+            [pscustomobject] @{ Project = $project; Glob = $glob }
         }
 }
 
@@ -66,28 +71,28 @@ if ($scripts.Count -gt 0)
 $styles = ConvertTo-PathAndGlob -InputString $StylesString -DefaultGlob '**/*.css'
 if ($styles.Count -gt 0)
 {
-    # Create a new temporary directory for storing dependencies.
-    $temporaryDirectoryPath = (New-TemporaryFile).FullName
-    Remove-Item -Path $temporaryDirectoryPath -Force
-    New-Item -ItemType Directory -Path $temporaryDirectoryPath
-    Push-Location $temporaryDirectoryPath
-
-    Initialize-Npm -CopyFrom css
-    @('.stylelintignore', 'stylelint.config.mjs') |
-        ForEach-Object { Join-Path $basePath $PSItem } |
-        Where-Object { Test-Path $PSItem } |
-        Get-Item |
-        Copy-Item .
+    $copiedItems = Initialize-Npm -CopyFrom css
 
     foreach ($pair in $styles)
     {
-        $parameters = @('--ignore-path', (Join-Path $basePath .gitignore))
-        Invoke-Npx -Package stylelint -ProjectAndGlob $pair -Type CSS -Parameters $parameters
+        Invoke-Npx -Package stylelint -ProjectAndGlob $pair -Type CSS
     }
 
-    # Reset location and clean up temporary files.
-    Pop-Location
-    Remove-Item -Path $temporaryDirectoryPath -Recurse -Force
+    $copiedItems | Remove-Item -Force
+}
+
+$texts = ConvertTo-PathAndGlob -InputString $TextsString -DefaultGlob '**/*.{md,markdown}'
+if ($texts.Count -gt 0)
+{
+    $copiedItems = Initialize-Npm -CopyFrom md
+
+    foreach ($pair in $texts)
+    {
+        Invoke-Npx -Package markdownlint-cli2 -ProjectAndGlob $pair -Type 'Markdown (markdownlint-cli2)'
+        Invoke-Npx -Package textlint -ProjectAndGlob $pair -Type 'Markdown (textlint)'
+    }
+
+    $copiedItems | Remove-Item -Force
 }
 
 if (Test-Path $watchdogFileName)
