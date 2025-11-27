@@ -3,6 +3,8 @@
     extends: [
         'github>Lombiq/renovate-config:default.json5',
         'github>Lombiq/Open-Source-Orchard-Core-Extensions:renovate-osoce-submodule.json5',
+        // Due to having to update branch references, it's easier to test all dependencies at once.
+        'github>Lombiq/renovate-config:all-dependencies.json5',
     ],
     packageRules: [
         {
@@ -10,10 +12,10 @@
             matchFileNames: ['.github/workflows/deploy-orchard1-to-azure-app-service.yml'], 
             enabled: false,
         },
+        // Disabling until https://github.com/NishargShah/eslint-config-airbnb-extended/issues/8 is fixed.
         {
-            // Due to having to update branch references, it's easier to test all dependencies at once.
-            groupName: 'All Dependencies',
-            matchUpdateTypes: ['*'],
+            matchPackageNames: ['@stylistic/eslint-plugin'],
+            enabled: false,
         },
     ]
 }
