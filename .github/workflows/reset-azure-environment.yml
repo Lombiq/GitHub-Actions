@@ -121,6 +121,11 @@ on:
         type: string
         default: '0'
         description: The batch size of the maintenance.
+      restart-after-test:
+        type: string
+        default: 'false'
+        description: >
+          When set to 'true', the destination web app slot will be restarted after testing (pinging) it succeeds.
 
 jobs:
   reset-azure-environment:
@@ -208,6 +213,14 @@ jobs:
       - name: Test Web App Slot
         run: |
           Test-AzureWebApp `
+            -ResourceGroupName ${{ inputs.resource-group-name }} `
+            -WebAppName ${{ inputs.app-name }} `
+            -SlotName ${{ inputs.destination-slot-name }}
+
+      - name: Restart Web App Slot
+        if: inputs.restart-after-test == 'true'
+        run: |
+          Restart-AzureWebAppSlot `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.destination-slot-name }}
