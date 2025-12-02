@@ -6,7 +6,7 @@ $blameHangDumpsName = 'BlameHangDumps'
 $testDirectoryPath = Join-Path $Directory 'test'
 $testDirectory = (Test-Path -Path $testDirectoryPath) ? (Resolve-Path $testDirectoryPath) : $rootDirectory
 
-$dumpCount = (Get-ChildItem -Filter '*_hangdump.dmp' -Recurse | Measure-Object).Count
+$dumpCount = (Get-ChildItem -Path $testDirectory -Filter '*_hangdump.dmp' -Recurse | Measure-Object).Count
 Set-GitHubOutput 'dump-count' $dumpCount
 
 if ($dumpCount -eq 0)

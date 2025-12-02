@@ -12,12 +12,12 @@ if ($CalledRepoBaseIncludeList.Count -eq 0)
 }
 else
 {
-    $CalledRepoBaseIncludeList = $CalledRepoBaseIncludeList.ForEach({ 'uses:\s*' + $PSItem + '.*@(?<ref>[\w\./-]*)' })
+    $CalledRepoBaseIncludeList = $CalledRepoBaseIncludeList.ForEach({ 'uses:\s*' + $PSItem + '.*@(?<ref>[\w\.//-]*)' })
 
-    $matchedRefs = Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse |
+    $matchedRefs = @(Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse) |
         Select-String -Pattern $CalledRepoBaseIncludeList
 
-    $additionalRefs = Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse |
+    $additionalRefs = @(Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse) |
         Select-String -Pattern $AdditionalPatternIncludeList
 
     $matchedRefs = $matchedRefs + $additionalRefs

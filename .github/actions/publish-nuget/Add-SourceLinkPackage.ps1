@@ -1,5 +1,5 @@
 # Find solution file.
-$solutionFile = Get-ChildItem -Path . -Filter *.sln -Recurse | Select-Object -First 1
+$solutionFile = Get-ChildItem -Path . -Filter '*.sln' -Recurse | Select-Object -First 1
 
 if ($null -eq $solutionFile)
 {

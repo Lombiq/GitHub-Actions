@@ -15,7 +15,7 @@ if ($CalledRepoBaseIncludeList.Count -eq 0)
 
 $CalledRepoBaseIncludeList = $CalledRepoBaseIncludeList.ForEach({ 'uses:\s*' + $PSItem })
 
-$mismatchRefs = Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse |
+$mismatchRefs = @(Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse) |
     Select-String -Pattern $CalledRepoBaseIncludeList |
     Select-String -Pattern $ExpectedRef -NotMatch
 
