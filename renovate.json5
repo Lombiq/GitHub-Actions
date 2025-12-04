@@ -14,7 +14,7 @@
         },
         // Disabling until https://github.com/NishargShah/eslint-config-airbnb-extended/issues/8 is fixed.
         {
-            matchPackageNames: ['@stylistic/eslint-plugin'],
+            matchPackageNames: ['@stylistic/eslint-plugin', '@eslint/compat'],
             enabled: false,
         },
     ]
