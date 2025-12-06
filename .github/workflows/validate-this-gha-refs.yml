@@ -16,7 +16,7 @@ jobs:
       - name: Check for Label
         id: check-label
         if: |
-          github.event_name == 'pull_request' || 
+          github.event_name == 'pull_request' ||
           (github.event_name == 'pull_request_review' && github.event.review.state == 'approved')
         shell: pwsh
         env:
@@ -24,10 +24,10 @@ jobs:
         run: |
           $repo = "${{ github.repository }}"
           $prNumber = "${{ github.event.pull_request.number }}"
-          
+
           $pr = gh api "repos/$repo/pulls/$prNumber" | ConvertFrom-Json
           $hasLabel = $pr.labels | Where-Object { $PSItem.name -eq 'dont-auto-manage-gha-refs' }
-          
+
           $labelFound = $hasLabel.Count -gt 0
           Write-Output "has-label=$labelFound" >> $env:GITHUB_OUTPUT
           Write-Output "Label 'dont-auto-manage-gha-refs' present: $labelFound"

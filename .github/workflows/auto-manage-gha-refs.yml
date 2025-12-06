@@ -26,10 +26,10 @@ jobs:
         run: |
           $repo = "${{ github.repository }}"
           $prNumber = "${{ github.event.pull_request.number }}"
-          
+
           $pr = gh api "repos/$repo/pulls/$prNumber" | ConvertFrom-Json
           $hasLabel = $pr.labels | Where-Object { $PSItem.name -eq 'dont-auto-manage-gha-refs' }
-          
+
           $labelFound = $hasLabel.Count -gt 0
           Write-Output "has-label=$labelFound" >> $env:GITHUB_OUTPUT
           Write-Output "Label 'dont-auto-manage-gha-refs' present: $labelFound"
@@ -70,7 +70,7 @@ jobs:
         shell: pwsh
         run: |
           $eventName = "${{ github.event_name }}"
-          
+
           if ($eventName -eq 'pull_request_review')
           {
               $headRef = "${{ github.event.pull_request.head.ref }}"
@@ -107,7 +107,7 @@ jobs:
           Write-Output "Head ref: $headRef"
           Write-Output "Base ref: $baseRef"
           Write-Output "Last review approved: $lastReviewApproved"
-          
+
           $output = "target-ref=$targetRef"
           $output >> $env:GITHUB_OUTPUT
 
@@ -127,7 +127,7 @@ jobs:
         shell: pwsh
         run: |
           $eventName = "${{ github.event_name }}"
-          
+
           if ($eventName -eq 'pull_request_review')
           {
               $headRef = "${{ github.event.pull_request.head.ref }}"
@@ -136,7 +136,7 @@ jobs:
           {
               $headRef = "${{ github.head_ref }}"
           }
-          
+
           Write-Output "Pushing changes to $headRef..."
           git push origin HEAD:$headRef
           Write-Output "Changes pushed successfully."
@@ -154,5 +154,5 @@ jobs:
               TargetRef = "${{ steps.determine-ref.outputs.target-ref }}"
               LastReviewApproved = "${{ steps.check-pr-reviews.outputs.last-review-approved }}"
           }
-          
+
           & "${{ github.workspace }}/.github/actions/auto-manage-gha-refs/Add-PullRequestComment.ps1" @params
