@@ -48,6 +48,8 @@ jobs:
         with:
           # Use a PAT to allow the workflow to trigger on the pushed commits.
           token: ${{ secrets.CHECKOUT_TOKEN || secrets.GITHUB_TOKEN }}
+          # Explicitly checkout the PR head commit to avoid pushing the synthetic merge commit.
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Configure Git
@@ -117,7 +119,8 @@ jobs:
         uses: ./.github/actions/auto-manage-gha-refs
         with:
           left-commit: ${{ github.event.pull_request.base.sha }}
-          right-commit: ${{ github.sha }}
+          # Compare against the actual PR head commit instead of the synthetic merge commit.
+          right-commit: ${{ github.event.pull_request.head.sha }}
           expected-ref: ${{ steps.determine-ref.outputs.target-ref }}
           called-repo-base-include-list: '@("${{ github.repository }}")'
           max-iterations: 10
