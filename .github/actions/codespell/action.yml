@@ -16,7 +16,7 @@ runs:
       with:
         # Needs to be what codespell supports, see
         # https://github.com/codespell-project/codespell?tab=readme-ov-file#requirements.
-        python-version: 3.14.1
+        python-version: 3.14.0
 
     - name: Install Dependencies
       shell: pwsh

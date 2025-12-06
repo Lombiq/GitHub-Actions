@@ -55,9 +55,17 @@ We can still choose to update to a more recent patch version, but only deliberat
 
 Build workflows also enable [corepack](https://github.com/nodejs/corepack) to allow using Node.js package managers other than NPM. This behavior will be disabled when upgrading to Node.js v26 since that version [won't contain corepack anymore](https://github.com/nodejs/node/issues/50963#issuecomment-2746471823).
 
-### Reference validation
+### Automatic GitHub Actions reference management
 
-To ensure that when changing actions or workflows their references to other actions/workflows are up-to-date (i.e. instead of `@dev` they reference each other with `@current-branch`) the [Validate GitHub Actions Refs workflow](https://github.com/Lombiq/GitHub-Actions/blob/dev/.github/workflows/validate-this-gha-refs.yml) will fail if references are incorrect. This is the case also if after a pull request approve that references don't point to the target branch; before merging, that should be fixed, otherwise merging via the merge queue will fail.
+When changing actions or workflows in this repository, their references to other actions/workflows need to be updated to ensure the latest changes are tested. This is now handled automatically:
+
+- **By default**: The [Auto-Manage GitHub Actions Refs workflow](.github/workflows/auto-manage-gha-refs.yml) automatically updates references when you push commits to a PR. It updates references to point to your PR branch so the latest changes are tested. When the PR is approved, it reverts references back to the target branch to prepare for merging.
+
+- **Manual control**: Add the `dont-auto-manage-gha-refs` label to your PR if you need manual control. The [Validate GitHub Actions Refs workflow](.github/workflows/validate-this-gha-refs.yml) will then run instead to verify references are correct.
+
+- **Cascading updates**: The system handles nested dependencies automatically. If changing an action requires updating its callers, which in turn requires updating their callers, the workflow performs multiple passes until all references are updated.
+
+See the [detailed documentation](Docs/Workflows/Productivity/AutoManageGitHubActionsRefs.md) for more information.
 
 ### Versioning, Tags and Releases
 
