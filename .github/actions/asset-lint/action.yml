@@ -1,5 +1,5 @@
 name: Lint Scripts and Styles
-description: Lint JavaScript and CSS files
+description: Lint JavaScript and CSS files.
 
 inputs:
   scripts:

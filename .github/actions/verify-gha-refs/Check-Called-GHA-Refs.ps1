@@ -31,17 +31,17 @@ if ($mismatchRefs.Count -gt 0)
     foreach ($mismatch in $mismatchRefs)
     {
         $filename = $mismatch.RelativePath($PWD)
-        $linenumber = $mismatch.LineNumber
+        $lineNumber = $mismatch.LineNumber
         $title = $mismatch.Line
 
         # The below statement won't work becuase actions/toolkit will not link to files that are not part of the commit.
         # See: https://github.com/actions/toolkit/issues/470
-        # Write-Output "::error file=$filename,line=$linenumber,title=$title::GHA Ref does not match '$ExpectedRef'"
+        # Write-Output "::error file=$filename,line=$lineNumber,title=$title::GHA Ref does not match '$ExpectedRef'"
 
         # As a workaround, link directly to file.
-        "- <a href='https://github.com/$GitHubRepository/blob/$GitHubRefName/$filename#L$linenumber'>$filename#L$linenumber</a>" >> $env:GITHUB_STEP_SUMMARY
+        "- <a href='https://github.com/$GitHubRepository/blob/$GitHubRefName/$filename#L$lineNumber'>$filename#L$lineNumber</a>" >> $env:GITHUB_STEP_SUMMARY
         # And write better log message.
-        Write-Output "::error::$filename#L$linenumber - called GitHub Action does not match expected Ref '$ExpectedRef'."
+        Write-Output "::error::$filename#L$lineNumber - called GitHub Action does not match expected Ref '$ExpectedRef'."
 
         # Beware the backtick character is the powershell escape character.
         "``````yaml" >> $env:GITHUB_STEP_SUMMARY

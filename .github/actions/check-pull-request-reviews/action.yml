@@ -1,7 +1,7 @@
 name: Check Pull Request Reviews
 description: >
-  Checks current pull request reviews to determine if latest review is approved. Intentionally not documented in Actions.md since it's
-  only meant for internal use.
+  Checks current pull request reviews to determine if latest review is approved. Intentionally not documented in
+  Actions.md since it's only meant for internal use.
 
 outputs:
   last-review-approved:
