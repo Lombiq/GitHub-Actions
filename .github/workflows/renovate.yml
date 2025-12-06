@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Run Renovate
-        uses: Lombiq/GitHub-Actions-Renovate-Test/.github/actions/renovate@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/renovate@dev
         env:
           CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
         with:

@@ -7,7 +7,6 @@ runs:
     - name: Write configuration to summary
       shell: pwsh
       run: |
-        Write-Output 'hello'
         $toolVersions = @"
           | Tool | Version |
           | :--- | ------: |
