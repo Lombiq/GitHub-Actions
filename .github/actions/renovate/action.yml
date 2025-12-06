@@ -23,5 +23,6 @@ runs:
         RENOVATE_ADDITIONAL_REVIEWERS: ${{ inputs.additional-reviewers }}
         # Do the dependency updates when the workflow runs, not when the Renovate config tells it.
         RENOVATE_FORCE: '{''schedule'':null,''prHourlyLimit'':0}'
+        RENOVATE_ALLOWED_COMMANDS: '[".*"]'
       with:
         token: ${{ env.CHECKOUT_TOKEN }}
