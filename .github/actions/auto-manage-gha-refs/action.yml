@@ -1,0 +1,61 @@
+name: Auto-Manage GitHub Actions References
+description: >
+  Automatically updates GitHub Actions references to the appropriate branch. This action performs iterative updates to
+  handle cascading reference changes (when changing an action necessitates updating references to that action, which in
+  turn requires updating references to the files that call it, etc.). Intentionally not documented in Actions.md since
+  it's only meant for internal use.
+
+inputs:
+  left-commit:
+    required: true
+    description: >
+      Git commit SHA or ref to compare from (typically the base branch commit).
+  right-commit:
+    required: true
+    description: >
+      Git commit SHA or ref to compare to (typically HEAD or the PR head).
+  expected-ref:
+    required: true
+    description: >
+      The expected reference value to update all affected GHA references to (e.g., the PR branch name or base branch
+      name).
+  called-repo-base-include-list:
+    required: false
+    default: '@("${{ github.repository }}")'
+    description: >
+      PowerShell string array of repository base URLs to include when updating GHA references, e.g
+      '@("Lombiq/GitHub-Actions")'. The parameter must be a PowerShell string array.
+  max-iterations:
+    required: false
+    default: '10'
+    description: >
+      Maximum number of iterations to perform when updating references. Each iteration finds changed items and updates
+      references to them, which may create new changes requiring another iteration.
+
+outputs:
+  has-changes:
+    description: >
+      'true' if any changes were made, 'false' otherwise.
+    value: ${{ steps.update-refs.outputs.has-changes }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Update GHA References Iteratively
+      id: update-refs
+      shell: pwsh
+      run: |
+        $params = @{
+            LeftCommit = "${{ inputs.left-commit }}"
+            RightCommit = "${{ inputs.right-commit }}"
+            ExpectedRef = "${{ inputs.expected-ref }}"
+            CalledRepoBaseIncludeList = ${{ inputs.called-repo-base-include-list }}
+            MaxIterations = [int]"${{ inputs.max-iterations }}"
+        }
+        Update-GHA-Refs-Iteratively @params

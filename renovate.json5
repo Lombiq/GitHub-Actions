@@ -17,5 +17,15 @@
             matchPackageNames: ['@stylistic/eslint-plugin', '@eslint/compat'],
             enabled: false,
         },
-    ]
+    ],
+    postUpgradeTasks: {
+        commands: [
+            // Replace @dev with @<branchName> in all YAML files in a separate commit so Renovate changes are easier to
+            // test run. Linux-specific script because Renovate only runs under Linux anyway.
+            // We need can't use the Mend Renovate app due to its restrictions on postUpgradeTasks commands (see
+            // https://docs.renovatebot.com/configuration-options/#postupgradetasks), so need to use run the GHA workflow.
+            'find . -path "*.yml" -type f -exec sed --in-place "s|@dev|@{{branchName}}|g" {} +',
+        ],
+        executionMode: 'update',
+    }
 }

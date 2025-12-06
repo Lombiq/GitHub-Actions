@@ -1,0 +1,158 @@
+name: Auto-Manage GitHub Actions Refs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-manage-gha-refs:
+    runs-on: ubuntu-24.04
+    # Only run if the PR doesn't have the opt-out label.
+    if: |
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'pull_request_review' && github.event.review.state == 'approved')
+    steps:
+      - name: Check for Opt-Out Label
+        id: check-label
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $repo = "${{ github.repository }}"
+          $prNumber = "${{ github.event.pull_request.number }}"
+          
+          $pr = gh api "repos/$repo/pulls/$prNumber" | ConvertFrom-Json
+          $hasLabel = $pr.labels | Where-Object { $PSItem.name -eq 'dont-auto-manage-gha-refs' }
+          
+          $labelFound = $hasLabel.Count -gt 0
+          Write-Output "has-label=$labelFound" >> $env:GITHUB_OUTPUT
+          Write-Output "Label 'dont-auto-manage-gha-refs' present: $labelFound"
+
+      # Exit early if opt-out label is present.
+      - name: Skip if Opt-Out Label Present
+        if: steps.check-label.outputs.has-label == 'true'
+        shell: pwsh
+        run: |
+          Write-Output "The 'dont-auto-manage-gha-refs' label is present. Skipping automatic reference management."
+          exit 0
+
+      - name: Checkout Repository
+        if: steps.check-label.outputs.has-label != 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          # Use a PAT to allow the workflow to trigger on the pushed commits.
+          token: ${{ secrets.CHECKOUT_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        if: steps.check-label.outputs.has-label != 'true'
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Check PR Reviews
+        id: check-pr-reviews
+        if: steps.check-label.outputs.has-label != 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-reviews@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine Target Ref
+        id: determine-ref
+        if: steps.check-label.outputs.has-label != 'true'
+        shell: pwsh
+        run: |
+          $eventName = "${{ github.event_name }}"
+          
+          if ($eventName -eq 'pull_request_review')
+          {
+              $headRef = "${{ github.event.pull_request.head.ref }}"
+              $baseRef = "${{ github.event.pull_request.base.ref }}"
+          }
+          else
+          {
+              $headRef = "${{ github.head_ref }}"
+              $baseRef = "${{ github.base_ref }}"
+          }
+
+          $lastReviewApproved = "${{ steps.check-pr-reviews.outputs.last-review-approved }}"
+
+          # For pull_request events (new commits), always use PR branch regardless of approval status.
+          # This handles the case where a developer pushes new commits after approval.
+          # For pull_request_review events, check if just approved to revert to base branch.
+          if ($eventName -eq 'pull_request')
+          {
+              $targetRef = $headRef
+              Write-Output "Event: pull_request - updating to PR branch (new commits)"
+          }
+          elseif ($eventName -eq 'pull_request_review' -and $lastReviewApproved -eq 'True')
+          {
+              $targetRef = $baseRef
+              Write-Output "Event: pull_request_review - PR approved, reverting to base branch"
+          }
+          else
+          {
+              $targetRef = $headRef
+              Write-Output "Event: $eventName - updating to PR branch"
+          }
+
+          Write-Output "Target ref: $targetRef"
+          Write-Output "Head ref: $headRef"
+          Write-Output "Base ref: $baseRef"
+          Write-Output "Last review approved: $lastReviewApproved"
+          
+          $output = "target-ref=$targetRef"
+          $output >> $env:GITHUB_OUTPUT
+
+      - name: Auto-Manage GHA References
+        id: auto-manage
+        if: steps.check-label.outputs.has-label != 'true'
+        uses: ./.github/actions/auto-manage-gha-refs
+        with:
+          left-commit: ${{ github.event.pull_request.base.sha }}
+          right-commit: ${{ github.sha }}
+          expected-ref: ${{ steps.determine-ref.outputs.target-ref }}
+          called-repo-base-include-list: '@("${{ github.repository }}")'
+          max-iterations: 10
+
+      - name: Push Changes
+        if: steps.check-label.outputs.has-label != 'true' && steps.auto-manage.outputs.has-changes == 'true'
+        shell: pwsh
+        run: |
+          $eventName = "${{ github.event_name }}"
+          
+          if ($eventName -eq 'pull_request_review')
+          {
+              $headRef = "${{ github.event.pull_request.head.ref }}"
+          }
+          else
+          {
+              $headRef = "${{ github.head_ref }}"
+          }
+          
+          Write-Output "Pushing changes to $headRef..."
+          git push origin HEAD:$headRef
+          Write-Output "Changes pushed successfully."
+
+      - name: Add Comment to PR
+        if: steps.check-label.outputs.has-label != 'true' && steps.auto-manage.outputs.has-changes == 'true'
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $params = @{
+              Repository = "${{ github.repository }}"
+              PullRequestNumber = ${{ github.event.pull_request.number }}
+              EventName = "${{ github.event_name }}"
+              TargetRef = "${{ steps.determine-ref.outputs.target-ref }}"
+              LastReviewApproved = "${{ steps.check-pr-reviews.outputs.last-review-approved }}"
+          }
+          
+          & "${{ github.workspace }}/.github/actions/auto-manage-gha-refs/Add-PullRequestComment.ps1" @params
