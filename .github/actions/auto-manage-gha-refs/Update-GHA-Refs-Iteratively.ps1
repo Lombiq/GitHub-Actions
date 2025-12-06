@@ -39,26 +39,36 @@ function Get-ChangedGhaItems
             return $false
         }
 
-        $isInGitHubDir = $itemDirectory -like '*/.github/*' -or $itemDirectory -eq '*/.github'
+        # Accept Windows and POSIX style paths.
+        $isInGitHubDir = $itemDirectory -like "*\.github*"
         if (-not $isInGitHubDir)
         {
             return $false
         }
 
-        (Get-Item $PSItem).Directory.GetFiles('action.yml').Count -gt 0 -or
-        (Get-Item $PSItem).Directory.GetFiles('action.yaml').Count -gt 0
+        $manifestExists = @(Get-ChildItem -Path $itemDirectory -Filter 'action.yml' -File -ErrorAction SilentlyContinue).Count -gt 0 -or
+                           @(Get-ChildItem -Path $itemDirectory -Filter 'action.yaml' -File -ErrorAction SilentlyContinue).Count -gt 0
+
+        return $manifestExists
     }
 
-    # Get action directory names (de-duplicate).
-    [array]$actions = $actionFiles.ForEach({ $PSItem.Replace('/' + $(Get-Item $PSItem).Name, '') }) | Select-Object -Unique
+    # Get action directory names (de-duplicate) in repo-relative, forward-slash form.
+    [array]$actions = $actionFiles.ForEach({
+        $dir = (Get-Item $PSItem).Directory.FullName
+        $relative = [System.IO.Path]::GetRelativePath($PWD.Path, $dir)
+        $relative -replace '\\', '/'
+    }) | Select-Object -Unique
 
-    # Filter workflow files.
+    # Filter workflow files within .github.
     [array]$workflows = $files | Where-Object -FilterScript {
         try
         {
-            (Get-Item $PSItem).BaseName -ne 'action' -and
-            ((Get-Item $PSItem).Extension -eq '.yml' -or
-            (Get-Item $PSItem).Extension -eq '.yaml')
+            $item = Get-Item $PSItem -ErrorAction Stop
+            $itemDirectory = $item.Directory.FullName
+
+            $item.BaseName -ne 'action' -and
+            ($item.Extension -eq '.yml' -or $item.Extension -eq '.yaml') -and
+            $itemDirectory -like "*\.github*"
         }
         catch
         {
@@ -74,7 +84,7 @@ function Get-ChangedGhaItems
     return $items
 }
 
-# Function to update references for specific items
+# Function to update references for specific items.
 function Update-ReferencesForItems
 {
     param(
