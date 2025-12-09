@@ -23,5 +23,8 @@ runs:
         RENOVATE_ADDITIONAL_REVIEWERS: ${{ inputs.additional-reviewers }}
         # Do the dependency updates when the workflow runs, not when the Renovate config tells it.
         RENOVATE_FORCE: '{''schedule'':null,''prHourlyLimit'':0}'
+        # Since the caller can run anything on the runner anyway, no need to restrict commands.
+        # See: https://docs.renovatebot.com/self-hosted-configuration/#allowedcommands.
+        RENOVATE_ALLOWED_COMMANDS: '[".*"]'
       with:
         token: ${{ env.CHECKOUT_TOKEN }}
