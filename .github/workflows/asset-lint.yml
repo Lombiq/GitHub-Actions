@@ -44,7 +44,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
 
       - name: Lint Scripts and Styles
-        uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@issue/OSOE-1210
+        uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@dev
         with:
           scripts: ${{ inputs.scripts }}
           styles: ${{ inputs.styles }}
