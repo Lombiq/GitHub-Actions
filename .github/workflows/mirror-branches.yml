@@ -69,7 +69,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Mirror branches
-        uses: Lombiq/GitHub-Actions/.github/actions/mirror-branches@issue/OSOE-1212
+        uses: Lombiq/GitHub-Actions/.github/actions/mirror-branches@dev
         with:
           source-repository: ${{ inputs.source-repository }}
           source-token: ${{ secrets.SOURCE_TOKEN }}
@@ -80,7 +80,7 @@ jobs:
 
       - name: Send Microsoft Teams failure notification
         if: failure() && env.FAILURE_NOTIFICATION_TEAMS_WEBHOOK != ''
-        uses: Lombiq/GitHub-Actions/.github/actions/notify-teams@issue/OSOE-1212
+        uses: Lombiq/GitHub-Actions/.github/actions/notify-teams@dev
         env:
           # This is added only to be able to use it in the step's run condition.
           FAILURE_NOTIFICATION_TEAMS_WEBHOOK: ${{ secrets.FAILURE_NOTIFICATION_TEAMS_WEBHOOK }}
