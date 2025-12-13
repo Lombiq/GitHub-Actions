@@ -53,7 +53,7 @@ runs:
   steps:
     - name: Checkout
       if: inputs.repository != ''
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1214
       with:
         repository: ${{ inputs.repository }}
         ref: ${{ inputs.checkout-ref }}

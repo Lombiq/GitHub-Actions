@@ -118,7 +118,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1214
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 

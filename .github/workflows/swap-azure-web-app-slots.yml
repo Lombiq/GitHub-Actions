@@ -148,7 +148,7 @@ jobs:
 
       - name: Checkout Code Repository
         if: inputs.app-code-repository != ''
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1214
         with:
           repository: ${{ inputs.app-code-repository }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}

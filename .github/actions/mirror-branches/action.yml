@@ -100,7 +100,7 @@ runs:
 
     - name: Checkout source repository
       if: steps.find-branches.outputs.first-branch-name != ''
-      uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1214
       with:
         repository: ${{ inputs.source-repository }}
         ref: ${{ steps.find-branches.outputs.first-branch-name }}
