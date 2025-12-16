@@ -11,7 +11,7 @@ The `mirror-branches` workflow and action allow synchronizing changes from one r
     2. One of the workflows is triggered by the push event and is running in the source or destination repositories.
     3. The branches mirrored to and from that repository overlap.
 
-    Consider adding the PAT for pushing to the repository running the workflow triggered by the push event to a bot user (i.e. a user that doesn't normally commits changes) and set a condition to the job not to run when the push event is triggered by that user. See the first example below with an explanation.
+    Consider adding the PAT for pushing to the repository running the workflow triggered by the push event to a bot user (i.e. a user that doesn't normally commit changes) and set a condition to the job not to run when the push event is triggered by that user. See the first example below with an explanation.
 - When you mirror changes from the repository that runs such workflows, consider adding a condition to the job not to run in other repositories.
 - You can optionally pass in a webhook URL to send a notification to a Microsoft Teams channel using the `FAILURE_NOTIFICATION_TEAMS_WEBHOOK` secret. See [the official documentation](https://support.microsoft.com/en-us/office/create-incoming-webhooks-with-workflows-for-microsoft-teams-8ae491c7-0394-4861-ba59-055e33f75498) on how to generate one. It is recommended to set up some sort of notification when a workflow that wasn't started by a user action (e.g. schedule trigger) fails - see the second example.
 
