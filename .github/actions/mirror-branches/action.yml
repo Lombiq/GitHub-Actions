@@ -143,7 +143,7 @@ runs:
         git remote add destination "https://github.com/$destinationRepository"
 
         $refNames | ForEach-Object {
-            git push --dry-run destination "$($PSItem):$($PSItem)"
+            git push destination "$($PSItem):$($PSItem)"
 
             if ($LASTEXITCODE -ne 0)
             {
