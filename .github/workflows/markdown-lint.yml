@@ -52,7 +52,7 @@ jobs:
           Write-Output '::warning::This workflow is deprecated. Use asset-lint instead. It lints Markdown files with markdownlint and textlint too.'
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1214
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 

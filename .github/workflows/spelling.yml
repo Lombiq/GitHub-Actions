@@ -98,7 +98,7 @@ jobs:
         run: Write-Output '::warning::This workflow is deprecated. Use the codespell workflow instead.'
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1214
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
