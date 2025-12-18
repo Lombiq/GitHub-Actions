@@ -51,17 +51,15 @@ inputs:
       Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc. Supports wildcards or
       a list of file names for caching multiple dependencies.
   mirror:
-    description: >
-      Used to specify an alternative mirror to download Node.js binaries from
+    description: Used to specify an alternative mirror to download Node.js binaries from
   mirror-token:
-    description: >
-      The token used as Authorization header when fetching from the mirror
+    description: The token used as Authorization header when fetching from the mirror
 outputs:
   cache-hit:
-    description: 'A boolean value to indicate if a cache was hit.'
+    description: A boolean value to indicate if a cache was hit.
     value: ${{ steps.setup-node.outputs.cache-hit }}
   node-version:
-    description: 'The installed node version.'
+    description: The installed node version.
     value: ${{ steps.setup-node.outputs.node-version }}
 
 runs:
