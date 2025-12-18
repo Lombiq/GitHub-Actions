@@ -56,6 +56,13 @@ inputs:
   mirror-token:
     description: >
       The token used as Authorization header when fetching from the mirror
+outputs:
+  cache-hit:
+    description: 'A boolean value to indicate if a cache was hit.'
+    value: ${{ steps.setup-node.outputs.cache-hit }}
+  node-version:
+    description: 'The installed node version.'
+    value: ${{ steps.setup-node.outputs.node-version }}
 
 runs:
   using: composite
@@ -67,6 +74,7 @@ runs:
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Set up Node.js
+      id: setup-node
       if: inputs.node-version != 'none'
       uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
       with:
