@@ -7,9 +7,6 @@ description: >
 # Inputs are copied from https://github.com/actions/setup-node/blob/main/action.yml and formatted, as well as the
 # default Node.js version is specified.
 inputs:
-  always-auth:
-    description: Set always-auth in npmrc.
-    default: false
   node-version:
     description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
     default: 24.10.0
@@ -73,7 +70,6 @@ runs:
       if: inputs.node-version != 'none'
       uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
       with:
-        always-auth: ${{ inputs.always-auth }}
         node-version: ${{ inputs.node-version }}
         node-version-file: ${{ inputs.node-version-file }}
         architecture: ${{ inputs.architecture }}
