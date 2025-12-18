@@ -7,9 +7,6 @@ description: >
 # Inputs are copied from https://github.com/actions/setup-node/blob/main/action.yml and formatted, as well as the
 # default Node.js version is specified.
 inputs:
-  always-auth:
-    description: Set always-auth in npmrc.
-    default: false
   node-version:
     description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
     default: 24.10.0
@@ -54,11 +51,16 @@ inputs:
       Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc. Supports wildcards or
       a list of file names for caching multiple dependencies.
   mirror:
-    description: >
-      Used to specify an alternative mirror to download Node.js binaries from
+    description: Used to specify an alternative mirror to download Node.js binaries from
   mirror-token:
-    description: >
-      The token used as Authorization header when fetching from the mirror
+    description: The token used as Authorization header when fetching from the mirror
+outputs:
+  cache-hit:
+    description: A boolean value to indicate if a cache was hit.
+    value: ${{ steps.setup-node.outputs.cache-hit }}
+  node-version:
+    description: The installed node version.
+    value: ${{ steps.setup-node.outputs.node-version }}
 
 runs:
   using: composite
@@ -70,10 +72,10 @@ runs:
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Set up Node.js
+      id: setup-node
       if: inputs.node-version != 'none'
-      uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+      uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
       with:
-        always-auth: ${{ inputs.always-auth }}
         node-version: ${{ inputs.node-version }}
         node-version-file: ${{ inputs.node-version-file }}
         architecture: ${{ inputs.architecture }}
