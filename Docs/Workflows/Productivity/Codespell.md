@@ -7,9 +7,9 @@ name: Codespell
 
 on:
   pull_request:
-    push:
-      branches:
-        - dev
+  push:
+    branches:
+      - dev
 
 jobs:
   codespell:
