@@ -9,7 +9,7 @@ Reusable workflows and actions for GitHub Actions shared between Lombiq projects
 - Publish packages to NuGet
 - Verify and validate pull requests
 - Check spelling
-- Perform static code analysis and linting
+- Perform linting on JS, CSS, and even Markdown and YAML files
 - Deploy to an Azure App Service, swap staging and production slots, and copy production data to the staging site
 - And more!
 
