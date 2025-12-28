@@ -12,10 +12,5 @@
             matchFileNames: ['.github/workflows/deploy-orchard1-to-azure-app-service.yml'], 
             enabled: false,
         },
-        // Disabling until https://github.com/NishargShah/eslint-config-airbnb-extended/issues/8 is fixed.
-        {
-            matchPackageNames: ['@stylistic/eslint-plugin', '@eslint/compat'],
-            enabled: false,
-        },
     ]
 }
