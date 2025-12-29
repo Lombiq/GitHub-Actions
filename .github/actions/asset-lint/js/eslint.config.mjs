@@ -5,13 +5,9 @@ import js from '@eslint/js';
 import { configs, plugins } from 'eslint-config-airbnb-extended';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
-import onlyWarn from 'eslint-plugin-only-warn';
 
 const lombiqConfig = defineConfig([{
     name: "Lombiq custom configuration",
-    plugins: {
-        "only-warn": onlyWarn,
-    },
 
     settings: {
         node: {
