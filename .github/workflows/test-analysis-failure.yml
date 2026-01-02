@@ -25,7 +25,7 @@ on:
           '["ubuntu-24.04"]' or '["ubuntu-24.04", "windows-2025"]'.
       dotnet-version:
         type: string
-        default: 8.0.318
+        default: 8.0.319
         description: Version of the .NET SDK to set up.
       node-version:
         type: string
