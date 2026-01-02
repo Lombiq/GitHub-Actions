@@ -12,7 +12,12 @@ on:
         required: false
         description: >
           A JSON string containing key-value pairs of environment variables to be set. You can use this to pass in
-          arbitrary environment variables that can be used to e.g. customize the build or test execution.
+          arbitrary environment variables that can be used to e.g. customize the build or test execution. Example:
+          ENVIRONMENT_VARIABLES_JSON: |
+            {
+              "MY_ENV_VAR": "value of environment variable",
+              "MY_ENV_VAR2": "value of environment variable"
+            }
 
     inputs:
       cancel-in-progress-for-this-pr:
