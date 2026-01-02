@@ -36,15 +36,15 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1223
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1223
 
       - name: Lint Scripts and Styles
-        uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@issue/OSOE-1223
         with:
           scripts: ${{ inputs.scripts }}
           styles: ${{ inputs.styles }}
@@ -52,6 +52,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1223
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

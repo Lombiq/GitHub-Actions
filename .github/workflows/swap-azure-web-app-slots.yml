@@ -111,14 +111,14 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-1223
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_SERVICE_PRINCIPAL_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_TENANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@issue/OSOE-1223
 
       - name: Test Source Web App Slot
         run: |
@@ -137,7 +137,7 @@ jobs:
 
       - name: Create Timestamp
         id: create-timestamp
-        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-1223
 
       - name: Test Destination Web App Slot
         run: |
@@ -148,7 +148,7 @@ jobs:
 
       - name: Checkout Code Repository
         if: inputs.app-code-repository != ''
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1223
         with:
           repository: ${{ inputs.app-code-repository }}
           token: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
@@ -215,7 +215,7 @@ jobs:
             "commit-sha=$stagingLatest" >> $Env:GITHUB_OUTPUT
 
       - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-1223
         with:
           release-name: 'Swap #${{ github.run_number }} from ${{ inputs.source-slot-name }} to ${{ inputs.destination-slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
@@ -248,6 +248,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1223
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
