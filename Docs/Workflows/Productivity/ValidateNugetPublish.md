@@ -18,3 +18,5 @@ jobs:
 ```
 
 The workflow otherwise takes the same configuration options as [`publish-nuget`](PublishNuGetPackage.md), but doesn't require the `API_KEY` secret.
+
+Unless you set `indicate-breaking-changes: 'false'`, failed package validation against the baseline will add the `breaking-changes` label, append "(⚠️ breaking changes)" to the pull request title, and post guidance in a comment. The marker and label are removed automatically if you add the `false-breaking-changes` label.

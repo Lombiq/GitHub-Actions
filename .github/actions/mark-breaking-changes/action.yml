@@ -1,0 +1,45 @@
+name: Mark Breaking Changes
+description: Adds or removes a breaking-changes indication on a pull request title and label, optionally leaving a comment.
+
+inputs:
+  token:
+    description: GitHub token with permission to edit pull requests.
+    required: true
+  pull-request-number:
+    description: Pull request number. If omitted, it will be auto-detected when possible.
+    required: false
+  breaking:
+    description: Set to 'true' to add the breaking changes marker, or 'false' to remove it.
+    required: true
+  label:
+    description: Label name to add or remove when breaking changes are detected.
+    required: false
+    default: breaking-changes
+  title-suffix:
+    description: Suffix appended to pull request titles when breaking changes are detected.
+    required: false
+    default: "(⚠️ breaking changes)"
+  comment-body:
+    description: Optional comment body to post when breaking changes are detected.
+    required: false
+    default: |
+      This pull request appears to contain breaking changes.
+      - If you can do this without breaking changes, then please do that, it'd be better.
+      - If breaking changes are inevitable, then add an explanation of these and a migration guide for users to the description of the pull request (during the next release, these will be added to the release notes). Generate the _CompatibilitySuppressions.xml_ file following the [corresponding docs](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions?tab=readme-ov-file#opening-pull-requests).
+      - If the changes are technically breaking but not something that would actually be breaking for consuming projects (like the signature of a constructor changing due to new injected dependencies) then also generate the _CompatibilitySuppressions.xml_ file. Also consider how in the future this can be avoided: Can perhaps the class be made internal (what's usually better for implementations of interfaces for injected dependencies)?
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Update Breaking Changes Label
+      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
+      with:
+        token: ${{ inputs.token }}
+        label: breaking-changes
+        type: ${{ inputs.breaking == 'true' && 'add' || 'remove' }}

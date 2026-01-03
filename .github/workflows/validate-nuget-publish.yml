@@ -49,6 +49,12 @@ on:
         type: number
         default: 15
         description: Configuration for the timeout-minutes parameter of the workflow. 360 is GitHub's default.
+      indicate-breaking-changes:
+        type: string
+        default: 'true'
+        description: >-
+          When set to "true", failed package validation against the baseline will mark the pull request with a title
+          suffix, a breaking-changes label, and a guidance comment.
       enable-corepack:
         type: string
         default: 'false'
@@ -77,7 +83,7 @@ on:
 jobs:
   validate-nuget-publish:
     name: Validate NuGet Publish
-    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@issue/OSOE-1101
     with:
       cancel-workflow-on-failure: ${{ inputs.cancel-workflow-on-failure }}
       verbosity: ${{ inputs.verbosity }}
@@ -95,6 +101,7 @@ jobs:
       nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
       add-source-link-package: ${{ inputs.add-source-link-package }}
       dry-run: true
+      indicate-breaking-changes: ${{ inputs.indicate-breaking-changes }}
     secrets:
       CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
       API_KEY: not needed
