@@ -69,8 +69,6 @@ $doBaselinePackageValidation = ($EnablePackageValidation -and
     -not ($Version -match '-(alpha|beta|preview|rc)[.-]') -and
     [int]$Version.Split('.')[0] -le [int]$PackageValidationBaselineVersion.Split('.')[0])
 
-$packageValidationPassed = $true
-
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
@@ -106,15 +104,39 @@ foreach ($project in $projects)
 
     $packageValidationParameters = @(
         "-p:EnablePackageValidation=$EnablePackageValidation"
-        "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
     )
 
-    if (-not $doBaselinePackageValidation)
+    # If we don't explicitly restore the baseline version NuGet package then the validator will fail when it can't find
+    # it locally.
+    if ($doBaselinePackageValidation)
     {
-        $packageValidationParameters = @(
-            "-p:EnablePackageValidation=$EnablePackageValidation"
-        )
+        Write-Output 'Creating temporary project for baseline NuGet package.'
+        dotnet new classlib -n TempProject
+        Push-Location TempProject
+
+        Write-Output 'Installing baseline version NuGet package.'
+        dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+
+        if ($LASTEXITCODE -eq 0)
+        {
+            Write-Output 'Baseline version NuGet package installed successfully. Continuing with baseline package validation.'
+
+            $packageValidationParameters = @(
+                "-p:EnablePackageValidation=$EnablePackageValidation"
+                "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
+            )
+        }
+        else
+        {
+            Write-Output "::warning:: Package version couldn't be added, thus package validation to the baseline version won't be done."
+        }
+
+        dotnet restore
+        Pop-Location
+        Remove-Item -Recurse -Force TempProject
     }
+
+    Push-Location $project.Directory
 
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
@@ -129,13 +151,8 @@ foreach ($project in $projects)
     if ($LASTEXITCODE -ne 0)
     {
         Write-Output "::error file=$($project.FullName)::dotnet pack failed for the project $($project.Name)."
-        $packageValidationPassed = $false
         exit 1
     }
 
     Pop-Location
 }
-
-# Set package validation results output
-$validationResult = ($EnablePackageValidation -and $packageValidationPassed) ? 'passed' : 'failed'
-& "$PSScriptRoot/../../../Scripts/Set-GitHubOutput.ps1" 'package-validation-results' $validationResult
