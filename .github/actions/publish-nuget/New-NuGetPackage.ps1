@@ -164,6 +164,8 @@ foreach ($project in $projects)
             {
                 git diff --quiet "origin/$BaseBranch" -- $baselineFilePath 2>$null
 
+                Write-Output "Git diff exit code: $LASTEXITCODE"
+                
                 # An exit code of 0 means no changes, 1 means there are changes.
                 if ($LASTEXITCODE -eq 1)
                 {
