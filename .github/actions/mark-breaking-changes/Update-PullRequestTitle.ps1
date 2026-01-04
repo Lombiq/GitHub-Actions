@@ -1,9 +1,6 @@
 param(
-    [Parameter(Mandatory = $true)]
     [bool]$IsBreaking,
-    [Parameter(Mandatory = $true)]
     [string]$Title,
-    [Parameter(Mandatory = $true)]
     [string]$PullRequestNumber
 )
 
