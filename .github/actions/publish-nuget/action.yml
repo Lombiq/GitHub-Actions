@@ -249,6 +249,12 @@ runs:
             Write-Output "::notice::Dry run mode: Package created successfully but will not be published."
         }
 
+    - name: Show Breaking Status
+      if: ${{ (failure() || success()) && steps.pack.outputs.is-breaking }}
+      shell: pwsh
+      run: |
+        Write-Output "::notice::Package validation detected breaking changes compared to the baseline version."
+
     - name: Push with dotnet
       if: inputs.dry-run != 'true'
       shell: pwsh
@@ -262,9 +268,7 @@ runs:
 
     - name: Check for ignore-breaking-changes Label
       id: check-ignore-breaking
-      if: ${{ (failure() || success()) &&
-        inputs.mark-breaking-changes == 'true' &&
-        github.event_name == 'pull_request' }}
+      if: ${{ (failure() || success()) && inputs.mark-breaking-changes == 'true' && github.event_name == 'pull_request' }}
       uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
       with:
         label1: ignore-breaking-changes
