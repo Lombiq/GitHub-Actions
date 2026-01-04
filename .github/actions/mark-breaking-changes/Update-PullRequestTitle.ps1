@@ -7,7 +7,6 @@ param(
 $suffix = ' (⚠️ breaking changes)'
 
 $currentTitle = $Title
-Write-Output "current title: $currentTitle"
 $newTitle = $currentTitle
 
 if ($IsBreaking)
