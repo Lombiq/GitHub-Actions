@@ -5,7 +5,7 @@ inputs:
   pull-request-number:
     description: Pull request number. If omitted, it will be auto-detected when possible.
     required: false
-  breaking:
+  is-breaking:
     description: Set to 'true' to add the breaking changes marker, or 'false' to remove it.
     required: true
   label:
@@ -39,4 +39,4 @@ runs:
       with:
         token: ${{ env.GITHUB_TOKEN }}
         label: breaking-changes
-        type: ${{ inputs.breaking == 'true' && 'add' || 'remove' }}
+        type: ${{ inputs.is-breaking == 'true' && 'add' || 'remove' }}
