@@ -135,7 +135,7 @@ foreach ($project in $projects)
             $packageValidationParameters = @(
                 "-p:EnablePackageValidation=$EnablePackageValidation"
                 "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
-                'p:GenerateCompatibilitySuppressionFile=true'
+                '-p:GenerateCompatibilitySuppressionFile=true'
             )
         }
         else
