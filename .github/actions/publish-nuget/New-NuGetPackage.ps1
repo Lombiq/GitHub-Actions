@@ -184,12 +184,13 @@ foreach ($project in $projects)
                     Write-Output 'The CompatibilitySuppressions.xml file has changed, so there are new breaking changes.'
                     Write-Output 'The file will be added as an artifact.'
 
-                    $destinationFileName = "$($project.Name)-CompatibilitySuppressions.xml"
-                    $destinationFilePath = Join-Path $CompatibilitySuppressionsDirectoryPath $destinationFileName
+                    $projectSubfolder = Join-Path $CompatibilitySuppressionsDirectoryPath $project.BaseName
+                    New-Item -ItemType Directory -Path $projectSubfolder | Out-Null
+                    $destinationFilePath = Join-Path $projectSubfolder 'CompatibilitySuppressions.xml'
                     Write-Output "Copying CompatibilitySuppressions.xml to '$destinationFilePath'."
                     Copy-Item -Path $compatibilitySuppressionsFilePath -Destination $destinationFilePath
 
-                    Write-Output "::notice::CompatibilitySuppressions.xml file added as an artifact for the '$($project.Name)' project."
+                    Write-Output "::notice::CompatibilitySuppressions.xml file added as an artifact for the '$($project.BaseName)' project."
                 }
             }
         }
