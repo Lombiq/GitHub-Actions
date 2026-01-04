@@ -9,14 +9,6 @@ inputs:
     description: Suffix appended to pull request titles when breaking changes are detected.
     required: false
     default: (⚠️ breaking changes)
-  comment-body:
-    description: Optional comment body to post when breaking changes are detected.
-    required: false
-    default: |
-      This pull request appears to contain breaking changes.
-      - If you can do this without breaking changes, then please do that, it'd be better.
-      - If breaking changes are inevitable, then add an explanation of these and a migration guide for users to the description of the pull request (during the next release, these will be added to the release notes). A _CompatibilitySuppressions.xml_ file was generated for each project with breaking changes that you can download from the artifacts and use to suppress further such warnings.
-      - If the changes are technically breaking but not something that would actually be breaking for consuming projects (like the signature of a constructor changing due to new injected dependencies) then also take the generated _CompatibilitySuppressions.xml_ file. Furthermore, consider how in the future this can be avoided: Can perhaps the class be made internal (what's usually better for implementations of interfaces for injected dependencies)?
 
 runs:
   using: composite
@@ -33,3 +25,25 @@ runs:
         token: ${{ env.GITHUB_TOKEN }}
         label: breaking-changes
         type: ${{ inputs.is-breaking == 'true' && 'add' || 'remove' }}
+
+    - name: Find Existing Breaking Changes Comment
+      if: inputs.is-breaking == 'true'
+      uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
+      id: find-comment
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: 'github-actions[bot]'
+        body-includes: 'This pull request appears to contain breaking changes.'
+
+    - name: Create Breaking Changes Comment
+      if: inputs.is-breaking == 'true' && steps.find-comment.outputs.comment-id == ''
+      uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          This pull request appears to contain breaking changes.
+          - If you can do this without breaking changes, then please do that, it'd be better.
+          - If breaking changes are inevitable, then add an explanation of these and a migration guide for users to the description of the pull request (during the next release, these will be added to the release notes). A _CompatibilitySuppressions.xml_ file was generated for each project with breaking changes that you can download from the artifacts and use to suppress further such warnings.
+          - If the changes are technically breaking but not something that would actually be breaking for consuming projects (like the signature of a constructor changing due to new injected dependencies) then also take the generated _CompatibilitySuppressions.xml_ file and add the `ignore-breaking-changes` label too. Furthermore, consider how in the future this can be avoided: Can perhaps the class be made internal (what's usually better for implementations of interfaces for injected dependencies)?
