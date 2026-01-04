@@ -5,10 +5,6 @@ inputs:
   is-breaking:
     description: Set to 'true' to add the breaking changes markers, or 'false' to remove them.
     required: true
-  title-suffix:
-    description: Suffix appended to pull request titles when breaking changes are detected.
-    required: false
-    default: (⚠️ breaking changes)
 
 runs:
   using: composite
