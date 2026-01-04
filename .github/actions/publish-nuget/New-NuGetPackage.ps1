@@ -162,6 +162,7 @@ foreach ($project in $projects)
             # Check if the CompatibilitySuppressions.xml file changed in this branch, even if not in this commit.
             if (-not $isBreaking -and -not [string]::IsNullOrWhiteSpace($BaseBranch))
             {
+                git fetch origin $BaseBranch --depth=1
                 git diff --quiet "origin/$BaseBranch" -- $baselineFilePath
 
                 Write-Output "Git diff exit code: $LASTEXITCODE"
