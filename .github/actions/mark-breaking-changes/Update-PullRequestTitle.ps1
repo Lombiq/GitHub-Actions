@@ -18,6 +18,7 @@ if ($IsBreaking)
 }
 else
 {
+    Write-Output "current title: $currentTitle"
     if ($currentTitle.Contains($suffix))
     {
         $newTitle = $currentTitle.Substring(0, $currentTitle.Length - $suffix.Length)
