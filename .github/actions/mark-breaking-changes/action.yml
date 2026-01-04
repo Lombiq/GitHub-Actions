@@ -26,6 +26,13 @@ runs:
         label: breaking-changes
         type: ${{ inputs.is-breaking == 'true' && 'add' || 'remove' }}
 
+    - name: Update Pull Request Title
+      shell: pwsh
+      env:
+        GH_TOKEN: ${{ env.GITHUB_TOKEN }}
+        PR_TITLE: ${{ github.event.pull_request.title }}
+      run: Update-PullRequestTitle.ps1 -IsBreaking $${{ inputs.is-breaking }} -Title $Env:PR_TITLE -PullRequestNumber '${{ github.event.pull_request.number }}'
+
     - name: Find Existing Breaking Changes Comment
       if: inputs.is-breaking == 'true'
       uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
