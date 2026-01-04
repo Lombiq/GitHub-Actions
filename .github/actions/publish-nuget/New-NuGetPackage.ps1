@@ -14,7 +14,7 @@
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
 #>
 
-param([array] $PackParameters, [bool] $EnablePackageValidation, [string] $PackageValidationBaselineVersion, [string] $Version)
+param([bool] $EnablePackageValidation, [string] $PackageValidationBaselineVersion, [string] $Version, [string] $CompatibilitySuppressionsDirectoryPath, [array] $PackParameters)
 
 <#
 .SYNOPSIS
@@ -69,15 +69,9 @@ $doBaselinePackageValidation = ($EnablePackageValidation -and
     -not ($Version -match '-(alpha|beta|preview|rc)[.-]') -and
     [int]$Version.Split('.')[0] -le [int]$PackageValidationBaselineVersion.Split('.')[0])
 
-if ($doBaselinePackageValidation)
+if ($doBaselinePackageValidation -and -not (Test-Path -Path $CompatibilitySuppressionsDirectoryPath))
 {
-    $parentDir = Split-Path -Parent (Get-Location).Path
-    $compatibilitySuppressionsDirectoryPath = Join-Path $parentDir 'CompatibilitySuppressions'
-
-    if (-not (Test-Path -Path $compatibilitySuppressionsDirectoryPath))
-    {
-        New-Item -ItemType Directory -Path $compatibilitySuppressionsDirectoryPath | Out-Null
-    }
+    New-Item -ItemType Directory -Path $CompatibilitySuppressionsDirectoryPath | Out-Null
 }
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
@@ -191,7 +185,7 @@ foreach ($project in $projects)
                     Write-Output 'The file will be added as an artifact.'
 
                     $destinationFileName = "$($project.Name)-CompatibilitySuppressions.xml"
-                    $destinationFilePath = Join-Path $compatibilitySuppressionsDirectoryPath $destinationFileName
+                    $destinationFilePath = Join-Path $CompatibilitySuppressionsDirectoryPath $destinationFileName
                     Write-Output "Copying CompatibilitySuppressions.xml to '$destinationFilePath'."
                     Copy-Item -Path $compatibilitySuppressionsFilePath -Destination $destinationFilePath
 

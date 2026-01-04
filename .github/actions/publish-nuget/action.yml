@@ -213,6 +213,7 @@ runs:
           EnablePackageValidation=$enablePackageValidation
           PackageValidationBaselineVersion='${{ steps.setup.outputs.baseline-version }}'
           Version=$version
+          CompatibilitySuppressionsDirectoryPath=(Join-Path $PWD CompatibilitySuppressions)
           PackParameters = @(
             "--configuration:Release",
             "--warnaserror",
