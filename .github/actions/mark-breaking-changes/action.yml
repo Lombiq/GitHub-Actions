@@ -27,7 +27,13 @@ runs:
       env:
         GH_TOKEN: ${{ env.GITHUB_TOKEN }}
         PR_TITLE: ${{ github.event.pull_request.title }}
-      run: Update-PullRequestTitle.ps1 -IsBreaking $${{ inputs.is-breaking }} -Title $Env:PR_TITLE -PullRequestNumber '${{ github.event.pull_request.number }}'
+      run: |
+        $params = @{
+            IsBreaking = $${{ inputs.is-breaking }}
+            Title = $Env:PR_TITLE
+            PullRequestNumber = '${{ github.event.pull_request.number }}'
+        }
+        Update-PullRequestTitle.ps1 @params
 
     - name: Find Existing Breaking Changes Comment
       if: inputs.is-breaking == 'true'
