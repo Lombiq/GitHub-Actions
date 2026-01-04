@@ -18,15 +18,15 @@ inputs:
   title-suffix:
     description: Suffix appended to pull request titles when breaking changes are detected.
     required: false
-    default: "(⚠️ breaking changes)"
+    default: (⚠️ breaking changes)
   comment-body:
     description: Optional comment body to post when breaking changes are detected.
     required: false
     default: |
       This pull request appears to contain breaking changes.
       - If you can do this without breaking changes, then please do that, it'd be better.
-      - If breaking changes are inevitable, then add an explanation of these and a migration guide for users to the description of the pull request (during the next release, these will be added to the release notes). Generate the _CompatibilitySuppressions.xml_ file following the [corresponding docs](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions?tab=readme-ov-file#opening-pull-requests).
-      - If the changes are technically breaking but not something that would actually be breaking for consuming projects (like the signature of a constructor changing due to new injected dependencies) then also generate the _CompatibilitySuppressions.xml_ file. Also consider how in the future this can be avoided: Can perhaps the class be made internal (what's usually better for implementations of interfaces for injected dependencies)?
+      - If breaking changes are inevitable, then add an explanation of these and a migration guide for users to the description of the pull request (during the next release, these will be added to the release notes). A _CompatibilitySuppressions.xml_ file was generated for each project with breaking changes that you can download from the artifacts and use to suppress further such warnings.
+      - If the changes are technically breaking but not something that would actually be breaking for consuming projects (like the signature of a constructor changing due to new injected dependencies) then also take the generated _CompatibilitySuppressions.xml_ file. Furthermore, consider how in the future this can be avoided: Can perhaps the class be made internal (what's usually better for implementations of interfaces for injected dependencies)?
 
 runs:
   using: composite
