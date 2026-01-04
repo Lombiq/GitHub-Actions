@@ -164,7 +164,6 @@ foreach ($project in $projects)
 
     Set-GitHubOutput 'is-breaking' 'false'
 
-
     dotnet pack $project @projectPackParameters @packageValidationParameters
 
     if ($LASTEXITCODE -ne 0)

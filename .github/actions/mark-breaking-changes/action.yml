@@ -2,16 +2,9 @@ name: Mark Breaking Changes
 description: Adds or removes a breaking-changes indication on a pull request title and label, optionally leaving a comment.
 
 inputs:
-  pull-request-number:
-    description: Pull request number. If omitted, it will be auto-detected when possible.
-    required: false
   is-breaking:
-    description: Set to 'true' to add the breaking changes marker, or 'false' to remove it.
+    description: Set to 'true' to add the breaking changes markers, or 'false' to remove them.
     required: true
-  label:
-    description: Label name to add or remove when breaking changes are detected.
-    required: false
-    default: breaking-changes
   title-suffix:
     description: Suffix appended to pull request titles when breaking changes are detected.
     required: false
