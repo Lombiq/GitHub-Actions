@@ -86,6 +86,8 @@ foreach ($project in $projects)
 {
     Write-Output "Packing $($project.Name)..."
 
+    $projectPackParameters = $packParameters
+
     $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
     $isPackable = $isPackableProperty -notlike '*false*'
     $isRequired = "$isPackableProperty".Trim() -like 'true'
@@ -135,7 +137,6 @@ foreach ($project in $projects)
             $packageValidationParameters = @(
                 "-p:EnablePackageValidation=$EnablePackageValidation"
                 "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
-                '-p:GenerateCompatibilitySuppressionFile=true'
             )
         }
         else
@@ -164,31 +165,37 @@ foreach ($project in $projects)
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
-        dotnet pack $project -p:NuspecFile="$nuspecFile" @packParameters @packageValidationParameters
+        $projectPackParameters += "-p:NuspecFile=$nuspecFile"
     }
-    else
-    {
-        dotnet pack $project @packParameters @packageValidationParameters
-    }
+
+    dotnet pack $project @projectPackParameters @packageValidationParameters
 
     if ($LASTEXITCODE -ne 0)
     {
         Write-Output "::error file=$($project.FullName)::dotnet pack failed for the project $($project.Name)."
 
-        if ($doBaselinePackageValidation -and (Test-Path $compatibilitySuppressionsFilePath))
+        if ($doBaselinePackageValidation)
         {
-            $newCompatibilitySuppressionsContent = Get-Content $compatibilitySuppressionsFilePath -Raw -ErrorAction Stop
+            # dotnet pack needs to run twice, because if we were to run it with GenerateCompatibilitySuppressionFile
+            # first, then it wouldn't fail on compatibility errors.
+            $packageValidationParameters += '-p:GenerateCompatibilitySuppressionFile=true'
+            dotnet pack $project @projectPackParameters @packageValidationParameters
 
-            if ($existingCompatibilitySuppressionsContent -ne $newCompatibilitySuppressionsContent)
+            if (Test-Path $compatibilitySuppressionsFilePath)
             {
-                Write-Output 'The CompatibilitySuppressions.xml file has changed, so there are new breaking changes.'
-                Write-Output 'The file will be added as an artifact.'
+                $newCompatibilitySuppressionsContent = Get-Content $compatibilitySuppressionsFilePath -Raw -ErrorAction Stop
 
-                $destinationFileName = "$($project.Name)-CompatibilitySuppressions.xml"
-                $destinationFilePath = Join-Path $compatibilitySuppressionsDirectoryPath $destinationFileName
-                Copy-Item -Path $compatibilitySuppressionsFilePath -Destination $destinationFilePath
+                if ($existingCompatibilitySuppressionsContent -ne $newCompatibilitySuppressionsContent)
+                {
+                    Write-Output 'The CompatibilitySuppressions.xml file has changed, so there are new breaking changes.'
+                    Write-Output 'The file will be added as an artifact.'
 
-                Write-Output "::notice::CompatibilitySuppressions.xml file added as an artifact for the '$($project.Name)' project."
+                    $destinationFileName = "$($project.Name)-CompatibilitySuppressions.xml"
+                    $destinationFilePath = Join-Path $compatibilitySuppressionsDirectoryPath $destinationFileName
+                    Copy-Item -Path $compatibilitySuppressionsFilePath -Destination $destinationFilePath
+
+                    Write-Output "::notice::CompatibilitySuppressions.xml file added as an artifact for the '$($project.Name)' project."
+                }
             }
         }
 

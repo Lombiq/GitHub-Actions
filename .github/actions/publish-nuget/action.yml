@@ -263,6 +263,7 @@ runs:
         name: CompatibilitySuppressions
         path: CompatibilitySuppressions
         retention-days: 1
+        if-no-files-found: ignore
 
     - name: Create Release
       uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
