@@ -1,4 +1,4 @@
-param(
+﻿param(
     [bool]$IsBreaking,
     [string]$Title,
     [string]$PullRequestNumber
