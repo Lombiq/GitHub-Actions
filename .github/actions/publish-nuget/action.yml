@@ -262,7 +262,7 @@ runs:
     - name: Check for ignore-breaking-changes Label
       id: check-ignore-breaking
       if: ${{ (failure() || success()) &&
-        inputs.mark-breaking-changes == 'true' && 
+        inputs.mark-breaking-changes == 'true' &&
         github.event_name == 'pull_request' }}
       uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
       with:
@@ -270,11 +270,11 @@ runs:
 
     - name: Mark Breaking Changes on Pull Request
       if: ${{ (failure() || success()) &&
-        inputs.mark-breaking-changes == 'true' && 
+        inputs.mark-breaking-changes == 'true' &&
         github.event_name == 'pull_request' }}
       uses: Lombiq/GitHub-Actions/.github/actions/mark-breaking-changes@issue/OSOE-1101
       with:
-        is-breaking: '${{ steps.check-ignore-breaking.outputs.contains-label == ''true'' &&''false'' || steps.pack.outputs.is-breaking }}'
+        is-breaking: ${{ steps.check-ignore-breaking.outputs.contains-label == ''true'' &&''false'' || steps.pack.outputs.is-breaking }}
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
