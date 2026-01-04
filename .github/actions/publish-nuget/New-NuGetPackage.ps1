@@ -187,6 +187,8 @@ foreach ($project in $projects)
                 $destinationFileName = "$($project.Name)-CompatibilitySuppressions.xml"
                 $destinationFilePath = Join-Path $compatibilitySuppressionsDirectoryPath $destinationFileName
                 Copy-Item -Path $compatibilitySuppressionsFilePath -Destination $destinationFilePath
+
+                Write-Output "::notice::CompatibilitySuppressions.xml file added as an artifact for the '$($project.Name)' project."
             }
         }
 
