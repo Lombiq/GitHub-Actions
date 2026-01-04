@@ -260,7 +260,7 @@ runs:
         dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
 
     - name: Mark Breaking Changes on Pull Request
-      if: ${{ failure() &&
+      if: ${{ (failure() || success()) &&
         inputs.mark-breaking-changes == 'true' && 
         github.event_name == 'pull_request' }}
       uses: Lombiq/GitHub-Actions/.github/actions/mark-breaking-changes@issue/OSOE-1101
