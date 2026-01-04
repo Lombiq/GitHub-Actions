@@ -2,9 +2,6 @@ name: Mark Breaking Changes
 description: Adds or removes a breaking-changes indication on a pull request title and label, optionally leaving a comment.
 
 inputs:
-  token:
-    description: GitHub token with permission to edit pull requests.
-    required: true
   pull-request-number:
     description: Pull request number. If omitted, it will be auto-detected when possible.
     required: false
@@ -37,9 +34,14 @@ runs:
         '${{ github.action_path }}' >> $Env:GITHUB_PATH
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
+    - env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      shell: pwsh
+      run: Write-Output $Env:GITHUB_CONTEXT
+
     - name: Update Breaking Changes Label
       uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
       with:
-        token: ${{ inputs.token }}
+        token: ${{ env.GITHUB_TOKEN }}
         label: breaking-changes
         type: ${{ inputs.breaking == 'true' && 'add' || 'remove' }}

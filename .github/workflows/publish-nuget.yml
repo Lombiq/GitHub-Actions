@@ -106,13 +106,13 @@ on:
         description: |
           If set to "true", the action will perform all package creation and validation steps without actually publishing
           the NuGet package or creating a GitHub release.
-      indicate-breaking-changes:
+      mark-breaking-changes:
         type: string
         # Different than validate-nuget-publish because contrary to that workflow, this one doesn't frequently doesn't
         # run for pull requests.
         default: 'false'
-        description: >-
-          When set to "true", failed package validation against the baseline will mark the pull request with a title
+        description: |
+          When set to 'true', failed package validation against the baseline will mark the pull request with a title
           suffix, a breaking-changes label, and a guidance comment.
 
 jobs:
@@ -158,6 +158,7 @@ jobs:
           nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
           add-source-link-package: ${{ inputs.add-source-link-package }}
           dry-run: ${{ inputs.dry-run }}
+          mark-breaking-changes: ${{ inputs.mark-breaking-changes }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           API_KEY: ${{ secrets.API_KEY }}

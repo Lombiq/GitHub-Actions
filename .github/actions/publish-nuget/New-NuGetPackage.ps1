@@ -162,6 +162,8 @@ foreach ($project in $projects)
         $projectPackParameters += "-p:NuspecFile=$nuspecFile"
     }
 
+    Set-GitHubOutput 'baseline-package-validation-passed' 'true'
+
     dotnet pack $project @projectPackParameters @packageValidationParameters
 
     if ($LASTEXITCODE -ne 0)
@@ -181,6 +183,8 @@ foreach ($project in $projects)
 
                 if ($existingCompatibilitySuppressionsContent -ne $newCompatibilitySuppressionsContent)
                 {
+                    Set-GitHubOutput 'baseline-package-validation-passed' 'false'
+
                     Write-Output 'The CompatibilitySuppressions.xml file has changed, so there are new breaking changes.'
                     Write-Output 'The file will be added as an artifact.'
 

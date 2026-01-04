@@ -52,6 +52,13 @@ inputs:
     description: |
       If set to "true", the action will perform all package creation and validation steps without actually publishing
       the NuGet package or creating a GitHub release.
+  mark-breaking-changes:
+    type: string
+    default: 'false'
+    description: |
+      When set to 'true', failed package validation against the baseline will mark the pull request with a title suffix,
+      a breaking-changes label, and a guidance comment.
+
 
 runs:
   using: composite
@@ -189,6 +196,7 @@ runs:
       run: ./Invoke-BeforePack.ps1
 
     - name: Pack
+      id: pack
       shell: pwsh
       # Notes on the configuration apart from what's also for dotnet build:
       # * -p:WarnOnPackingNonPackableProject=True will cause a build warning (converted to error) if we try to pack a
@@ -250,6 +258,16 @@ runs:
             exit 1
         }
         dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
+
+    - name: Mark Breaking Changes on Pull Request
+      if: ${{ inputs.mark-breaking-changes == 'true' && 
+        steps.pack.outputs.baseline-package-validation-passed == 'false' &&
+        github.event_name == 'pull_request' }}
+      uses: Lombiq/GitHub-Actions/.github/actions/mark-breaking-changes@dev
+      with:
+        breaking: 'true'
+      env:
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
     - name: Upload NuGet Package Artifact
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
