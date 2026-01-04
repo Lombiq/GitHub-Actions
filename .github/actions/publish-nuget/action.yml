@@ -250,12 +250,19 @@ runs:
         }
         dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
 
-    - name: Publish Artifacts
+    - name: Upload NuGet Package Artifact
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       with:
         name: NuGet-Package
         path: artifacts
         retention-days: ${{ inputs.nuget-artifact-retention-days }}
+
+    - name: Upload CompatibilitySuppressions File Artifact
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      with:
+        name: CompatibilitySuppressions
+        path: CompatibilitySuppressions
+        retention-days: 1
 
     - name: Create Release
       uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev

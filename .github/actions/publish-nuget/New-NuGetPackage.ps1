@@ -69,6 +69,17 @@ $doBaselinePackageValidation = ($EnablePackageValidation -and
     -not ($Version -match '-(alpha|beta|preview|rc)[.-]') -and
     [int]$Version.Split('.')[0] -le [int]$PackageValidationBaselineVersion.Split('.')[0])
 
+if ($doBaselinePackageValidation)
+{
+    $parentDir = Split-Path -Parent (Get-Location).Path
+    $compatibilitySuppressionsDirectoryPath = Join-Path $parentDir 'CompatibilitySuppressions'
+
+    if (-not (Test-Path -Path $compatibilitySuppressionsDirectoryPath))
+    {
+        New-Item -ItemType Directory -Path $compatibilitySuppressionsDirectoryPath | Out-Null
+    }
+}
+
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
@@ -124,6 +135,7 @@ foreach ($project in $projects)
             $packageValidationParameters = @(
                 "-p:EnablePackageValidation=$EnablePackageValidation"
                 "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
+                'p:GenerateCompatibilitySuppressionFile=true'
             )
         }
         else
@@ -138,6 +150,17 @@ foreach ($project in $projects)
 
     Push-Location $project.Directory
 
+    if ($doBaselinePackageValidation)
+    {
+        # Check for an existing CompatibilitySuppressions.xml file, so we can compare it against the one possibly
+        # generated during packaging. This is to see if there are any new breaking changes.
+        $compatibilitySuppressionsFilePath = Join-Path $project.Directory 'CompatibilitySuppressions.xml'
+        if (Test-Path $compatibilitySuppressionsFilePath)
+        {
+            $existingCompatibilitySuppressionsContent = Get-Content $compatibilitySuppressionsFilePath -Raw -ErrorAction Stop
+        }
+    }
+
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
@@ -151,6 +174,22 @@ foreach ($project in $projects)
     if ($LASTEXITCODE -ne 0)
     {
         Write-Output "::error file=$($project.FullName)::dotnet pack failed for the project $($project.Name)."
+
+        if ($doBaselinePackageValidation -and (Test-Path $compatibilitySuppressionsFilePath))
+        {
+            $newCompatibilitySuppressionsContent = Get-Content $compatibilitySuppressionsFilePath -Raw -ErrorAction Stop
+
+            if ($existingCompatibilitySuppressionsContent -ne $newCompatibilitySuppressionsContent)
+            {
+                Write-Output 'The CompatibilitySuppressions.xml file has changed, so there are new breaking changes.'
+                Write-Output 'The file will be added as an artifact.'
+
+                $destinationFileName = "$($project.Name)-CompatibilitySuppressions.xml"
+                $destinationFilePath = Join-Path $compatibilitySuppressionsDirectoryPath $destinationFileName
+                Copy-Item -Path $compatibilitySuppressionsFilePath -Destination $destinationFilePath
+            }
+        }
+
         exit 1
     }
 
