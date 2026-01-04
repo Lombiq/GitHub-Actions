@@ -262,11 +262,10 @@ runs:
     - name: Mark Breaking Changes on Pull Request
       if: ${{ failure() &&
         inputs.mark-breaking-changes == 'true' && 
-        steps.pack.outputs.baseline-package-validation-passed == 'false' &&
         github.event_name == 'pull_request' }}
       uses: Lombiq/GitHub-Actions/.github/actions/mark-breaking-changes@issue/OSOE-1101
       with:
-        breaking: 'true'
+        breaking: '${{ steps.pack.outputs.baseline-package-validation-passed }}'
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
