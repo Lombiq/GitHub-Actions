@@ -266,7 +266,7 @@ runs:
         github.event_name == 'pull_request' }}
       uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
       with:
-        label2: ignore-breaking-changes
+        label1: ignore-breaking-changes
 
     - name: Mark Breaking Changes on Pull Request
       if: ${{ (failure() || success()) &&
