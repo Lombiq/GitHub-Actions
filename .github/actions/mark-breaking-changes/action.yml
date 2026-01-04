@@ -1,5 +1,7 @@
 name: Mark Breaking Changes
-description: Adds or removes a breaking-changes indication on a pull request title and label, optionally leaving a comment.
+description: >
+  Adds or removes a breaking-changes indication on a pull request title and label, optionally leaving a comment.
+  Intentionally not documented in Actions.md since it's only meant for internal use.
 
 inputs:
   is-breaking:
