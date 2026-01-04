@@ -90,7 +90,7 @@ foreach ($project in $projects)
 {
     Write-Output "Packing $($project.Name)..."
 
-    $projectPackParameters = $packParameters
+    $projectPackParameters = $PackParameters
 
     $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
     $isPackable = $isPackableProperty -notlike '*false*'
@@ -164,8 +164,6 @@ foreach ($project in $projects)
             {
                 git fetch origin $BaseBranch --depth=1
                 git diff --quiet "origin/$BaseBranch" -- $baselineFilePath
-
-                Write-Output "Git diff exit code: $LASTEXITCODE"
 
                 # An exit code of 0 means no changes, 1 means there are changes.
                 if ($LASTEXITCODE -eq 1)
