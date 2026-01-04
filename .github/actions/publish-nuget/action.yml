@@ -221,6 +221,7 @@ runs:
           EnablePackageValidation=$enablePackageValidation
           PackageValidationBaselineVersion='${{ steps.setup.outputs.baseline-version }}'
           Version=$version
+          BaseBranch='${{ github.base_ref }}'
           CompatibilitySuppressionsDirectoryPath=(Join-Path $PWD CompatibilitySuppressions)
           PackParameters = @(
             "--configuration:Release",

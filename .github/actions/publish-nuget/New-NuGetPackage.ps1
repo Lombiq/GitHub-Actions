@@ -14,7 +14,14 @@
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
 #>
 
-param([bool] $EnablePackageValidation, [string] $PackageValidationBaselineVersion, [string] $Version, [string] $CompatibilitySuppressionsDirectoryPath, [array] $PackParameters)
+param(
+    [bool] $EnablePackageValidation,
+    [string] $PackageValidationBaselineVersion,
+    [string] $Version,
+    [string] $BaseBranch,
+    [string] $CompatibilitySuppressionsDirectoryPath,
+    [array] $PackParameters
+)
 
 <#
 .SYNOPSIS
@@ -73,6 +80,9 @@ if ($doBaselinePackageValidation -and -not (Test-Path -Path $CompatibilitySuppre
 {
     New-Item -ItemType Directory -Path $CompatibilitySuppressionsDirectoryPath | Out-Null
 }
+
+# Whether the pull request contains breaking changes is a global, not project-specific property.
+$isBreaking = $false
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
@@ -141,20 +151,29 @@ foreach ($project in $projects)
         dotnet restore
         Pop-Location
         Remove-Item -Recurse -Force TempProject
-    }
 
-    Push-Location $project.Directory
-
-    if ($doBaselinePackageValidation)
-    {
         # Check for an existing CompatibilitySuppressions.xml file, so we can compare it against the one possibly
         # generated during packaging. This is to see if there are any new breaking changes.
         $compatibilitySuppressionsFilePath = Join-Path $project.Directory 'CompatibilitySuppressions.xml'
         if (Test-Path $compatibilitySuppressionsFilePath)
         {
             $existingCompatibilitySuppressionsContent = Get-Content $compatibilitySuppressionsFilePath -Raw -ErrorAction Stop
+
+            # Check if the CompatibilitySuppressions.xml file changed in this branch, even if not in this commit.
+            if (-not $isBreaking -and -not [string]::IsNullOrWhiteSpace($BaseBranch))
+            {
+                git diff --quiet "origin/$BaseBranch" -- $baselineFilePath 2>$null
+
+                # An exit code of 0 means no changes, 1 means there are changes.
+                if ($LASTEXITCODE -eq 1)
+                {
+                    $isBreaking = $true
+                }
+            }
         }
     }
+
+    Push-Location $project.Directory
 
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
@@ -162,7 +181,7 @@ foreach ($project in $projects)
         $projectPackParameters += "-p:NuspecFile=$nuspecFile"
     }
 
-    Set-GitHubOutput 'is-breaking' 'false'
+    Set-GitHubOutput 'is-breaking' ($isBreaking ? 'true' : 'false')
 
     dotnet pack $project @projectPackParameters @packageValidationParameters
 
@@ -173,7 +192,9 @@ foreach ($project in $projects)
         if ($doBaselinePackageValidation)
         {
             # dotnet pack needs to run twice, because if we were to run it with GenerateCompatibilitySuppressionFile
-            # first, then it wouldn't fail on compatibility errors.
+            # first, then it wouldn't fail on compatibility errors. It also needs to run even if $isBreaking is true,
+            # because if another project is breaking then this one still may and thus need a new
+            # CompatibilitySuppressions.xml file too.
             $packageValidationParameters += '-p:GenerateCompatibilitySuppressionFile=true'
             dotnet pack $project @projectPackParameters @packageValidationParameters
 
@@ -183,6 +204,7 @@ foreach ($project in $projects)
 
                 if ($existingCompatibilitySuppressionsContent -ne $newCompatibilitySuppressionsContent)
                 {
+                    $isBreaking = $true
                     Set-GitHubOutput 'is-breaking' 'true'
 
                     Write-Output 'The CompatibilitySuppressions.xml file has changed, so there are new breaking changes.'
