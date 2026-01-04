@@ -42,9 +42,11 @@ runs:
       with:
         token: ${{ env.GITHUB_TOKEN }}
         issue-number: ${{ github.event.pull_request.number }}
+        # These lines can't be broken since that would cause unwanted line breaks in the comment too.
         # yamllint disable rule:line-length
         body: |
           This pull request appears to contain breaking changes.
           - If you can do this without breaking changes, then please do that, it'd be better.
           - If breaking changes are inevitable, then add an explanation of these and a migration guide for users to the description of the pull request (during the next release, these will be added to the release notes). A _CompatibilitySuppressions.xml_ file was generated for each project with breaking changes that you can download from the artifacts and use to suppress further such warnings.
           - If the changes are technically breaking but not something that would actually be breaking for consuming projects (like the signature of a constructor changing due to new injected dependencies) then also take the generated _CompatibilitySuppressions.xml_ file and add the `ignore-breaking-changes` label too. Furthermore, consider how in the future this can be avoided: Can perhaps the class be made internal (what's usually better for implementations of interfaces for injected dependencies)?
+        # yamllint enable rule:line-length
