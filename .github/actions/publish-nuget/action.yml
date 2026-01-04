@@ -258,6 +258,7 @@ runs:
         retention-days: ${{ inputs.nuget-artifact-retention-days }}
 
     - name: Upload CompatibilitySuppressions File Artifact
+      if: success() || failure()
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       with:
         name: CompatibilitySuppressions
