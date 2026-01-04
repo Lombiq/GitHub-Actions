@@ -167,6 +167,7 @@ foreach ($project in $projects)
                 # An exit code of 0 means no changes, 1 means there are changes.
                 if ($LASTEXITCODE -eq 1)
                 {
+                    Write-Output 'The CompatibilitySuppressions.xml file has changed compared to the base branch, so there are new breaking changes.'
                     $isBreaking = $true
                 }
             }
