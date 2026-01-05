@@ -20,7 +20,7 @@ else
 {
     if ($currentTitle.Contains($suffix))
     {
-        $newTitle = $currentTitle.Substring(0, $currentTitle.Length - $suffix.Length)
+        $newTitle = $currentTitle.Replace($suffix, '')
     }
 }
 
