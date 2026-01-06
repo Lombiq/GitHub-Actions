@@ -277,7 +277,7 @@ runs:
       if: ${{ (failure() || success()) &&
         inputs.mark-breaking-changes == 'true' &&
         github.event_name == 'pull_request' }}
-      uses: Lombiq/GitHub-Actions/.github/actions/mark-breaking-changes@issue/OSOE-1101
+      uses: Lombiq/GitHub-Actions/.github/actions/mark-breaking-changes@dev
       with:
         is-breaking: ${{ steps.check-ignore-breaking.outputs.contains-label == 'true' && 'false' || steps.pack.outputs.is-breaking == 'true' }}
       env:
