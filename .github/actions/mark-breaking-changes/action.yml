@@ -1,0 +1,63 @@
+name: Mark Breaking Changes
+description: >
+  Adds or removes a breaking-changes indication on a pull request title and label, optionally leaving a comment.
+  Intentionally not documented in Actions.md since it's only meant for internal use.
+
+inputs:
+  is-breaking:
+    description: Set to 'true' to add the breaking changes markers, or 'false' to remove them.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
+    - name: Update Breaking Changes Label
+      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        label: breaking-changes
+        type: ${{ inputs.is-breaking == 'true' && 'add' || 'remove' }}
+
+    - name: Update Pull Request Title
+      shell: pwsh
+      env:
+        GH_TOKEN: ${{ env.GITHUB_TOKEN }}
+        PR_TITLE: ${{ github.event.pull_request.title }}
+      run: |
+        $params = @{
+            IsBreaking = $${{ inputs.is-breaking }}
+            Title = $Env:PR_TITLE
+            PullRequestNumber = '${{ github.event.pull_request.number }}'
+        }
+        Update-PullRequestTitle.ps1 @params
+
+    - name: Find Existing Breaking Changes Comment
+      if: inputs.is-breaking == 'true'
+      uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
+      id: find-comment
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: github-actions[bot]
+        body-includes: This pull request appears to contain breaking changes.
+
+    - name: Create Breaking Changes Comment
+      if: inputs.is-breaking == 'true' && steps.find-comment.outputs.comment-id == ''
+      uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        # These lines can't be broken since that would cause unwanted line breaks in the comment too.
+        # yamllint disable rule:line-length
+        body: |
+          This pull request appears to contain breaking changes.
+          - If you can do this without breaking changes, then please do that, it'd be better.
+          - If breaking changes are inevitable, then add an explanation of these and a migration guide for users to the description of the pull request (during the next release, these will be added to the release notes). A _CompatibilitySuppressions.xml_ file was generated for each project with breaking changes that you can download from the artifacts and use to suppress further such warnings.
+          - If the changes are technically breaking but not something that would actually be breaking for consuming projects (like the signature of a constructor changing due to new injected dependencies) then also take the generated _CompatibilitySuppressions.xml_ file and add the `ignore-breaking-changes` label too, the push another commit. Furthermore, consider how in the future this can be avoided: Can perhaps the class be made internal (what's usually better for implementations of interfaces for injected dependencies)?
+        # yamllint enable rule:line-length

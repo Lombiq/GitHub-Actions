@@ -73,6 +73,12 @@ on:
         type: string
         default: 'true'
         description: If set to "true", the Microsoft.SourceLink.GitHub NuGet package is added to the projects.
+      mark-breaking-changes:
+        type: string
+        default: 'true'
+        description: |
+          When set to 'true', failed package validation against the baseline will mark the pull request with a title
+          suffix, a breaking-changes label, and a guidance comment.
 
 jobs:
   validate-nuget-publish:
@@ -95,6 +101,7 @@ jobs:
       nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
       add-source-link-package: ${{ inputs.add-source-link-package }}
       dry-run: true
+      mark-breaking-changes: ${{ inputs.mark-breaking-changes }}
     secrets:
       CHECKOUT_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
       API_KEY: not needed

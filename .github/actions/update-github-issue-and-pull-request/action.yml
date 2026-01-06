@@ -12,7 +12,7 @@ runs:
         '${{ github.action_path }}' >> $Env:GITHUB_PATH
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
-    - name: Add Jira Issue Code to Pull Request
+    - name: Update GitHub Issue and Pull Request
       shell: pwsh
       env:
         PR_TITLE: ${{ github.event.pull_request.title }}
@@ -26,6 +26,6 @@ runs:
             Title = $Env:PR_TITLE
             Body = $Env:PR_BODY
             Assignee = "${{ env.PR_AUTHOR }}"
-            PullRequestID = ${{ github.event.number }}
+            PullRequestNumber = ${{ github.event.number }}
         }
         Update-GitHubIssueAndPullRequest @params

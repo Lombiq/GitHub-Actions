@@ -52,6 +52,13 @@ inputs:
     description: |
       If set to "true", the action will perform all package creation and validation steps without actually publishing
       the NuGet package or creating a GitHub release.
+  mark-breaking-changes:
+    type: string
+    default: 'false'
+    description: |
+      When set to 'true', failed package validation against the baseline will mark the pull request with a title suffix,
+      a breaking-changes label, and a guidance comment.
+
 
 runs:
   using: composite
@@ -189,6 +196,7 @@ runs:
       run: ./Invoke-BeforePack.ps1
 
     - name: Pack
+      id: pack
       shell: pwsh
       # Notes on the configuration apart from what's also for dotnet build:
       # * -p:WarnOnPackingNonPackableProject=True will cause a build warning (converted to error) if we try to pack a
@@ -213,6 +221,8 @@ runs:
           EnablePackageValidation=$enablePackageValidation
           PackageValidationBaselineVersion='${{ steps.setup.outputs.baseline-version }}'
           Version=$version
+          BaseBranch='${{ github.base_ref }}'
+          CompatibilitySuppressionsDirectoryPath=(Join-Path $PWD CompatibilitySuppressions)
           PackParameters = @(
             "--configuration:Release",
             "--warnaserror",
@@ -239,6 +249,12 @@ runs:
             Write-Output "::notice::Dry run mode: Package created successfully but will not be published."
         }
 
+    - name: Show Breaking Status
+      if: ${{ (failure() || success()) && steps.pack.outputs.is-breaking == 'true' }}
+      shell: pwsh
+      run: |
+        Write-Output "::notice::Package validation detected breaking changes compared to the baseline version."
+
     - name: Push with dotnet
       if: inputs.dry-run != 'true'
       shell: pwsh
@@ -250,12 +266,38 @@ runs:
         }
         dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
 
-    - name: Publish Artifacts
+    - name: Check for ignore-breaking-changes Label
+      id: check-ignore-breaking
+      if: ${{ (failure() || success()) && inputs.mark-breaking-changes == 'true' && github.event_name == 'pull_request' }}
+      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
+      with:
+        label1: ignore-breaking-changes
+
+    - name: Mark Breaking Changes on Pull Request
+      if: ${{ (failure() || success()) &&
+        inputs.mark-breaking-changes == 'true' &&
+        github.event_name == 'pull_request' }}
+      uses: Lombiq/GitHub-Actions/.github/actions/mark-breaking-changes@dev
+      with:
+        is-breaking: ${{ steps.check-ignore-breaking.outputs.contains-label == 'true' && 'false' || steps.pack.outputs.is-breaking == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+
+    - name: Upload NuGet Package Artifact
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       with:
         name: NuGet-Package
         path: artifacts
         retention-days: ${{ inputs.nuget-artifact-retention-days }}
+
+    - name: Upload CompatibilitySuppressions File Artifact
+      if: success() || failure()
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      with:
+        name: CompatibilitySuppressions
+        path: CompatibilitySuppressions
+        retention-days: 1
+        if-no-files-found: ignore
 
     - name: Create Release
       uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev

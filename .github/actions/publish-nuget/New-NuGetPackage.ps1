@@ -14,7 +14,14 @@
     Calls "dotnet pack project.csproj --configuration:Release --warnaserror" on each project.
 #>
 
-param([array] $PackParameters, [bool] $EnablePackageValidation, [string] $PackageValidationBaselineVersion, [string] $Version)
+param(
+    [bool] $EnablePackageValidation,
+    [string] $PackageValidationBaselineVersion,
+    [string] $Version,
+    [string] $BaseBranch,
+    [string] $CompatibilitySuppressionsDirectoryPath,
+    [array] $PackParameters
+)
 
 <#
 .SYNOPSIS
@@ -64,16 +71,26 @@ function Get-ProjectProperty
 
 # The last condition wouldn't be necessary if baseline package validation would skip major releases by default, see:
 # https://github.com/dotnet/sdk/issues/40907.
-$shouldDownloadBaseLinePackages = ($EnablePackageValidation -and
+$doBaselinePackageValidation = ($EnablePackageValidation -and
     $PackageValidationBaselineVersion -and
     -not ($Version -match '-(alpha|beta|preview|rc)[.-]') -and
     [int]$Version.Split('.')[0] -le [int]$PackageValidationBaselineVersion.Split('.')[0])
+
+if ($doBaselinePackageValidation -and -not (Test-Path -Path $CompatibilitySuppressionsDirectoryPath))
+{
+    New-Item -ItemType Directory -Path $CompatibilitySuppressionsDirectoryPath | Out-Null
+}
+
+# Whether the pull request contains breaking changes is a global, not project-specific property.
+$isBreaking = $false
 
 $projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
 {
     Write-Output "Packing $($project.Name)..."
+
+    $projectPackParameters = $PackParameters
 
     $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
     $isPackable = $isPackableProperty -notlike '*false*'
@@ -104,11 +121,11 @@ foreach ($project in $projects)
 
     $packageValidationParameters = @(
         "-p:EnablePackageValidation=$EnablePackageValidation"
-        "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
     )
 
-    # Download baseline version NuGet packages
-    if ($shouldDownloadBaseLinePackages)
+    # If we don't explicitly restore the baseline version NuGet package then the validator will fail when it can't find
+    # it locally.
+    if ($doBaselinePackageValidation)
     {
         Write-Output 'Creating temporary project for baseline NuGet package.'
         dotnet new classlib -n TempProject
@@ -117,24 +134,45 @@ foreach ($project in $projects)
         Write-Output 'Installing baseline version NuGet package.'
         dotnet add TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
 
-        if ($LASTEXITCODE -ne 0)
+        if ($LASTEXITCODE -eq 0)
         {
-            Write-Output "::warning:: Package version couldn't be added, thus package validation to baseline version won't be done."
-            dotnet remove TempProject.csproj package $project.BaseName --version $PackageValidationBaselineVersion
+            Write-Output 'Baseline version NuGet package installed successfully. Continuing with baseline package validation.'
+
             $packageValidationParameters = @(
                 "-p:EnablePackageValidation=$EnablePackageValidation"
+                "-p:PackageValidationBaselineVersion=$PackageValidationBaselineVersion"
             )
+        }
+        else
+        {
+            Write-Output "::warning:: Package version couldn't be added, thus package validation to the baseline version won't be done."
         }
 
         dotnet restore
         Pop-Location
         Remove-Item -Recurse -Force TempProject
-    }
-    else
-    {
-        $packageValidationParameters = @(
-            "-p:EnablePackageValidation=$EnablePackageValidation"
-        )
+
+        # Check for an existing CompatibilitySuppressions.xml file, so we can compare it against the one possibly
+        # generated during packaging. This is to see if there are any new breaking changes.
+        $compatibilitySuppressionsFilePath = Join-Path $project.Directory 'CompatibilitySuppressions.xml'
+        if (Test-Path $compatibilitySuppressionsFilePath)
+        {
+            $existingCompatibilitySuppressionsContent = Get-Content $compatibilitySuppressionsFilePath -Raw -ErrorAction Stop
+
+            # Check if the CompatibilitySuppressions.xml file changed in this branch, even if not in this commit.
+            if (-not $isBreaking -and -not [string]::IsNullOrWhiteSpace($BaseBranch))
+            {
+                git fetch origin $BaseBranch --depth=1
+                git diff --quiet "origin/$BaseBranch" -- $baselineFilePath
+
+                # An exit code of 0 means no changes, 1 means there are changes.
+                if ($LASTEXITCODE -eq 1)
+                {
+                    Write-Output 'The CompatibilitySuppressions.xml file has changed compared to the base branch, so there are new breaking changes.'
+                    $isBreaking = $true
+                }
+            }
+        }
     }
 
     Push-Location $project.Directory
@@ -142,16 +180,49 @@ foreach ($project in $projects)
     $nuspecFile = (Get-ChildItem *.nuspec).Name
     if ($nuspecFile.Count -eq 1)
     {
-        dotnet pack $project -p:NuspecFile="$nuspecFile" @packParameters @packageValidationParameters
+        $projectPackParameters += "-p:NuspecFile=$nuspecFile"
     }
-    else
-    {
-        dotnet pack $project @packParameters @packageValidationParameters
-    }
+
+    Set-GitHubOutput 'is-breaking' ($isBreaking ? 'true' : 'false')
+
+    dotnet pack $project @projectPackParameters @packageValidationParameters
 
     if ($LASTEXITCODE -ne 0)
     {
         Write-Output "::error file=$($project.FullName)::dotnet pack failed for the project $($project.Name)."
+
+        if ($doBaselinePackageValidation)
+        {
+            # dotnet pack needs to run twice, because if we were to run it with GenerateCompatibilitySuppressionFile
+            # first, then it wouldn't fail on compatibility errors. It also needs to run even if $isBreaking is true,
+            # because if another project is breaking then this one still may and thus need a new
+            # CompatibilitySuppressions.xml file too.
+            $packageValidationParameters += '-p:GenerateCompatibilitySuppressionFile=true'
+            dotnet pack $project @projectPackParameters @packageValidationParameters
+
+            if (Test-Path $compatibilitySuppressionsFilePath)
+            {
+                $newCompatibilitySuppressionsContent = Get-Content $compatibilitySuppressionsFilePath -Raw -ErrorAction Stop
+
+                if ($existingCompatibilitySuppressionsContent -ne $newCompatibilitySuppressionsContent)
+                {
+                    $isBreaking = $true
+                    Set-GitHubOutput 'is-breaking' 'true'
+
+                    Write-Output 'The CompatibilitySuppressions.xml file has changed, so there are new breaking changes.'
+                    Write-Output 'The file will be added as an artifact.'
+
+                    $projectSubfolder = Join-Path $CompatibilitySuppressionsDirectoryPath $project.BaseName
+                    New-Item -ItemType Directory -Path $projectSubfolder | Out-Null
+                    $destinationFilePath = Join-Path $projectSubfolder 'CompatibilitySuppressions.xml'
+                    Write-Output "Copying CompatibilitySuppressions.xml to '$destinationFilePath'."
+                    Copy-Item -Path $compatibilitySuppressionsFilePath -Destination $destinationFilePath
+
+                    Write-Output "::notice::CompatibilitySuppressions.xml file added as an artifact for the '$($project.BaseName)' project."
+                }
+            }
+        }
+
         exit 1
     }
 
