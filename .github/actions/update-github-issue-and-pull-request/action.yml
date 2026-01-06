@@ -26,6 +26,6 @@ runs:
             Title = $Env:PR_TITLE
             Body = $Env:PR_BODY
             Assignee = "${{ env.PR_AUTHOR }}"
-            PullRequestID = ${{ github.event.number }}
+            PullRequestNumber = ${{ github.event.number }}
         }
         Update-GitHubIssueAndPullRequest @params

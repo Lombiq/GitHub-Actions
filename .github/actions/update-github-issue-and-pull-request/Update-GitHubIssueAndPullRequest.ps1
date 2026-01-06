@@ -5,7 +5,7 @@
     [string] $Title,
     [string] $Body,
     [string] $Assignee,
-    [string] $PullRequestId
+    [string] $PullRequestNumber
 )
 
 $jiraBrowseUrl = $JiraBaseUrl.TrimEnd('/') + '/browse/'
@@ -85,5 +85,5 @@ if (($Title -ne $originalTitle) -or ($Body -ne $originalBody))
     $Body = $Body -replace '"', '\"'
 
     # See https://cli.github.com/manual/gh_pr_edit
-    gh pr edit $PullRequestId --title $Title --body $Body --repo $GitHubRepository
+    gh pr edit $PullRequestNumber --title $Title --body $Body --repo $GitHubRepository
 }
