@@ -130,7 +130,7 @@ runs:
         Write-CacheConfiguration $isNuget $isNpm "${key}-${type}" $hashes[$type]
 
     - name: Cache Packages with GitHub Cache
-      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
       if: steps.detect-cache-configuration.outputs.cache-enabled == 'true' && !contains(runner.name, 'buildjet') && !contains(runner.name, 'warp')
       with:
         path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
