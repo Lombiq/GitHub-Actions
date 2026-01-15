@@ -163,6 +163,10 @@ foreach ($project in $projects)
             if (-not $isBreaking -and -not [string]::IsNullOrWhiteSpace($BaseBranch))
             {
                 git fetch origin $BaseBranch --depth=1
+
+                Write-Output 'Full git diff:'
+                git diff "origin/$BaseBranch" -- $baselineFilePath
+
                 git diff --quiet "origin/$BaseBranch" -- $baselineFilePath
 
                 # An exit code of 0 means no changes, 1 means there are changes.
