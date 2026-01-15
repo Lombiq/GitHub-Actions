@@ -163,7 +163,6 @@ foreach ($project in $projects)
             if (-not $isBreaking -and -not [string]::IsNullOrWhiteSpace($BaseBranch))
             {
                 git fetch origin $BaseBranch --depth=1
-
                 git diff --quiet "origin/$BaseBranch" -- $compatibilitySuppressionsFilePath
 
                 # An exit code of 0 means no changes, 1 means there are changes.
