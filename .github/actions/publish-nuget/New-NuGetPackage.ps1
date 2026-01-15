@@ -123,10 +123,10 @@ foreach ($project in $projects)
         "-p:EnablePackageValidation=$EnablePackageValidation"
     )
 
-    # If we don't explicitly restore the baseline version NuGet package then the validator will fail when it can't find
-    # it locally.
     if ($doBaselinePackageValidation)
     {
+        # If we don't explicitly restore the baseline version NuGet package then the validator will fail when it can't find
+        # it locally.
         Write-Output 'Creating temporary project for baseline NuGet package.'
         dotnet new classlib -n TempProject
         Push-Location TempProject
@@ -163,7 +163,7 @@ foreach ($project in $projects)
             if (-not $isBreaking -and -not [string]::IsNullOrWhiteSpace($BaseBranch))
             {
                 git fetch origin $BaseBranch --depth=1
-                git diff --quiet "origin/$BaseBranch" -- $baselineFilePath
+                git diff --quiet "origin/$BaseBranch" -- $compatibilitySuppressionsFilePath
 
                 # An exit code of 0 means no changes, 1 means there are changes.
                 if ($LASTEXITCODE -eq 1)
