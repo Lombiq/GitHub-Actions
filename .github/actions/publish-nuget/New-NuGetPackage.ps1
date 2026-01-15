@@ -163,13 +163,12 @@ foreach ($project in $projects)
             if (-not $isBreaking -and -not [string]::IsNullOrWhiteSpace($BaseBranch))
             {
                 git fetch origin $BaseBranch --depth=1
-                $diffOutput = git diff "origin/$BaseBranch" -- $compatibilitySuppressionsFilePath
+                git diff --quiet "origin/$BaseBranch" -- $baselineFilePath
 
                 # An exit code of 0 means no changes, 1 means there are changes.
                 if ($LASTEXITCODE -eq 1)
                 {
                     Write-Output 'The CompatibilitySuppressions.xml file has changed compared to the base branch, so there are new breaking changes.'
-                    Write-Output "Diff output:`n$diffOutput"
                     $isBreaking = $true
                 }
             }
