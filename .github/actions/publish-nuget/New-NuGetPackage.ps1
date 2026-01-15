@@ -122,7 +122,7 @@ foreach ($project in $projects)
     $packageValidationParameters = @(
         "-p:EnablePackageValidation=$EnablePackageValidation"
     )
-    
+
     if ($doBaselinePackageValidation)
     {
         # If we don't explicitly restore the baseline version NuGet package then the validator will fail when it can't find
