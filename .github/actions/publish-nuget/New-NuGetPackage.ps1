@@ -164,7 +164,7 @@ foreach ($project in $projects)
             {
                 git fetch origin $BaseBranch --depth=1
 
-                Write-Output 'Full git diff:'
+                Write-Output "Full git diff for the command 'git diff origin/$BaseBranch -- $baselineFilePath':"
                 git diff "origin/$BaseBranch" -- $baselineFilePath
 
                 git diff --quiet "origin/$BaseBranch" -- $baselineFilePath
