@@ -164,10 +164,10 @@ foreach ($project in $projects)
             {
                 git fetch origin $BaseBranch --depth=1
 
-                Write-Output "Full git diff for the command 'git diff origin/$BaseBranch -- $baselineFilePath':"
-                git diff "origin/$BaseBranch" -- $baselineFilePath
+                Write-Output "Full git diff for the command 'git diff origin/$BaseBranch -- $compatibilitySuppressionsFilePath':"
+                git diff "origin/$BaseBranch" -- $compatibilitySuppressionsFilePath
 
-                git diff --quiet "origin/$BaseBranch" -- $baselineFilePath
+                git diff --quiet "origin/$BaseBranch" -- $compatibilitySuppressionsFilePath
 
                 # An exit code of 0 means no changes, 1 means there are changes.
                 if ($LASTEXITCODE -eq 1)
