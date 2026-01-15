@@ -9,9 +9,6 @@ $suffix = ' (⚠️ breaking changes)'
 $currentTitle = $Title
 $newTitle = $currentTitle
 
-Write-Output "Current PR title: '$currentTitle'"
-Write-Output "Is breaking changes: $IsBreaking"
-
 if ($IsBreaking)
 {
     if (-not $currentTitle.Contains($suffix))
@@ -23,7 +20,6 @@ else
 {
     if ($currentTitle.Contains($suffix))
     {
-        Write-Output 'Removing breaking changes suffix from PR title.'
         $newTitle = $currentTitle.Replace($suffix, '')
     }
 }
