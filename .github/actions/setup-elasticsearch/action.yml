@@ -16,4 +16,4 @@ runs:
       # There are no versions and releases for this action yet, hence only using the commit hash.
       uses: elastic/elastic-github-actions/elasticsearch@dc110609b1cb3024477ead739ca23ab547b8b9ff
       with:
-        stack-version: 7.6.0
+        stack-version: 9.2.3
