@@ -16,7 +16,7 @@ runs:
       shell: pwsh
       run: |
         $url = 'https://github.com/OrchardCMS/OrchardCore/raw/refs/tags/v2.2.1/src/docs/reference/modules/Elasticsearch/docker-compose.yml'
-        
+
         New-Item -ItemType Directory -Path Elasticsearch
         Set-Location Elasticsearch
         Invoke-WebRequest $url -OutFile docker-compose.yml
