@@ -20,4 +20,5 @@ runs:
         New-Item -ItemType Directory -Path Elasticsearch
         Set-Location Elasticsearch
         Invoke-WebRequest $url -OutFile docker-compose.yml
-        docker-compose up
+        docker compose up --wait
+        docker compose start
