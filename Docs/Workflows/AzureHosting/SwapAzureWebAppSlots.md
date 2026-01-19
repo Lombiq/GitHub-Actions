@@ -34,6 +34,6 @@ jobs:
       CODE_REPOSITORY_WRITE_TOKEN: ${{ secrets.CODE_REPOSITORY_WRITE_TOKEN }}
 ```
 
-To restrict who can edit or run the Swap workflow, we recommend putting into a separate repository independent of your application code. If you're [on the Enterprise plan, you can add required reviewers](https://github.com/orgs/community/discussions/26262) instead, so that not everyone is able to run a swap who has write access to the repository.
+To restrict who can edit or run the Swap workflow, we recommend putting into a separate repository independent of your application code. If you're [on the Enterprise plan, you can add required reviewers](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments#required-reviewers) instead, so that not everyone is able to run a swap who has write access to the repository.
 
 This workflow has an alternate version (_swap-orchard1-azure-web-app-slots.yml_) designed for Orchard 1-based applications.
