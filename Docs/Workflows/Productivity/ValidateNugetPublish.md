@@ -14,7 +14,7 @@ on:
 jobs:
   validate-nuget-publish:
     name: Validate NuGet Publish
-    uses: Lombiq/GitHub-Actions/.github/workflows/validate-nuget-publish.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/validate-nuget-publish.yml@issue/OSOE-925
 ```
 
 The workflow otherwise takes the same configuration options as [`publish-nuget`](PublishNuGetPackage.md), but doesn't require the `API_KEY` secret.
