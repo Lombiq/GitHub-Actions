@@ -23,10 +23,23 @@ runs:
         docker compose start
 
         # Test server status.
+        function Test-Elasticsearch()
+        {
+          try
+          {
+            $result = Invoke-WebRequest http://localhost:9200/
+            Write-Output $result
+            return $True
+          }
+          catch
+          {
+            return $False
+          }
+        }
+        
         for ($i = 0; $i -lt 10; $i += 1)
         {
-          $result = (Invoke-WebRequest http://localhost:9200/) && $True || $False
-          if ($result)
+          if (Test-Elasticsearch)
           {
             Write-Output ok
             break
