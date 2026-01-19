@@ -13,7 +13,12 @@ runs:
         sudo sysctl -w vm.max_map_count=262144
 
     - name: Runs Elasticsearch
-      # There are no versions and releases for this action yet, hence only using the commit hash.
-      uses: elastic/elastic-github-actions/elasticsearch@dc110609b1cb3024477ead739ca23ab547b8b9ff
-      with:
-        stack-version: 9.2.3
+      shell: pwsh
+      run: |
+        $url = 'https://github.com/OrchardCMS/OrchardCore/raw/refs/tags/v2.2.1/src/docs/reference/modules/Elasticsearch/docker-compose.yml'
+
+        New-Item -ItemType Directory -Path Elasticsearch
+        Set-Location Elasticsearch
+        Invoke-WebRequest $url -OutFile docker-compose.yml
+        docker compose up --wait
+        docker compose start
