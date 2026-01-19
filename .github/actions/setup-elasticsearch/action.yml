@@ -36,7 +36,7 @@ runs:
             return $False
           }
         }
-        
+
         for ($i = 0; $i -lt 10; $i += 1)
         {
           if (Test-Elasticsearch)
