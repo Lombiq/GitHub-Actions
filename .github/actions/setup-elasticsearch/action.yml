@@ -17,8 +17,12 @@ runs:
       run: |
         $url = 'https://github.com/OrchardCMS/OrchardCore/raw/refs/tags/v2.2.1/src/docs/reference/modules/Elasticsearch/docker-compose.yml'
 
+        # Install Docker containers using "compose", using the configuration provided in the Orchard Core documentation.
         New-Item -ItemType Directory -Path Elasticsearch
         Set-Location Elasticsearch
         Invoke-WebRequest $url -OutFile docker-compose.yml
         docker compose up --wait
         docker compose start
+
+        # Test server status.
+        Invoke-WebRequest http://localhost:9200/
