@@ -1,4 +1,5 @@
-# Based on the official Orchard Core configuration for Elasticsearch at:
+# Based on the official Orchard Core configuration for Elasticsearch at the address below. Make sure to update it during
+# Orchard Core upgrade and comment if there were any changes besides what's required by linting.
 # https://github.com/OrchardCMS/OrchardCore/raw/refs/tags/v2.2.1/src/docs/reference/modules/Elasticsearch/docker-compose.yml
 
 
