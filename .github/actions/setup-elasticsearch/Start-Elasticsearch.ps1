@@ -12,11 +12,11 @@ function Test-Elasticsearch()
     {
         $result = Invoke-WebRequest http://localhost:9200/
         Write-Output $result
-        return $True
+        return $true
     }
     catch
     {
-        return $False
+        return $false
     }
 }
 
