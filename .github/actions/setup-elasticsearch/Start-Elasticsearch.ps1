@@ -20,12 +20,12 @@ function Test-Elasticsearch()
     }
 }
 
-for ($i = 0; $i -lt 10; $i += 1)
+for ($i = 0; $i -lt 20; $i += 1)
 {
     if (Test-Elasticsearch)
     {
         Write-Output ok
-        break
+        exit 0
     }
     else
     {
@@ -33,3 +33,6 @@ for ($i = 0; $i -lt 10; $i += 1)
         Start-Sleep -Seconds 3
     }
 }
+
+Write-Output "::error::Couldn't start up the Elasticsearch Docker container within the allotted time frame."
+exit 1
