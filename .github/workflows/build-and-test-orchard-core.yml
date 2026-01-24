@@ -301,7 +301,9 @@ jobs:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Verify that .NET packages are consolidated
-        if: ${{ inputs.verify-dotnet-consolidation }}
+        # This .NET tool has problems with the GH Windows runner when the solution uses .NET 10 unless the framework
+        # version is exactly 10.0.2, so it's best to disable. Run consolidation checks on Linux instead.
+        if: env.RUNNER_OS != 'Windows' && ${{ inputs.verify-dotnet-consolidation }}
         uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
         with:
           directory: ${{ inputs.build-directory }}
