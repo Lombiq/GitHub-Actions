@@ -38,6 +38,12 @@ runs:
         '${{ github.action_path }}' >> $Env:GITHUB_PATH
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
+    # This tool depends on .NET 8 to run regardless of the solution's framework.
+    - name: Set up .NET
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-925
+      with:
+        dotnet-version: 8.0.319
+
     - name: Install dotnet-consolidate
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
