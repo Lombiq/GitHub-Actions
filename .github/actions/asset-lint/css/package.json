@@ -1,6 +1,6 @@
 {
   "private": true,
   "dependencies": {
-    "stylelint-config-standard": "39.0.1"
+    "stylelint-config-standard": "40.0.0"
   }
 }
