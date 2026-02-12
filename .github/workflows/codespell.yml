@@ -26,7 +26,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Run codespell
-        uses: Lombiq/GitHub-Actions/.github/actions/codespell@renovate/all-dependencies
+        uses: Lombiq/GitHub-Actions/.github/actions/codespell@dev
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
