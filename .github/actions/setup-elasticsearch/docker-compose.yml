@@ -1,5 +1,6 @@
-# Based on the official Orchard Core configuration for Elasticsearch at the address below. Make sure to update it during
-# Orchard Core upgrade and comment if there were any changes besides what's required by linting.
+# Based on the official Orchard Core configuration for Elasticsearch at the address below, but the "kibana" service
+# taken out as that's not needed in CI. Make sure to update it during Orchard Core upgrade and comment if there were any
+# changes besides the aforementioned and what's required by linting.
 # https://github.com/OrchardCMS/OrchardCore/raw/refs/tags/v2.2.1/src/docs/reference/modules/Elasticsearch/docker-compose.yml
 
 
@@ -51,21 +52,6 @@ services:
       - data02:/usr/share/elasticsearch/data
     networks:
       - elastic
-  kibana:
-    container_name: kibana
-    image: docker.elastic.co/kibana/kibana:9.2.4
-    environment:
-      ELASTICSEARCH_HOSTS: '["http://es01:9200","http://es02:9200"]'
-      # Disable security features in Kibana
-      ELASTICSEARCH_USERNAME: elastic
-      ELASTICSEARCH_PASSWORD:
-      XPACK_SECURITY_ENABLED: false
-    networks:
-      - elastic
-    depends_on:
-      - es01
-    ports:
-      - 5601:5601
 volumes:
   data01:
     driver: local
