@@ -343,7 +343,7 @@ jobs:
 
       - name: Set up Elasticsearch
         if: inputs.set-up-elasticsearch == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@issue/OSOE-925-gha-elastic
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@dev
 
       - name: Set up Azurite
         if: inputs.set-up-azurite == 'true'
