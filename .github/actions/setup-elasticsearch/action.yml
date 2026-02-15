@@ -4,6 +4,11 @@ description: Sets up Elasticsearch
 runs:
   using: composite
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+
     - name: Configure sysctl limits
       shell: pwsh
       run: |
@@ -13,7 +18,5 @@ runs:
         sudo sysctl -w vm.max_map_count=262144
 
     - name: Runs Elasticsearch
-      # There are no versions and releases for this action yet, hence only using the commit hash.
-      uses: elastic/elastic-github-actions/elasticsearch@dc110609b1cb3024477ead739ca23ab547b8b9ff
-      with:
-        stack-version: 7.6.0
+      shell: pwsh
+      run: Start-Elasticsearch
