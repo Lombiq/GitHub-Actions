@@ -23,6 +23,8 @@ runs:
 
     - name: Open Pull Request
       shell: pwsh
+      env:
+        GH_TOKEN: ${{ env.GITHUB_TOKEN }}
       run: |
         $params = @{
             Repository = '${{ github.repository }}'

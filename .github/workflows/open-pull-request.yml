@@ -33,6 +33,8 @@ jobs:
 
       - name: Open Pull Request
         uses: Lombiq/GitHub-Actions/.github/actions/open-pull-request@issue/OSOE-1156
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           source-branch: ${{ inputs.source-branch }}
           target-branch: ${{ inputs.target-branch }}
