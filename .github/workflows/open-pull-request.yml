@@ -1,0 +1,35 @@
+name: Open Pull Request
+
+on:
+  workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout with. Pass in a GitHub personal access token if authenticated
+          submodules are used.
+
+    inputs:
+      source-branch:
+        required: false
+        default: ${{ github.head_ref }}
+        description: The name of the source branch for the pull request.
+      target-branch:
+        required: true
+        description: The name of the target branch for the pull request.
+
+jobs:
+  lint:
+    name: Open Pull Request
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
+
+      - name: Open Pull Request
+        uses: Lombiq/GitHub-Actions/.github/actions/open-pull-request@issue/OSOE-1156
+        with:
+          source-branch: ${{ inputs.source-branch }}
+          target-branch: ${{ inputs.target-branch }}
