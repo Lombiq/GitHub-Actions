@@ -7,13 +7,11 @@ inputs:
   source-branch:
     required: false
     default: ${{ github.head_ref }}
-    description: >
-      The name of the source branch for the pull request.
-
+    description: The name of the source branch for the pull request.
   target-branch:
     required: true
-    description: >
-      The name of the target branch for the pull request.
+    default: ${{ github.event.repository.default_branch }}
+    description: The name of the target branch for the pull request.
 
 runs:
   using: composite
