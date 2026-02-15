@@ -5,6 +5,11 @@ param(
 	[string] $PullRequestTitle
 )
 
+if (-not $Env:GH_TOKEN -and $Env:GITHUB_TOKEN)
+{
+	$Env:GH_TOKEN = $Env:GITHUB_TOKEN
+}
+
 $comparison = gh api "repos/$Repository/compare/$TargetBranch...$SourceBranch" | ConvertFrom-Json
 if ($comparison.ahead_by -eq 0)
 {
