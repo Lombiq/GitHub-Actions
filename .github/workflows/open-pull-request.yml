@@ -20,6 +20,11 @@ on:
         required: false
         default: ${{ github.event.repository.default_branch }}
         description: The name of the target branch for the pull request.
+      pull-request-body:
+        type: string
+        required: false
+        default: ''
+        description: The body text for the pull request.
 
 jobs:
   lint:
@@ -43,3 +48,4 @@ jobs:
         with:
           source-branch: ${{ inputs.source-branch }}
           target-branch: ${{ inputs.target-branch }}
+          pull-request-body: ${{ inputs.pull-request-body }}

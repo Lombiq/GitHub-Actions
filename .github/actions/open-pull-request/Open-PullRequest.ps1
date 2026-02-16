@@ -2,7 +2,8 @@ param(
 	[string] $Repository,
 	[string] $SourceBranch,
 	[string] $TargetBranch,
-	[string] $PullRequestTitle
+	[string] $PullRequestTitle,
+	[string] $PullRequestBody = ''
 )
 
 $comparison = gh api "repos/$Repository/compare/$TargetBranch...$SourceBranch" | ConvertFrom-Json
@@ -20,5 +21,6 @@ if ($existingPullRequest)
 }
 
 $escapedTitle = $PullRequestTitle -replace '"', '\"'
+$escapedBody = $PullRequestBody -replace '"', '\"'
 
-gh pr create --repo $Repository --head $SourceBranch --base $TargetBranch --title $escapedTitle --body ''
+gh pr create --repo $Repository --head $SourceBranch --base $TargetBranch --title $escapedTitle --body $escapedBody
