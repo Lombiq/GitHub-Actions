@@ -34,7 +34,7 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 - [Codespell](Workflows/Productivity/Codespell.md)
 - [Create Jira issues for community activities](Workflows/Productivity/CreateJiraIssuesForCommunityActivities.md)
 - [Mirror branches](Workflows/Productivity/MirrorBranches.md)
-- [Open pull request](Workflows/Productivity/OpenPullRequest.md)
+- [Open Pull Request](Workflows/Productivity/OpenPullRequest.md)
 - [Post-pull request checks automation](Workflows/Productivity/PostPullRequestChecksAutomation.md)
 - [Publish NuGet package](Workflows/Productivity/PublishNuGetPackage.md)
 - [Renovate](Workflows/Productivity/Renovate.md)

@@ -27,3 +27,5 @@ jobs:
 ```
 
 Setting `CHECKOUT_TOKEN` is only necessary if your repository has private submodules or if you want a specific user (not the github-actions bot) to be the author of the pull request.
+
+If no `target-branch` is specified, then the default branch of the repository will be used as the target branch. If no `source-branch` is specified, then the branch that triggered the workflow will be used as the source branch.
