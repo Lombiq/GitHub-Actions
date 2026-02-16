@@ -1,9 +1,9 @@
 param(
-	[string] $Repository,
-	[string] $SourceBranch,
-	[string] $TargetBranch,
-	[string] $PullRequestTitle,
-	[string] $PullRequestBody = ''
+    [string] $Repository,
+    [string] $SourceBranch,
+    [string] $TargetBranch,
+    [string] $PullRequestTitle,
+    [string] $PullRequestBody = ''
 )
 
 $comparison = gh api "repos/$Repository/compare/$TargetBranch...$SourceBranch" | ConvertFrom-Json
