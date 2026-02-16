@@ -12,7 +12,7 @@ if ($comparison.ahead_by -eq 0)
 	exit 0
 }
 
-$existingPullRequest = gh pr list --repo $Repository --head $SourceBranch --base $TargetBranch --state all --json number --template '{{range .}}{{.number}}{{end}}'
+$existingPullRequest = gh pr list --repo $Repository --head $SourceBranch --base $TargetBranch --state open
 if ($existingPullRequest)
 {
 	Write-Output "::notice::Pull request already exists for '$SourceBranch' -> '$TargetBranch', skipping."
