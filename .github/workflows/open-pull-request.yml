@@ -26,6 +26,11 @@ jobs:
     name: Open Pull Request
     runs-on: ubuntu-24.04
     steps:
+      - name: Set Checkout Token
+        uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@dev
+        with:
+          checkout-token: ${{ secrets.CHECKOUT_TOKEN }}
+
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
@@ -34,7 +39,7 @@ jobs:
       - name: Open Pull Request
         uses: Lombiq/GitHub-Actions/.github/actions/open-pull-request@issue/OSOE-1156
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
         with:
           source-branch: ${{ inputs.source-branch }}
           target-branch: ${{ inputs.target-branch }}
