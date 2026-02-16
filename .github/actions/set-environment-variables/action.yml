@@ -19,7 +19,13 @@ runs:
         $envVars = ConvertFrom-Json $env:ENVIRONMENT_VARIABLES_JSON
         foreach ($key in $envVars.PSObject.Properties.Name)
         {
+            $value = $envVars.$key
             Write-Output "Setting environment variable $key."
-            Write-Output "::add-mask::$($envVars.$key)"
-            Set-GitHubEnv $key $envVars.$key
+
+            if (-not [string]::IsNullOrWhiteSpace([string]$value))
+            {
+                Write-Output "::add-mask::$value"
+            }
+
+            Set-GitHubEnv $key $value
         }
