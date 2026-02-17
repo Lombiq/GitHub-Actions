@@ -1,0 +1,41 @@
+name: Open Pull Request
+description: >
+  Opens a pull request from a source branch to a target branch. This can be used to e.g. automatically open a pull
+  request in a fork to your branch from a branch coming from the original repository.
+
+inputs:
+  source-branch:
+    required: false
+    default: ${{ github.head_ref }}
+    description: The name of the source branch for the pull request.
+  target-branch:
+    required: true
+    default: ${{ github.event.repository.default_branch }}
+    description: The name of the target branch for the pull request.
+  pull-request-body:
+    required: false
+    default: ''
+    description: The body text for the pull request.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+
+    - name: Open Pull Request
+      shell: pwsh
+      env:
+        GH_TOKEN: ${{ env.GITHUB_TOKEN }}
+      run: |
+        $params = @{
+            Repository = '${{ github.repository }}'
+            SourceBranch = '${{ inputs.source-branch }}'
+            TargetBranch = '${{ inputs.target-branch }}'
+            PullRequestTitle = 'Merge changes from ${{ inputs.source-branch }} into ${{ inputs.target-branch }}'
+            PullRequestBody = '${{ inputs.pull-request-body }}'
+        }
+
+        Open-PullRequest @params
