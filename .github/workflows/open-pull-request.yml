@@ -42,7 +42,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Open Pull Request
-        uses: Lombiq/GitHub-Actions/.github/actions/open-pull-request@issue/OSOE-1156
+        uses: Lombiq/GitHub-Actions/.github/actions/open-pull-request@dev
         env:
           GITHUB_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
         with:
