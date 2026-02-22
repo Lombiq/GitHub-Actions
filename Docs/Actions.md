@@ -33,6 +33,7 @@ In addition to the below short explanations, check out the inline documentation 
 - `create-jira-issues-for-community-activities`: Creates Jira issues for community activities happening on GitHub, like issues, discussions, and pull requests being opened. Pull requests are only taken into account if they're not already related to a Jira issue (by starting their title with a Jira issue key).
 - `get-branches`: Fetches information about all the branches in a repository from the GitHub API.
 - `notify-teams`: A wrapper for the [carriquiry-g/ms-teams-notification](https://github.com/carriquiry-g/ms-teams-notification) action to send a notification to a Microsoft Teams channel using a webhook.
+- `open-pull-request`: Opens a pull request from a source branch to a target branch in a repository. This can be used to automatically open pull requests e.g. in a fork to merge changes from a branch in the original repository to your branch.
 - `publish-nuget`: Publishes the content of the current directory as a NuGet package.
 - `update-github-issue-and-pull-request`: Adds the Jira issue key prefix and link to pull requests as well as a Fixes reference to a GitHub issue, if a suitable one is found.
 - `verify-submodule-pull-request`: Assuming that the current repository is a submodule in another repository, this action verifies that a pull request with a matching issue code has been opened there as well.
