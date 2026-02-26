@@ -9,7 +9,7 @@
     packageRules: [
         {
             matchPackageNames: ['azure/webapps-deploy'],
-            matchFileNames: ['.github/workflows/deploy-orchard1-to-azure-app-service.yml'], 
+            matchFileNames: ['.github/workflows/deploy-orchard1-to-azure-app-service.yml'],
             enabled: false,
         },
     ]
