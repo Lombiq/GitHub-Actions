@@ -284,7 +284,7 @@ jobs:
       - name: Deploy to Azure App Service
         id: deploy-to-azure
         continue-on-error: true
-        uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d # v3.0.6
+        uses: azure/webapps-deploy@84a80cfe7e9889f35148ed88c307e6e93bf02578 # v3.0.7
         with:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
@@ -297,7 +297,7 @@ jobs:
 
       - name: Deploy to Azure App Service (Retry)
         if: steps.deploy-to-azure.outcome == 'failure'
-        uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d # v3.0.6
+        uses: azure/webapps-deploy@84a80cfe7e9889f35148ed88c307e6e93bf02578 # v3.0.7
         with:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
