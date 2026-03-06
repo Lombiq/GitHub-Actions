@@ -50,7 +50,7 @@ function Invoke-Npx()
     param($Package, $ProjectAndGlob, $Type, $Parameters)
 
     $relativePath = Resolve-Path -Path $ProjectAndGlob.Project -Relative -RelativeBasePath $basePath
-    npx -y $Package $ProjectAndGlob.Glob @Parameters || Write-GitHubError -Type $Type -RelativePath $relativePath
+    npx $Package $ProjectAndGlob.Glob @Parameters || Write-GitHubError -Type $Type -RelativePath $relativePath
 }
 
 $scripts = ConvertTo-PathAndGlob -InputString $ScriptsString -DefaultGlob 'wwwroot/js'
