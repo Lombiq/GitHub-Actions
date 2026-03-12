@@ -83,7 +83,7 @@ on:
 jobs:
   validate-nuget-publish:
     name: Validate NuGet Publish
-    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@issue/OSOE-1247
     with:
       cancel-workflow-on-failure: ${{ inputs.cancel-workflow-on-failure }}
       verbosity: ${{ inputs.verbosity }}

@@ -122,32 +122,32 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Set Environment Variables
-        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@issue/OSOE-1247
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
       - name: Free up Space
         if: inputs.free-up-space == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@issue/OSOE-1247
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1247
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1247
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1247
         with:
           node-version: ${{ inputs.node-version }}
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Publish to NuGet
-        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/OSOE-1247
         with:
           source: ${{ inputs.source }}
           verbosity: ${{ inputs.verbosity }}
@@ -165,6 +165,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1247
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
