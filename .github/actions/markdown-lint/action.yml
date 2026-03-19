@@ -64,7 +64,7 @@ runs:
         Set-GitHubOutput 'artifact-path' $artifactFolder
 
     - name: Upload files fixed by markdown-lint
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1247
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1250
       if: inputs.fix == 'true' && steps.markdown-lint-fix-files.outputs.has-fixes == 'true'
       with:
         name: markdown-lint-fixed-files

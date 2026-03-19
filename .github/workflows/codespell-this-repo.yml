@@ -11,4 +11,4 @@ on:
 jobs:
   codespell:
     name: Codespell
-    uses: Lombiq/GitHub-Actions/.github/workflows/codespell.yml@issue/OSOE-1247
+    uses: Lombiq/GitHub-Actions/.github/workflows/codespell.yml@issue/OSOE-1250
