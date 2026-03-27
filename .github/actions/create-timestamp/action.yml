@@ -1,4 +1,4 @@
-﻿name: Create Timestamp
+name: Create Timestamp
 description: >
   Create a timestamp in ISO 8601 format for use in tags (replaces ":" with "." for use in git tags). Intentionally not
   documented in Actions.md since it's only meant for internal use.
