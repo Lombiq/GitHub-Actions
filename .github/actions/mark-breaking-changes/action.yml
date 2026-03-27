@@ -18,7 +18,7 @@ runs:
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Update Breaking Changes Label
-      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@issue/OSOE-1252
+      uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
       with:
         token: ${{ env.GITHUB_TOKEN }}
         label: breaking-changes
