@@ -146,7 +146,7 @@ runs:
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
     - name: Cache Packages with WarpBuild Cache
-      uses: WarpBuilds/cache@8f10197bad216ec3a6ba6188e7e41e5f52f894cc # v1.4.7
+      uses: WarpBuilds/cache@f643a1ba29942d56621d07fc2d4284c7219868ad # v1.4.10
       if: steps.detect-cache-configuration.outputs.cache-enabled == 'true' && contains(runner.name, 'warp')
       with:
         path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
@@ -212,7 +212,7 @@ runs:
         Write-Output ("Solution or project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
 
     - name: Upload MSBuild Binary Log
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1252
       if: (success() || failure()) && inputs.create-binary-log == 'true'
       with:
         name: build-binary-log-${{ steps.build.outputs.artifact-name-suffix }}.binlog
