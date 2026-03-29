@@ -270,7 +270,7 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@dev
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@4a640861470f7674569af8331f4b6aa0f2fcfbd2 # dev
 
       - name: Stop Web App Slot
         run: |
@@ -284,7 +284,7 @@ jobs:
       - name: Deploy to Azure App Service
         id: deploy-to-azure
         continue-on-error: true
-        uses: azure/webapps-deploy@84a80cfe7e9889f35148ed88c307e6e93bf02578 # v3.0.7
+        uses: azure/webapps-deploy@45c7df8f6a4fe841b67ff88920b33f4f8328f8d9 # v3.0.8
         with:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
@@ -297,7 +297,7 @@ jobs:
 
       - name: Deploy to Azure App Service (Retry)
         if: steps.deploy-to-azure.outcome == 'failure'
-        uses: azure/webapps-deploy@84a80cfe7e9889f35148ed88c307e6e93bf02578 # v3.0.7
+        uses: azure/webapps-deploy@45c7df8f6a4fe841b67ff88920b33f4f8328f8d9 # v3.0.8
         with:
           app-name: ${{ inputs.app-name }}
           slot-name: ${{ inputs.slot-name }}
