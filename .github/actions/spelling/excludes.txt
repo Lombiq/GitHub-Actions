@@ -23,6 +23,7 @@
 \.psm1$
 \.ruleset$
 \.sln$
+\.slnx$
 \.stylelintrc$
 \.svg$
 \.t$
