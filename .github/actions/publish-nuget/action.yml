@@ -162,7 +162,7 @@ runs:
       run: ./ConvertTo-Nuspec.ps1 '${{ steps.setup.outputs.publish-version }}'
 
     - name: Build
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-925
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-1199
       # Notes on the configuration:
       # * -p:NuGetBuild=true is our property to load Lombiq dependencies from NuGet by switching project references
       #   to package references.
