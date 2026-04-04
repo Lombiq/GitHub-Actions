@@ -49,7 +49,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
     $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($SolutionOrProject)
     $solutionDirectory = [System.IO.Path]::GetDirectoryName($SolutionOrProject)
 
-    Write-Output "Running tests for the $SolutionOrProject solution."
+    Write-Output "Running tests for the `"$SolutionOrProject`" solution."
 
     Write-Output 'Gathering test projects.'
 
@@ -88,12 +88,12 @@ if ($SolutionOrProject -imatch '\.slnx?$')
 }
 elseif ($SolutionOrProject -like '*.csproj')
 {
-    Write-Output "Running tests for the $SolutionOrProject project."
+    Write-Output "Running tests for the `"$SolutionOrProject`' project."
     $tests = @($SolutionOrProject)
 }
 else
 {
-    Write-Error "The $SolutionOrProject is not a solution or project file."
+    Write-Error "The `"$SolutionOrProject`" is not a solution or project file."
     exit 1
 }
 
