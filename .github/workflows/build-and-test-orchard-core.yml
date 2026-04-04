@@ -297,14 +297,14 @@ jobs:
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-925
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-1199
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
           exclude-project-path: ${{ inputs.dotnet-consolidation-exclude-project-path }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-925
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1199
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
@@ -319,7 +319,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-925
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-1199
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration }}
@@ -343,7 +343,7 @@ jobs:
 
       - name: Set up Elasticsearch
         if: inputs.set-up-elasticsearch == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@issue/OSOE-925
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@issue/OSOE-1199
 
       - name: Set up Azurite
         if: inputs.set-up-azurite == 'true'
