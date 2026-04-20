@@ -12,6 +12,8 @@ In addition to the below short explanations, check out the inline documentation 
 - `setup-dotnet`: Sets up the .NET SDK.
 - `verify-dotnet-consolidation`: Verifies that the NuGet packages of a .NET solution are consolidated, i.e. the same version of a given package is used in all projects.
 - `test-dotnet`: Runs .NET unit and UI tests (with the [Lombiq UI Testing Toolbox for Orchard Core](https://github.com/Lombiq/UI-Testing-Toolbox)), generates a test report, and uploads UI testing failure dumps to artifacts.
+- `verify-git-status-clean`: Fails if the current Git repository has pending tracked or untracked changes, with an
+  optional ignore list for exact repository-relative paths.
 
 ## .NET Framework and Orchard 1 builds
 
