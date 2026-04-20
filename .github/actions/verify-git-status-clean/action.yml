@@ -1,0 +1,57 @@
+name: Verify Git Status is Clean
+description: Fails if the current Git repository has pending tracked or untracked changes.
+
+inputs:
+  ignored-paths:
+    required: false
+    default: ''
+    description: >
+      Newline-separated repository-relative paths to ignore when checking for pending Git changes.
+
+runs:
+  using: composite
+  steps:
+    - name: Verify Git Status is Clean
+      shell: pwsh
+      run: |
+        $ignoredPathsInput = @'
+        ${{ inputs.ignored-paths }}
+        '@
+
+        $ignoredPaths = @()
+        if (-not [string]::IsNullOrWhiteSpace($ignoredPathsInput))
+        {
+            $ignoredPaths = $ignoredPathsInput -split "`r?`n" |
+              ForEach-Object { $PSItem.Trim() } |
+              Where-Object { $PSItem }
+        }
+
+        $pendingChanges = @(git status --porcelain=v1 --untracked-files=all)
+
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Output '::error::Failed to get Git status.'
+            exit $LASTEXITCODE
+        }
+
+        $relevantChanges = @()
+        foreach ($pendingChange in $pendingChanges)
+        {
+            $path = $pendingChange.Length -gt 3 ? $pendingChange.Substring(3) : $pendingChange
+
+            if ($path -in $ignoredPaths)
+            {
+                continue
+            }
+
+            $relevantChanges += $pendingChange
+        }
+
+        if ($relevantChanges.Count -gt 0)
+        {
+            Write-Output '::error::The repository has pending Git changes. A repository and the build pipeline in it should be set up in a way that building the projects in it will not cause pending changes in Git.'
+            Write-Output 'Pending changes from "git status --porcelain":'
+            $relevantChanges | ForEach-Object { Write-Output $PSItem }
+
+            exit 1
+        }
