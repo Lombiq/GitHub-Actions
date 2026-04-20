@@ -49,8 +49,8 @@ runs:
 
         if ($relevantChanges.Count -gt 0)
         {
-            Write-Output '::error::The repository has pending Git changes. A repository and the build pipeline in it
-                should be set up in a way that building the projects in it will not cause pending changes in Git.'
+            Write-Output '::error::The repository has pending Git changes. A repository and the build pipeline in it' +
+                'should be set up in a way that building the projects in it will not cause pending changes in Git.'
             Write-Output 'Pending changes from "git status --porcelain":'
             $relevantChanges | ForEach-Object { Write-Output $PSItem }
 
