@@ -11,22 +11,17 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+
     - name: Verify Git Status is Clean
       shell: pwsh
       run: |
-        $ignoredPathsInput = @'
-        ${{ inputs.ignored-paths }}
-        '@
+        $ignoredPaths = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.ignored-paths }}'
 
-        $ignoredPaths = @()
-        if (-not [string]::IsNullOrWhiteSpace($ignoredPathsInput))
-        {
-            $ignoredPaths = $ignoredPathsInput -split "`r?`n" |
-              ForEach-Object { $PSItem.Trim() } |
-              Where-Object { $PSItem }
-        }
-
-        $pendingChanges = @(git status --porcelain=v1 --untracked-files=all)
+        $pendingChanges = @(git status --porcelain)
 
         if ($LASTEXITCODE -ne 0)
         {
