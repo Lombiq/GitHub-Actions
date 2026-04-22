@@ -147,7 +147,7 @@ on:
           https://github.com/actions/upload-artifact#retention-period for more details.
       build-fail-on-pending-changes:
         type: string
-        default: 'false'
+        default: 'true'
         description: >
           If set to "true", the workflow fails when the checked out repository has pending Git changes immediately
           after the build step.
