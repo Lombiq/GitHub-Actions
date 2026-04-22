@@ -342,9 +342,6 @@ jobs:
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@issue/OSOE-1167
-        with:
-          ignored-paths: |
-            global.json
 
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
