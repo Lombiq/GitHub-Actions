@@ -29,18 +29,8 @@ runs:
             exit $LASTEXITCODE
         }
 
-        $relevantChanges = @()
-        foreach ($pendingChange in $pendingChanges)
-        {
-            $path = $pendingChange.Length -gt 3 ? $pendingChange.Substring(3) : $pendingChange
-
-            if ($path -in $ignoredPaths)
-            {
-                continue
-            }
-
-            $relevantChanges += $pendingChange
-        }
+        $relevantChanges = $pendingChanges |
+            Where-Object { ($PSItem.Length -gt 3 ? $PSItem.Substring(3) : $PSItem) -notin $ignoredPaths }
 
         if ($relevantChanges.Count -gt 0)
         {
