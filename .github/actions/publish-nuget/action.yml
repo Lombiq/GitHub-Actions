@@ -154,7 +154,7 @@ runs:
 
     - name: Enable Node corepack
       if: inputs.enable-corepack == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-1263
+      uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
     - name: Generate nuspec file if needed
       if: hashFiles('ConvertTo-Nuspec.ps1')
@@ -162,7 +162,7 @@ runs:
       run: ./ConvertTo-Nuspec.ps1 '${{ steps.setup.outputs.publish-version }}'
 
     - name: Build
-      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-1263
+      uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
       # Notes on the configuration:
       # * -p:NuGetBuild=true is our property to load Lombiq dependencies from NuGet by switching project references
       #   to package references.
@@ -269,7 +269,7 @@ runs:
     - name: Check for ignore-breaking-changes Label
       id: check-ignore-breaking
       if: ${{ (failure() || success()) && inputs.mark-breaking-changes == 'true' && github.event_name == 'pull_request' }}
-      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@issue/OSOE-1263
+      uses: Lombiq/GitHub-Actions/.github/actions/check-pull-request-labels@dev
       with:
         label1: ignore-breaking-changes
 
@@ -277,14 +277,14 @@ runs:
       if: ${{ (failure() || success()) &&
         inputs.mark-breaking-changes == 'true' &&
         github.event_name == 'pull_request' }}
-      uses: Lombiq/GitHub-Actions/.github/actions/mark-breaking-changes@issue/OSOE-1263
+      uses: Lombiq/GitHub-Actions/.github/actions/mark-breaking-changes@dev
       with:
         is-breaking: ${{ steps.check-ignore-breaking.outputs.contains-label == 'true' && 'false' || steps.pack.outputs.is-breaking == 'true' }}
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
     - name: Upload NuGet Package Artifact
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1263
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       with:
         name: NuGet-Package
         path: artifacts
@@ -292,7 +292,7 @@ runs:
 
     - name: Upload CompatibilitySuppressions File Artifact
       if: success() || failure()
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1263
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
       with:
         name: CompatibilitySuppressions
         path: CompatibilitySuppressions
@@ -300,7 +300,7 @@ runs:
         if-no-files-found: ignore
 
     - name: Create Release
-      uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-1263
+      uses: Lombiq/GitHub-Actions/.github/actions/release-action@dev
       # Also preventing creating releases when pushing tags for issue-specific pre-releases like v4.3.1-alpha.osoe-86.
       if: inputs.dry-run != 'true' && !contains(steps.setup.outputs.publish-version, '-')
       with:
