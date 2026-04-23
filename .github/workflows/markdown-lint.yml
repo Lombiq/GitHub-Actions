@@ -52,12 +52,12 @@ jobs:
           Write-Output '::warning::This workflow is deprecated. Use asset-lint instead. It lints Markdown files with markdownlint and textlint too.'
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1263
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Markdown Linting
-        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/markdown-lint@issue/OSOE-1263
         with:
           config: ${{ inputs.config }}
           fix: ${{ inputs.fix }}
@@ -66,6 +66,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1263
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
