@@ -341,11 +341,12 @@ jobs:
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@issue/LMBQ-558-marketing-module
         with:
           ignored-paths: |
             global.json
             ${{ inputs.build-directory }}/global.json
+            build.binlog
 
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
