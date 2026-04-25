@@ -1,0 +1,78 @@
+name: Verify Git Status is Clean
+description: Fails if the current Git repository has pending tracked or untracked changes.
+
+inputs:
+  ignored-paths:
+    required: false
+    default: ''
+    description: >
+      Newline-separated repository-relative paths to ignore when checking for pending Git changes.
+  artifact-retention-days:
+    required: false
+    default: '1'
+    description: >
+      Duration in days after which the artifact of the pending changed files (if any) will expire. See
+      https://github.com/actions/upload-artifact#retention-period for more details.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup
+      id: setup
+      shell: pwsh
+      run: |
+        (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+        Initialize-ArtifactNameSuffix '.'
+
+    - name: Check Git Status
+      id: verify-git-status-is-clean
+      shell: pwsh
+      run: |
+        $ignoredPaths = ConvertFrom-MultiLineStringToStringArray -Lines '${{ inputs.ignored-paths }}'
+        $pendingChanges = @(git status --porcelain)
+
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Output '::error::Failed to get Git status.'
+            exit $LASTEXITCODE
+        }
+
+        $relevantPaths = $pendingChanges |
+            ForEach-Object { $PSItem.Length -gt 3 ? $PSItem.Substring(3) : $PSItem } |
+            Where-Object { $PSItem -notin $ignoredPaths }
+        $artifactPaths = $relevantPaths |
+            Where-Object { Test-Path -LiteralPath $PSItem } |
+            Select-Object -Unique
+
+        Set-GitHubOutput 'has-failing-changes' (($relevantPaths.Count -gt 0).ToString().ToLower())
+        Set-GitHubOutput 'has-files' (($artifactPaths.Count -gt 0).ToString().ToLower())
+        Set-GitHubOutput 'artifact-path' ($artifactPaths -join [Environment]::NewLine)
+
+        if ($relevantPaths.Count -gt 0)
+        {
+            Write-Output ('::error::The repository has pending Git changes. A repository and the build pipeline in it' +
+                'should be set up in a way that building the projects in it will not cause pending changes in Git.')
+            Write-Output 'Pending changed paths:'
+            $relevantPaths | ForEach-Object { Write-Output $PSItem }
+        }
+
+    - name: Upload Files Causing Failure
+      if: steps.verify-git-status-is-clean.outputs.has-files == 'true'
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      with:
+        name: git-status-pending-changes-${{ steps.setup.outputs.artifact-name-suffix }}
+        path: ${{ steps.verify-git-status-is-clean.outputs.artifact-path }}
+        if-no-files-found: ignore
+        retention-days: ${{ inputs.artifact-retention-days }}
+
+    - name: Fail if Repository has Pending Git Changes
+      if: steps.verify-git-status-is-clean.outputs.has-failing-changes == 'true'
+      shell: pwsh
+      run: |
+        Write-Output '::error::Pending Git changes were found after the build step.'
+        if ('${{ steps.verify-git-status-is-clean.outputs.has-files }}' -eq 'true')
+        {
+            Write-Output 'The changed files are available to download as artifacts.'
+        }
+
+        exit 1
