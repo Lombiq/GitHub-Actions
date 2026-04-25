@@ -145,6 +145,12 @@ on:
         description: >
           Duration in days after which the artifact of the build's binary log (if any) will expire. See
           https://github.com/actions/upload-artifact#retention-period for more details.
+      build-fail-on-pending-changes:
+        type: string
+        default: 'true'
+        description: >
+          If set to "true", the workflow fails when the checked out repository has pending Git changes immediately
+          after the build step.
       dotnet-test-process-timeout:
         required: false
         type: number
@@ -332,6 +338,14 @@ jobs:
           create-binary-log: ${{ inputs.build-create-binary-log }}
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
+
+      - name: Verify Git Status is Clean
+        if: inputs.build-fail-on-pending-changes == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@dev
+        with:
+          ignored-paths: |
+            global.json
+            ${{ inputs.build-directory }}/global.json
 
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
