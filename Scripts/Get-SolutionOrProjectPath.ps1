@@ -3,7 +3,7 @@ param (
     [string] $PathPattern
 )
 
-$matchedItems = Get-ChildItem $PathPattern
+$matchedItems = Get-ChildItem -Filter $PathPattern
 $matchCount = ($matchedItems | Measure-Object).Count
 
 if ($matchCount -ne 1)

@@ -102,10 +102,10 @@ on:
         description: Configuration parameter for dotnet build (e.g. Debug, Release).
       build-solution-path:
         type: string
-        default: '*.sln'
+        default: '*.sln?'
         description: >
-          The path of the solution or project file to be built. If there's exactly one .sln file in the build directory
-          then this can be omitted. For further information, see the documentation of the build-dotnet action.
+          The path of the solution or project file to be built. If there's exactly one .sln or .slnx file in the build
+          directory then this can be omitted. For further information, see the documentation of the build-dotnet action.
       build-verbosity:
         type: string
         default: quiet
@@ -367,7 +367,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-925
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}

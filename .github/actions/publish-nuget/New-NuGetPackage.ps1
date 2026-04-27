@@ -84,7 +84,7 @@ if ($doBaselinePackageValidation -and -not (Test-Path -Path $CompatibilitySuppre
 # Whether the pull request contains breaking changes is a global, not project-specific property.
 $isBreaking = $false
 
-$projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
+$projects = ((Test-Path *.slnx) -or (Test-Path *.sln)) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
 {

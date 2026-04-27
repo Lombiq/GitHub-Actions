@@ -44,12 +44,12 @@ $connectionString = @(
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionString
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
-if ($SolutionOrProject -like '*.sln')
+if ($SolutionOrProject -imatch '\.slnx?$')
 {
     $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($SolutionOrProject)
     $solutionDirectory = [System.IO.Path]::GetDirectoryName($SolutionOrProject)
 
-    Write-Output "Running tests for the $SolutionOrProject solution."
+    Write-Output "Running tests for the `"$SolutionOrProject`" solution."
 
     Write-Output 'Gathering test projects.'
 
@@ -88,12 +88,12 @@ if ($SolutionOrProject -like '*.sln')
 }
 elseif ($SolutionOrProject -like '*.csproj')
 {
-    Write-Output "Running tests for the $SolutionOrProject project."
+    Write-Output "Running tests for the `"$SolutionOrProject`' project."
     $tests = @($SolutionOrProject)
 }
 else
 {
-    Write-Error "The $SolutionOrProject is not a solution or project file."
+    Write-Error "The `"$SolutionOrProject`" is not a solution or project file."
     exit 1
 }
 
