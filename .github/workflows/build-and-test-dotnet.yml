@@ -283,13 +283,13 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1199
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-925
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-1199
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-925
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
@@ -302,7 +302,7 @@ jobs:
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-1199
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-925
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration }}

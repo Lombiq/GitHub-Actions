@@ -206,7 +206,7 @@ jobs:
 
       # This is necessary for building Gulp Extensions and test-dotnet.
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1199
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-925
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 

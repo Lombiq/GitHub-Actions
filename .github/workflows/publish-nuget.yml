@@ -136,7 +136,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1199
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-925
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
@@ -147,7 +147,7 @@ jobs:
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Publish to NuGet
-        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/OSOE-1199
+        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/OSOE-925
         with:
           source: ${{ inputs.source }}
           verbosity: ${{ inputs.verbosity }}
