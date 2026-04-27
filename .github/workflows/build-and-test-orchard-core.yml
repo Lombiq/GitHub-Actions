@@ -346,6 +346,7 @@ jobs:
           ignored-paths: |
             global.json
             ${{ inputs.build-directory }}/global.json
+            build.binlog
 
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())

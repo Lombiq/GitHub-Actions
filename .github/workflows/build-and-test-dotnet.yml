@@ -322,6 +322,7 @@ jobs:
         with:
           ignored-paths: |
             global.json
+            build.binlog
 
       - name: Tests
         if: inputs.test-disable == 'false'
