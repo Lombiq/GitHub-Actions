@@ -32,6 +32,12 @@ on:
         type: string
         default: https://api.nuget.org/v3/index.json
         description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument.
+      checkout-ref:
+        type: string
+        default: ''
+        description: >
+          The branch, tag, or SHA to check out before publishing. This is useful for `workflow_dispatch`-triggered
+          one-off publishes where the package should be built from a specific tag.
       verbosity:
         type: string
         default: minimal
@@ -87,7 +93,15 @@ on:
           version is derived from the latest non-prerelease version tag and the current run number to create a preview
           version (e.g. "1.0.1-preview-1" if the current version is 1.0.0). With "USE_NEXT_PATCH_VERSION" the version is
           derived from the latest non-prerelease version tag to create the next patch version (e.g. "1.0.1" if the current
-          version is 1.0.0).
+          version is 1.0.0). If a literal version is provided, an optional leading `v` is ignored.
+      require-major-version-for-compatibility-suppressions:
+        type: string
+        default: 'true'
+        description: >
+          If set to "true", publishing fails when any CompatibilitySuppressions.xml file exists in the repository and the
+          publish version's major version is not greater than the latest stable tag's major version. Versions in the
+          format `vM.N.O-[alpha|beta|preview|rc]` with an optional `".X.<issue-code>`" suffix are exempt. Set to
+          "false" for intentional compatibility suppressions that don't require a SemVer major release.
       nuget-artifact-retention-days:
         type: string
         default: '14'
@@ -133,6 +147,7 @@ jobs:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
+          ref: ${{ inputs.checkout-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
@@ -147,7 +162,7 @@ jobs:
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Publish to NuGet
-        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/OSOE-1149
         with:
           source: ${{ inputs.source }}
           verbosity: ${{ inputs.verbosity }}
@@ -155,6 +170,7 @@ jobs:
           dotnet-pack-ignore-warning: ${{ inputs.dotnet-pack-ignore-warning }}
           dotnet-pack-include-symbols: ${{ inputs.dotnet-pack-include-symbols }}
           publish-version: ${{ inputs.publish-version }}
+          require-major-version-for-compatibility-suppressions: ${{ inputs.require-major-version-for-compatibility-suppressions }}
           nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
           add-source-link-package: ${{ inputs.add-source-link-package }}
           dry-run: ${{ inputs.dry-run }}
