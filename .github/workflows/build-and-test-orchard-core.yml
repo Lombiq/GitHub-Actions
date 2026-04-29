@@ -295,7 +295,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-925
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.repository-ref }}
