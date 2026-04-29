@@ -280,10 +280,9 @@ jobs:
     steps:
       # This step must be the very first step, to ensure that the scrips are loaded from the correct branch.
       - name: Setup Scripts
-        shell: pwsh
-        run: |
-          '${{ github.action_path }}' >> $Env:GITHUB_PATH
-          (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-scripts@issue/OSOE-925
+        with:
+          github_token: ${{ secrets.CHECKOUT_TOKEN }}
       # This has to be the second step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
