@@ -144,8 +144,6 @@ runs:
 
         $isPreReleaseVersion = $version -match '^\d+\.\d+\.\d+-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?$'
 
-        Write-OutPut "IsPreReleaseVersion: $isPreReleaseVersion"
-
         if ('${{ inputs.require-major-version-for-compatibility-suppressions }}' -eq 'true' -and -not $isPreReleaseVersion)
         {
             $compatibilitySuppressionsFiles = @(Get-ChildItem -Path . -Recurse -File -Filter CompatibilitySuppressions.xml -ErrorAction SilentlyContinue)
@@ -184,9 +182,6 @@ runs:
 
         Set-GitHubOutput "baseline-version" $baselineVersion
         Set-GitHubOutput "publish-version" $version
-
-        # Only needed for debugging
-        exit 1
 
     # This also implicitly restores NuGet dependencies.
     - name: Add Source Link package
