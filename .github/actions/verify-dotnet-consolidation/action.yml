@@ -56,7 +56,7 @@ runs:
       env:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
       run: |
-        Get-Command Get-SolutionOrProjectPath
+        Write-Output ('Get-SolutionOrProjectPath location: ' + (Get-Command Get-SolutionOrProjectPath).Source)
         $solutionPath = Get-SolutionOrProjectPath ${{ inputs.solution-path }}
         $excludedProjects = (Get-Item ${{ inputs.exclude-project-path }} -ErrorAction Ignore).FullName
 
