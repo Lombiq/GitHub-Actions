@@ -278,12 +278,7 @@ jobs:
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
     steps:
-      # This step must be the very first step, to ensure that the scrips are loaded from the correct branch.
-      - name: Setup Scripts
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-scripts@issue/OSOE-925
-        with:
-          github_token: ${{ secrets.CHECKOUT_TOKEN }}
-      # This has to be the second step so it can collect data about the whole workflow run.
+      # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
@@ -300,7 +295,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-925
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.repository-ref }}
