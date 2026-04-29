@@ -1,5 +1,5 @@
 param (
-    [Parameter(Mandatory = $true, Position = 0)]
+    [Parameter(Position = 0)]
     [string] $PathPattern
 )
 
