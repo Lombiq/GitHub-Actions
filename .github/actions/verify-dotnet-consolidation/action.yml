@@ -56,7 +56,7 @@ runs:
       env:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
       run: |
-        $solutionPath = Get-SolutionOrProjectPath ${{ inputs.solution-path }}
+        $solutionPath = Get-SolutionOrProjectPath '${{ inputs.solution-path }}'
         $excludedProjects = (Get-Item ${{ inputs.exclude-project-path }} -ErrorAction Ignore).FullName
 
         Test-DotnetPackageConsolidation -SolutionPath $solutionPath -ExcludedProjects $excludedProjects
