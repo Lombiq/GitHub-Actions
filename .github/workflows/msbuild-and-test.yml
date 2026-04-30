@@ -175,43 +175,43 @@ jobs:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/OSOE-1265
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set Environment Variables
-        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@issue/OSOE-1265
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
       - name: Free up Space
         if: inputs.free-up-space == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@issue/OSOE-1265
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1265
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1265
         with:
           node-version: ${{ inputs.node-version }}
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Enable Node corepack
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-1265
 
       # This is necessary for building Gulp Extensions and test-dotnet.
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1265
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/OSOE-1265
         with:
           directory: ${{ inputs.build-directory }}
           solution-or-project-path: ${{ inputs.solution-or-project-path }}
@@ -223,11 +223,11 @@ jobs:
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@issue/OSOE-1265
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-1265
         with:
           build-directory: ${{ inputs.build-directory }}
           dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
@@ -237,6 +237,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1265
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
