@@ -9,4 +9,13 @@ param (
     $Value
 )
 
-"$Key=$Value" >> $Env:GITHUB_OUTPUT
+if ($Value -match "`n")
+{
+    # Multi-line values require the heredoc syntax in GITHUB_OUTPUT.
+    $delimiter = [System.Guid]::NewGuid().ToString()
+    "$Key<<$delimiter`n$Value`n$delimiter" >> $Env:GITHUB_OUTPUT
+}
+else
+{
+    "$Key=$Value" >> $Env:GITHUB_OUTPUT
+}
