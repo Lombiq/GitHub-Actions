@@ -33,7 +33,7 @@ inputs:
       version is derived from the latest non-prerelease version tag and the current run number to create a preview
       version (e.g. "1.0.1-preview-1" if the current version is 1.0.0). With "USE_NEXT_PATCH_VERSION" the version is
       derived from the latest non-prerelease version tag to create the next patch version (e.g. "1.0.1" if the current
-      version is 1.0.0). If a literal version is provided, an optional leading `v` is ignored.
+      version is 1.0.0).
   require-major-version-for-compatibility-suppressions:
     required: false
     default: 'true'
@@ -91,11 +91,6 @@ runs:
         $version = @'
         ${{ inputs.publish-version }}
         '@.Trim()
-
-        if ($version -notin @('USE_GITHUB_REF_NAME', 'USE_GITHUB_RUN_NUMBER', 'USE_NEXT_PATCH_VERSION'))
-        {
-            $version = $version.TrimStart('v')
-        }
 
         if ($version -eq 'USE_GITHUB_REF_NAME')
         {
@@ -354,5 +349,4 @@ runs:
       with:
         allowUpdates: true
         generateReleaseNotes: true
-        tag: v${{ steps.setup.outputs.publish-version }}
         artifacts: artifacts/*.nupkg, artifacts/*.snupkg

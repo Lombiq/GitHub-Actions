@@ -32,12 +32,6 @@ on:
         type: string
         default: https://api.nuget.org/v3/index.json
         description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument.
-      checkout-ref:
-        type: string
-        default: ''
-        description: >
-          The branch, tag, or SHA to check out before publishing. This is useful for `workflow_dispatch`-triggered
-          one-off publishes where the package should be built from a specific tag.
       verbosity:
         type: string
         default: minimal
@@ -93,7 +87,7 @@ on:
           version is derived from the latest non-prerelease version tag and the current run number to create a preview
           version (e.g. "1.0.1-preview-1" if the current version is 1.0.0). With "USE_NEXT_PATCH_VERSION" the version is
           derived from the latest non-prerelease version tag to create the next patch version (e.g. "1.0.1" if the current
-          version is 1.0.0). If a literal version is provided, an optional leading `v` is ignored.
+          version is 1.0.0).
       require-major-version-for-compatibility-suppressions:
         type: string
         default: 'true'
@@ -147,7 +141,6 @@ jobs:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
         with:
-          ref: ${{ inputs.checkout-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
