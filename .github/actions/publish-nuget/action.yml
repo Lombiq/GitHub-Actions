@@ -141,7 +141,8 @@ runs:
 
         if ('${{ inputs.require-major-version-for-compatibility-suppressions }}' -eq 'true' -and -not $isPreReleaseVersion)
         {
-            $compatibilitySuppressionsFiles = @(Get-ChildItem -Path . -Recurse -File -Filter CompatibilitySuppressions.xml -ErrorAction SilentlyContinue)
+            $compatibilitySuppressionsFiles = @(
+                Get-ChildItem -Path . -Recurse -File -Filter CompatibilitySuppressions.xml -ErrorAction SilentlyContinue)
 
             if ($compatibilitySuppressionsFiles.Count -gt 0)
             {
