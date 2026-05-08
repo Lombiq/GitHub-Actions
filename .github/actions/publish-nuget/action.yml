@@ -152,17 +152,7 @@ runs:
                 Write-Output 'CompatibilitySuppressions.xml file(s) found:'
                 $compatibilitySuppressionsFiles | ForEach-Object { Write-Output "- $($PSItem.FullName)" }
 
-                $versionMatch = [regex]::Match($version, '^(?<major>\d+)\.\d+\.\d+($|-)')
-                if (-not $versionMatch.Success)
-                {
-                    Write-Output ("::error::CompatibilitySuppressions.xml files indicate breaking changes, but " +
-                        "`"$version`" doesn't use an x.y.z version format. Following Semantic Versioning, publish a " +
-                        'new major version.')
-
-                    exit 1
-                }
-
-                $publishMajorVersion = [int]$versionMatch.Groups['major'].Value
+                $publishMajorVersion = ([Version]$version).Major
 
                 if ($publishMajorVersion -le $current.Major)
                 {
