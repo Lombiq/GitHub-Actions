@@ -92,10 +92,12 @@ runs:
         ${{ inputs.publish-version }}
         '@.Trim()
 
+        $versionRegex = '^\d+\.\d+\.\d+(-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?)?$'
+
         if ($version -eq 'USE_GITHUB_REF_NAME')
         {
             $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
-            if (!($version -match '^\d+\.\d+\.\d+(-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?)?$'))
+            if (!($version -match $versionRegex))
             {
                 Write-Output ("::error::`"v$version`" is invalid. The correct format is " +
                   "`"vM.N.O`" or `"vM.N.O-[alpha|beta|preview|rc]`" with an optional `".X.<issue-code>`" suffix.")
@@ -137,7 +139,8 @@ runs:
             $baselineVersion = ''
         }
 
-        $isPreReleaseVersion = $version -match '^\d+\.\d+\.\d+-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?$'
+        $version -match $versionRegex
+        $isPreReleaseVersion = $Matches.Values.Count -gt 1
 
         if ('${{ inputs.require-major-version-for-compatibility-suppressions }}' -eq 'true' -and -not $isPreReleaseVersion)
         {
