@@ -88,6 +88,14 @@ on:
           version (e.g. "1.0.1-preview-1" if the current version is 1.0.0). With "USE_NEXT_PATCH_VERSION" the version is
           derived from the latest non-prerelease version tag to create the next patch version (e.g. "1.0.1" if the current
           version is 1.0.0).
+      require-major-version-for-compatibility-suppressions:
+        type: string
+        default: 'true'
+        description: >
+          If set to "true", publishing fails when any CompatibilitySuppressions.xml file exists in the repository and the
+          publish version's major version is not greater than the latest stable tag's major version. Versions in the
+          format `vM.N.O-[alpha|beta|preview|rc]` with an optional `".X.<issue-code>`" suffix are exempt. Set to
+          "false" for intentional compatibility suppressions that don't require a SemVer major release.
       nuget-artifact-retention-days:
         type: string
         default: '14'
@@ -155,6 +163,7 @@ jobs:
           dotnet-pack-ignore-warning: ${{ inputs.dotnet-pack-ignore-warning }}
           dotnet-pack-include-symbols: ${{ inputs.dotnet-pack-include-symbols }}
           publish-version: ${{ inputs.publish-version }}
+          require-major-version-for-compatibility-suppressions: ${{ inputs.require-major-version-for-compatibility-suppressions }}
           nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
           add-source-link-package: ${{ inputs.add-source-link-package }}
           dry-run: ${{ inputs.dry-run }}

@@ -79,6 +79,15 @@ on:
         description: |
           When set to 'true', failed package validation against the baseline will mark the pull request with a title
           suffix, a breaking-changes label, and a guidance comment.
+      require-major-version-for-compatibility-suppressions:
+        type: string
+        default: 'false'
+        description: >
+          If set to "true", publishing validation fails when any CompatibilitySuppressions.xml file exists in the
+          repository and the validation version's major version is not greater than the latest stable tag's major version.
+          Versions in the format `vM.N.O-[alpha|beta|preview|rc]` with an optional `".X.<issue-code>`" suffix are
+          exempt. Set to "false" for intentional compatibility suppressions that don't require a SemVer major release.
+          Default is set to 'false' otherwise the validation will fail, because the version is defined automatically.
 
 jobs:
   validate-nuget-publish:
@@ -98,6 +107,7 @@ jobs:
       dotnet-pack-ignore-warning: ${{ inputs.dotnet-pack-ignore-warning }}%3BNU5104
       dotnet-pack-include-symbols: ${{ inputs.dotnet-pack-include-symbols }}
       publish-version: USE_NEXT_PATCH_VERSION
+      require-major-version-for-compatibility-suppressions: ${{ inputs.require-major-version-for-compatibility-suppressions }}
       nuget-artifact-retention-days: ${{ inputs.nuget-artifact-retention-days }}
       add-source-link-package: ${{ inputs.add-source-link-package }}
       dry-run: true

@@ -34,6 +34,14 @@ inputs:
       version (e.g. "1.0.1-preview-1" if the current version is 1.0.0). With "USE_NEXT_PATCH_VERSION" the version is
       derived from the latest non-prerelease version tag to create the next patch version (e.g. "1.0.1" if the current
       version is 1.0.0).
+  require-major-version-for-compatibility-suppressions:
+    required: false
+    default: 'true'
+    description: >
+      If set to "true", publishing fails when any CompatibilitySuppressions.xml file exists in the repository and the
+      publish version's major version is not greater than the latest stable tag's major version. Versions in the format
+      `vM.N.O-[alpha|beta|preview|rc]` with an optional `".X.<issue-code>`" suffix are exempt. Set to "false" for
+      intentional compatibility suppressions that don't require a SemVer major release.
   nuget-artifact-retention-days:
     required: false
     default: '14'
@@ -84,10 +92,12 @@ runs:
         ${{ inputs.publish-version }}
         '@.Trim()
 
+        $versionRegex = '^\d+\.\d+\.\d+(-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?)?$'
+
         if ($version -eq 'USE_GITHUB_REF_NAME')
         {
             $version = $Env:GITHUB_REF_NAME.Trim().TrimStart("v")
-            if (!($version -match '^\d+\.\d+\.\d+(-(alpha|beta|preview|rc)(\.\d+(\.[a-zA-Z]{2,}(-\d+)?)?)?)?$'))
+            if (!($version -match $versionRegex))
             {
                 Write-Output ("::error::`"v$version`" is invalid. The correct format is " +
                   "`"vM.N.O`" or `"vM.N.O-[alpha|beta|preview|rc]`" with an optional `".X.<issue-code>`" suffix.")
@@ -127,6 +137,33 @@ runs:
         {
             # In this case validation to baseline version is not possible due to being this the first release.
             $baselineVersion = ''
+        }
+
+        $version -match $versionRegex
+        $isPreReleaseVersion = $Matches.Values.Count -gt 1
+
+        if ('${{ inputs.require-major-version-for-compatibility-suppressions }}' -eq 'true' -and -not $isPreReleaseVersion)
+        {
+            $compatibilitySuppressionsFiles = @(
+                Get-ChildItem -Path . -Recurse -File -Filter CompatibilitySuppressions.xml -ErrorAction SilentlyContinue)
+
+            if ($compatibilitySuppressionsFiles.Count -gt 0)
+            {
+                Write-Output 'CompatibilitySuppressions.xml file(s) found:'
+                $compatibilitySuppressionsFiles | ForEach-Object { Write-Output "- $($PSItem.FullName)" }
+
+                $publishMajorVersion = ([Version]$version).Major
+
+                if ($publishMajorVersion -le $current.Major)
+                {
+                    Write-Output ("::error::CompatibilitySuppressions.xml files indicate breaking changes. Following " +
+                        "Semantic Versioning, publish a new major version. The current version is $current, so the " +
+                        "publish version's major version must be greater than $($current.Major), but it is " +
+                        "$publishMajorVersion in `"$version`".")
+
+                    exit 1
+                }
+            }
         }
 
         Write-Output "Baseline version: $baselineVersion"
