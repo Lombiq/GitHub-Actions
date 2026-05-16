@@ -40,6 +40,8 @@ When `source` is not provided, it assumes a default value of pushing to the [Lom
 
 Valid values for `verbosity` are those defined by [MSBuild](https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022#:~:text=you%20can%20specify%20the%20following%20verbosity%20levels). The default value is `minimal`.
 
+If any `CompatibilitySuppressions.xml` file exists in the repository, publishing is allowed only when the publish version's major version is greater than the latest stable tag's major version. This follows Semantic Versioning, because compatibility suppressions indicate breaking changes. Versions in the format `vM.N.O-[alpha|beta|preview|rc]` with an optional `".X.<issue-code>`" suffix are exempt from this check. To intentionally bypass it for exceptional cases, set `require-major-version-for-compatibility-suppressions: 'false'`.
+
  Things to keep in mind:
 
 - If you have multiple projects in the repository or if the project you want to build is in a subfolder, then add a solution to the root of the repository that references all projects you want to build.

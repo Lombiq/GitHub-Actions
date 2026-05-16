@@ -15,7 +15,7 @@ Reusable workflows and actions for GitHub Actions shared between Lombiq projects
 
 These can be invoked from any other repository's build.
 
-[Check out a demo](https://www.youtube.com/watch?v=bhMnX0TsybM) on our YouTube channel, and the Orchard Harvest 2023 conference talk about automated QA in Orchard Core [here](https://youtu.be/CHdhwD2NHBU).
+[Check out the Orchard Harvest 2025 conference talk about the project](https://www.youtube.com/watch?v=kB6qjEDrpdk&list=PLpCsCyd254FodB6zUxTUj7g3hGIeEotvB&index=3) on the Orchard Core YouTube channel, and the [Orchard Harvest 2023 talk about automated QA in Orchard Core](https://youtu.be/CHdhwD2NHBU) that utilizes GitHub Actions as well.
 
 We at [Lombiq](https://lombiq.com/) also used these workflows for the following projects:
 
