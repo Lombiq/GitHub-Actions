@@ -13,6 +13,7 @@ param(
 )
 
 $issueNumberInt = 0
+
 if (-not [int]::TryParse($IssueNumber, [ref]$issueNumberInt))
 {
     throw "The issue number '$IssueNumber' is not a valid integer."
@@ -21,14 +22,8 @@ if (-not [int]::TryParse($IssueNumber, [ref]$issueNumberInt))
 $title = "$IssueTitle ($JiraIssueKey)"
 
 $jiraIssueLink = "[Jira issue]($JiraIssueUrl)"
-$body = if ([string]::IsNullOrWhiteSpace($IssueBody))
-{
-    $jiraIssueLink
-}
-else
-{
-    "$IssueBody`n`n$jiraIssueLink"
-}
+
+$body = [string]::IsNullOrWhiteSpace($IssueBody) ? $jiraIssueLink : "$IssueBody`n`n$jiraIssueLink"
 
 $requestBody = @{
     title = $title
