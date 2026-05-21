@@ -122,4 +122,4 @@ runs:
             JiraIssueUrl = $Env:JIRA_ISSUE_URL
             Repository = $Env:GITHUB_REPOSITORY
         }
-        Update-GitHubIssue.ps1 @parameters
+        & '${{ github.action_path }}/Update-GitHubIssue.ps1' @parameters

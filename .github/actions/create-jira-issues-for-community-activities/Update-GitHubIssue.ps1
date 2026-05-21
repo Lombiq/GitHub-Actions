@@ -1,9 +1,14 @@
 param(
+    [Parameter(Mandatory = $true)]
     [string] $IssueNumber,
+    [Parameter(Mandatory = $true)]
     [string] $IssueTitle,
     [string] $IssueBody,
+    [Parameter(Mandatory = $true)]
     [string] $JiraIssueKey,
+    [Parameter(Mandatory = $true)]
     [string] $JiraIssueUrl,
+    [Parameter(Mandatory = $true)]
     [string] $Repository
 )
 
