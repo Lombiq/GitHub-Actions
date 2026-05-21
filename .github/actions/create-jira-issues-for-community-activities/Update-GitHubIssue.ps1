@@ -30,18 +30,8 @@ $requestBody = @{
     body = $body
 } | ConvertTo-Json -Compress
 
-$requestBodyFilePath = New-TemporaryFile
-try
-{
-    $requestBody | Out-File -FilePath $requestBodyFilePath -Encoding utf8NoBOM
-
-    gh api `
-        --method PATCH `
-        --header 'Accept: application/vnd.github+json' `
-        "/repos/$Repository/issues/$issueNumberInt" `
-        --input "$requestBodyFilePath"
-}
-finally
-{
-    Remove-Item $requestBodyFilePath -Force -ErrorAction SilentlyContinue
-}
+$requestBody | gh api `
+    --method PATCH `
+    --header 'Accept: application/vnd.github+json' `
+    "/repos/$Repository/issues/$issueNumberInt" `
+    --input -
