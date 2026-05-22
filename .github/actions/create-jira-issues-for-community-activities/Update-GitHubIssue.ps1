@@ -30,8 +30,15 @@ $requestBody = @{
     body = $body
 } | ConvertTo-Json -Compress
 
-$requestBody | gh api `
-    --method PATCH `
-    --header 'Accept: application/vnd.github+json' `
-    "/repos/$Repository/issues/$issueNumberInt" `
-    --input -
+$ghApiParameters = @(
+    'api'
+    '--method'
+    'PATCH'
+    '--header'
+    'Accept: application/vnd.github+json'
+    "/repos/$Repository/issues/$issueNumberInt"
+    '--input'
+    '-'
+)
+
+$requestBody | & gh @ghApiParameters
