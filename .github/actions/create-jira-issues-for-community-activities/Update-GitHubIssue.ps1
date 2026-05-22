@@ -41,4 +41,4 @@ $ghApiParameters = @(
     '-'
 )
 
-$requestBody | & gh @ghApiParameters
+$requestBody | gh @ghApiParameters
