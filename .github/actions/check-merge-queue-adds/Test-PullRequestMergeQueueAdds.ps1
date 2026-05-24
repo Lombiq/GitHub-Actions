@@ -14,8 +14,9 @@ Write-Output "name=$repositoryName"
 $query = "query(`$owner: String!, `$name: String!) {  repository(owner: `$owner name: `$name) {    pullRequest(number:$PullRequestNumber) {      timelineItems(itemTypes:ADDED_TO_MERGE_QUEUE_EVENT) {        totalCount      }    } } }"
 Write-Output "query=$query"
 
-$content = gh api graphql -F owner=$repositoryOwner -F name=$repositoryName -f query=$query | ConvertFrom-Json -AsHashtable
-Write-Output "content=$content"
+$contentJson = gh api graphql -F owner=$repositoryOwner -F name=$repositoryName -f query=$query
+$content = $contentJson | ConvertFrom-Json -AsHashtable
+Write-Output "content=$contentJson"
 
 $addedToMergeQueue = $content.data.repository.pullRequest.timelineItems.totalCount -gt 0
 Write-Output "addedToMergeQueue=$addedToMergeQueue"
