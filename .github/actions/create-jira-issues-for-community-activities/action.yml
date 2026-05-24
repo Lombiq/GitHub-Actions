@@ -105,14 +105,21 @@ runs:
       if: steps.issue-related-pr.outputs.is-issue-pr == 'False' &&
           github.event.issue &&
           steps.no-jira-label.outputs.no-jira-community-activity-issue == 'False'
-      uses: actions-cool/issues-helper@200c78641dbf33838311e5a1e0c31bbdb92d7cf0 # v3.8.0
-      with:
-        actions: update-issue
-        token: ${{ env.GITHUB_TOKEN }}
-        issue-number: ${{ github.event.issue.number }}
-        title: ${{ github.event.issue.title }} (${{ steps.create-issue.outputs.issue-key }})
-        body: |
-          ${{ github.event.issue.body }}
-
-          [Jira issue](${{ steps.create-issue.outputs.issue-url }})
-        update-mode: replace
+      env:
+        GH_TOKEN: ${{ env.GITHUB_TOKEN }}
+        ISSUE_NUMBER: ${{ github.event.issue.number }}
+        ISSUE_TITLE: ${{ github.event.issue.title }}
+        ISSUE_BODY: ${{ github.event.issue.body }}
+        JIRA_ISSUE_KEY: ${{ steps.create-issue.outputs.issue-key }}
+        JIRA_ISSUE_URL: ${{ steps.create-issue.outputs.issue-url }}
+      shell: pwsh
+      run: |
+        $parameters = @{
+            IssueNumber = $Env:ISSUE_NUMBER
+            IssueTitle = $Env:ISSUE_TITLE
+            IssueBody = $Env:ISSUE_BODY
+            JiraIssueKey = $Env:JIRA_ISSUE_KEY
+            JiraIssueUrl = $Env:JIRA_ISSUE_URL
+            Repository = $Env:GITHUB_REPOSITORY
+        }
+        Update-GitHubIssue.ps1 @parameters
