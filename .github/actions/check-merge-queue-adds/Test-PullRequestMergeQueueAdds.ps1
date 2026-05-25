@@ -33,7 +33,7 @@ query($owner: String!, $name: String!, $prNumber: Int!) {
 $content = $contentJson | ConvertFrom-Json -AsHashtable
 Write-Output "content=$contentJson"
 
-$reviewApproved = "$($content.data.repository.pullRequest.reviewDecision)" -eq "APPROVED"
+$reviewApproved = "$($content.data.repository.pullRequest.reviewDecision)" -eq 'APPROVED'
 Write-Output "reviewApproved=$reviewApproved"
 
 $autoMergeEnabled = -not [string]::IsNullOrWhiteSpace("$($content.data.repository.pullRequest.autoMergeRequest.enabledBy.login)")
