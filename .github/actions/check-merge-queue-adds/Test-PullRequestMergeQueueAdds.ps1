@@ -11,13 +11,35 @@ $repositoryName = $repoTokens[1]
 Write-Output "owner=$repositoryOwner"
 Write-Output "name=$repositoryName"
 
-$query = "query(`$owner: String!, `$name: String!) {  repository(owner: `$owner name: `$name) {    pullRequest(number:$PullRequestNumber) {      timelineItems(itemTypes:ADDED_TO_MERGE_QUEUE_EVENT) {        totalCount      }    } } }"
-Write-Output "query=$query"
+$contentJson = gh api graphql -F owner=$repositoryOwner -F name=$repositoryName -F prNumber=$PullRequestNumber -f query='
+query($owner: String!, $name: String!, $prNumber: Int!) {
+  repository(owner: $owner, name: $name) {
+    pullRequest(number: $prNumber) {
+      number
+      title
+      author {
+        login
+      }
+      reviewDecision
+      autoMergeRequest {
+        enabledBy {
+          login
+        }
+      }
+    }
+  }
+}'
 
-$content = gh api graphql -F owner=$repositoryOwner -F name=$repositoryName -f query=$query | ConvertFrom-Json -AsHashtable
-Write-Output "content=$content"
+$content = $contentJson | ConvertFrom-Json -AsHashtable
+Write-Output "content=$contentJson"
 
-$addedToMergeQueue = $content.data.repository.pullRequest.timelineItems.totalCount -gt 0
+$reviewApproved = "$($content.data.repository.pullRequest.reviewDecision)" -eq 'APPROVED'
+Write-Output "reviewApproved=$reviewApproved"
+
+$autoMergeEnabled = -not [string]::IsNullOrWhiteSpace("$($content.data.repository.pullRequest.autoMergeRequest.enabledBy.login)")
+Write-Output "autoMergeEnabled=$autoMergeEnabled"
+
+$addedToMergeQueue = $reviewApproved -and $autoMergeEnabled
 Write-Output "addedToMergeQueue=$addedToMergeQueue"
 
 Set-GitHubOutput 'added-to-merge-queue' $addedToMergeQueue
