@@ -79,7 +79,7 @@ on:
           Repository with default configuration to use when the workspace repository doesn't have its own configuration.
           The default from Check Spelling is ''.
         type: string
-        default: Lombiq/GitHub-Actions@dev
+        default: Lombiq/GitHub-Actions@issue/OSOE-925
       timeout-minutes:
         type: number
         default: 3
@@ -98,7 +98,7 @@ jobs:
         run: Write-Output '::warning::This workflow is deprecated. Use the codespell workflow instead.'
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-925
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
@@ -115,7 +115,7 @@ jobs:
 
       - name: Check Spelling
         id: check-spelling-action
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-925
         with:
           merge-file-excludes: ${{ inputs.merge-file-excludes }}
           merge-forbidden-patterns: ${{ inputs.merge-forbidden-patterns }}
@@ -129,7 +129,7 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-925
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -142,7 +142,7 @@ jobs:
     if: always() && needs.check-spelling.outputs.followup && github.event_name == 'pull_request'
     steps:
       - name: Comment (PR)
-        uses: Lombiq/GitHub-Actions/.github/actions/spelling@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/spelling@issue/OSOE-925
         with:
           post-comment: 1
           task: ${{ needs.check-spelling.outputs.followup }}
