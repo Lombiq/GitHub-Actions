@@ -71,6 +71,9 @@ if ($SolutionOrProject -imatch '\.slnx?$')
                 "-p:SolutionDir=""$solutionDirectory"""
             )
 
+            # Show the current command for easier debugging if run fails here.
+            Write-Output "Discovering tests with ``dotnet test $switches $absolutePath``."
+
             # Without Out-String, Contains() below won't work for some reason.
             $output = dotnet test @switches $absolutePath 2>&1 | Out-String -Width 9999
 
