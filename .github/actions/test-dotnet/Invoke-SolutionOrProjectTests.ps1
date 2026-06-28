@@ -88,6 +88,9 @@ if ($SolutionOrProject -imatch '\.slnx?$')
                 Write-Output "Found some tests for `"$absolutePath`"."
                 $tests += $absolutePath
             }
+            else {
+                Write-Output "No tests were found for `"$absolutePath`"."
+            }
         }
 }
 elseif ($SolutionOrProject -like '*.csproj')
