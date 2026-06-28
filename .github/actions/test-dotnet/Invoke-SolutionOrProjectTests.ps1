@@ -101,6 +101,8 @@ else
     exit 1
 }
 
+Write-Output "Found tests in these projects: $tests"
+
 Set-GitHubOutput 'test-count' $tests.Length
 Set-GitHubOutput 'dotnet-test-hang-dump' 0
 
