@@ -50,10 +50,10 @@ if ($SolutionOrProject -imatch '\.slnx?$')
     $solutionDirectory = [System.IO.Path]::GetDirectoryName($SolutionOrProject)
 
     Write-Output "Running tests for the `"$SolutionOrProject`" solution."
-
     Write-Output 'Gathering test projects.'
 
-    $tests = dotnet sln $SolutionOrProject list |
+    $tests = @()
+    dotnet sln $SolutionOrProject list |
         Select-Object -Skip 2 |
         Select-String '\.Tests\.' |
         Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
@@ -85,7 +85,8 @@ if ($SolutionOrProject -imatch '\.slnx?$')
 
             if (-not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available'))
             {
-                $absolutePath
+                Write-Output "Found some tests for `"$absolutePath`"."
+                $tests += $absolutePath
             }
         }
 }
