@@ -64,7 +64,6 @@ if ($SolutionOrProject -imatch '\.slnx?$')
             # While the test projects are run individually, passing in the solution name and solution dir via the
             # conventional MSBuild properties allows build customization.
             $switches = @(
-                '--no-build'
                 "--configuration:$Configuration"
                 '--list-tests'
                 "--verbosity:$Verbosity"
@@ -223,7 +222,6 @@ foreach ($test in $tests)
 
     $dotnetTestSwitches = @(
         '--configuration', $Configuration
-        '--no-build'
         '--nologo',
         '--logger', '''trx;LogFileName=test-results.trx'''
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
