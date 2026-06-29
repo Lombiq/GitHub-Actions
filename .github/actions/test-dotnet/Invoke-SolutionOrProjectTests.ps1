@@ -104,6 +104,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
 elseif ($SolutionOrProject -like '*.csproj')
 {
     Write-Output "Running tests for the `"$SolutionOrProject`' project."
+    dotnet build --configuration $Configuration --verbosity $Verbosity --nologo $SolutionOrProject
     $tests = @($SolutionOrProject)
 }
 else
@@ -236,6 +237,7 @@ foreach ($test in $tests)
     $dotnetTestSwitches = @(
         '--configuration', $Configuration
         '--nologo',
+        '--no-build',
         '--logger', '''trx;LogFileName=test-results.trx'''
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
         '--logger', '''console;verbosity=detailed'''
