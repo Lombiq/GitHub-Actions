@@ -242,15 +242,25 @@ foreach ($test in $tests)
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
         '--logger', '''console;verbosity=detailed'''
         '--verbosity', $Verbosity
-        $BlameHangTimeout ? ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full') : ''
-        $Filter ? '--filter', "'$Filter'" : ''
-        $EnableDiagnosticMode ? '--diag DiagnosticLogs/dotnet-test.log' : ''
-        $test
     )
 
-    Write-Output "Starting testing with ``dotnet test $dotnetTestSwitches``."
+    if ($BlameHangTimeout) {
+        $dotnetTestSwitches += ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full')
+    }
 
-    $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
+    if ($Filter) {
+        $dotnetTestSwitches += ('--filter', "'$Filter'")
+    }
+
+    if ($EnableDiagnosticMode) {
+        $dotnetTestSwitches += ('--diag', 'DiagnosticLogs/dotnet-test.log')
+    }
+
+    $arguments = "test $dotnetTestSwitches $test"
+
+    Write-Output "Starting testing with ``dotnet $arguments``."
+
+    $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments $arguments -Timeout $TestProcessTimeout
 
     if ($processResult.ExitCode -eq 0 -or (-not $processResult.HasExited -and $processResult.HasTestRunSuccessfully))
     {
