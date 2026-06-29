@@ -65,17 +65,19 @@ if ($SolutionOrProject -imatch '\.slnx?$')
             # conventional MSBuild properties allows build customization.
             $switches = @(
                 "--configuration:$Configuration"
+                '--no-build'
                 '--list-tests'
                 "--verbosity:$Verbosity"
                 "-p:SolutionName=""$solutionName"""
                 "-p:SolutionDir=""$solutionDirectory"""
+                $absolutePath
             )
 
             # Show the current command for easier debugging if run fails here.
-            Write-Output "Discovering tests with ``dotnet test $switches $absolutePath``."
+            Write-Output "Discovering tests with ``dotnet test $switches``."
 
             # Without Out-String, Contains() below won't work for some reason.
-            $output = dotnet test @switches $absolutePath 2>&1 | Out-String -Width 9999
+            $output = dotnet test @switches 2>&1 | Out-String -Width 9999
 
             if ($LASTEXITCODE -ne 0)
             {
@@ -97,7 +99,6 @@ if ($SolutionOrProject -imatch '\.slnx?$')
 elseif ($SolutionOrProject -like '*.csproj')
 {
     Write-Output "Running tests for the `"$SolutionOrProject`' project."
-    dotnet build --configuration $Configuration --verbosity $Verbosity --nologo $SolutionOrProject
     $tests = @($SolutionOrProject)
 }
 else
