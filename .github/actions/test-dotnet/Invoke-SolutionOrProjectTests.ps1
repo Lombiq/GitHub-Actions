@@ -246,7 +246,19 @@ foreach ($test in $tests)
         $test
     )
 
-    Write-Output "Starting testing with ``dotnet test $($dotnetTestSwitches -join ' ')``."
+    Write-Output "Starting testing with ``dotnet test $dotnetTestSwitches``."
+    
+    # temporary test code start
+    dotnet test @dotnetTestSwitches
+    
+    if ($LASTEXITCODE -ne 0)
+    {
+        Write-Error "::error::dotnet test failed for the project $absolutePath"
+        exit 1
+    }
+
+    continue
+    # temporary test code end
 
     $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments "test $($dotnetTestSwitches -join ' ')" -Timeout $TestProcessTimeout
 
