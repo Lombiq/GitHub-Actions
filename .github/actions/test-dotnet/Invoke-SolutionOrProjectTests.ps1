@@ -66,7 +66,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
             $switches = @(
                 "--configuration:$Configuration"
                 '--list-tests'
-                #"--verbosity:$Verbosity"
+                "--verbosity:$Verbosity"
                 "-p:SolutionName=""$solutionName"""
                 "-p:SolutionDir=""$solutionDirectory"""
             )
