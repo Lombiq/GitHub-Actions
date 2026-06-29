@@ -238,15 +238,18 @@ foreach ($test in $tests)
         '--verbosity', $Verbosity
     )
 
-    if ($BlameHangTimeout) {
+    if ($BlameHangTimeout)
+    {
         $dotnetTestSwitches += ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full')
     }
 
-    if ($Filter) {
+    if ($Filter)
+    {
         $dotnetTestSwitches += ('--filter', "'$Filter'")
     }
 
-    if ($EnableDiagnosticMode) {
+    if ($EnableDiagnosticMode)
+    {
         $dotnetTestSwitches += ('--diag', 'DiagnosticLogs/dotnet-test.log')
     }
 
