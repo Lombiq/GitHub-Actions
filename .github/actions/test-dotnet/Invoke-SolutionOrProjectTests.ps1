@@ -71,7 +71,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
                 "-p:SolutionDir=""$solutionDirectory"""
             )
 
-            if ($absolutePath.EndsWith('.Web.Tests.UI.csproj'))
+            if ($absolutePath.Name.EndsWith('.Web.Tests.UI.csproj'))
             {
                 Write-Output "Found some tests for `"$absolutePath`"."
                 $tests += $absolutePath
