@@ -119,106 +119,122 @@ function GetChildProcesses($Id)
     return Get-Process | Where-Object { $PSItem.Parent -and $PSItem.Parent.Id -eq $Id }
 }
 
-function MemDumpProcess($Output, $RootProcess, $DumpRootPath, $Process)
+function MemDumpProcess($RootProcess, $DumpRootPath, $Process)
 {
-    $Output.AppendLine("Collecting a dump of the process $($Process.Id).")
+    Write-Output "Collecting a dump of the process $($Process.Id)."
 
     $outputFile = "$DumpRootPath/dotnet-test-hang-dump-$($RootProcess.Id)-$($Process.Parent.Id)_$($Process.Id)"
     $Process | Format-Table Id, SI, Name, Path, @{ Label = 'TotalRunningTime'; Expression = { (Get-Date) - $PSItem.StartTime } } > "$outputFile.log"
     dotnet-dump collect --process-id $Process.Id --type Full --output "$outputFile.dmp" 2>&1 >> "$outputFile.log"
 }
 
-function MemDumpProcessTree($Output, $RootProcess, $DumpRootPath, $CurrentProcess)
+function MemDumpProcessTree($RootProcess, $DumpRootPath, $CurrentProcess)
 {
     foreach ($child in GetChildProcesses -Id $CurrentProcess.Id)
     {
-        MemDumpProcessTree -Output $Output -RootProcess $RootProcess -DumpRootPath $DumpRootPath -CurrentProcess $child
+        MemDumpProcessTree -RootProcess $RootProcess -DumpRootPath $DumpRootPath -CurrentProcess $child
     }
 
-    MemDumpProcess -Output $Output -RootProcess $RootProcess -DumpRootPath $DumpRootPath -Process $CurrentProcess
+    MemDumpProcess -RootProcess $RootProcess -DumpRootPath $DumpRootPath -Process $CurrentProcess
 }
 
-function KillProcessTree($Output, $Process)
+function KillProcessTree($Process)
 {
-    $Output.AppendLine("Killing the process $($Process.ProcessName)($($Process.Id)).")
+    Write-Output "Killing the process $($Process.ProcessName)($($Process.Id))."
 
     foreach ($child in GetChildProcesses -Id $Process.Id)
     {
-        KillProcessTree -Output $Output -Process $child
+        KillProcessTree -Process $child
     }
 
     Stop-Process -Force -InputObject $Process
 }
 
-function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
+function Failed($Job, $ProcessId, $Switches, $Test)
 {
-    $process = [System.Diagnostics.Process]@{
-        StartInfo = @{
-            FileName = 'pwsh'
-            Arguments = "-c `"$FileName $Arguments 2>&1`""
-            RedirectStandardOutput = $true
-            RedirectStandardError = $true
-            UseShellExecute = $false
-            WorkingDirectory = Get-Location
-        }
-    }
-
-    $eventHandlerArgs = @{
-        Process = $process
-        HasTestRunSuccessfully = $false
-    }
-
-    $stdoutEvent = Register-ObjectEvent $process -EventName OutputDataReceived -MessageData $eventHandlerArgs -Action {
-        $Event.SourceEventArgs.Data | Out-Host
-        $Event.MessageData.HasTestRunSuccessfully = $Event.MessageData.HasTestRunSuccessfully -or ($Event.SourceEventArgs.Data -like '*Test Run Successful.*')
-    }
-
-    $stderrEvent = Register-ObjectEvent $process -EventName ErrorDataReceived -MessageData $eventHandlerArgs -Action {
-        $Event.SourceEventArgs.Data | Out-Host
-    }
-
-    "process.Start()" | Out-Host
-    $process.Start() | Out-Null
-    $process.BeginOutputReadLine()
-    $process.BeginErrorReadLine()
-
-    "process.WaitForExit($Timeout)" | Out-Host
-    $process.WaitForExit($Timeout)
-    $hasExited = $process.HasExited
-
-    if ($hasExited)
+    $rootProcess = Get-Process -Id $ProcessId -ErrorAction Ignore
+    if ($ProcessId -gt 0 -and $rootProcess)
     {
-        $exitCode = $process.ExitCode
+        Write-Output "Collecting a dump of the process $($rootProcess.Id) tree."
+
+        $dumpRootPath = './DotnetTestHangDumps'
+        New-Item -ItemType 'directory' -Path $dumpRootPath -Force | Out-Null
+        
+        MemDumpProcessTree -RootProcess $rootProcess -DumpRootPath $dumpRootPath -CurrentProcess $rootProcess
+
+        Set-GitHubOutput 'dotnet-test-hang-dump' 1
+        
+        Stop-Job $Job
+        KillProcessTree -Process $rootProcess
     }
     else
     {
-        # Write-Output doesn't work here.
-        "::warning::The process $($process.Id) for $FileName $Arguments didn't exit in $Timeout milliseconds." | Out-Host
-        "Collecting a dump of the process $($process.Id) tree." | Out-Host
+        Stop-Job $Job
+    }
+}
 
-        $output = New-Object System.Text.StringBuilder
-        $dumpRootPath = './DotnetTestHangDumps'
-        New-Item -ItemType 'directory' -Path $dumpRootPath -Force | Out-Null
+function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
+{
+    $block = {
+        Write-Output "StartProcessAndWaitForExitProcessId:$PID"
 
-        $rootProcess = Get-Process -Id $process.Id
-        MemDumpProcessTree -Output $output -RootProcess $rootProcess -DumpRootPath $dumpRootPath -CurrentProcess $rootProcess
+        $switches = $args[0]
+        $test = $args[1]
+        dotnet test @switches $test 2>&1
 
-        Set-GitHubOutput 'dotnet-test-hang-dump' 1
-
-        KillProcessTree -Output $output -Process $rootProcess
-
-        $output.ToString() | Out-Host
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Output "::error::dotnet test failed for the project $test."
+        }
     }
 
-    Unregister-Event $stdoutEvent.Id
-    Unregister-Event $stderrEvent.Id
 
-    return @{
-        ProcessId = $process.Id
-        ExitCode = $exitCode
-        HasExited = $hasExited
-        HasTestRunSuccessfully = $eventHandlerArgs.HasTestRunSuccessfully
+    $processId = -1
+    $hasTestRunSuccessfully = $false
+    $stopWatch = [System.Diagnostics.Stopwatch]::StartNew()
+    $job = Start-Job -ScriptBlock $block -ArgumentList $Switches, $Test
+    
+    while ($job.HasMoreData -or $job.JobStateInfo.State -eq [System.Management.Automation.JobState]::Running)
+    {
+        Receive-Job $job | Tee-Object -Variable line
+
+        if ("$line".StartsWith('StartProcessAndWaitForExitProcessId:'))
+        {
+            $processId = [int]("$line".Split('StartProcessAndWaitForExitProcessId:')[1].Split()[0])
+        }
+
+        if ("$line".Contains('Test Run Successful.'))
+        {
+            $hasTestRunSuccessfully = $true
+        }
+
+        if ("$line".Contains('::error::'))
+        {
+            $hasTestRunSuccessfully = $false
+            break
+        }
+        
+        if ($Timeout -gt 0)
+        {
+            if ($stopWatch.Elapsed.TotalMilliseconds -gt $Timeout)
+            {
+                Write-Output "::warning::The process for ``dotnet test $Switches $Test`` didn't exit in $Timeout milliseconds."
+                $hasTestRunSuccessfully = $false
+                break
+            }
+
+            Write-Output "Remaining: $([Math]::Ceiling(($Timeout - $stopWatch.Elapsed.TotalMilliseconds) / 1000))s"
+        }
+
+        Start-Sleep -Seconds 1
     }
+
+    if (-not $hasTestRunSuccessfully)
+    {
+        Failed -Job $job -ProcessId $processId -Switches $Switches -Test $Test
+    }
+
+    return $hasTestRunSuccessfully
 }
 
 foreach ($test in $tests)
@@ -237,7 +253,7 @@ foreach ($test in $tests)
         '--logger', '''trx;LogFileName=test-results.trx'''
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
         '--logger', '''console;verbosity=detailed'''
-        '--verbosity', 'detailed'
+        '--verbosity', $Verbosity
     )
 
     if ($BlameHangTimeout)
@@ -255,28 +271,16 @@ foreach ($test in $tests)
         $dotnetTestSwitches += ('--diag', 'DiagnosticLogs/dotnet-test.log')
     }
 
-    $arguments = "test $dotnetTestSwitches $test"
+    Write-Output "Starting testing with ``dotnet test $dotnetTestSwitches $test``."
 
-    Write-Output "Starting testing with ``dotnet $arguments``."
+    $success = StartProcessAndWaitForExit -Switches $dotnetTestSwitches -Test $test -Timeout $TestProcessTimeout
 
-    $processResult = StartProcessAndWaitForExit -FileName 'dotnet' -Arguments $arguments -Timeout $TestProcessTimeout
-
-    if ($processResult.ExitCode -eq 0 -or (-not $processResult.HasExited -and $processResult.HasTestRunSuccessfully))
+    if ($success)
     {
-        if (-not $processResult.HasExited)
-        {
-            Write-Output "::warning::The process $($processResult.ProcessId) for $test was killed but the tests were successful."
-        }
-
-        Write-Output "Test successful: $test"
-
+        Write-Output "::info::Test successful: $test"
         continue
     }
 
-    Write-Output "Test failed: $test"
-    $statusMessage = "Test process exit code: $($processResult.ExitCode). Process exited: $($processResult.HasExited). "
-    $statusMessage += "Test run successful: $($processResult.HasTestRunSuccessfully)."
-    Write-Output $statusMessage
-
+    Write-Output "::error::Test failed: $test"
     exit 100
 }
