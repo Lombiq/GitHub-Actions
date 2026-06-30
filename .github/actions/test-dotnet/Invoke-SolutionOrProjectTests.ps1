@@ -177,10 +177,12 @@ function StartProcessAndWaitForExit($FileName, $Arguments, $Timeout = -1)
         $Event.SourceEventArgs.Data | Out-Host
     }
 
+    "process.Start()" | Out-Host
     $process.Start() | Out-Null
     $process.BeginOutputReadLine()
     $process.BeginErrorReadLine()
 
+    "process.WaitForExit($Timeout)" | Out-Host
     $process.WaitForExit($Timeout)
     $hasExited = $process.HasExited
 
@@ -235,7 +237,7 @@ foreach ($test in $tests)
         '--logger', '''trx;LogFileName=test-results.trx'''
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
         '--logger', '''console;verbosity=detailed'''
-        '--verbosity', $Verbosity
+        '--verbosity', 'detailed'
     )
 
     if ($BlameHangTimeout)
