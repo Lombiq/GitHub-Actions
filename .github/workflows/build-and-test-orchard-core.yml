@@ -98,7 +98,7 @@ on:
         description: Path to the directory where a solution file can be found.
       build-configuration:
         type: string
-        default: Debug
+        default: Release
         description: Configuration parameter for dotnet build (e.g. Debug, Release).
       build-solution-path:
         type: string
