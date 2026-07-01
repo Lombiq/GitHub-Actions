@@ -122,12 +122,18 @@ else
     exit 1
 }
 
+if ($tests.Length -eq 0)
+{
+    Write-GitHub -Warning "No actionable tests were found."
+    exit 0
+}
+
 Write-Output "Found tests in these projects: $tests"
 
 Set-GitHubOutput 'test-count' $tests.Length
 Set-GitHubOutput 'dotnet-test-hang-dump' 0
 
-Write-Output "Starting to execute tests from $($tests.Length) project(s)."
+Write-Output "Starting to execute tests from $($tests.Length) $(($tests.Length -eq 1) ? 'project' : 'projects')."
 
 function GetChildProcesses($Id)
 {
