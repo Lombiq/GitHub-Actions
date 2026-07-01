@@ -63,6 +63,10 @@ $connectionString = @(
 $Env:Lombiq_Tests_UI__SqlServerDatabaseConfiguration__ConnectionStringTemplate = $connectionString
 $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
+# Running dotnet test on individual projects when the whole solution is not built can have unforseen effects. It's the
+# safest to build the solution or project target explicitly, then run "dotnet test" with the "--no-build" switch.
+dotnet build --configuration $Configuration $SolutionOrProject
+
 if ($SolutionOrProject -imatch '\.slnx?$')
 {
     $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($SolutionOrProject)
@@ -250,7 +254,7 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
                 break
             }
 
-            Write-Information "Remaining: $([Math]::Ceiling(($Timeout - $stopWatch.Elapsed.TotalMilliseconds) / 1000))s"
+            Write-Information "Time Remaining: $([Math]::Ceiling(($Timeout - $stopWatch.Elapsed.TotalMilliseconds) / 1000))s"
         }
 
         Start-Sleep -Seconds 1
@@ -277,9 +281,9 @@ foreach ($test in $tests)
         '--configuration', $Configuration
         '--nologo',
         '--no-build',
-        '--logger', '''trx;LogFileName=test-results.trx'''
+        '--logger', 'trx;LogFileName=test-results.trx'
         # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
-        '--logger', '''console;verbosity=detailed'''
+        '--logger', 'console;verbosity=detailed'
         '--verbosity', $Verbosity
     )
 
