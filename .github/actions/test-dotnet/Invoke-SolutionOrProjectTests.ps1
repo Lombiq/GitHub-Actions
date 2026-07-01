@@ -65,7 +65,7 @@ $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 
 # Running dotnet test on individual projects when the whole solution is not built can have unforseen effects. It's the
 # safest to build the solution or project target explicitly, then run "dotnet test" with the "--no-build" switch.
-dotnet build --configuration $Configuration $SolutionOrProject
+dotnet build --verbosity $Verbosity --configuration $Configuration $SolutionOrProject
 
 if ($SolutionOrProject -imatch '\.slnx?$')
 {
