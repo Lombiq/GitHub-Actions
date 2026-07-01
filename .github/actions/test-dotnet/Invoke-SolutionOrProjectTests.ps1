@@ -201,7 +201,7 @@ function Failed($Job, $ProcessId, $Switches, $Test)
 function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
 {
     # This is executed in a separate proecess so no variables or settings come through except what's copied over in the
-    # "$args" automatic variable.
+    # "$args" automatic variable. Only Write-Output should be used here, so "Receive-Job" can reliably capture it.
     $block = {
         Write-Output "StartProcessAndWaitForExitProcessId:$PID"
 
@@ -211,7 +211,7 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
 
         if ($LASTEXITCODE -ne 0)
         {
-            Write-Host "::error::dotnet test failed for the project $test."
+            Write-Output "::error::dotnet test failed for the project `"$test`"."
         }
     }
 
