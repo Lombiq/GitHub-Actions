@@ -181,6 +181,12 @@ on:
         description: >
           Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files,
           to be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
+      test-show-time-remaining:
+        type: string
+        default: 'false'
+        description: >
+          Enables the output of a "Time Remaining: Ns" type message every second during test execution. This can be
+          helpful if you need an idea about the timing of the test outputs.
       ui-test-retry-interval-seconds:
         type: string
         required: false
@@ -337,6 +343,7 @@ jobs:
           artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
           enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
+          show-time-remaining: ${{ inputs.test-show-time-remaining }}
           ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
 
       - name: Cancel Workflow on Failure

@@ -59,6 +59,12 @@ inputs:
     description: >
       Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files, to
       be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
+  show-time-remaining:
+    required: false
+    default: 'false'
+    description: >
+      Enables the output of a "Time Remaining: Ns" type message every second during test execution. This can be helpful
+      if you need an idea about the timing of the test outputs.
   ui-test-retry-interval-seconds:
     required: false
     default: '30'
@@ -103,6 +109,7 @@ runs:
           BlameHangTimeout = "${{ inputs.blame-hang-timeout }}"
           TestProcessTimeout = ${{ inputs.dotnet-test-process-timeout }}
           EnableDiagnosticMode = $${{ inputs.enable-diagnostic-mode }}
+          ShowTimeRemaining = $${{ inputs.show-time-remaining }}
         }
 
         Invoke-SolutionOrProjectTests @switches

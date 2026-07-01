@@ -5,7 +5,8 @@ param (
     [string] $Configuration,
     [string] $BlameHangTimeout,
     [string] $TestProcessTimeout,
-    [boolean] $EnableDiagnosticMode)
+    [boolean] $EnableDiagnosticMode,
+    [boolean] $ShowTimeRemaining)
 
 function Write-GitHub
 {
@@ -254,7 +255,10 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
                 break
             }
 
-            Write-Information "Time Remaining: $([Math]::Ceiling(($Timeout - $stopWatch.Elapsed.TotalMilliseconds) / 1000))s"
+            if ($ShowTimeRemaining)
+            {
+                Write-Information "Time Remaining: $([Math]::Ceiling(($Timeout - $stopWatch.Elapsed.TotalMilliseconds) / 1000))s"
+            }
         }
 
         Start-Sleep -Seconds 1
