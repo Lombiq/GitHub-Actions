@@ -380,7 +380,6 @@ jobs:
           build-directory: ${{ inputs.build-directory }}
           dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
           solution-path: ${{ inputs.build-solution-path }}
-          test-configuration: ${{ inputs.build-configuration }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
           artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
