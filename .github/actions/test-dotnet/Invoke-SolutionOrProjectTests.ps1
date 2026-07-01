@@ -7,6 +7,21 @@ param (
     [string] $TestProcessTimeout,
     [boolean] $EnableDiagnosticMode)
 
+function Write-GitHub
+{
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string] $Message,
+        [switch] $Warning,
+        [switch] $Notice)
+
+    $mode = 'error'
+
+    if ($Warning) { $mode = 'warning' }
+    if ($Notice) { $mode = 'notice' }
+
+    Write-Host "::$mode::$Message"
+}
 # Note that this script will only find tests if they were previously build in Release mode.
 
 # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
@@ -81,7 +96,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
 
             if ($LASTEXITCODE -ne 0)
             {
-                Write-Error "::error::dotnet test failed for the project $absolutePath with the following output:`n$output"
+                Write-GitHub "dotnet test failed for the project `"$absolutePath`" with the following output:`n$output"
                 exit 1
             }
 
@@ -184,7 +199,7 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
 
         if ($LASTEXITCODE -ne 0)
         {
-            Write-Output "::error::dotnet test failed for the project $test."
+            Write-GitHub "dotnet test failed for the project $test."
         }
     }
 
@@ -218,7 +233,7 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
         {
             if ($stopWatch.Elapsed.TotalMilliseconds -gt $Timeout)
             {
-                Write-Output "::warning::The process for ``dotnet test $Switches $Test`` didn't exit in $Timeout milliseconds."
+                Write-GitHub -Warning "The process for ``dotnet test $Switches $Test`` didn't exit in $Timeout milliseconds."
                 $hasTestRunSuccessfully = $false
                 break
             }
@@ -277,10 +292,10 @@ foreach ($test in $tests)
 
     if ($success)
     {
-        Write-Output "::info::Test successful: $test"
+        Write-GitHub -Notice "Test successful: $test"
         continue
     }
 
-    Write-Output "::error::Test failed: $test"
+    Write-GitHub "Test failed: $test"
     exit 100
 }
