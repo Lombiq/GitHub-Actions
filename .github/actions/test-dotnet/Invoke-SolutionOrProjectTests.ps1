@@ -20,9 +20,13 @@ function Write-GitHub
     if ($Warning) { $mode = 'warning' }
     if ($Notice) { $mode = 'notice' }
 
+    # Write-Host is used because these messages always have to go to the workflow runner's virtual console.
     Write-Host "::$mode::$Message"
 }
-# Note that this script will only find tests if they were previously build in Release mode.
+
+# This setting lets us always display the information stream without needing to add the "-InformationAction Continue" to
+# every call. This is not best practice for general PowerShell scripts, but makes sense for scripts made for GHA.
+$InformationPreference="Continue"
 
 # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
 # (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output is
@@ -64,8 +68,8 @@ if ($SolutionOrProject -imatch '\.slnx?$')
     $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($SolutionOrProject)
     $solutionDirectory = [System.IO.Path]::GetDirectoryName($SolutionOrProject)
 
-    Write-Output "Running tests for the `"$SolutionOrProject`" solution."
-    Write-Output 'Gathering test projects.'
+    Write-Information "Running tests for the `"$SolutionOrProject`" solution."
+    Write-Information 'Gathering test projects.'
 
     $tests = @()
     dotnet sln $SolutionOrProject list |
@@ -89,7 +93,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
             )
 
             # Show the current command for easier debugging if run fails here.
-            Write-Output "Discovering tests with ``dotnet test $switches``."
+            Write-Information "Discovering tests with ``dotnet test $switches``."
 
             # Without Out-String, Contains() below won't work for some reason.
             $output = dotnet test @switches 2>&1 | Out-String -Width 9999
@@ -102,18 +106,18 @@ if ($SolutionOrProject -imatch '\.slnx?$')
 
             if (-not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available'))
             {
-                Write-Output "Found some tests for `"$absolutePath`"."
+                Write-Information "Found some tests for `"$absolutePath`"."
                 $tests += $absolutePath
             }
             else
             {
-                Write-Output "No tests were found for `"$absolutePath`"."
+                Write-Information "No tests were found for `"$absolutePath`"."
             }
         }
 }
 elseif ($SolutionOrProject -like '*.csproj')
 {
-    Write-Output "Running tests for the `"$SolutionOrProject`' project."
+    Write-Information "Running tests for the `"$SolutionOrProject`' project."
     $tests = @($SolutionOrProject)
 }
 else
@@ -128,12 +132,12 @@ if ($tests.Length -eq 0)
     exit 0
 }
 
-Write-Output "Found tests in these projects: $tests"
+Write-Information "Found tests in these projects: $tests"
 
 Set-GitHubOutput 'test-count' $tests.Length
 Set-GitHubOutput 'dotnet-test-hang-dump' 0
 
-Write-Output "Starting to execute tests from $($tests.Length) $(($tests.Length -eq 1) ? 'project' : 'projects')."
+Write-Information "Starting to execute tests from $($tests.Length) $(($tests.Length -eq 1) ? 'project' : 'projects')."
 
 function GetChildProcesses($Id)
 {
@@ -142,7 +146,7 @@ function GetChildProcesses($Id)
 
 function MemDumpProcess($RootProcess, $DumpRootPath, $Process)
 {
-    Write-Output "Collecting a dump of the process $($Process.Id)."
+    Write-Information "Collecting a dump of the process $($Process.Id)."
 
     $outputFile = "$DumpRootPath/dotnet-test-hang-dump-$($RootProcess.Id)-$($Process.Parent.Id)_$($Process.Id)"
     $Process | Format-Table Id, SI, Name, Path, @{ Label = 'TotalRunningTime'; Expression = { (Get-Date) - $PSItem.StartTime } } > "$outputFile.log"
@@ -161,7 +165,7 @@ function MemDumpProcessTree($RootProcess, $DumpRootPath, $CurrentProcess)
 
 function KillProcessTree($Process)
 {
-    Write-Output "Killing the process $($Process.ProcessName)($($Process.Id))."
+    Write-Information "Killing the process $($Process.ProcessName)($($Process.Id))."
 
     foreach ($child in GetChildProcesses -Id $Process.Id)
     {
@@ -176,7 +180,7 @@ function Failed($Job, $ProcessId, $Switches, $Test)
     $rootProcess = Get-Process -Id $ProcessId -ErrorAction Ignore
     if ($ProcessId -gt 0 -and $rootProcess)
     {
-        Write-Output "Collecting a dump of the process $($rootProcess.Id) tree."
+        Write-Information "Collecting a dump of the process $($rootProcess.Id) tree."
 
         $dumpRootPath = './DotnetTestHangDumps'
         New-Item -ItemType 'directory' -Path $dumpRootPath -Force | Out-Null
@@ -196,6 +200,8 @@ function Failed($Job, $ProcessId, $Switches, $Test)
 
 function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
 {
+    # This is executed in a separate proecess so no variables or settings come through except what's copied over in the
+    # "$args" automatic variable.
     $block = {
         Write-Output "StartProcessAndWaitForExitProcessId:$PID"
 
@@ -205,7 +211,7 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
 
         if ($LASTEXITCODE -ne 0)
         {
-            Write-GitHub "dotnet test failed for the project $test."
+            Write-Host "::error::dotnet test failed for the project $test."
         }
     }
 
@@ -217,7 +223,7 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
     
     while ($job.HasMoreData -or $job.JobStateInfo.State -eq [System.Management.Automation.JobState]::Running)
     {
-        Receive-Job $job | Tee-Object -Variable line
+        Receive-Job $job | Tee-Object -Variable line | Out-Host
 
         if ("$line".StartsWith('StartProcessAndWaitForExitProcessId:'))
         {
@@ -244,7 +250,7 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
                 break
             }
 
-            Write-Output "Remaining: $([Math]::Ceiling(($Timeout - $stopWatch.Elapsed.TotalMilliseconds) / 1000))s"
+            Write-Information "Remaining: $([Math]::Ceiling(($Timeout - $stopWatch.Elapsed.TotalMilliseconds) / 1000))s"
         }
 
         Start-Sleep -Seconds 1
@@ -265,7 +271,7 @@ foreach ($test in $tests)
     # https://github.com/actions/runner/issues/1477. See the c341ef145d2a0898c5900f64604b67b21d2ea5db commit for a
     # nested grouping implementation.
 
-    Write-Output "Starting to execute tests from the $test project."
+    Write-Information "Starting to execute tests from the $test project."
 
     $dotnetTestSwitches = @(
         '--configuration', $Configuration
@@ -292,7 +298,7 @@ foreach ($test in $tests)
         $dotnetTestSwitches += ('--diag', 'DiagnosticLogs/dotnet-test.log')
     }
 
-    Write-Output "Starting testing with ``dotnet test $dotnetTestSwitches $test``."
+    Write-Information "Starting testing with ``dotnet test $dotnetTestSwitches $test``."
 
     $success = StartProcessAndWaitForExit -Switches $dotnetTestSwitches -Test $test -Timeout $TestProcessTimeout
 
