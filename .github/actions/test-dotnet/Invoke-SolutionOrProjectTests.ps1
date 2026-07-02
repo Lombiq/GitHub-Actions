@@ -10,6 +10,10 @@ param (
 
 function Write-GitHub
 {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSAvoidUsingWriteHost',
+        '',
+        Justification='These messages github annotations always have to go to the workflow runner virtual console.')]
     param(
         [Parameter(Mandatory = $true, Position = 0)]
         [string] $Message,
@@ -21,13 +25,13 @@ function Write-GitHub
     if ($Warning) { $mode = 'warning' }
     if ($Notice) { $mode = 'notice' }
 
-    # Write-Host is used because these messages always have to go to the workflow runner's virtual console.
     Write-Host "::$mode::$Message"
 }
 
-# This setting lets us always display the information stream without needing to add the "-InformationAction Continue" to
-# every call. This is not best practice for general PowerShell scripts, but makes sense for scripts made for GHA.
-$InformationPreference="Continue"
+# This is a magic variable, setting it lets us always display the information stream without needing to add the
+# "-InformationAction Continue" to every call. This is not best practice for general PowerShell scripts, but makes sense
+# for scripts made for GHA.
+$informationPreference = 'Continue'
 
 # First, we globally set test configurations using environment variables. Then acquire the list of all test projects
 # (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output is
@@ -134,7 +138,7 @@ else
 
 if ($tests.Length -eq 0)
 {
-    Write-GitHub -Warning "No actionable tests were found."
+    Write-GitHub -Warning 'No actionable tests were found.'
     exit 0
 }
 
@@ -190,11 +194,11 @@ function Failed($Job, $ProcessId, $Switches, $Test)
 
         $dumpRootPath = './DotnetTestHangDumps'
         New-Item -ItemType 'directory' -Path $dumpRootPath -Force | Out-Null
-        
+
         MemDumpProcessTree -RootProcess $rootProcess -DumpRootPath $dumpRootPath -CurrentProcess $rootProcess
 
         Set-GitHubOutput 'dotnet-test-hang-dump' 1
-        
+
         Stop-Job $Job
         KillProcessTree -Process $rootProcess
     }
@@ -204,29 +208,28 @@ function Failed($Job, $ProcessId, $Switches, $Test)
     }
 }
 
-function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
+function StartProcessAndWaitForExit($Switches, $Test, $Timeout, $ShowTimeRemaining)
 {
     # This is executed in a separate proecess so no variables or settings come through except what's copied over in the
     # "$args" automatic variable. Only Write-Output should be used here, so "Receive-Job" can reliably capture it.
     $block = {
         Write-Output "StartProcessAndWaitForExitProcessId:$PID"
 
-        $switches = $args[0]
-        $test = $args[1]
-        dotnet test @switches $test 2>&1
+        $argSwitches = $args[0]
+        $argTest = $args[1]
+        dotnet test @argSwitches $argTest 2>&1
 
         if ($LASTEXITCODE -ne 0)
         {
-            Write-Output "::error::dotnet test failed for the project `"$test`"."
+            Write-Output "::error::dotnet test failed for the project `"$argTest`"."
         }
     }
-
 
     $processId = -1
     $hasTestRunSuccessfully = $false
     $stopWatch = [System.Diagnostics.Stopwatch]::StartNew()
     $job = Start-Job -ScriptBlock $block -ArgumentList $Switches, $Test
-    
+
     while ($job.HasMoreData -or $job.JobStateInfo.State -eq [System.Management.Automation.JobState]::Running)
     {
         Receive-Job $job | Tee-Object -Variable line | Out-Host
@@ -246,7 +249,7 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout = -1)
             $hasTestRunSuccessfully = $false
             break
         }
-        
+
         if ($Timeout -gt 0)
         {
             if ($stopWatch.Elapsed.TotalMilliseconds -gt $Timeout)
@@ -282,7 +285,7 @@ foreach ($test in $tests)
 
     Write-Information "Starting to execute tests from the $test project."
 
-    $dotnetTestSwitches = @(
+    $switches = @(
         '--configuration', $Configuration
         '--nologo',
         '--no-build',
@@ -294,22 +297,22 @@ foreach ($test in $tests)
 
     if ($BlameHangTimeout)
     {
-        $dotnetTestSwitches += ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full')
+        $switches += ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full')
     }
 
     if ($Filter)
     {
-        $dotnetTestSwitches += ('--filter', "'$Filter'")
+        $switches += ('--filter', "'$Filter'")
     }
 
     if ($EnableDiagnosticMode)
     {
-        $dotnetTestSwitches += ('--diag', 'DiagnosticLogs/dotnet-test.log')
+        $switches += ('--diag', 'DiagnosticLogs/dotnet-test.log')
     }
 
-    Write-Information "Starting testing with ``dotnet test $dotnetTestSwitches $test``."
+    Write-Information "Starting testing with ``dotnet test $switches $test``."
 
-    $success = StartProcessAndWaitForExit -Switches $dotnetTestSwitches -Test $test -Timeout $TestProcessTimeout
+    $success = StartProcessAndWaitForExit -Switches $switches -Test $test -Timeout $TestProcessTimeout -ShowTimeRemaining $ShowTimeRemaining
 
     if ($success)
     {
