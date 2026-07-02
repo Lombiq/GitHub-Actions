@@ -15,7 +15,7 @@ runs:
 
     # Installs the SQL Server command-line tools if they're not present (necessary for Ubuntu 24.04-based runners).
     - name: Install sqlcmd
-      uses: Lombiq/GitHub-Actions/.github/actions/install-sqlcmd@issue/OSOE-1294
+      uses: Lombiq/GitHub-Actions/.github/actions/install-sqlcmd@dev
 
     # Needs to be a separate step, otherwise the Chocolatey installation won't be visible.
     - name: Wait for SQL Server to start
