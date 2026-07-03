@@ -99,14 +99,18 @@ if ($SolutionOrProject -imatch '\.slnx?$')
                 "--verbosity:$Verbosity"
                 "-p:SolutionName=""$solutionName"""
                 "-p:SolutionDir=""$solutionDirectory"""
-                $absolutePath
             )
 
+            if ($Filter)
+            {
+                $switches += ('--filter', "$Filter")
+            }
+
             # Show the current command for easier debugging if run fails here.
-            Write-Information "Discovering tests with ``dotnet test $switches``."
+            Write-Information "Discovering tests with ``dotnet test $switches $absolutePath``."
 
             # Without Out-String, Contains() below won't work for some reason.
-            $output = dotnet test @switches 2>&1 | Out-String -Width 9999
+            $output = dotnet test @switches $absolutePath 2>&1 | Out-String -Width 9999
 
             if ($LASTEXITCODE -ne 0)
             {
@@ -114,7 +118,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
                 exit 1
             }
 
-            if (-not [string]::IsNullOrEmpty($output) -and $output.Contains('The following Tests are available'))
+            if ($output -match 'The following Tests are available.*\n\s+[a-zA-Z0-9_]+\.')
             {
                 Write-Information "Found some tests for `"$absolutePath`"."
                 $tests += $absolutePath
@@ -302,7 +306,7 @@ foreach ($test in $tests)
 
     if ($Filter)
     {
-        $switches += ('--filter', "'$Filter'")
+        $switches += ('--filter', "$Filter")
     }
 
     if ($EnableDiagnosticMode)
