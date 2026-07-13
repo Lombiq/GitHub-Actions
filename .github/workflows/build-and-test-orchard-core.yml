@@ -372,6 +372,13 @@ jobs:
         with:
           location: ${{ inputs.build-directory}}
 
+      - name: Log disk usage before tests
+        run: |
+          if ((Get-Command -ErrorAction Ignore -Type Application du))
+          {
+            du --human-readable --max-depth=3 .
+          } 
+
       - name: Tests
         if: inputs.test-disable == 'false'
         uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-925
