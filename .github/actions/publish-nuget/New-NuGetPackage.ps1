@@ -90,6 +90,8 @@ foreach ($project in $projects)
 {
     Write-Output "Packing $($project.Name)..."
 
+    dotnet nuget why $project Microsoft.OpenApi
+
     $projectPackParameters = $PackParameters
 
     $isPackableProperty = Get-ProjectProperty -ProjectFilePath  $project -PropertyName 'IsPackable'
