@@ -205,9 +205,6 @@ runs:
             WarningsAsErrors = $${{ inputs.warnings-as-errors }}
         }
 
-        Write-Output "dotnet nuget why $solutionOrProjectPath Microsoft.OpenApi"
-        dotnet nuget why $solutionOrProjectPath Microsoft.OpenApi
-
         $startTime = [DateTime]::Now
         Build-DotNetSolutionOrProject @switches
         $endTime = [DateTime]::Now
