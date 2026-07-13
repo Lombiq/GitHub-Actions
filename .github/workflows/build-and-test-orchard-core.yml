@@ -256,6 +256,13 @@ on:
         description: >
           If "true" (the default), detailed telemetry about the workflow run will be collected with
           https://github.com/catchpoint/workflow-telemetry-action.
+      log-disk-usage-depth:
+        type: number
+        default: 0
+        description: >
+          If set to an integer larger than 0, the "du" tool is used to log the disk usage of the directories up to that
+          regursion depth before and after the "Tests" step. This can be used to diagnose the source if the instance
+          runs out of disk space.
 
 jobs:
   build-and-test:
@@ -376,10 +383,11 @@ jobs:
           location: ${{ inputs.build-directory}}
 
       - name: Log disk usage before tests
+        if: inputs.log-disk-usage-depth > 0
         run: |
           if ((Get-Command -ErrorAction Ignore -Type Application du))
           {
-            du --human-readable --max-depth=4 .
+            du --human-readable --max-depth=${{ inputs.log-disk-usage-depth }} .
           }
 
       - name: Tests
@@ -399,10 +407,11 @@ jobs:
           ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
 
       - name: Log disk usage after tests
+        if: inputs.log-disk-usage-depth > 0
         run: |
           if ((Get-Command -ErrorAction Ignore -Type Application du))
           {
-            du --human-readable --max-depth=4 .
+            du --human-readable --max-depth=${{ inputs.log-disk-usage-depth }} .
           }
 
       - name: Cancel Workflow on Failure
