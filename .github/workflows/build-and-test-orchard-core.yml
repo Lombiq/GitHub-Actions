@@ -379,7 +379,7 @@ jobs:
         run: |
           if ((Get-Command -ErrorAction Ignore -Type Application du))
           {
-            du --human-readable --max-depth=3 .
+            du --human-readable --max-depth=4 .
           }
 
       - name: Tests
@@ -397,6 +397,13 @@ jobs:
           enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
           show-time-remaining: ${{ inputs.test-show-time-remaining }}
           ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
+
+      - name: Log disk usage after tests
+        run: |
+          if ((Get-Command -ErrorAction Ignore -Type Application du))
+          {
+            du --human-readable --max-depth=4 .
+          }
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
