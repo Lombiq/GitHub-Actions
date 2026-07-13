@@ -283,6 +283,9 @@ jobs:
             || format('{0}_build-and-test-orchard-core_{1}_{2}', github.run_id, inputs.parent-job-name, matrix.machine-type)
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
+    defaults:
+      run:
+        shell: pwsh
     steps:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
@@ -377,7 +380,7 @@ jobs:
           if ((Get-Command -ErrorAction Ignore -Type Application du))
           {
             du --human-readable --max-depth=3 .
-          } 
+          }
 
       - name: Tests
         if: inputs.test-disable == 'false'
