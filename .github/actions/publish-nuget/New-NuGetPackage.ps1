@@ -90,6 +90,7 @@ foreach ($project in $projects)
 {
     Write-Output "::group::Packing $($project.Name)..."
 
+    Write-Output "dotnet nuget why $project Microsoft.OpenApi"
     dotnet nuget why $project Microsoft.OpenApi
 
     $projectPackParameters = $PackParameters
