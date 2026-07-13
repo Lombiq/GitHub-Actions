@@ -185,9 +185,6 @@ runs:
             dotnet restore -p:NuGetBuild=true
         }
 
-        Write-Output "dotnet nuget why *.slnx Microsoft.OpenApi"
-        dotnet nuget why *.slnx Microsoft.OpenApi
-
     - name: Update package manifest version
       shell: pwsh
       run: Update-ManifestVersion './' '${{ steps.setup.outputs.publish-version }}'
