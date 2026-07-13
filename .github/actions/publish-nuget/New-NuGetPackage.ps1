@@ -88,7 +88,7 @@ $projects = ((Test-Path *.slnx) -or (Test-Path *.sln)) ? (dotnet sln list | Sele
 
 foreach ($project in $projects)
 {
-    Write-Output "Packing $($project.Name)..."
+    Write-Output "::group::Packing $($project.Name)..."
 
     dotnet nuget why $project Microsoft.OpenApi
 
@@ -102,6 +102,7 @@ foreach ($project in $projects)
     if (-not $isPackable)
     {
         Write-Output "Skipping $($project.Name) because it has <IsPackable>false</IsPackable>."
+        Write-Output '::endgroup::'
         continue
     }
 
@@ -116,6 +117,7 @@ foreach ($project in $projects)
 
         Write-Output "isPackableProperty: '$isPackableProperty'"
         Write-Output (Get-Content $project)
+        Write-Output '::endgroup::'
 
         if ($isRequired) { exit 1 }
         continue
@@ -225,8 +227,10 @@ foreach ($project in $projects)
             }
         }
 
+        Write-Output '::endgroup::'
         exit 1
     }
 
     Pop-Location
+    Write-Output '::endgroup::'
 }
