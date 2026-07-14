@@ -387,7 +387,8 @@ jobs:
         run: |
           if ((Get-Command -ErrorAction Ignore -Type Application du))
           {
-            du --human-readable --max-depth=${{ inputs.log-disk-usage-depth }} .
+            du --human-readable --max-depth=${{ inputs.log-disk-usage-depth }} $PWD
+            df --human-readable
           }
 
       - name: Tests
@@ -411,7 +412,7 @@ jobs:
         run: |
           if ((Get-Command -ErrorAction Ignore -Type Application du))
           {
-            du --human-readable --max-depth=${{ inputs.log-disk-usage-depth }} .
+            du --human-readable --max-depth=${{ inputs.log-disk-usage-depth }} $PWD
             df --human-readable
           }
 
