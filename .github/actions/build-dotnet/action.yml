@@ -94,7 +94,7 @@ inputs:
     required: false
     default: 'false'
     description: >
-      If set to "true", it runs "git clean" on the working directory (as specified by the "directory" input) after 
+      If set to "true", it runs "git clean" on the working directory (as specified by the "directory" input) after
       build. This can be used to save disk space if you only ran this action to verify the code using the
       "enable-code-analysis" option.
 
