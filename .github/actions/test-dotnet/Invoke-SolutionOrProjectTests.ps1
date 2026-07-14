@@ -6,7 +6,7 @@ param (
     [string] $BlameHangTimeout,
     [string] $TestProcessTimeout,
     [boolean] $EnableDiagnosticMode,
-    [boolean] $ShowTimeRemaining)
+    [boolean] $ShowTimeRemainingUntilTimeout)
 
 function Write-GitHub
 {
@@ -212,7 +212,7 @@ function Failed($Job, $ProcessId, $Switches, $Test)
     }
 }
 
-function StartProcessAndWaitForExit($Switches, $Test, $Timeout, $ShowTimeRemaining)
+function StartProcessAndWaitForExit($Switches, $Test, $Timeout, $ShowTimeRemainingUntilTimeout)
 {
     # This is executed in a separate proecess so no variables or settings come through except what's copied over in the
     # "$args" automatic variable. Only Write-Output should be used here, so "Receive-Job" can reliably capture it.
@@ -263,9 +263,9 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout, $ShowTimeRemaini
                 break
             }
 
-            if ($ShowTimeRemaining)
+            if ($ShowTimeRemainingUntilTimeout)
             {
-                Write-Information "Time Remaining: $([Math]::Ceiling(($Timeout - $stopWatch.Elapsed.TotalMilliseconds) / 1000))s"
+                Write-Information "Until timeout: $([Math]::Ceiling(($Timeout - $stopWatch.Elapsed.TotalMilliseconds) / 1000))s"
             }
         }
 
@@ -316,7 +316,7 @@ foreach ($test in $tests)
 
     Write-Information "Starting testing with ``dotnet test $switches $test``."
 
-    $success = StartProcessAndWaitForExit -Switches $switches -Test $test -Timeout $TestProcessTimeout -ShowTimeRemaining $ShowTimeRemaining
+    $success = StartProcessAndWaitForExit -Switches $switches -Test $test -Timeout $TestProcessTimeout -ShowTimeRemainingUntilTimeout $ShowTimeRemainingUntilTimeout
 
     if ($success)
     {
