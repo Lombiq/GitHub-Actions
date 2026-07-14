@@ -358,8 +358,8 @@ jobs:
           create-binary-log: ${{ inputs.build-create-binary-log }}
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
-          dotnet-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true')
-          git-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true')
+          dotnet-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true') }}
+          git-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true') }}
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
