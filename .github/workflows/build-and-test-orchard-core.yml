@@ -407,7 +407,7 @@ jobs:
           ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
 
       - name: Log disk usage after tests
-        if: failure() || inputs.log-disk-usage-depth > 0
+        if: failure() && inputs.log-disk-usage-depth > 0
         run: |
           if ((Get-Command -ErrorAction Ignore -Type Application du))
           {
