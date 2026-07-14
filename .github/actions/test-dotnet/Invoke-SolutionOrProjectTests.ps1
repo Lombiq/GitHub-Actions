@@ -225,7 +225,7 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout, $ShowTimeRemaini
 
         if ($LASTEXITCODE -ne 0)
         {
-            Write-Output "::error::dotnet test failed for the project `"$argTest`"."
+            Write-Output "::error::dotnet test failed for the project `"$argTest`" (exit code: $LASTEXITCODE)."
         }
     }
 
