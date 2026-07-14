@@ -192,6 +192,10 @@ on:
         description: >
           Duration in days after which the artifacts of testing (e.g. UI testing failure dump, hang dump, if any) will
           expire. See https://github.com/actions/upload-artifact#retention-period for more details.
+      test-configuration:
+        type: string
+        default: Debug
+        description: Configuration parameter for dotnet test (e.g. Debug, Release).
       xunit-max-parallel-threads:
         type: string
         default: '0'
@@ -354,6 +358,8 @@ jobs:
           create-binary-log: ${{ inputs.build-create-binary-log }}
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
+          dotnet-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true')
+          git-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true')
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
@@ -406,6 +412,7 @@ jobs:
           enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
           show-time-remaining: ${{ inputs.test-show-time-remaining }}
           ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
+          test-configuration: ${{ inputs.test-configuration }}
 
       - name: Log disk usage after tests
         if: failure() && inputs.log-disk-usage-depth > 0
