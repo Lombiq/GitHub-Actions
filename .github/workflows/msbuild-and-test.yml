@@ -155,6 +155,10 @@ on:
         description: >
           Filter expression for dotnet test. See:
           https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
+      test-configuration:
+        type: string
+        default: Release
+        description: Configuration parameter for dotnet test (e.g. Debug, Release).
       timeout-minutes:
         type: number
         default: 360
@@ -233,7 +237,7 @@ jobs:
           dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
-          test-configuration: Release
+          test-configuration: ${{ inputs.test-configuration }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
