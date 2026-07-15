@@ -252,9 +252,10 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        # Cleans and resets a git repo and its submodules.
+        Write-Output "Cleaning out and resetting the git repo in `"$PWD`" and its submodules."
         git reset --hard
         git submodule sync --recursive
         git submodule update --init --force --recursive
         git clean -ffdx
-        git submodule foreach --recursive git clean -ffdx
+        # We shouldn't fail the run if the cleanout fails for any reason, so " || true" is added to this command.
+        git submodule foreach --recursive 'git clean -ffdx || true'
