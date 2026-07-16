@@ -150,7 +150,8 @@ foreach ($project in $projects)
             Write-Output "::warning:: Package version couldn't be added, thus package validation to the baseline version won't be done."
         }
 
-        dotnet restore
+        # It doesn't matter if the baseline package has known vulnerabilities.
+        dotnet restore --p:NoWarn=NU1902%3BNU1903
         Pop-Location
         Remove-Item -Recurse -Force TempProject
 
