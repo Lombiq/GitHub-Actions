@@ -153,26 +153,26 @@ jobs:
     steps:
       - name: Free up Space
         if: inputs.free-up-space == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@issue/OSOE-1298
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1298
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1298
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1298
         with:
           node-version: ${{ inputs.node-version }}
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Enable Node corepack
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-1298
 
       # Calling nuget restore separately on the actual solution, because we're passing Orchard.proj to the msbuild
       # action instead to be able to call the Precompiled target.
@@ -180,7 +180,7 @@ jobs:
         run: nuget restore ${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
       - name: Publish Precompiled App
-        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/msbuild@issue/OSOE-1298
         with:
           solution-or-project-path: Orchard.proj
           verbosity: ${{ inputs.build-verbosity }}
@@ -191,7 +191,7 @@ jobs:
             /p:Solution=${{ inputs.build-directory }}\${{ inputs.solution-or-project-path }}
 
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-1298
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID }}
@@ -222,7 +222,7 @@ jobs:
 
       - name: Add Azure Application Insights Release Annotation
         if: ${{ inputs.application-insights-resource-id != '' }}
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-1298
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
@@ -255,6 +255,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1298
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
