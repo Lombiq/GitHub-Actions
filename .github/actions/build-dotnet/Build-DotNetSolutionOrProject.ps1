@@ -37,7 +37,10 @@ $buildSwitches = ConvertTo-Array @"
     $Switches
 "@
 
-[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors | ForEach-Object { $PSItem.Split(':')[0] } | Sort-Object
+[array] $expectedErrorCodes = ConvertTo-Array $ExpectedCodeAnalysisErrors |
+    ForEach-Object { $PSItem.Split(':')[0] } |
+    Select-Object -Unique |
+    Sort-Object
 $noErrorsExpected = $expectedErrorCodes.Count -eq 0
 
 if (Test-Path src/Utilities/Lombiq.Gulp.Extensions/Lombiq.Gulp.Extensions.csproj)
@@ -88,7 +91,7 @@ Stop-DotNetBuildServers
 
 if ($expectedErrorCodes)
 {
-    $errorCodes = $errorCodes | Sort-Object
+    $errorCodes = $errorCodes | Select-Object -Unique | Sort-Object
     $fail = 0
     $report = New-Object 'System.Text.StringBuilder' "`n"
 

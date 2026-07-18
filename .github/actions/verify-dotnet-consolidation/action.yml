@@ -10,13 +10,13 @@ inputs:
     description: Path to the directory where a solution file can be found.
   solution-path:
     required: false
-    default: '*.sln'
+    default: '*.sln?'
     description: >
-      The path of the solution file to be processed. The value is given to PowerShell's `Get-Item` cmdlet as-is, so
-      grepping is still possible but a name with spaces must be escaped separately.
+      The path of the solution file to be processed. The value is given to the Get-SolutionOrProjectPath cmdlet as-is,
+      so grepping is still possible but a name with spaces must be escaped separately.
   exclude-version-regex:
     required: false
-    default: \-alpha
+    default: \-(alpha|preview)
     description: >
       A regular expression to match package versions that will be skipped during NuGet package consolidation. See the
       dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
@@ -38,6 +38,12 @@ runs:
         '${{ github.action_path }}' >> $Env:GITHUB_PATH
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
+    # This tool depends on .NET 8 to run regardless of the solution's framework.
+    - name: Set up .NET
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+      with:
+        dotnet-version: 8.0.319
+
     - name: Install dotnet-consolidate
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
@@ -50,7 +56,7 @@ runs:
       env:
         ExcludeVersionRegex: ${{ inputs.exclude-version-regex }}
       run: |
-        $solutionPath = (Get-Item '${{ inputs.solution-path }}').FullName;
+        $solutionPath = Get-SolutionOrProjectPath ${{ inputs.solution-path }}
         $excludedProjects = (Get-Item ${{ inputs.exclude-project-path }} -ErrorAction Ignore).FullName
 
         Test-DotnetPackageConsolidation -SolutionPath $solutionPath -ExcludedProjects $excludedProjects

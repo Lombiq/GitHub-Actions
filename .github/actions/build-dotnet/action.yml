@@ -49,12 +49,12 @@ inputs:
       parameter value.
   solution-or-project-path:
     required: false
-    default: '*.sln'
+    default: '*.sln?'
     description: >
-      The path of the solution or project file to be built. If you have exactly one .sln file in the current directory
-      then this can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can be
-      specified." error that is thrown when the `*.sln` wildcard results in multiple files. To build a project file you
-      must specify a path that ends with `.csproj`. An example: "./src/*Web/*.Web.csproj". The value is given to
+      The path of the solution or project file to be built. If you have exactly one .sln or .slnx file in the current
+      directory then this can be omitted. Otherwise make sure to specify it to avoid an "MSB1008: Only one project can
+      be specified." error that is thrown when the `*.sln?` wildcard results in multiple files. To build a project file
+      you must specify a path that ends with `.csproj`. An example: "./src/*Web/*.Web.csproj". The value is given to
       PowerShell's `Get-ChildItem` cmdlet as-is, so grepping is still possible but a name with spaces must be escaped
       separately.
   expected-code-analysis-errors:
@@ -84,6 +84,19 @@ inputs:
       compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set to
       "false", the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the build to
       fail.
+  dotnet-clean:
+    required: false
+    default: 'false'
+    description: >
+      If set to "true", it runs "dotnet clean" on the "solution-or-project-path" after build. This can be used to save
+      disk space if you only ran this action to verify the code using the "enable-code-analysis" option.
+  git-clean:
+    required: false
+    default: 'false'
+    description: >
+      If set to "true", it runs "git clean" on the working directory (as specified by the "directory" input) after
+      build. This can be used to save disk space if you only ran this action to verify the code using the
+      "enable-code-analysis" option.
 
 runs:
   using: composite
@@ -219,3 +232,30 @@ runs:
         path: ${{ inputs.directory }}/build.binlog
         if-no-files-found: ignore
         retention-days: ${{ inputs.binary-log-artifact-retention-days }}
+
+    - name: Run dotnet clean
+      if: inputs.dotnet-clean == 'true'
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        $arguments = @(
+            $solutionOrProjectPath
+            '--configuration', '${{ inputs.configuration }}'
+            '--verbosity', '${{ inputs.verbosity }}'
+        )
+
+        Write-Output "Running `"dotnet clean $arguments`" in the `"$PWD`" directory."
+        dotnet clean @arguments
+
+    - name: Run git clean
+      if: inputs.git-clean == 'true'
+      shell: pwsh
+      working-directory: ${{ inputs.directory }}
+      run: |
+        Write-Output "Cleaning out and resetting the git repo in `"$PWD`" and its submodules."
+        git reset --hard
+        git submodule sync --recursive
+        git submodule update --init --force --recursive
+        git clean -ffdx
+        # We shouldn't fail the run if the cleanout fails for any reason, so " || true" is added to this command.
+        git submodule foreach --recursive 'git clean -ffdx || true'

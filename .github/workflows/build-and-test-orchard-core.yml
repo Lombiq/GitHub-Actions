@@ -67,7 +67,7 @@ on:
           that the runner has insufficient storage space.
       dotnet-version:
         type: string
-        default: 8.0.319
+        default: 10.0.102
         description: Version of the .NET SDK to set up.
       node-version:
         type: string
@@ -102,10 +102,10 @@ on:
         description: Configuration parameter for dotnet build (e.g. Debug, Release).
       build-solution-path:
         type: string
-        default: '*.sln'
+        default: '*.sln?'
         description: >
-          The path of the solution or project file to be built. If there's exactly one .sln file in the build directory
-          then this can be omitted. For further information, see the documentation of the build-dotnet action.
+          The path of the solution or project file to be built. If there's exactly one .sln or .slnx file in the build
+          directory then this can be omitted. For further information, see the documentation of the build-dotnet action.
       build-verbosity:
         type: string
         default: quiet
@@ -192,6 +192,10 @@ on:
         description: >
           Duration in days after which the artifacts of testing (e.g. UI testing failure dump, hang dump, if any) will
           expire. See https://github.com/actions/upload-artifact#retention-period for more details.
+      test-configuration:
+        type: string
+        default: Debug
+        description: Configuration parameter for dotnet test (e.g. Debug, Release).
       xunit-max-parallel-threads:
         type: string
         default: '0'
@@ -204,6 +208,12 @@ on:
         description: >
           Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files,
           to be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
+      test-show-time-remaining-until-timeout:
+        type: string
+        default: 'false'
+        description: >
+          Enables the output of a "Until timeout: Ns" type message every second during test execution. This can be
+          helpful if you need an idea about the timing of the test outputs.
       ui-test-retry-interval-seconds:
         type: string
         required: false
@@ -224,7 +234,7 @@ on:
       dotnet-consolidation-exclude-version-regex:
         type: string
         required: false
-        default: \-alpha
+        default: \-(alpha|preview)
         description: >
           A regular expression to match package versions that will be skipped during NuGet package consolidation. See
           the dotnet consolidate docs for details: https://github.com/olsh/dotnet-consolidate?tab=readme-ov-file#usage.
@@ -250,6 +260,13 @@ on:
         description: >
           If "true" (the default), detailed telemetry about the workflow run will be collected with
           https://github.com/catchpoint/workflow-telemetry-action.
+      log-disk-usage-depth:
+        type: number
+        default: 0
+        description: >
+          If set to an integer larger than 0, the "du" tool is used to log the disk usage of the directories up to that
+          regursion depth before and after the "Tests" step. This can be used to diagnose the source if the instance
+          runs out of disk space.
 
 jobs:
   build-and-test:
@@ -277,6 +294,9 @@ jobs:
             || format('{0}_build-and-test-orchard-core_{1}_{2}', github.run_id, inputs.parent-job-name, matrix.machine-type)
         }}
       cancel-in-progress: ${{ inputs.cancel-in-progress-for-this-pr == 'true' }}
+    defaults:
+      run:
+        shell: pwsh
     steps:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
@@ -301,11 +321,6 @@ jobs:
           ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
-      - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
-        with:
-          dotnet-version: ${{ inputs.dotnet-version }}
-
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
         uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
@@ -313,6 +328,11 @@ jobs:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
           exclude-project-path: ${{ inputs.dotnet-consolidation-exclude-project-path }}
+
+      - name: Set up .NET
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Set up Node.js
         uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
@@ -338,6 +358,8 @@ jobs:
           create-binary-log: ${{ inputs.build-create-binary-log }}
           binary-log-artifact-retention-days: ${{ inputs.build-binary-log-artifact-retention-days }}
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
+          dotnet-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true') }}
+          git-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true') }}
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
@@ -366,6 +388,15 @@ jobs:
         with:
           location: ${{ inputs.build-directory}}
 
+      - name: Log disk usage before tests
+        if: inputs.log-disk-usage-depth > 0
+        run: |
+          if ((Get-Command -ErrorAction Ignore -Type Application du))
+          {
+            du --human-readable --max-depth=${{ inputs.log-disk-usage-depth }} $PWD
+            df --human-readable
+          }
+
       - name: Tests
         if: inputs.test-disable == 'false'
         uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
@@ -379,7 +410,18 @@ jobs:
           artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
           enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
+          show-time-remaining-until-timeout: ${{ inputs.test-show-time-remaining-until-timeout }}
           ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
+          test-configuration: ${{ inputs.test-configuration }}
+
+      - name: Log disk usage after tests
+        if: failure() && inputs.log-disk-usage-depth > 0
+        run: |
+          if ((Get-Command -ErrorAction Ignore -Type Application du))
+          {
+            du --human-readable --max-depth=${{ inputs.log-disk-usage-depth }} $PWD
+            df --human-readable
+          }
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

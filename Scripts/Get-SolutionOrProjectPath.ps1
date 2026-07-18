@@ -1,9 +1,9 @@
 param (
-    [Parameter(Mandatory = $true, Position = 0)]
+    [Parameter(Position = 0)]
     [string] $PathPattern
 )
 
-$matchedItems = Get-ChildItem $PathPattern
+$matchedItems = $PathPattern -eq '' ? (Get-ChildItem *.sln, *.slnx) : (Get-ChildItem -Filter $PathPattern)
 $matchCount = ($matchedItems | Measure-Object).Count
 
 if ($matchCount -ne 1)

@@ -84,11 +84,11 @@ if ($doBaselinePackageValidation -and -not (Test-Path -Path $CompatibilitySuppre
 # Whether the pull request contains breaking changes is a global, not project-specific property.
 $isBreaking = $false
 
-$projects = (Test-Path *.sln) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
+$projects = ((Test-Path *.slnx) -or (Test-Path *.sln)) ? (dotnet sln list | Select-Object -Skip 2 | Get-Item) : (Get-ChildItem *.csproj)
 
 foreach ($project in $projects)
 {
-    Write-Output "Packing $($project.Name)..."
+    Write-Output "::group::Packing $($project.Name)..."
 
     $projectPackParameters = $PackParameters
 
@@ -100,6 +100,7 @@ foreach ($project in $projects)
     if (-not $isPackable)
     {
         Write-Output "Skipping $($project.Name) because it has <IsPackable>false</IsPackable>."
+        Write-Output '::endgroup::'
         continue
     }
 
@@ -114,6 +115,7 @@ foreach ($project in $projects)
 
         Write-Output "isPackableProperty: '$isPackableProperty'"
         Write-Output (Get-Content $project)
+        Write-Output '::endgroup::'
 
         if ($isRequired) { exit 1 }
         continue
@@ -148,7 +150,8 @@ foreach ($project in $projects)
             Write-Output "::warning:: Package version couldn't be added, thus package validation to the baseline version won't be done."
         }
 
-        dotnet restore
+        # It doesn't matter if the baseline package has known vulnerabilities.
+        dotnet restore --p:NoWarn=NU1902%3BNU1903
         Pop-Location
         Remove-Item -Recurse -Force TempProject
 
@@ -223,8 +226,10 @@ foreach ($project in $projects)
             }
         }
 
+        Write-Output '::endgroup::'
         exit 1
     }
 
     Pop-Location
+    Write-Output '::endgroup::'
 }

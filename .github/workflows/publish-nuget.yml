@@ -45,7 +45,7 @@ on:
           that the runner has insufficient storage space.
       dotnet-version:
         type: string
-        default: 8.0.319
+        default: 10.0.102
         description: Version of the .NET SDK to set up.
       node-version:
         type: string

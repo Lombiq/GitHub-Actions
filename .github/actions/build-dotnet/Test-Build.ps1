@@ -11,7 +11,7 @@ $expectedCodeAnalysisErrors = @'
 
 $switches = @{
     Configuration = 'Release'
-    SolutionOrProject = '../../../../../Lombiq.OSOCE.sln'
+    SolutionOrProject = '../../../../../Lombiq.OSOCE.slnx'
     Verbosity = 'quiet'
     EnableCodeAnalysis = 'true'
     Version = '1.2.3'

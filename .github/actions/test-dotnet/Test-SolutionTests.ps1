@@ -4,7 +4,7 @@
 #>
 
 $switches = @{
-    SolutionOrProject = '.\Lombiq.OSOCE.sln'
+    SolutionOrProject = '.\Lombiq.OSOCE.slnx'
     Verbosity = 'quiet'
     Filter = ''
     Configuration = 'Debug'
