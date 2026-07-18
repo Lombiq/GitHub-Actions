@@ -13,7 +13,7 @@ on:
 jobs:
   publish-nuget:
     name: Publish to NuGet
-    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@issue/OSOE-925
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     secrets:
       API_KEY: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
 ```
@@ -28,7 +28,7 @@ It takes one non-optional secret parameter, `API_KEY`, the organization API key 
 jobs:
   publish-nuget:
     name: Publish to NuGet
-    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@issue/OSOE-925
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     with:
       source: https://nuget.cloudsmith.io/lombiq/open-source-orchard-core-extensions/v3/index.json
       verbosity: detailed

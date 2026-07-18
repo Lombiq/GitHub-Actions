@@ -91,7 +91,7 @@ runs:
         Set-GitHubEnv 'Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__RetryIntervalSeconds' ${{ inputs.ui-test-retry-interval-seconds }}
 
     - name: Install dotnet-dump
-      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@issue/OSOE-925
+      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
       with:
         name: dotnet-dump
         version: 8.0.510501
