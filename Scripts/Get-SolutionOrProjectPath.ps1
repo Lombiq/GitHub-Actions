@@ -3,11 +3,15 @@ param (
     [string] $PathPattern
 )
 
-Write-Output ""
-
-$matchedItems = $PathPattern -eq '' ?
-    (Get-ChildItem *.sln, *.slnx) :
+$matchedItems = if ($PathPattern -eq '') 
+{
+    (Get-ChildItem *.sln, *.slnx)
+}
+else
+{
     (Get-ChildItem -Filter $PathPattern -ErrorAction Ignore || Get-ChildItem $PathPattern)
+}
+
 $matchCount = ($matchedItems | Measure-Object).Count
 
 if ($matchCount -ne 1)
