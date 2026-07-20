@@ -3,7 +3,7 @@ param (
     [string] $PathPattern
 )
 
-$matchedItems = if ($PathPattern -eq '') 
+$matchedItems = if ($PathPattern -eq '')
 {
     (Get-ChildItem *.sln, *.slnx)
 }
