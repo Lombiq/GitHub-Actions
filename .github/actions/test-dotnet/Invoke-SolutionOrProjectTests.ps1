@@ -74,12 +74,25 @@ Write-Information "Building target with ``dotnet build --verbosity $Verbosity --
 dotnet build --verbosity $Verbosity --configuration $Configuration $SolutionOrProject
 
 $rebuildDirectory = 'src/Themes'
-if (-not $? -and $rebuildDirectory -and (Test-Path -Path $rebuildDirectory))
+
+if ($?)
 {
+    Write-Error "Failed to build `"$SolutionOrProject`"."
+    exit 1
+}
+
+if ($rebuildDirectory -and (Test-Path -Path $rebuildDirectory))
+{
+    Write-Information "Rebuilding `"$rebuildDirectory`"."
     foreach ($project in (Get-ChildItem -Path $rebuildDirectory -Filter *.csproj -Recurse))
     {
+        Write-Information "Rebuilding `"$project`" with `"dotnet build $project $buildSwitches`"."
         dotnet build $project @buildSwitches
     }
+}
+else
+{
+    Write-Information "No rebuild for `"$rebuildDirectory`"."
 }
 
 if ($SolutionOrProject -imatch '\.slnx?$')
