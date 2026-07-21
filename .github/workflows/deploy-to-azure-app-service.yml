@@ -117,6 +117,12 @@ on:
           the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
           to "false", the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the
           build to fail.
+      build-rebuild-directory:
+        type: string
+        default: 'true'
+        description: >
+          If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be
+          considered a workaround for a build order problem, and should be avoided when possible.
       timeout-minutes:
         type: number
         default: 360
@@ -244,6 +250,7 @@ jobs:
             -p:AzureDeploy=true
             -p:AzureDeployStage=build
             -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          rebuild-directory: ${{ inputs.build-rebuild-directory }}
 
       - name: Publish
         run: |

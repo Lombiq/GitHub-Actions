@@ -5,6 +5,7 @@ param (
     [string] $Configuration,
     [string] $BlameHangTimeout,
     [string] $TestProcessTimeout,
+    [string] $RebuildDirectory,
     [boolean] $EnableDiagnosticMode,
     [boolean] $ShowTimeRemainingUntilTimeout)
 
@@ -73,18 +74,16 @@ $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 Write-Information "Building target with ``dotnet build --verbosity $Verbosity --configuration $Configuration $SolutionOrProject``."
 dotnet build --verbosity $Verbosity --configuration $Configuration $SolutionOrProject
 
-$rebuildDirectory = 'src/Themes'
-
 if ($LASTEXITCODE -ne 0)
 {
     Write-Error "Failed to build `"$SolutionOrProject`"."
     exit 1
 }
 
-if ($rebuildDirectory -and (Test-Path -Path $rebuildDirectory))
+if ($RebuildDirectory -and (Test-Path -Path $RebuildDirectory))
 {
-    Write-Information "Rebuilding `"$rebuildDirectory`"."
-    foreach ($project in (Get-ChildItem -Path $rebuildDirectory -Filter *.csproj -Recurse))
+    Write-Information "Rebuilding `"$RebuildDirectory`"."
+    foreach ($project in (Get-ChildItem -Path $RebuildDirectory -Filter *.csproj -Recurse))
     {
         Write-Information "Rebuilding `"$project`" with `"dotnet build $project $buildSwitches`"."
         dotnet build $project @buildSwitches
@@ -92,7 +91,7 @@ if ($rebuildDirectory -and (Test-Path -Path $rebuildDirectory))
 }
 else
 {
-    Write-Information "No rebuild for `"$rebuildDirectory`"."
+    Write-Information "No rebuild for `"$RebuildDirectory`"."
 }
 
 if ($SolutionOrProject -imatch '\.slnx?$')
