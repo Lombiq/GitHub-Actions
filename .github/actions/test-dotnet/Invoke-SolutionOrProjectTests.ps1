@@ -75,7 +75,7 @@ dotnet build --verbosity $Verbosity --configuration $Configuration $SolutionOrPr
 
 $rebuildDirectory = 'src/Themes'
 
-if ($?)
+if ($LASTEXITCODE -ne 0)
 {
     Write-Error "Failed to build `"$SolutionOrProject`"."
     exit 1
