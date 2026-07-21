@@ -97,6 +97,12 @@ inputs:
       If set to "true", it runs "git clean" on the working directory (as specified by the "directory" input) after
       build. This can be used to save disk space if you only ran this action to verify the code using the
       "enable-code-analysis" option.
+  rebuild-directory:
+    required: false
+    default: ''
+    description: >
+      If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be considered a
+      workaround for a build order problem, and should be avoided when possible.
 
 runs:
   using: composite
@@ -214,6 +220,7 @@ runs:
             Version = "${{ inputs.publish-version }}"
             Switches = $buildSwitches
             ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+            RebuildDirectory = "${{ inputs.rebuild-directory }}"
             CreateBinaryLog = $${{ inputs.create-binary-log }}
             WarningsAsErrors = $${{ inputs.warnings-as-errors }}
         }

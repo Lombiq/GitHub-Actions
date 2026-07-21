@@ -73,6 +73,15 @@ $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 Write-Information "Building target with ``dotnet build --verbosity $Verbosity --configuration $Configuration $SolutionOrProject``."
 dotnet build --verbosity $Verbosity --configuration $Configuration $SolutionOrProject
 
+$rebuildDirectory = 'src/Themes'
+if (-not $? -and $rebuildDirectory -and (Test-Path -Path $rebuildDirectory))
+{
+    foreach ($project in (Get-ChildItem -Path $rebuildDirectory -Filter *.csproj -Recurse))
+    {
+        dotnet build $project @buildSwitches
+    }
+}
+
 if ($SolutionOrProject -imatch '\.slnx?$')
 {
     $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($SolutionOrProject)
