@@ -255,7 +255,7 @@ runs:
         )
 
         Write-Output "Running `"dotnet clean $arguments`" in the `"$PWD`" directory."
-        dotnet clean @arguments
+        dotnet clean @arguments || exit 0 # It shouldn't be breaking if clean fails here.
 
     - name: Run git clean
       if: inputs.git-clean == 'true'
