@@ -256,7 +256,7 @@ runs:
 
         Write-Output "Running `"dotnet clean $arguments`" in the `"$PWD`" directory."
         # It shouldn't be breaking if clean fails here.
-        dotnet clean @arguments || Write-Output "::warning::The `"dotnet clean $arguments`" command did not finish successfully."
+        dotnet clean @arguments || $(Write-Output "::warning::The `"dotnet clean $arguments`" command did not finish successfully."; $LASTEXITCODE = 0)
 
     - name: Run git clean
       if: inputs.git-clean == 'true'
