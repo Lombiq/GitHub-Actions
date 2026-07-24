@@ -245,6 +245,9 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        $solutionOrProjectPathInput = '${{ inputs.solution-or-project-path }}'
+        $solutionOrProjectPath = Get-SolutionOrProjectPath ($solutionOrProjectPathInput || '*.sln?')
+
         $arguments = @(
             $solutionOrProjectPath
             '--configuration', '${{ inputs.configuration }}'
