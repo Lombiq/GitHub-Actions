@@ -36,7 +36,7 @@ runs:
         (Resolve-Path '${{ github.action_path }}/../../../Scripts').Path >> $Env:GITHUB_PATH
 
     - name: Set Checkout Token
-      uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@snapshot/dotnet8
       with:
         checkout-token: ${{ inputs.token }}
 
