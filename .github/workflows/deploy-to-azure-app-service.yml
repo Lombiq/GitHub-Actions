@@ -239,7 +239,7 @@ jobs:
           enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
           enable-npm-caching: ${{ inputs.build-enable-npm-caching }}
           cache-version: ${{ inputs.build-cache-version }}
-          # solution-or-project-path: ${{ inputs.web-project-path }}
+          solution-or-project-path: ${{ inputs.web-project-path }}
           warnings-as-errors: ${{ inputs.build-warnings-as-errors }}
           # Arguments need to be separated into newlines: https://stackoverflow.com/a/59077879/16192320
           dotnet-build-switches: |
