@@ -362,6 +362,14 @@ jobs:
             --name ${{ inputs.app-name }} `
             --slot ${{ inputs.slot-name }}
 
+      - name: Display Startup Logs on Failure
+        if: failure()
+        run: |
+          az container logs `
+            --resource-group ${{ inputs.resource-group-name }} `
+            --name ${{ inputs.app-name }} `
+            --slot ${{ inputs.slot-name }}
+
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
