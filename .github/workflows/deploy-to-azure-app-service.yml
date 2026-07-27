@@ -354,6 +354,16 @@ jobs:
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
 
+          if ($LASTEXITCODE -ne 0)
+          {
+            Write-Output "::error::Failed to verify web app slot (error code: $LASTEXITCODE)."
+            az webapp log startup show `
+              --resource-group ${{ inputs.resource-group-name }} `
+              --name ${{ inputs.app-name }} `
+              --slot ${{ inputs.slot-name }}
+            exit 1
+          }
+
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
