@@ -341,6 +341,7 @@ jobs:
           git push origin '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
 
       - name: Start Web App Slot
+        id: start-web-app-slot
         run: |
           Start-AzureWebAppSlot `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -348,6 +349,7 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Test Web App Slot
+        id: test-web-app-slot
         run: |
           Test-AzureWebApp `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -355,7 +357,7 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Display Startup Logs on Failure
-        if: failure()
+        if: failure() && (steps.start-web-app-slot.outcome == 'failure' || steps.test-web-app-slot.outcome == 'failure')
         run: |
           az webapp log startup show `
             --resource-group ${{ inputs.resource-group-name }} `
@@ -363,7 +365,7 @@ jobs:
             --slot ${{ inputs.slot-name }}
 
       - name: Display Container Logs on Failure
-        if: failure()
+        if: failure() && (steps.start-web-app-slot.outcome == 'failure' || steps.test-web-app-slot.outcome == 'failure')
         run: |
           az container logs `
             --resource-group ${{ inputs.resource-group-name }} `
