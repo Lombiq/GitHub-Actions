@@ -119,7 +119,7 @@ on:
           build to fail.
       build-rebuild-directory:
         type: string
-        default: 'true'
+        default: ''
         description: >
           If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be
           considered a workaround for a build order problem, and should be avoided when possible.
