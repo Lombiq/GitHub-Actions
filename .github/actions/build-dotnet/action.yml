@@ -97,6 +97,12 @@ inputs:
       If set to "true", it runs "git clean" on the working directory (as specified by the "directory" input) after
       build. This can be used to save disk space if you only ran this action to verify the code using the
       "enable-code-analysis" option.
+  rebuild-directory:
+    required: false
+    default: ''
+    description: >
+      If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be considered a
+      workaround for a build order problem, and should be avoided when possible.
 
 runs:
   using: composite
@@ -214,6 +220,7 @@ runs:
             Version = "${{ inputs.publish-version }}"
             Switches = $buildSwitches
             ExpectedCodeAnalysisErrors = $expectedCodeAnalysisErrors
+            RebuildDirectory = "${{ inputs.rebuild-directory }}"
             CreateBinaryLog = $${{ inputs.create-binary-log }}
             WarningsAsErrors = $${{ inputs.warnings-as-errors }}
         }
@@ -238,6 +245,9 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
+        $solutionOrProjectPathInput = '${{ inputs.solution-or-project-path }}'
+        $solutionOrProjectPath = Get-SolutionOrProjectPath ($solutionOrProjectPathInput || '*.sln?')
+
         $arguments = @(
             $solutionOrProjectPath
             '--configuration', '${{ inputs.configuration }}'
@@ -245,7 +255,9 @@ runs:
         )
 
         Write-Output "Running `"dotnet clean $arguments`" in the `"$PWD`" directory."
-        dotnet clean @arguments
+        # It shouldn't be breaking if clean fails here, so we write out the dotnet version to clean the last exit code.
+        dotnet clean @arguments || Write-Output "::warning::The `"dotnet clean $arguments`" command did not finish successfully."
+        dotnet --version
 
     - name: Run git clean
       if: inputs.git-clean == 'true'

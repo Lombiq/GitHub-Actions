@@ -71,6 +71,12 @@ inputs:
     description: >
       Interval in seconds to wait between retries of UI tests. Configuring a non-zero interval increases the chance that
       retries will be successful, due to load on the runner changing.
+  rebuild-directory:
+    required: false
+    default: ''
+    description: >
+      If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be considered a
+      workaround for a build order problem, and should be avoided when possible.
 
 runs:
   using: composite
@@ -108,6 +114,7 @@ runs:
           Configuration = "${{ inputs.test-configuration }}"
           BlameHangTimeout = "${{ inputs.blame-hang-timeout }}"
           TestProcessTimeout = ${{ inputs.dotnet-test-process-timeout }}
+          RebuildDirectory = "${{ inputs.rebuild-directory }}"
           EnableDiagnosticMode = $${{ inputs.enable-diagnostic-mode }}
           ShowTimeRemainingUntilTimeout = $${{ inputs.show-time-remaining-until-timeout }}
         }

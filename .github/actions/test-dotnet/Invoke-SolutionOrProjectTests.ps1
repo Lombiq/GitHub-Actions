@@ -5,6 +5,7 @@ param (
     [string] $Configuration,
     [string] $BlameHangTimeout,
     [string] $TestProcessTimeout,
+    [string] $RebuildDirectory,
     [boolean] $EnableDiagnosticMode,
     [boolean] $ShowTimeRemainingUntilTimeout)
 
@@ -72,6 +73,26 @@ $Env:Lombiq_Tests_UI__BrowserConfiguration__Headless = 'true'
 # safest to build the solution or project target explicitly, then run "dotnet test" with the "--no-build" switch.
 Write-Information "Building target with ``dotnet build --verbosity $Verbosity --configuration $Configuration $SolutionOrProject``."
 dotnet build --verbosity $Verbosity --configuration $Configuration $SolutionOrProject
+
+if ($LASTEXITCODE -ne 0)
+{
+    Write-Error "Failed to build `"$SolutionOrProject`"."
+    exit 1
+}
+
+if ($RebuildDirectory -and (Test-Path -Path $RebuildDirectory))
+{
+    Write-Information "Rebuilding `"$RebuildDirectory`"."
+    foreach ($project in (Get-ChildItem -Path $RebuildDirectory -Filter *.csproj -Recurse))
+    {
+        Write-Information "Rebuilding `"$project`" with `"dotnet build $project $buildSwitches`"."
+        dotnet build $project @buildSwitches
+    }
+}
+else
+{
+    Write-Information "No rebuild for `"$RebuildDirectory`"."
+}
 
 if ($SolutionOrProject -imatch '\.slnx?$')
 {

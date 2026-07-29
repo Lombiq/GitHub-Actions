@@ -6,6 +6,7 @@
     [string] $Version,
     [string] $Switches,
     [string] $ExpectedCodeAnalysisErrors,
+    [string] $RebuildDirectory,
     [boolean] $CreateBinaryLog,
     [boolean] $WarningsAsErrors)
 
@@ -68,6 +69,14 @@ $errorCodes = New-Object 'System.Collections.Generic.List[string]'
 if ($noErrorsExpected)
 {
     dotnet build $SolutionOrProject @buildSwitches
+
+    if (-not $? -and $RebuildDirectory -and (Test-Path -Path $RebuildDirectory))
+    {
+        foreach ($project in (Get-ChildItem -Path $RebuildDirectory -Filter *.csproj -Recurse))
+        {
+            dotnet build $project @buildSwitches
+        }
+    }
 }
 else
 {

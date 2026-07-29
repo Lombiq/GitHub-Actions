@@ -151,6 +151,12 @@ on:
         description: >
           If set to "true", the workflow fails when the checked out repository has pending Git changes immediately
           after the build step.
+      build-rebuild-directory:
+        type: string
+        default: ''
+        description: >
+          If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be
+          considered a workaround for a build order problem, and should be avoided when possible.
       dotnet-test-process-timeout:
         required: false
         type: number
@@ -214,6 +220,12 @@ on:
         description: >
           Enables the output of a "Until timeout: Ns" type message every second during test execution. This can be
           helpful if you need an idea about the timing of the test outputs.
+      test-rebuild-directory:
+        type: string
+        default: ''
+        description: >
+          If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be
+          considered a workaround for a build order problem, and should be avoided when possible.
       ui-test-retry-interval-seconds:
         type: string
         required: false
@@ -360,6 +372,7 @@ jobs:
           warnings-as-errors: ${{ inputs.warnings-as-errors }}
           dotnet-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true') }}
           git-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true') }}
+          rebuild-directory: ${{ inputs.build-rebuild-directory }}
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
@@ -413,6 +426,7 @@ jobs:
           show-time-remaining-until-timeout: ${{ inputs.test-show-time-remaining-until-timeout }}
           ui-test-retry-interval-seconds: ${{ inputs.ui-test-retry-interval-seconds }}
           test-configuration: ${{ inputs.test-configuration }}
+          rebuild-directory: ${{ inputs.test-rebuild-directory }}
 
       - name: Log disk usage after tests
         if: failure() && inputs.log-disk-usage-depth > 0

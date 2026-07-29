@@ -117,6 +117,12 @@ on:
           the compiler flag "-warnaserror" will be used, causing the build to fail if any warnings are generated. If set
           to "false", the flag "-warnaserror" will not be used, allowing warnings to be generated without causing the
           build to fail.
+      build-rebuild-directory:
+        type: string
+        default: ''
+        description: >
+          If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be
+          considered a workaround for a build order problem, and should be avoided when possible.
       timeout-minutes:
         type: number
         default: 360
@@ -244,6 +250,7 @@ jobs:
             -p:AzureDeploy=true
             -p:AzureDeployStage=build
             -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          rebuild-directory: ${{ inputs.build-rebuild-directory }}
 
       - name: Publish
         run: |
@@ -334,6 +341,7 @@ jobs:
           git push origin '${{ inputs.tag-prefix }}/${{ steps.create-timestamp.outputs.timestamp-tag }}'
 
       - name: Start Web App Slot
+        id: start-web-app-slot
         run: |
           Start-AzureWebAppSlot `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
@@ -341,11 +349,27 @@ jobs:
             -SlotName ${{ inputs.slot-name }}
 
       - name: Test Web App Slot
+        id: test-web-app-slot
         run: |
           Test-AzureWebApp `
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
+
+      - name: Display Startup Logs on Failure
+        if: failure() && (steps.start-web-app-slot.outcome == 'failure' || steps.test-web-app-slot.outcome == 'failure')
+        run: |
+          az webapp log startup show `
+            --resource-group ${{ inputs.resource-group-name }} `
+            --name ${{ inputs.app-name }} `
+            --slot ${{ inputs.slot-name }}
+
+      - name: Display Container Logs on Failure
+        if: failure() && (steps.start-web-app-slot.outcome == 'failure' || steps.test-web-app-slot.outcome == 'failure')
+        run: |
+          az container logs `
+            --resource-group ${{ inputs.resource-group-name }} `
+            --name ${{ inputs.app-name }} `
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
