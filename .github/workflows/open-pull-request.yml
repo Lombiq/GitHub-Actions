@@ -32,17 +32,17 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Set Checkout Token
-        uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@v5.0.0
         with:
           checkout-token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@v5.0.0
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Open Pull Request
-        uses: Lombiq/GitHub-Actions/.github/actions/open-pull-request@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/open-pull-request@v5.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.CHECKOUT_TOKEN }}
         with:
