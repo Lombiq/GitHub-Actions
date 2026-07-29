@@ -357,7 +357,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-925
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration }}
@@ -412,7 +412,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-925
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}

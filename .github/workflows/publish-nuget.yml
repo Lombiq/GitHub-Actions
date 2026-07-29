@@ -155,7 +155,7 @@ jobs:
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Publish to NuGet
-        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@issue/OSOE-925
+        uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
         with:
           source: ${{ inputs.source }}
           verbosity: ${{ inputs.verbosity }}
