@@ -313,21 +313,21 @@ jobs:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/OSOE-1303
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set Environment Variables
-        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@issue/OSOE-1303
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
       - name: Free up Space
         if: inputs.free-up-space == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@issue/OSOE-1303
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1303
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.repository-ref }}
@@ -335,29 +335,29 @@ jobs:
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-1303
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
           exclude-project-path: ${{ inputs.dotnet-consolidation-exclude-project-path }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1303
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1303
         with:
           node-version: ${{ inputs.node-version }}
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Enable Node.js corepack
         if: inputs.enable-corepack == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-1303
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-1303
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration }}
@@ -376,7 +376,7 @@ jobs:
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@issue/OSOE-1303
         with:
           ignored-paths: |
             global.json
@@ -385,19 +385,19 @@ jobs:
 
       - name: Print configuration summary
         if: inputs.print-config-summary == 'true' && (success() || failure())
-        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/print-config-summary@issue/OSOE-1303
 
       - name: Set up SQL Server
         if: inputs.set-up-sql-server == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-sql-server@issue/OSOE-1303
 
       - name: Set up Elasticsearch
         if: inputs.set-up-elasticsearch == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-elasticsearch@issue/OSOE-1303
 
       - name: Set up Azurite
         if: inputs.set-up-azurite == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-azurite@issue/OSOE-1303
         with:
           location: ${{ inputs.build-directory}}
 
@@ -412,7 +412,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-1303
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
@@ -439,6 +439,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1303
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
