@@ -199,7 +199,7 @@ runs:
     - name: Build and Static Code Analysis
       id: build
       shell: pwsh
-      timeout-minutes: ${{ inputs.timeout-minutes }}
+      timeout-minutes: ${{ fromJSON(inputs.timeout-minutes) }}
       continue-on-error: true
       working-directory: ${{ inputs.directory }}
       run: |
