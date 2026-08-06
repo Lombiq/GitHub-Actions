@@ -103,6 +103,12 @@ inputs:
     description: >
       If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be considered a
       workaround for a build order problem, and should be avoided when possible.
+  timeout-minutes:
+    required: false
+    default: '360'
+    description: >
+      The maximum time the for the "build" step in minutes. Can be useful in combination with "create-binary-log" if the
+      build hangs.
 
 runs:
   using: composite
@@ -193,6 +199,8 @@ runs:
     - name: Build and Static Code Analysis
       id: build
       shell: pwsh
+      timeout-minutes: ${{ inputs.timeout-minutes }}
+      continue-on-error: true
       working-directory: ${{ inputs.directory }}
       run: |
         Write-Output "Using .NET SDK from ./global.json:`n$(Get-Content .\global.json -Raw)"

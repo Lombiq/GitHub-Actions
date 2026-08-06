@@ -129,6 +129,12 @@ on:
         description: >
           Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
           https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
+      build-timeout-minutes:
+        type: number
+        default: 360
+        description: >
+          The maximum time the for the "build-dotnet" action's "build" step in minutes. Can be useful in combination
+          with "build-create-binary-log" if the build hangs.
       timeout-minutes:
         type: number
         default: 360
@@ -236,10 +242,11 @@ jobs:
           "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/NEST-608
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
           verbosity: ${{ inputs.build-verbosity }}
           enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
           enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
@@ -257,7 +264,7 @@ jobs:
             -p:AzureDeployStage=build
             -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           rebuild-directory: ${{ inputs.build-rebuild-directory }}
-          create-binary-log: ${{ inputs.build-create-binary-log }}
+          timeout-minutes: ${{ inputs.build-timeout-minutes }}
 
       - name: Publish
         run: |
