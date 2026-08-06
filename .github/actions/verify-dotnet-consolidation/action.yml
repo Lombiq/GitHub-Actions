@@ -40,12 +40,12 @@ runs:
 
     # This tool depends on .NET 8 to run regardless of the solution's framework.
     - name: Set up .NET
-      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1307
       with:
         dotnet-version: 8.0.319
 
     - name: Install dotnet-consolidate
-      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@issue/OSOE-1307
       with:
         name: dotnet-consolidate
         version: 4.2.0
