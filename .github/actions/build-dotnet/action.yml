@@ -197,9 +197,9 @@ runs:
         $globalJsonObject | ConvertTo-Json | Set-Content .\global.json
 
     - name: Build and Static Code Analysis
+      timeout-minutes: 30
       id: build
       shell: pwsh
-      timeout-minutes: 30
       continue-on-error: true
       working-directory: ${{ inputs.directory }}
       run: |
