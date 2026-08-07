@@ -197,7 +197,6 @@ runs:
         $globalJsonObject | ConvertTo-Json | Set-Content .\global.json
 
     - name: Build and Static Code Analysis
-      timeout-minutes: 30
       id: build
       shell: pwsh
       continue-on-error: true
@@ -233,10 +232,36 @@ runs:
             WarningsAsErrors = $${{ inputs.warnings-as-errors }}
         }
 
+        $timeoutMinutes = [int]${{ inputs.timeout-minutes }}
         $startTime = [DateTime]::Now
-        Build-DotNetSolutionOrProject @switches
-        $endTime = [DateTime]::Now
 
+        if ($timeoutMinutes -gt 0)
+        {
+            # If there is a timeout, run the commandlet as a job so "Wait-Job" can manage the limit.
+            $block = {
+                $switches = $args[0]
+                Build-DotNetSolutionOrProject @switches
+            }
+
+            $job = Start-Job -ScriptBlock $block -ArgumentList $switches
+            $completed = Wait-Job -Job $job -Timeout ($timeoutMinutes * 60)
+
+            if ($completed -eq $null)
+            {
+                Write-Output "::error::The dotnet build job timed out."
+                $job | Stop-Job | Remove-Job
+                exit 1
+            }
+
+            Receive-Job -Job $job
+            Remove-Job -Job $job
+        }
+        else
+        {
+            Build-DotNetSolutionOrProject @switches
+        }
+
+        $endTime = [DateTime]::Now
         Write-Output ("Solution or project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
 
     - name: Upload MSBuild Binary Log
