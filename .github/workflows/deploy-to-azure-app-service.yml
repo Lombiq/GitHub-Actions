@@ -286,6 +286,15 @@ jobs:
               -Name 'dotnet publish' `
               -ScriptBlock $block
 
+      - name: Upload MSBuild Binary Log
+        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+        if: (success() || failure()) && inputs.build-create-binary-log == 'true'
+        with:
+          name: build-binary-log-publish.binlog
+          path: ${{ inputs.build-directory }}/build.binlog
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Compress Publish Package
         run: |
           Compress-Archive -Path .\Published\* -DestinationPath .\Published.zip
