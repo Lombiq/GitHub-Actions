@@ -268,16 +268,23 @@ jobs:
 
       - name: Publish
         run: |
-          dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
-            --no-build `
-            --configuration ${{ inputs.build-configuration }} `
-            --output '${{ inputs.build-directory }}/Published' `
-            --verbosity ${{ inputs.build-verbosity }} `
-            --self-contained ${{ inputs.self-contained }} `
-            -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
-            -p:AzureDeploy=true `
-            -p:AzureDeployStage=publish `
-            ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}
+          $block = {
+              dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
+                  --no-build `
+                  --configuration ${{ inputs.build-configuration }} `
+                  --output '${{ inputs.build-directory }}/Published' `
+                  --verbosity ${{ inputs.build-verbosity }} `
+                  --self-contained ${{ inputs.self-contained }} `
+                  -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
+                  -p:AzureDeploy=true `
+                  -p:AzureDeployStage=publish `
+                  ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}
+          }
+
+          Invoke-ScriptBlock `
+              -TimeoutMinutes ${{ inputs.build-timeout-minutes }} `
+              -Name 'dotnet publish' `
+              -ScriptBlock $block
 
       - name: Compress Publish Package
         run: |
