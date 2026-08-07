@@ -243,12 +243,14 @@ runs:
                 Build-DotNetSolutionOrProject @switches
             }
 
+            Write-Output "Starting `"dotnet build`" as a separate job that must finish within $timeoutMinutes minutes."
+
             $job = Start-Job -ScriptBlock $block -ArgumentList $switches
             $completed = Wait-Job -Job $job -Timeout ($timeoutMinutes * 60)
 
             if ($completed -eq $null)
             {
-                Write-Output "::error::The dotnet build job timed out."
+                Write-Output "::error::The `"dotnet build`" job did not finish within $timeoutMinutes minutes."
                 $job | Stop-Job | Remove-Job
                 exit 1
             }
