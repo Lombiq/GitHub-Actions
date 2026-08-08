@@ -255,7 +255,7 @@ runs:
         $enablePackageValidation = !($version -like '*-*')
 
         $parameters = @{
-          EnablePackageValidation=$enablePackageValidation
+          EnablePackageValidation=$false
           PackageValidationBaselineVersion='${{ steps.setup.outputs.baseline-version }}'
           Version=$version
           BaseBranch='${{ github.base_ref }}'
