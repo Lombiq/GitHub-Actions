@@ -285,6 +285,7 @@ jobs:
               -TimeoutMinutes ${{ inputs.build-timeout-minutes }} `
               -Name 'dotnet publish' `
               -ScriptBlock $block
+              -ShowTimeRemainingUntilTimeout $true
 
       - name: Upload MSBuild Binary Log
         uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev

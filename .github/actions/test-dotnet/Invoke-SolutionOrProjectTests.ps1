@@ -9,26 +9,6 @@ param (
     [boolean] $EnableDiagnosticMode,
     [boolean] $ShowTimeRemainingUntilTimeout)
 
-function Write-GitHub
-{
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-        'PSAvoidUsingWriteHost',
-        '',
-        Justification = 'These messages github annotations always have to go to the workflow runner virtual console.')]
-    param(
-        [Parameter(Mandatory = $true, Position = 0)]
-        [string] $Message,
-        [switch] $Warning,
-        [switch] $Notice)
-
-    $mode = 'error'
-
-    if ($Warning) { $mode = 'warning' }
-    if ($Notice) { $mode = 'notice' }
-
-    Write-Host "::$mode::$Message"
-}
-
 # This is a magic variable, setting it lets us always display the information stream without needing to add the
 # "-InformationAction Continue" to every call. This is not best practice for general PowerShell scripts, but makes sense
 # for scripts made for GHA.
