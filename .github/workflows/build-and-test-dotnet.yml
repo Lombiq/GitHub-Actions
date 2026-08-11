@@ -288,11 +288,6 @@ jobs:
           ref: ${{ inputs.repository-ref }}
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
-      - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
-        with:
-          dotnet-version: ${{ inputs.dotnet-version }}
-
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
         uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
@@ -300,6 +295,11 @@ jobs:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
           exclude-project-path: ${{ inputs.dotnet-consolidation-exclude-project-path }}
+
+      - name: Set up .NET
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Set up Node.js
         uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev

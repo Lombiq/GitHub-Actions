@@ -7,7 +7,7 @@
 version: '2.2'
 services:
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.4.4@sha256:a3545404e436e348721786bed638042a81f2181ebe2e2636501bb43940677747
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.0@sha256:8818ab9af72d7482e38a9d6f0454d5ee667564a25bbdc42360c0f9b8f8f72fc5
     container_name: es01
     environment:
       - node.name=es01
@@ -31,7 +31,7 @@ services:
     networks:
       - elastic
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.4.4@sha256:a3545404e436e348721786bed638042a81f2181ebe2e2636501bb43940677747
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.0@sha256:8818ab9af72d7482e38a9d6f0454d5ee667564a25bbdc42360c0f9b8f8f72fc5
     container_name: es02
     environment:
       - node.name=es02
