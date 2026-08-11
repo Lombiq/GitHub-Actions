@@ -17,7 +17,7 @@ if ($TimeoutMinutes -gt 0)
     {
         Receive-Job $job | Tee-Object -Variable line | Write-Output
 
-        $timeRemaining = $TimeoutMinutes - $stopWatch.Elapsed.TotalMinutes
+        $timeRemaining = ($TimeoutMinutes * 60) - $stopWatch.Elapsed.TotalSeconds
         if ($timeRemaining -lt 0)
         {
             Write-GitHub "The `"$Name`" job did not finish within $TimeoutMinutes minutes."
@@ -27,8 +27,10 @@ if ($TimeoutMinutes -gt 0)
 
         if ($ShowTimeRemainingUntilTimeout)
         {
-            Write-Output "Until timeout: $([Math]::Ceiling($timeRemaining)) minutes"
+            Write-Output "Until timeout: $([Math]::Ceiling($timeRemaining)) seconds."
         }
+
+        Start-Sleep -Seconds 5
     }
 
     Receive-Job -Job $job
