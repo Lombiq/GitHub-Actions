@@ -197,12 +197,17 @@ on:
         type: string
         default: 'false'
         description: If set to "true", the latests tags will not be updated.
-      test-orchard-core-url:
+      verify-orchard-core-url:
         type: string
         default: ''
         description: >
           If not empty, this URL will be checked for the "X-Powered-By" HTTP response header, which should have the
           value 'OrchardCore' to pass. This is performed at the end of the "test-web-app-slot" step.
+      verify-orchard-core-delay-time-seconds:
+        type: number
+        default: 5
+        description: >
+          The wait time between failed access attempts when using "verify-orchard-core-url".
 
 jobs:
   deploy:
@@ -393,27 +398,28 @@ jobs:
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
 
-          $testOrchardCoreUrl = '${{ inputs.test-orchard-core-url }}'
-          if ($testOrchardCoreUrl)
+          $verifyOrchardCoreUrl = '${{ inputs.verify-orchard-core-url }}'
+          $verifyOrchardCoreDelayTimeSeconds = ${{ inputs.verify-orchard-core-delay-time-seconds }}
+          if ($verifyOrchardCoreUrl)
           {
             for ($i = 0; $i -lt 5; $i += 1)
             {
-              $response = Invoke-WebRequest $testOrchardCoreUrl -ErrorAction SilentlyContinue
+              $response = Invoke-WebRequest $verifyOrchardCoreUrl -ErrorAction SilentlyContinue
               if ($response -and $response.Headers['X-Powered-By'] -eq 'OrchardCore')
               {
-                Write-Output "Successfully reached `"$testOrchardCoreUrl`" after $i tries."
+                Write-Output "Successfully reached `"$verifyOrchardCoreUrl`" after $i tries."
                 exit 0
               }
               else
               {
                 $attempt = $i + 1
-                Write-Output "Attempt ${attempt}: Couldn't reach `"$testOrchardCoreUrl`". Retrying in 3 seconds..."
+                Write-Output "Attempt ${attempt}: Couldn't reach `"$verifyOrchardCoreUrl`". Retrying in 3 seconds..."
 
-                Start-Sleep -Seconds 3
+                Start-Sleep -Seconds $verifyOrchardCoreDelayTimeSeconds
               }
             }
 
-            Write-GitHub "Couldn't reach `"$testOrchardCoreUrl`"!"
+            Write-GitHub "Couldn't reach `"$verifyOrchardCoreUrl`"!"
             exit 1
           }
 
