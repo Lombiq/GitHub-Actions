@@ -404,19 +404,23 @@ jobs:
           {
             for ($i = 0; $i -lt 5; $i += 1)
             {
-              $response = Invoke-WebRequest $verifyOrchardCoreUrl -ErrorAction SilentlyContinue
-              if ($response -and $response.Headers['X-Powered-By'] -eq 'OrchardCore')
+              try
               {
-                Write-Output "Successfully reached `"$verifyOrchardCoreUrl`" after $i tries."
-                exit 0
+                $response = Invoke-WebRequest $verifyOrchardCoreUrl -ErrorAction SilentlyContinue
+                if ($response -and $response.Headers['X-Powered-By'] -eq 'OrchardCore')
+                {
+                  Write-Output "Successfully reached `"$verifyOrchardCoreUrl`" after $i tries."
+                  exit 0
+                }
               }
-              else
+              catch ($exception)
               {
-                $attempt = $i + 1
-                Write-Output "Attempt ${attempt}: Couldn't reach `"$verifyOrchardCoreUrl`". Retrying in 3 seconds..."
+                Write-Output $exception.Message
+              }
 
-                Start-Sleep -Seconds $verifyOrchardCoreDelayTimeSeconds
-              }
+              Write-Output "Attempt $($i + 1): Couldn't reach `"$verifyOrchardCoreUrl`". Retrying in $verifyOrchardCoreDelayTimeSeconds seconds..."
+
+              Start-Sleep -Seconds $verifyOrchardCoreDelayTimeSeconds
             }
 
             Write-GitHub "Couldn't reach `"$verifyOrchardCoreUrl`"!"
