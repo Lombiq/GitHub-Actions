@@ -197,6 +197,12 @@ on:
         type: string
         default: 'false'
         description: If set to "true", the latests tags will not be updated.
+      test-orchard-core-url:
+        type: string
+        default: ''
+        description: >
+          If not empty, this URL will be checked for the "X-Powered-By" HTTP response header, which should have the
+          value 'OrchardCore' to pass. This is performed at the end of the "test-web-app-slot" step.
 
 jobs:
   deploy:
@@ -386,6 +392,30 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
+
+          $testOrchardCoreUrl = '${{ inputs.test-orchard-core-url }}'
+          if ($testOrchardCoreUrl)
+          {
+            for ($i = 0; $i -lt 5; $i += 1)
+            {
+              $response = Invoke-WebRequest $testOrchardCoreUrl -ErrorAction SilentlyContinue
+              if ($response -and $response.Headers['X-Powered-By'] -eq 'OrchardCore')
+              {
+                Write-Output "Successfully reached `"$testOrchardCoreUrl`" after $i tries."
+                exit 0
+              }
+              else
+              {
+                $attempt = $i + 1
+                Write-Output "Attempt $attempt: Couldn't reach `"$testOrchardCoreUrl`". Retrying in 3 seconds..."
+
+                Start-Sleep -Seconds 3
+              }
+            }
+
+            Write-GitHub "Couldn't reach `"$testOrchardCoreUrl`"!"
+            exit 1
+          }
 
       - name: Display Startup Logs on Failure
         if: failure() && (steps.start-web-app-slot.outcome == 'failure' || steps.test-web-app-slot.outcome == 'failure')
