@@ -413,9 +413,9 @@ jobs:
                   exit 0
                 }
               }
-              catch ($exception)
+              catch
               {
-                Write-Output $exception.Message
+                Write-Output $PSItem.Message
               }
 
               Write-Output "Attempt $($i + 1): Couldn't reach `"$verifyOrchardCoreUrl`". Retrying in $verifyOrchardCoreDelayTimeSeconds seconds..."
