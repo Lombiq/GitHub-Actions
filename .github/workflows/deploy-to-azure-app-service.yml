@@ -407,7 +407,7 @@ jobs:
               else
               {
                 $attempt = $i + 1
-                Write-Output "Attempt $attempt: Couldn't reach `"$testOrchardCoreUrl`". Retrying in 3 seconds..."
+                Write-Output "Attempt ${attempt}: Couldn't reach `"$testOrchardCoreUrl`". Retrying in 3 seconds..."
 
                 Start-Sleep -Seconds 3
               }
