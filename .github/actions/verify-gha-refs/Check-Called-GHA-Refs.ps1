@@ -9,7 +9,7 @@
 
 if ($CalledRepoBaseIncludeList.Count -eq 0)
 {
-    Write-Output '::warning file=Check-Called-GHA-refs.ps1,line10::CalledRepoBaseIncludeList is empty which is unexpected. If this was intentional, you can ignore this warning.'
+    Write-GitHub -Warning 'Check-Called-GHA-refs.ps1: CalledRepoBaseIncludeList is empty which is unexpected. If this was intentional, you can ignore this warning.'
     exit 0 # Nothing to check because array is empty.
 }
 
@@ -41,13 +41,13 @@ if ($mismatchRefs.Count -gt 0)
         # As a workaround, link directly to file.
         "- <a href='https://github.com/$GitHubRepository/blob/$GitHubRefName/$filename#L$lineNumber'>$filename#L$lineNumber</a>" >> $env:GITHUB_STEP_SUMMARY
         # And write better log message.
-        Write-Output "::error::$filename#L$lineNumber - called GitHub Action does not match expected Ref '$ExpectedRef'."
+        Write-GitHub "$filename#L$lineNumber - called GitHub Action does not match expected Ref '$ExpectedRef'."
 
         '```yaml' >> $env:GITHUB_STEP_SUMMARY
         $title >> $env:GITHUB_STEP_SUMMARY
         '```' >> $env:GITHUB_STEP_SUMMARY
     }
 
-    Write-Output "::error::Check Job Summary for more details on which GitHub Actions Refs do not match '$ExpectedRef'."
+    Write-GitHub "Check Job Summary for more details on which GitHub Actions Refs do not match '$ExpectedRef'."
     exit 1
 }
