@@ -199,7 +199,6 @@ runs:
     - name: Build and Static Code Analysis
       id: build
       shell: pwsh
-      continue-on-error: true
       working-directory: ${{ inputs.directory }}
       run: |
         Write-Output "Using .NET SDK from ./global.json:`n$(Get-Content .\global.json -Raw)"
