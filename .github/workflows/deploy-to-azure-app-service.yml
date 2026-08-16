@@ -192,7 +192,11 @@ on:
           when by tagging the deployed commit.
       publish-arguments:
         type: string
+        default: 'false'
         description: Additional arguments passed to dotnet publish.
+      publish-show-diagnostics:
+        type: string
+        description: Show diagnostic information while executing the "dotnet publish" command.
       skip-update-latest-tag:
         type: string
         default: 'false'
@@ -296,7 +300,7 @@ jobs:
               -TimeoutMinutes ${{ inputs.build-timeout-minutes }} `
               -Name 'dotnet publish' `
               -ScriptBlock $block `
-              -ShowTimeRemainingUntilTimeout $true
+              -ShowDiagnostics $${{ inputs.publish-show-diagnostics }}
 
       - name: Upload MSBuild Binary Log
         uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev

@@ -3,7 +3,7 @@ param (
     [string] $Name,
     [ScriptBlock] $ScriptBlock,
     [array] $ArgumentList,
-    [boolean] $ShowTimeRemainingUntilTimeout)
+    [boolean] $ShowDiagnostics)
 
 if ($TimeoutMinutes -gt 0)
 {
@@ -25,9 +25,17 @@ if ($TimeoutMinutes -gt 0)
             exit 1
         }
 
-        if ($ShowTimeRemainingUntilTimeout)
+        if ($ShowDiagnostics)
         {
             Write-Output "Until timeout: $([Math]::Ceiling($timeRemaining)) seconds."
+
+            if ($isLinux)
+            {
+                $memoryTotal = [int](free -m | awk '/Mem/{print $2}')
+                $memoryUsed = [int](free -m | awk '/Mem/{print $3}')
+                $memoryPercent = 100.0 * $memoryUsed / $memoryTotal
+                Write-Output ('Memory used: {0} MB ({1:0.00}%)' -f $memoryUsed, $memoryPercent)
+            }
         }
 
         Start-Sleep -Seconds 5
