@@ -78,5 +78,5 @@ runs:
         $ghaError = ((Get-Content .gha-error).Replace("`n", ' ') -join ' ') -replace '\s+', ' '
         Write-GitHub "Verify GitHub Actions References failed with the following error: $ghaError"
 
-        Remove-Item .gha-error
+        Remove-Item -Force .gha-error
         exit 1
