@@ -43,10 +43,9 @@ if ($mismatchRefs.Count -gt 0)
         # And write better log message.
         Write-Output "::error::$filename#L$lineNumber - called GitHub Action does not match expected Ref '$ExpectedRef'."
 
-        # Beware the backtick character is the powershell escape character.
-        "``````yaml" >> $env:GITHUB_STEP_SUMMARY
-        "$title" >> $env:GITHUB_STEP_SUMMARY
-        "``````" >> $env:GITHUB_STEP_SUMMARY
+        '```yaml' >> $env:GITHUB_STEP_SUMMARY
+        $title >> $env:GITHUB_STEP_SUMMARY
+        '```' >> $env:GITHUB_STEP_SUMMARY
     }
 
     Write-Output "::error::Check Job Summary for more details on which GitHub Actions Refs do not match '$ExpectedRef'."
