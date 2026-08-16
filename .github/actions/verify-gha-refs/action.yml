@@ -75,8 +75,8 @@ runs:
           exit 0
         }
 
-        $error = ((Get-Content .gha-error).Replace("`n", ' ') -join ' ') -replace '\s+', ' '
-        Write-GitHub "Verify GitHub Actions References failed with the following error: $error"
+        $ghaError = ((Get-Content .gha-error).Replace("`n", ' ') -join ' ') -replace '\s+', ' '
+        Write-GitHub "Verify GitHub Actions References failed with the following error: $ghaError"
 
         Remove-Item .gha-error
         exit 1

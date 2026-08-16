@@ -31,6 +31,8 @@ while ($true)
 
     if ($first)
     {
+        Set-GitHubOutput 'has-files' 'true'
+
         Write-Output '> :warning: Warning :warning:' >> $env:GITHUB_STEP_SUMMARY
         Write-Output '> Your pull request branch may be outdated if you see errors for files you did not edit. Please merge the target branch to resolve these errors.' >> $env:GITHUB_STEP_SUMMARY
 
