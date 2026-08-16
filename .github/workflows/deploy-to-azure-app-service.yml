@@ -278,8 +278,6 @@ jobs:
           timeout-minutes: ${{ inputs.build-timeout-minutes }}
 
       - name: Publish
-        env:
-          MSBUILDDISABLENODEREUSE: '1' # Prevents background worker processes from staying alive in memory
         run: |
           $block = {
               dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
