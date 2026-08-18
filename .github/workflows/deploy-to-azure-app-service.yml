@@ -193,7 +193,6 @@ on:
           when by tagging the deployed commit.
       publish-arguments:
         type: string
-        default: 'false'
         description: Additional arguments passed to dotnet publish.
       publish-show-diagnostics:
         type: string
@@ -288,7 +287,6 @@ jobs:
           $projectFile = (Get-ChildItem ${{ inputs.web-project-path }}).FullName
           $block = {
               $projectFile = $args[0]
-              Write-Host "dotnet publish $projectFile --no-build --configuration ${{ inputs.build-configuration }} --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }} --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=${{ inputs.ready-to-run }} -p:AzureDeploy=true -p:AzureDeployStage=publish ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}"
               dotnet publish $projectFile `
                   --no-build `
                   --configuration ${{ inputs.build-configuration }} `
