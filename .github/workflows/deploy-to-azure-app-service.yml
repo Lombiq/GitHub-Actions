@@ -303,7 +303,7 @@ jobs:
               -TimeoutMinutes ${{ inputs.build-timeout-minutes }} `
               -Name "dotnet publish `"$projectFile`"" `
               -ScriptBlock $block `
-              -ShowDiagnostics $${{ inputs.publish-show-diagnostics }}
+              -ShowDiagnostics $${{ inputs.publish-show-diagnostics }} `
               -ArgumentList @($projectFile)
 
       - name: Upload MSBuild Binary Log
