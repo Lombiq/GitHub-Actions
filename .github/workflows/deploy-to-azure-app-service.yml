@@ -131,7 +131,7 @@ on:
           https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
       build-timeout-minutes:
         type: number
-        default: 0
+        default: 360
         description: >
           The maximum time the for the "build-dotnet" action's "build" step and for this workflow's "publish" step in
           minutes. Can be useful in combination with "build-create-binary-log" if the build hangs. If set to zero (which
