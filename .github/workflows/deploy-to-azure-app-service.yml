@@ -287,9 +287,9 @@ jobs:
         run: |
           $projectFile = (Get-ChildItem ${{ inputs.web-project-path }}).FullName
           $block = {
-              Write-Host dotnet publish $args[0] --no-build `
-                  --configuration ${{ inputs.build-configuration }} --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }} --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=${{ inputs.ready-to-run }} -p:AzureDeploy=true -p:AzureDeployStage=publish ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}
-              dotnet publish $args[0] `
+              $projectFile = $args[0]
+              Write-Host "dotnet publish $projectFile --no-build --configuration ${{ inputs.build-configuration }} --output '${{ inputs.build-directory }}/Published' --verbosity ${{ inputs.build-verbosity }} --self-contained ${{ inputs.self-contained }} -p:PublishReadyToRun=${{ inputs.ready-to-run }} -p:AzureDeploy=true -p:AzureDeployStage=publish ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}"
+              dotnet publish $projectFile `
                   --no-build `
                   --configuration ${{ inputs.build-configuration }} `
                   --output '${{ inputs.build-directory }}/Published' `
