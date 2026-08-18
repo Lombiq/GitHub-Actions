@@ -131,10 +131,11 @@ on:
           https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
       build-timeout-minutes:
         type: number
-        default: 360
+        default: 0
         description: >
-          The maximum time the for the "build-dotnet" action's "build" step in minutes. Can be useful in combination
-          with "build-create-binary-log" if the build hangs.
+          The maximum time the for the "build-dotnet" action's "build" step and for this workflow's "publish" step in
+          minutes. Can be useful in combination with "build-create-binary-log" if the build hangs. If set to zero (which
+          is the default), then there is no timeout.
       timeout-minutes:
         type: number
         default: 360
@@ -284,8 +285,9 @@ jobs:
 
       - name: Publish
         run: |
+          $projectFile = (Get-ChildItem ${{ inputs.web-project-path }}).FullName
           $block = {
-              dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
+              dotnet publish $args[0] `
                   --no-build `
                   --configuration ${{ inputs.build-configuration }} `
                   --output '${{ inputs.build-directory }}/Published' `
@@ -299,9 +301,10 @@ jobs:
 
           Invoke-ScriptBlock `
               -TimeoutMinutes ${{ inputs.build-timeout-minutes }} `
-              -Name 'dotnet publish' `
+              -Name "dotnet publish `"$projectFile`"" `
               -ScriptBlock $block `
               -ShowDiagnostics $${{ inputs.publish-show-diagnostics }}
+              -ArgumentList @($projectFile)
 
       - name: Upload MSBuild Binary Log
         uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
