@@ -196,6 +196,7 @@ on:
         description: Additional arguments passed to dotnet publish.
       publish-show-diagnostics:
         type: string
+        default: 'false'
         description: Show diagnostic information while executing the "dotnet publish" command.
       skip-update-latest-tag:
         type: string
