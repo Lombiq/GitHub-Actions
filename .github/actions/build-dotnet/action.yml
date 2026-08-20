@@ -219,10 +219,14 @@ runs:
         $solutionOrProjectPath = $solutionOrProjectPathInput ? (Get-SolutionOrProjectPath $solutionOrProjectPathInput) : ''
 
         $block = {
+            $ErrorActionPreference = 'Stop'
             $buildSwitches = $args[0]
             Build-DotNetSolutionOrProject @buildSwitches
             Write-Host "LASTEXITCODE(inner): $LASTEXITCODE"
-            exit $LASTEXITCODE
+            if ($LASTEXITCODE -gt 0)
+            {
+              throw "Build failed with exit code $LASTEXITCODE."
+            }
         }
 
         $switches = @{
