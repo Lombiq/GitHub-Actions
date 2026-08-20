@@ -183,16 +183,19 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        $globalJsonExists = Test-Path -Path .\global.json -PathType Leaf
         # Read from file or use empty object.
-        $globalJsonContent = $globalJsonExists ? (Get-Content .\global.json -Raw) : '{}'
-        $globalJsonObject = $globalJsonContent | ConvertFrom-Json
+        $globalJsonContent = (Test-Path -Path .\global.json -PathType Leaf) ? (Get-Content .\global.json -Raw) : '{}'
+        $globalJsonObject = $globalJsonContent | ConvertFrom-Json -AsHashTable
+
         # Only set the sdk property if it does not exist yet.
-        if (-not (Get-Member -InputObject $globalJsonObject -Name 'sdk' -MemberType NoteProperty))
+        if (-not $globalJsonObject.ContainsKey('sdk'))
         {
-            $sdkValue = "{ ""version"": ""$Env:DOTNET_SDK_TO_USE"" }" | ConvertFrom-Json
-            Add-Member -InputObject $globalJsonObject -MemberType NoteProperty -Name 'sdk' -Value $sdkValue
+            $globalJsonObject['sdk'] = @{
+              "version" = $Env:DOTNET_SDK_TO_USE
+              "rollForward" = "latestFeature"
+            }
         }
+
         # Write back to file.
         $globalJsonObject | ConvertTo-Json | Set-Content .\global.json
 
