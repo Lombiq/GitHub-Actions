@@ -16,27 +16,13 @@ if ($TimeoutMinutes -gt 0)
 
     while ($job.HasMoreData -or $job.JobStateInfo.State -eq [System.Management.Automation.JobState]::Running)
     {
-        Receive-Job $job | Tee-Object -Variable lines | Write-Output
+        Receive-Job $job
 
         $timeRemaining = ($TimeoutMinutes * 60) - $stopWatch.Elapsed.TotalSeconds
         if ($timeRemaining -lt 0)
         {
             Write-GitHub "The `"$Name`" job did not finish within $TimeoutMinutes minutes."
             $job | Stop-Job | Remove-Job
-            exit 1
-        }
-
-        # Stop if the job sent a GHA error message.
-        if (($lines | Where-Object { "$PSItem".Trim().StartsWith('::error') }).Count -gt 0)
-        {
-            # We wait for a few more seconds in case further relevant information is delivered.
-            Start-Sleep -Seconds 3
-
-            Stop-Job -Job $job
-            Receive-Job -Job $job
-            Remove-Job -Job $job
-
-            Write-GitHub "The `"$Name`" job caused an error. ."
             exit 1
         }
 
@@ -61,9 +47,10 @@ if ($TimeoutMinutes -gt 0)
     Receive-Job -Job $job
     Remove-Job -Job $job
     
+    Write-Host "FAILED: $failed"
     if ($failed)
     {
-        exit 1
+        throw "The `"$Name`" job failed."
     }
 }
 else
