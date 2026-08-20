@@ -221,6 +221,7 @@ runs:
         $block = {
             $buildSwitches = $args[0]
             Build-DotNetSolutionOrProject @buildSwitches
+            exit $LASTEXITCODE
         }
 
         $switches = @{

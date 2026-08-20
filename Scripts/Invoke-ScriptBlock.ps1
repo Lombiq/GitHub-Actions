@@ -41,8 +41,16 @@ if ($TimeoutMinutes -gt 0)
         Start-Sleep -Seconds 5
     }
 
+    $failed = $job.State -eq 'Stopped' || ($job.ChildJobs.Count -gt 0 -and $job.ChildJobs[0].State -eq 'Stopped')
+
     Receive-Job -Job $job
     Remove-Job -Job $job
+    
+    if ($failed)
+    {
+        $LASTEXITCODE = 1
+        exit 1
+    }
 }
 else
 {
