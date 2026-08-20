@@ -25,7 +25,7 @@ $body = ConvertTo-Json $annotation -Compress
 # Az CLI and Invoke-AzRestMethod both work in GitHub Actions, but Az throws various (inconsistent) errors in localhost.
 Invoke-AzRestMethod -Path "$ApplicationInsightsResourceId/Annotations?api-version=2015-05-01" -Method PUT -Payload $body
 
-if (-not $?)
+if ($LASTEXITCODE -gt 0)
 {
     exit 1
 }
