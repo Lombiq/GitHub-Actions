@@ -237,8 +237,8 @@ runs:
             WarningsAsErrors = $${{ inputs.warnings-as-errors }}
         }
 
-        Write-Host $LASTEXITCODE
-        Write-Host $LASTEXITCODE
+        Write-Host "LASTEXITCODE: $LASTEXITCODE"
+        Write-Host "LASTEXITCODE: $LASTEXITCODE"
 
         $startTime = [DateTime]::Now
         Invoke-ScriptBlock `
@@ -248,13 +248,13 @@ runs:
             -ArgumentList $switches
         $endTime = [DateTime]::Now
 
-        Write-Host $LASTEXITCODE
-        Write-Host $LASTEXITCODE
+        Write-Host "LASTEXITCODE: $LASTEXITCODE"
+        Write-Host "LASTEXITCODE: $LASTEXITCODE"
 
         Write-Output ("Solution or project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)
 
-        Write-Host $LASTEXITCODE
-        Write-Host $LASTEXITCODE
+        Write-Host "LASTEXITCODE: $LASTEXITCODE"
+        Write-Host "LASTEXITCODE: $LASTEXITCODE"
 
     - name: Upload MSBuild Binary Log
       uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
