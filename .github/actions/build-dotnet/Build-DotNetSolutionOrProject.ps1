@@ -93,6 +93,7 @@ else
 
 if ($noErrorsExpected -and ($LASTEXITCODE -gt 0))
 {
+    Write-GitHub "Solution or project build failed with error code ${LASTEXITCODE}."
     exit 1
 }
 
