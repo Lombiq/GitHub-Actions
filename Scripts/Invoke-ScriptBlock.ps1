@@ -47,7 +47,6 @@ if ($TimeoutMinutes -gt 0)
     Receive-Job -Job $job
     Remove-Job -Job $job
     
-    Write-Host "FAILED: $failed"
     if ($failed)
     {
         throw "The `"$Name`" job failed."
