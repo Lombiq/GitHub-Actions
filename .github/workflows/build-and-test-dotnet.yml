@@ -268,21 +268,21 @@ jobs:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/OSOE-1311
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set Environment Variables
-        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@issue/OSOE-1311
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
       - name: Free up Space
         if: inputs.free-up-space == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@issue/OSOE-1311
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1311
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.repository-ref }}
@@ -290,25 +290,25 @@ jobs:
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-1311
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
           exclude-project-path: ${{ inputs.dotnet-consolidation-exclude-project-path }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1311
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1311
         with:
           node-version: ${{ inputs.node-version }}
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-1311
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration }}
@@ -324,7 +324,7 @@ jobs:
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@issue/OSOE-1311
         with:
           ignored-paths: |
             global.json
@@ -332,7 +332,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-1311
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
@@ -348,6 +348,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1311
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
