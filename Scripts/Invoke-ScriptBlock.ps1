@@ -30,7 +30,7 @@ if ($TimeoutMinutes -gt 0)
         {
             Write-Output "Until timeout: $([Math]::Ceiling($timeRemaining)) seconds."
 
-            if ($isLinux)
+            if ($IsLinux)
             {
                 $memoryTotal = [int](free -m | awk '/Mem/{print $2}')
                 $memoryUsed = [int](free -m | awk '/Mem/{print $3}')
@@ -46,7 +46,7 @@ if ($TimeoutMinutes -gt 0)
 
     Receive-Job -Job $job
     Remove-Job -Job $job
-    
+
     if ($failed)
     {
         throw "The `"$Name`" job failed."
