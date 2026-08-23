@@ -229,7 +229,7 @@ runs:
 
             if ($LASTEXITCODE -gt 0)
             {
-              throw "Build failed with exit code $LASTEXITCODE."
+                throw "Build failed with exit code $LASTEXITCODE."
             }
         }
 
