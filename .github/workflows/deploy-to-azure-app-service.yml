@@ -321,7 +321,8 @@ jobs:
       - name: Compress Publish Package
         run: |
           $basePath = '${{ inputs.build-directory }}/Published'
-          Compress-Archive -Path "$basePath/*", "$basePath/.agents/" -DestinationPath "$basePath.zip"
+          $paths = Get-ChildItem $basePath -Force | ForEach-Object { $PSItem.FullName }
+          Compress-Archive -Path $paths -DestinationPath "$basePath.zip"
 
       - name: Upload Publish Package
         uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
