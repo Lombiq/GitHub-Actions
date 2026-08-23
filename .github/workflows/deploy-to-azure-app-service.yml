@@ -31,7 +31,6 @@ on:
           The ID of the Azure Subscription the resources are under, which will be mapped to the subscription-id
           parameter when calling azure/login. You can look this up e.g. in the Azure Portal under any resource or the
           subscription itself.
-
       AZURE_APP_SERVICE_PUBLISH_PROFILE:
         required: true
 
@@ -213,6 +212,10 @@ on:
         default: 5
         description: >
           The wait time between failed access attempts when using "verify-orchard-core-url".
+      upload-publish-package:
+        type: string
+        default: 'false'
+        description: If set to "true", the "Published.zip" file is uploaded as an artifact after creation.
 
 jobs:
   deploy:
@@ -317,7 +320,17 @@ jobs:
 
       - name: Compress Publish Package
         run: |
-          Compress-Archive -Path .\Published\* -DestinationPath .\Published.zip
+          $basePath = '${{ inputs.build-directory }}/Published'
+          Compress-Archive -Path "$basePath/*", "$basePath/.agents/" -DestinationPath "$basePath.zip"
+
+      - name: Upload Publish Package
+        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+        if: inputs.upload-publish-package == 'true'
+        with:
+          name: publish-package
+          path: ${{ inputs.build-directory }}/Published.zip
+          if-no-files-found: ignore
+          retention-days: 1
 
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
