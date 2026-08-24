@@ -192,7 +192,6 @@ runs:
         {
             $globalJsonObject['sdk'] = @{
               "version" = $Env:DOTNET_SDK_TO_USE
-              "rollForward" = "latestFeature"
             }
         }
 
