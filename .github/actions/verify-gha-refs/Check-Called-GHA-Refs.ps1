@@ -7,26 +7,40 @@
     [String] $GitHubRefName
 )
 
+$first = $true
+$files = @()
+
 if ($CalledRepoBaseIncludeList.Count -eq 0)
 {
-    Write-Output '::warning file=Check-Called-GHA-refs.ps1,line10::CalledRepoBaseIncludeList is empty which is unexpected. If this was intentional, you can ignore this warning.'
+    Write-GitHub -Warning 'Check-Called-GHA-refs.ps1: CalledRepoBaseIncludeList is empty which is unexpected. If this was intentional, you can ignore this warning.'
     exit 0 # Nothing to check because array is empty.
 }
 
 $CalledRepoBaseIncludeList = $CalledRepoBaseIncludeList.ForEach({ 'uses:\s*' + $PSItem })
 
-$mismatchRefs = @(Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse) |
-    Select-String -Pattern $CalledRepoBaseIncludeList |
-    Select-String -Pattern $ExpectedRef -NotMatch
-
-if ($mismatchRefs.Count -gt 0)
+while ($true)
 {
-    Write-Output '> :warning: Warning :warning:' >> $env:GITHUB_STEP_SUMMARY
-    Write-Output '> Your pull request branch may be outdated if you see errors for files you did not edit. Please merge the target branch to resolve these errors.' >> $env:GITHUB_STEP_SUMMARY
+    $mismatchRefs = @(Get-ChildItem -Path $PathIncludeList -Include $FileIncludeList -Force -Recurse) |
+        Select-String -Pattern $CalledRepoBaseIncludeList |
+        Select-String -Pattern $ExpectedRef -NotMatch
 
-    Write-Output '' >> $env:GITHUB_STEP_SUMMARY
+    if ($mismatchRefs.Count -eq 0)
+    {
+        break
+    }
 
-    "These called GitHub Actions and Workflows do not match expected ref '$ExpectedRef'." >> $env:GITHUB_STEP_SUMMARY
+    if ($first)
+    {
+        Set-GitHubOutput 'has-files' 'true'
+
+        Write-Output '> :warning: Warning :warning:' >> $env:GITHUB_STEP_SUMMARY
+        Write-Output '> Your pull request branch may be outdated if you see errors for files you did not edit. Please merge the target branch to resolve these errors.' >> $env:GITHUB_STEP_SUMMARY
+
+        Write-Output '' >> $env:GITHUB_STEP_SUMMARY
+
+        "These called GitHub Actions and Workflows do not match expected ref '$ExpectedRef'." >> $env:GITHUB_STEP_SUMMARY
+        $first = $false
+    }
 
     foreach ($mismatch in $mismatchRefs)
     {
@@ -41,14 +55,22 @@ if ($mismatchRefs.Count -gt 0)
         # As a workaround, link directly to file.
         "- <a href='https://github.com/$GitHubRepository/blob/$GitHubRefName/$filename#L$lineNumber'>$filename#L$lineNumber</a>" >> $env:GITHUB_STEP_SUMMARY
         # And write better log message.
-        Write-Output "::error::$filename#L$lineNumber - called GitHub Action does not match expected Ref '$ExpectedRef'."
+        Write-GitHub "$filename#L$lineNumber - called GitHub Action does not match expected Ref '$ExpectedRef'."
 
-        # Beware the backtick character is the powershell escape character.
-        "``````yaml" >> $env:GITHUB_STEP_SUMMARY
-        "$title" >> $env:GITHUB_STEP_SUMMARY
-        "``````" >> $env:GITHUB_STEP_SUMMARY
+        '```yaml' >> $env:GITHUB_STEP_SUMMARY
+        $title >> $env:GITHUB_STEP_SUMMARY
+        '```' >> $env:GITHUB_STEP_SUMMARY
+
+        $targetLine = $mismatch.Line -replace '@.*', "@$ExpectedRef"
+        $content = Get-Content $filename
+        $content.Replace($mismatch.Line, $targetLine) > $filename
+
+        $files += $filename
     }
+}
 
-    Write-Output "::error::Check Job Summary for more details on which GitHub Actions Refs do not match '$ExpectedRef'."
-    exit 1
+if ($files.Count -gt 0)
+{
+    "Check Job Summary for more details on which GitHub Actions Refs do not match '$ExpectedRef'." > .gha-error
+    Set-GitHubOutput 'artifact-path' (($files | Select-Object -Unique) -join [Environment]::NewLine)
 }

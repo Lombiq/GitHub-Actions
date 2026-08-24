@@ -30,7 +30,7 @@ on:
         description: The logging verbosity type used by the `dotnet` command.
       dotnet-version:
         type: string
-        default: 10.0.102
+        default: 10.0.302
         description: Version of the .NET SDK to set up.
       node-version:
         type: string

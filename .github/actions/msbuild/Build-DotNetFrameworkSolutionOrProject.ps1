@@ -79,7 +79,7 @@ msbuild $SolutionOrProject @buildSwitches
 # Developer Pack (SDK/Targeting Pack) for this framework version or retarget your application. You can download .NET
 # Framework Developer Packs at https://aka.ms/msbuild/developerpacks
 
-if ($?)
+if ($LASTEXITCODE -eq 0)
 {
     Write-Output 'Build successful.'
     Stop-DotNetBuildServers

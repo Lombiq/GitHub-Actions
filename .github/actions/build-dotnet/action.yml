@@ -103,6 +103,12 @@ inputs:
     description: >
       If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be considered a
       workaround for a build order problem, and should be avoided when possible.
+  timeout-minutes:
+    required: false
+    default: '360'
+    description: >
+      The maximum time the for the "build" step in minutes. Can be useful in combination with "create-binary-log" if the
+      build hangs.
 
 runs:
   using: composite
@@ -177,16 +183,18 @@ runs:
       shell: pwsh
       working-directory: ${{ inputs.directory }}
       run: |
-        $globalJsonExists = Test-Path -Path .\global.json -PathType Leaf
         # Read from file or use empty object.
-        $globalJsonContent = $globalJsonExists ? (Get-Content .\global.json -Raw) : '{}'
-        $globalJsonObject = $globalJsonContent | ConvertFrom-Json
+        $globalJsonContent = (Test-Path -Path .\global.json -PathType Leaf) ? (Get-Content .\global.json -Raw) : '{}'
+        $globalJsonObject = $globalJsonContent | ConvertFrom-Json -AsHashTable
+
         # Only set the sdk property if it does not exist yet.
-        if (-not (Get-Member -InputObject $globalJsonObject -Name 'sdk' -MemberType NoteProperty))
+        if (-not $globalJsonObject.ContainsKey('sdk'))
         {
-            $sdkValue = "{ ""version"": ""$Env:DOTNET_SDK_TO_USE"" }" | ConvertFrom-Json
-            Add-Member -InputObject $globalJsonObject -MemberType NoteProperty -Name 'sdk' -Value $sdkValue
+            $globalJsonObject['sdk'] = @{
+              "version" = $Env:DOTNET_SDK_TO_USE
+            }
         }
+
         # Write back to file.
         $globalJsonObject | ConvertTo-Json | Set-Content .\global.json
 
@@ -212,6 +220,18 @@ runs:
         $solutionOrProjectPathInput = '${{ inputs.solution-or-project-path }}'
         $solutionOrProjectPath = $solutionOrProjectPathInput ? (Get-SolutionOrProjectPath $solutionOrProjectPathInput) : ''
 
+        $block = {
+            $ErrorActionPreference = 'Stop'
+            $buildSwitches = $args[0]
+
+            Build-DotNetSolutionOrProject @buildSwitches
+
+            if ($LASTEXITCODE -gt 0)
+            {
+                throw "Build failed with exit code $LASTEXITCODE."
+            }
+        }
+
         $switches = @{
             Configuration = "${{ inputs.configuration }}"
             SolutionOrProject = $solutionOrProjectPath
@@ -226,7 +246,11 @@ runs:
         }
 
         $startTime = [DateTime]::Now
-        Build-DotNetSolutionOrProject @switches
+        Invoke-ScriptBlock `
+            -TimeoutMinutes ${{ inputs.timeout-minutes }} `
+            -Name 'Build-DotNetSolutionOrProject' `
+            -ScriptBlock $block `
+            -ArgumentList $switches
         $endTime = [DateTime]::Now
 
         Write-Output ("Solution or project build took {0:0.###} seconds." -f ($endTime - $startTime).TotalSeconds)

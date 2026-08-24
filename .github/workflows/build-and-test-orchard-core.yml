@@ -67,7 +67,7 @@ on:
           that the runner has insufficient storage space.
       dotnet-version:
         type: string
-        default: 10.0.102
+        default: 10.0.302
         description: Version of the .NET SDK to set up.
       node-version:
         type: string
@@ -157,6 +157,12 @@ on:
         description: >
           If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be
           considered a workaround for a build order problem, and should be avoided when possible.
+      build-timeout-minutes:
+        type: number
+        default: 360
+        description: >
+          The maximum time the for the "build-dotnet" action's "build" step in minutes. Can be useful in combination
+          with "build-create-binary-log" if the build hangs.
       dotnet-test-process-timeout:
         required: false
         type: number
@@ -373,6 +379,7 @@ jobs:
           dotnet-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true') }}
           git-clean: ${{ case(inputs.build-configuration == inputs.test-configuration, 'false', 'true') }}
           rebuild-directory: ${{ inputs.build-rebuild-directory }}
+          timeout-minutes: ${{ inputs.build-timeout-minutes }}
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'

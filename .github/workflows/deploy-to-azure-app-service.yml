@@ -31,7 +31,6 @@ on:
           The ID of the Azure Subscription the resources are under, which will be mapped to the subscription-id
           parameter when calling azure/login. You can look this up e.g. in the Azure Portal under any resource or the
           subscription itself.
-
       AZURE_APP_SERVICE_PUBLISH_PROFILE:
         required: true
 
@@ -53,7 +52,7 @@ on:
           that the runner has insufficient storage space.
       dotnet-version:
         type: string
-        default: 10.0.102
+        default: 10.0.302
         description: Version of the .NET SDK to set up.
       node-version:
         type: string
@@ -123,6 +122,19 @@ on:
         description: >
           If a path is provided, C# project files are searched and rebuilt inside that directory. This is to be
           considered a workaround for a build order problem, and should be avoided when possible.
+      build-create-binary-log:
+        type: string
+        default: 'false'
+        description: >
+          Configures MSBuild to create a binary log. This is useful to inspect and debug builds. See
+          https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Binary-Log.md for details.
+      build-timeout-minutes:
+        type: number
+        default: 360
+        description: >
+          The maximum time the for the "build-dotnet" action's "build" step and for this workflow's "publish" step in
+          minutes. Can be useful in combination with "build-create-binary-log" if the build hangs. If set to zero (which
+          is the default), then there is no timeout.
       timeout-minutes:
         type: number
         default: 360
@@ -181,10 +193,29 @@ on:
       publish-arguments:
         type: string
         description: Additional arguments passed to dotnet publish.
+      publish-show-diagnostics:
+        type: string
+        default: 'false'
+        description: Show diagnostic information while executing the "dotnet publish" command.
       skip-update-latest-tag:
         type: string
         default: 'false'
         description: If set to "true", the latests tags will not be updated.
+      verify-orchard-core-url:
+        type: string
+        default: ''
+        description: >
+          If not empty, this URL will be checked for the "X-Powered-By" HTTP response header, which should have the
+          value 'OrchardCore' to pass. This is performed at the end of the "test-web-app-slot" step.
+      verify-orchard-core-delay-time-seconds:
+        type: number
+        default: 5
+        description: >
+          The wait time between failed access attempts when using "verify-orchard-core-url".
+      upload-publish-package:
+        type: string
+        default: 'false'
+        description: If set to "true", the "Published.zip" file is uploaded as an artifact after creation.
 
 jobs:
   deploy:
@@ -234,6 +265,7 @@ jobs:
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration }}
+          create-binary-log: ${{ inputs.build-create-binary-log }}
           verbosity: ${{ inputs.build-verbosity }}
           enable-code-analysis: ${{ inputs.build-enable-code-analysis }}
           enable-nuget-caching: ${{ inputs.build-enable-nuget-caching }}
@@ -251,23 +283,55 @@ jobs:
             -p:AzureDeployStage=build
             -p:BuildVersionDisplay_BuildUrl=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           rebuild-directory: ${{ inputs.build-rebuild-directory }}
+          timeout-minutes: ${{ inputs.build-timeout-minutes }}
 
       - name: Publish
         run: |
-          dotnet publish (Get-ChildItem ${{ inputs.web-project-path }}).FullName `
-            --no-build `
-            --configuration ${{ inputs.build-configuration }} `
-            --output '${{ inputs.build-directory }}/Published' `
-            --verbosity ${{ inputs.build-verbosity }} `
-            --self-contained ${{ inputs.self-contained }} `
-            -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
-            -p:AzureDeploy=true `
-            -p:AzureDeployStage=publish `
-            ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}
+          $projectFile = (Get-ChildItem ${{ inputs.web-project-path }}).FullName
+          $block = {
+              $projectFile = $args[0]
+              dotnet publish $projectFile `
+                  --no-build `
+                  --configuration ${{ inputs.build-configuration }} `
+                  --output '${{ inputs.build-directory }}/Published' `
+                  --verbosity ${{ inputs.build-verbosity }} `
+                  --self-contained ${{ inputs.self-contained }} `
+                  -p:PublishReadyToRun=${{ inputs.ready-to-run }} `
+                  -p:AzureDeploy=true `
+                  -p:AzureDeployStage=publish `
+                  ${{ steps.set-up-runtime-option.outputs.runtime-option }} ${{ inputs.publish-arguments }}
+          }
+
+          Invoke-ScriptBlock `
+              -TimeoutMinutes ${{ inputs.build-timeout-minutes }} `
+              -Name "dotnet publish `"$projectFile`"" `
+              -ScriptBlock $block `
+              -ShowDiagnostics $${{ inputs.publish-show-diagnostics }} `
+              -ArgumentList @($projectFile)
+
+      - name: Upload MSBuild Binary Log
+        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+        if: (success() || failure()) && inputs.build-create-binary-log == 'true'
+        with:
+          name: build-binary-log-publish.binlog
+          path: ${{ inputs.build-directory }}/build.binlog
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Compress Publish Package
         run: |
-          Compress-Archive -Path .\Published\* -DestinationPath .\Published.zip
+          $basePath = '${{ inputs.build-directory }}/Published'
+          $paths = Get-ChildItem $basePath -Force | ForEach-Object { $PSItem.FullName }
+          Compress-Archive -Path $paths -DestinationPath "$basePath.zip"
+
+      - name: Upload Publish Package
+        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+        if: inputs.upload-publish-package == 'true'
+        with:
+          name: publish-package
+          path: ${{ inputs.build-directory }}/Published.zip
+          if-no-files-found: ignore
+          retention-days: 1
 
       - name: Login to Azure
         uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
@@ -355,6 +419,35 @@ jobs:
             -ResourceGroupName ${{ inputs.resource-group-name }} `
             -WebAppName ${{ inputs.app-name }} `
             -SlotName ${{ inputs.slot-name }}
+
+          $verifyOrchardCoreUrl = '${{ inputs.verify-orchard-core-url }}'
+          $verifyOrchardCoreDelayTimeSeconds = ${{ inputs.verify-orchard-core-delay-time-seconds }}
+          if ($verifyOrchardCoreUrl)
+          {
+            for ($i = 0; $i -lt 5; $i += 1)
+            {
+              try
+              {
+                $response = Invoke-WebRequest $verifyOrchardCoreUrl -ErrorAction SilentlyContinue
+                if ($response -and $response.Headers['X-Powered-By'] -eq 'OrchardCore')
+                {
+                  Write-Output "Successfully reached `"$verifyOrchardCoreUrl`" after $i tries."
+                  exit 0
+                }
+              }
+              catch
+              {
+                Write-Output $PSItem.Message
+              }
+
+              Write-Output "Attempt $($i + 1): Couldn't reach `"$verifyOrchardCoreUrl`". Retrying in $verifyOrchardCoreDelayTimeSeconds seconds..."
+
+              Start-Sleep -Seconds $verifyOrchardCoreDelayTimeSeconds
+            }
+
+            Write-GitHub "Couldn't reach `"$verifyOrchardCoreUrl`"!"
+            exit 1
+          }
 
       - name: Display Startup Logs on Failure
         if: failure() && (steps.start-web-app-slot.outcome == 'failure' || steps.test-web-app-slot.outcome == 'failure')

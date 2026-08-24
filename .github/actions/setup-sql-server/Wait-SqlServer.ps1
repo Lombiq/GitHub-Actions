@@ -15,7 +15,7 @@ for ($i = 1; $i -le $maxTryCount; $i++)
         sqlcmd -C -b -U sa -P 'Password1!' -Q 'SELECT @@SERVERNAME as ServerName' 2>&1>$null
     }
 
-    if ($?)
+    if ($LASTEXITCODE -eq 0)
     {
         Write-Output 'SQL Server is successfully started.'
         exit 0

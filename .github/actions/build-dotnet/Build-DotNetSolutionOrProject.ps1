@@ -70,7 +70,7 @@ if ($noErrorsExpected)
 {
     dotnet build $SolutionOrProject @buildSwitches
 
-    if (-not $? -and $RebuildDirectory -and (Test-Path -Path $RebuildDirectory))
+    if (($LASTEXITCODE -eq 0) -and $RebuildDirectory -and (Test-Path -Path $RebuildDirectory))
     {
         foreach ($project in (Get-ChildItem -Path $RebuildDirectory -Filter *.csproj -Recurse))
         {
@@ -91,8 +91,9 @@ else
     }
 }
 
-if ($noErrorsExpected -and -not $?)
+if ($noErrorsExpected -and ($LASTEXITCODE -gt 0))
 {
+    Write-GitHub "Solution or project build failed with error code $LASTEXITCODE."
     exit 1
 }
 
