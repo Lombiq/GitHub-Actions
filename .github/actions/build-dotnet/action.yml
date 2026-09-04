@@ -171,7 +171,7 @@ runs:
         restore-keys: ${{ steps.detect-cache-configuration.outputs.restore-keys }}
 
     - name: Cache Packages with WarpBuild Cache
-      uses: WarpBuilds/cache@40f3443ae7b70e568d6e2070ea897f3df94d7553 # v1.4.13
+      uses: WarpBuilds/cache@dad44e2487e9dc889ad6e6bd198e77bb2d828eee # v2.0.0
       if: steps.detect-cache-configuration.outputs.cache-enabled == 'true' && contains(runner.name, 'warp')
       with:
         path: ${{ format(steps.detect-cache-configuration.outputs.paths, fromJSON('"\n"')) }}
