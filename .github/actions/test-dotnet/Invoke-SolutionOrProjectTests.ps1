@@ -1,4 +1,6 @@
 param (
+    [ValidateSet('Microsoft.Testing.Platform', 'VSTest')]
+    [string] $TestPlatform = 'Microsoft.Testing.Platform',
     [string] $SolutionOrProject,
     [string] $Verbosity,
     [string] $Filter,
@@ -13,14 +15,13 @@ param (
 # "-InformationAction Continue" to every call. This is not best practice for general PowerShell scripts, but makes sense
 # for scripts made for GHA.
 $informationPreference = 'Continue'
+$useMtp = $TestPlatform -eq 'Microsoft.Testing.Platform'
+$SolutionOrProject = (Resolve-Path $SolutionOrProject).Path
+Set-GitHubOutput 'test-count' 0
+Set-GitHubOutput 'dotnet-test-hang-dump' 0
 
-# First, we globally set test configurations using environment variables. Then acquire the list of all test projects
-# (excluding the two test libraries) and then run each until one fails or all concludes. If a test fails, the output is
-# sanitized from unnecessary diagnostics messages from chromedriver if the output doesn't already contain groupings,
-# then it wraps them in "::group::<project name>". If there are already groupings, then it is not possible to nest them
-# (https://github.com/actions/runner/issues/802) so that's omitted. The groupings make the output collapsible region on
-# the Actions web UI. Note that we use bash to output the log using bash to avoid pwsh wrapping the output to the
-# default buffer width.
+# Set test configuration through environment variables, identify test applications, then run each until one fails.
+# Preserve the test output, including the UI Testing Toolbox's GitHub Actions groups and annotations.
 
 if ($Env:RUNNER_OS -eq 'Windows')
 {
@@ -85,11 +86,38 @@ if ($SolutionOrProject -imatch '\.slnx?$')
     $tests = @()
     dotnet sln $SolutionOrProject list |
         Select-Object -Skip 2 |
-        Select-String '\.Tests\.' |
-        Select-String -NotMatch 'Lombiq.Tests.UI.csproj' |
-        Select-String -NotMatch 'Lombiq.Tests.csproj' |
         ForEach-Object {
-            $absolutePath = Resolve-Path -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem)
+            $absolutePath = (Resolve-Path -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem)).Path
+
+            # Evaluate project properties instead of relying on project names or localized test runner output.
+            $properties = dotnet msbuild $absolutePath "-p:Configuration=$Configuration" `
+                '-getProperty:IsTestingPlatformApplication,IsTestProject' -verbosity:quiet | Out-String
+            if ($LASTEXITCODE -ne 0)
+            {
+                Write-GitHub "Failed to evaluate test project properties for `"$absolutePath`"."
+                exit 1
+            }
+
+            $properties = ($properties | ConvertFrom-Json).Properties
+            if ($useMtp)
+            {
+                if ($properties.IsTestingPlatformApplication -eq 'true')
+                {
+                    $tests += $absolutePath
+                }
+                elseif ($properties.IsTestProject -eq 'true')
+                {
+                    Write-GitHub "The test project `"$absolutePath`" does not support Microsoft.Testing.Platform. Migrate it or use test-platform: VSTest."
+                    exit 1
+                }
+
+                return
+            }
+
+            if ($properties.IsTestProject -ne 'true')
+            {
+                return
+            }
 
             # While the test projects are run individually, passing in the solution name and solution dir via the
             # conventional MSBuild properties allows build customization.
@@ -132,7 +160,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
 }
 elseif ($SolutionOrProject -like '*.csproj')
 {
-    Write-Information "Running tests for the `"$SolutionOrProject`' project."
+    Write-Information "Running tests for the `"$SolutionOrProject`" project."
     $tests = @($SolutionOrProject)
 }
 else
@@ -215,14 +243,17 @@ function Failed($Job, $ProcessId, $Switches, $Test)
 
 function StartProcessAndWaitForExit($Switches, $Test, $Timeout, $ShowTimeRemainingUntilTimeout)
 {
-    # This is executed in a separate proecess so no variables or settings come through except what's copied over in the
+    # This is executed in a separate process so no variables or settings come through except what's copied over in the
     # "$args" automatic variable. Only Write-Output should be used here, so "Receive-Job" can reliably capture it.
     $block = {
         Write-Output "StartProcessAndWaitForExitProcessId:$PID"
 
         $argSwitches = $args[0]
         $argTest = $args[1]
-        dotnet test @argSwitches $argTest 2>&1
+        dotnet test @argSwitches 2>&1
+
+        # Use the process exit code, not human-readable runner output, to determine success.
+        Write-Output "DotnetTestExitCode:$LASTEXITCODE"
 
         if ($LASTEXITCODE -ne 0)
         {
@@ -239,20 +270,16 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout, $ShowTimeRemaini
     {
         Receive-Job $job | Tee-Object -Variable line | Out-Host
 
-        if ("$line".StartsWith('StartProcessAndWaitForExitProcessId:'))
+        foreach ($outputLine in $line)
         {
-            $processId = [int]("$line".Split('StartProcessAndWaitForExitProcessId:')[1].Split()[0])
-        }
-
-        if ("$line".Contains('Test Run Successful.'))
-        {
-            $hasTestRunSuccessfully = $true
-        }
-
-        if ("$line".Contains('::error::'))
-        {
-            $hasTestRunSuccessfully = $false
-            break
+            if ("$outputLine" -match '^StartProcessAndWaitForExitProcessId:(\d+)$')
+            {
+                $processId = [int]$Matches[1]
+            }
+            elseif ("$outputLine" -match '^DotnetTestExitCode:(\d+)$')
+            {
+                $hasTestRunSuccessfully = [int]$Matches[1] -eq 0
+            }
         }
 
         if ($Timeout -gt 0)
@@ -278,6 +305,8 @@ function StartProcessAndWaitForExit($Switches, $Test, $Timeout, $ShowTimeRemaini
         Failed -Job $job -ProcessId $processId -Switches $Switches -Test $Test
     }
 
+    Remove-Job $job
+
     return $hasTestRunSuccessfully
 }
 
@@ -292,30 +321,76 @@ foreach ($test in $tests)
 
     $switches = @(
         '--configuration', $Configuration
-        '--nologo',
-        '--no-build',
-        '--logger', 'trx;LogFileName=test-results.trx'
-        # This is for xUnit ITestOutputHelper, see https://xunit.net/docs/capturing-output.
-        '--logger', 'console;verbosity=detailed'
+        '--no-build'
         '--verbosity', $Verbosity
     )
 
-    if ($BlameHangTimeout)
+    if ($useMtp)
     {
-        $switches += ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full')
+        $switches += @(
+            '--project', $test
+            '--output', 'Detailed'
+        )
+
+        if ($EnableDiagnosticMode)
+        {
+            $switches += ('--diagnostic-output-directory', (Join-Path (Get-Location) 'DiagnosticLogs'))
+        }
+
+        $switches += @(
+            '--'
+            '--report-trx'
+            '--report-gh'
+            # UI tests already emit per-test groups; GitHub Actions doesn't support nested groups.
+            '--report-gh-groups', 'off'
+            '--show-stdout', 'all'
+            '--show-stderr', 'all'
+        )
+
+        # A solution can contain empty test projects, or a filter can select no tests in some of its projects.
+        # Explicit project runs still fail when no tests run. Other failures always retain their exit code.
+        if ($SolutionOrProject -imatch '\.slnx?$')
+        {
+            $switches += ('--ignore-exit-code', '8')
+        }
+
+        if ($BlameHangTimeout)
+        {
+            $switches += ('--hangdump', '--hangdump-timeout', $BlameHangTimeout, '--hangdump-type', 'Full')
+            $switches += ('--hangdump-filename', '{asm}_{tfm}_{pid}_hangdump.dmp')
+        }
+
+        if ($EnableDiagnosticMode)
+        {
+            $switches += '--diagnostic'
+        }
+    }
+    else
+    {
+        $switches += @(
+            $test
+            '--nologo'
+            '--logger', 'trx;LogFileName=test-results.trx'
+            '--logger', 'console;verbosity=detailed'
+        )
+
+        if ($BlameHangTimeout)
+        {
+            $switches += ('--blame-hang-timeout', $BlameHangTimeout, '--blame-hang-dump-type', 'full')
+        }
+
+        if ($EnableDiagnosticMode)
+        {
+            $switches += ('--diag', 'DiagnosticLogs/dotnet-test.log')
+        }
     }
 
     if ($Filter)
     {
-        $switches += ('--filter', "$Filter")
+        $switches += ('--filter', $Filter)
     }
 
-    if ($EnableDiagnosticMode)
-    {
-        $switches += ('--diag', 'DiagnosticLogs/dotnet-test.log')
-    }
-
-    Write-Information "Starting testing with ``dotnet test $switches $test``."
+    Write-Information "Starting testing with ``dotnet test $switches``."
 
     $success = StartProcessAndWaitForExit -Switches $switches -Test $test -Timeout $TestProcessTimeout -ShowTimeRemainingUntilTimeout $ShowTimeRemainingUntilTimeout
 
