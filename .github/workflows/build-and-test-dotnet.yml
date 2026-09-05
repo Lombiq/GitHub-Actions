@@ -158,6 +158,10 @@ on:
         type: string
         default: 'false'
         description: Disables test execution completely if set to "true".
+      test-platform:
+        type: string
+        default: Microsoft.Testing.Platform
+        description: Test platform (Microsoft.Testing.Platform or VSTest). See the test-dotnet action for prerequisites.
       test-filter:
         type: string
         description: >
@@ -179,7 +183,7 @@ on:
         type: string
         default: 'false'
         description: >
-          Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files,
+          Enables diagnostic mode for `dotnet test` with MTP's `--diagnostic` flag (VSTest: `--diag`) and writes log files,
           to be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
       test-show-time-remaining-until-timeout:
         type: string
@@ -273,16 +277,16 @@ jobs:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set Environment Variables
-        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@issue/OSOE-1284
         env:
           ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
 
       - name: Free up Space
         if: inputs.free-up-space == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@issue/OSOE-1284
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1284
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.repository-ref }}
@@ -290,25 +294,25 @@ jobs:
 
       - name: Verify that .NET packages are consolidated
         if: ${{ inputs.verify-dotnet-consolidation }}
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-dotnet-consolidation@issue/OSOE-1284
         with:
           directory: ${{ inputs.build-directory }}
           exclude-version-regex: ${{ inputs.dotnet-consolidation-exclude-version-regex }}
           exclude-project-path: ${{ inputs.dotnet-consolidation-exclude-project-path }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1284
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1284
         with:
           node-version: ${{ inputs.node-version }}
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-1284
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration }}
@@ -324,7 +328,7 @@ jobs:
 
       - name: Verify Git Status is Clean
         if: inputs.build-fail-on-pending-changes == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/verify-git-status-clean@issue/OSOE-1284
         with:
           ignored-paths: |
             global.json
@@ -332,7 +336,7 @@ jobs:
 
       - name: Tests
         if: inputs.test-disable == 'false'
-        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/test-dotnet@issue/OSOE-1284
         with:
           blame-hang-timeout: ${{ inputs.blame-hang-timeout }}
           build-directory: ${{ inputs.build-directory }}
@@ -340,6 +344,7 @@ jobs:
           solution-path: ${{ inputs.build-solution-path }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
+          test-platform: ${{ inputs.test-platform }}
           artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
           enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
@@ -348,6 +353,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1284
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

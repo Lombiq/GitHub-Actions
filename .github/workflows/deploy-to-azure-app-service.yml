@@ -229,27 +229,27 @@ jobs:
     steps:
       - name: Free up Space
         if: inputs.free-up-space == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/free-up-space-for-dotnet@issue/OSOE-1284
 
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1284
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Set up .NET
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1284
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       - name: Set up Node.js
-        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@issue/OSOE-1284
         with:
           node-version: ${{ inputs.node-version }}
           package-manager-cache: ${{ inputs.node-package-manager-cache }}
 
       - name: Enable Node corepack
         if: inputs.enable-corepack == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@issue/OSOE-1284
 
       # If runtime is defined, we need to add "--runtime=" to the string so it will be a valid build/publish option. The
       # "build-dotnet" action requires the additional switches to be in separate lines (even the parameters), but we can
@@ -261,7 +261,7 @@ jobs:
           "runtime-option=--runtime=${{ inputs.runtime }}" >> $Env:GITHUB_OUTPUT
 
       - name: Build and Static Code Analysis
-        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/build-dotnet@issue/OSOE-1284
         with:
           directory: ${{ inputs.build-directory }}
           configuration: ${{ inputs.build-configuration }}
@@ -310,7 +310,7 @@ jobs:
               -ArgumentList @($projectFile)
 
       - name: Upload MSBuild Binary Log
-        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1284
         if: (success() || failure()) && inputs.build-create-binary-log == 'true'
         with:
           name: build-binary-log-publish.binlog
@@ -325,7 +325,7 @@ jobs:
           Compress-Archive -Path $paths -DestinationPath "$basePath.zip"
 
       - name: Upload Publish Package
-        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1284
         if: inputs.upload-publish-package == 'true'
         with:
           name: publish-package
@@ -334,7 +334,7 @@ jobs:
           retention-days: 1
 
       - name: Login to Azure
-        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/login-to-azure@issue/OSOE-1284
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_SERVICE_PRINCIPAL_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_APP_SERVICE_DEPLOYMENT_AZURE_TENANT_ID }}
@@ -381,10 +381,10 @@ jobs:
 
       - name: Create Timestamp
         id: create-timestamp
-        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/create-timestamp@issue/OSOE-1284
 
       - name: Add Azure Application Insights Release Annotation
-        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/add-azure-application-insights-release-annotation@issue/OSOE-1284
         with:
           release-name: 'Deploy #${{ github.run_number }} to ${{ inputs.slot-name }}'
           application-insights-resource-id: ${{ inputs.application-insights-resource-id }}
@@ -392,7 +392,7 @@ jobs:
 
       - name: Remove Old Latest Tags
         if: ${{ inputs.skip-update-latest-tag != 'true' }}
-        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/remove-old-latest-tags@issue/OSOE-1284
         with:
           tag-prefix: ${{ inputs.tag-prefix }}
 
@@ -466,6 +466,6 @@ jobs:
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@issue/OSOE-1284
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
