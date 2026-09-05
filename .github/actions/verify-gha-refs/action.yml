@@ -59,7 +59,7 @@ runs:
 
     - name: Upload Files Causing Failure
       if: steps.check-references.outputs.has-files == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1308
       with:
         name: check-references-fixes-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ steps.check-references.outputs.artifact-path }}
