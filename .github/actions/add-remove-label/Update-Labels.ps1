@@ -1,10 +1,10 @@
-$ErrorActionPreference = 'Stop'
+$errorActionPreference = 'Stop'
 
-$event = Get-Content -LiteralPath $Env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
-$number = $event.pull_request.number ?? $event.issue.number
+$githubEvent = Get-Content -LiteralPath $Env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
+$number = $githubEvent.pull_request.number ?? $githubEvent.issue.number
 
 # Push and other events without an issue or pull request have no labels to update.
-if (!$number)
+if (-not $number)
 {
     return
 }
@@ -18,7 +18,7 @@ if ($Env:LABEL_OPERATION -cnotin @('add', 'remove'))
 $labels = @(
     if ($Env:LABELS)
     {
-        $Env:LABELS.Split(',').Trim() | Where-Object { $_ }
+        $Env:LABELS.Split(',').Trim() | Where-Object { $PSItem }
     }
     elseif ($Env:LABEL)
     {
@@ -46,7 +46,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Failed to read labels.' }
 
 foreach ($label in ($labels | Select-Object -Unique))
 {
-    if ($existingLabels -ccontains $label)
+    if ($existingLabels -contains $label)
     {
         $encodedLabel = [Uri]::EscapeDataString($label)
         gh api --method DELETE "$endpoint/$encodedLabel" --silent
