@@ -85,6 +85,8 @@ try
     catch { $failed = $true }
     Assert-True $failed 'Invalid operations must fail.'
 
+    # The Actions PowerShell shell propagates LASTEXITCODE, including our intentionally mocked API failures.
+    $global:LASTEXITCODE = 0
     Write-Output 'All label update tests passed.'
 }
 finally
