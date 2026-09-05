@@ -3,7 +3,8 @@ param ($Directory, $Configuration)
 
 $rootDirectory = Resolve-Path $Directory
 $blameHangDumpsName = 'BlameHangDumps'
-$testDirectory = $rootDirectory
+$testDirectoryPath = Join-Path $Directory 'test'
+$testDirectory = (Test-Path -Path $testDirectoryPath) ? (Resolve-Path $testDirectoryPath) : $rootDirectory
 
 $dumpCount = (Get-ChildItem -Path $testDirectory -Filter '*_hangdump.dmp' -Recurse | Measure-Object).Count
 Set-GitHubOutput 'dump-count' $dumpCount
@@ -26,8 +27,7 @@ function ItemFilter($Item, $TestConfiguration)
         return $false
     }
 
-    $allow = (($Item.Name -like 'Sequence_*.xml') -or ($Item.Name -like '*_hangdump.dmp') -or
-        ($Item.Name -like '*.sequence.log'))
+    $allow = (($Item.Name -like 'Sequence_*.xml') -or ($Item.Name -like '*_hangdump.dmp'))
     if (-not $allow -and $TestConfiguration)
     {
         $allow = ($Item.FullName -like "*$(Join-Path 'bin' $TestConfiguration)*" )

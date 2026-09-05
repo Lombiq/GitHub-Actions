@@ -40,7 +40,7 @@ jobs:
     if: github.event_name == 'push' && github.ref_name == github.event.repository.default_branch
     steps:
       - name: Checkout
-        uses: Lombiq/GitHub-Actions/.github/actions/checkout@issue/OSOE-1284
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
 
       - name: Post
         uses: Lombiq/GitHub-Actions/.github/actions/twitter-together@issue/OSOE-1284
