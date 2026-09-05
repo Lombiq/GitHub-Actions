@@ -6,6 +6,15 @@
         // Due to having to update branch references, it's easier to test all dependencies at once.
         'github>Lombiq/renovate-config:all-dependencies.json5',
     ],
+    customManagers: [
+        {
+            customType: 'regex',
+            managerFilePatterns: ['/.github/actions/twitter-together/action\\.yml$/'],
+            matchStrings: ['TWITTER_TOGETHER_REF: (?<currentDigest>[a-f0-9]{40}) # (?<currentValue>v[0-9.]+)'],
+            datasourceTemplate: 'github-tags',
+            depNameTemplate: 'twitter-together/action',
+        },
+    ],
     packageRules: [
         {
             matchPackageNames: ['azure/webapps-deploy'],

@@ -1,78 +1,23 @@
 name: Workflow Telemetry
 description: >
-  Runs catchpoint/workflow-telemetry-action. Exists only to centralize which version of the action we use. Intentionally
-  not documented in Actions.md since it's only meant for internal use.
-
-# Copied from https://github.com/catchpoint/workflow-telemetry-action/blob/master/action.yml with code styling and
-# comment_on_pr defaulting to false.
+  Collects CPU and memory metrics and displays Mermaid charts in the job summary without an external chart service.
+  Intentionally not documented in Actions.md since it's only meant for internal use.
 
 inputs:
   github_token:
-    description: GitHub API Access Token
+    description: GitHub API access token. Requires actions:read for private repositories.
     default: ${{ github.token }}
     required: false
   metric_frequency:
-    description: Metric collection frequency in seconds. Must be a number. Defaults to '5'.
-    default: 5
-    required: false
-  proc_trace_min_duration:
-    description: >
-      Puts minimum limit for process execution duration to be traced. Must be a number. Defaults to '-1' which means
-      process duration filtering is not applied.
-    default: -1
-    required: false
-  proc_trace_sys_enable:
-    description: Enables tracing default system processes ('aws', 'cat', 'sed', ...). Defaults to 'false'.
-    default: false
-    required: false
-  proc_trace_chart_show:
-    description: Enables showing traced processes in trace chart. Defaults to 'true'.
-    default: true
-    required: false
-  proc_trace_chart_max_count:
-    description: >
-      Maximum number of processes to be shown in trace chart (applicable if `proc_trace_chart_show` input is `true`).
-      Must be a number. Defaults to '100'.
-    default: 100
-    required: false
-  proc_trace_table_show:
-    description: Enables showing traced processes in trace table. Defaults to 'false'.
-    default: false
-    required: false
-  comment_on_pr:
-    description: >
-      Set to `true` to publish the results as comment to the PR (applicable if workflow run is triggered from PR).
-      Defaults to 'false'.
-    default: false
-    required: false
-  job_summary:
-    description: >
-      Set to `true` to publish the results as part of the job summary page of the workflow run. Defaults to 'true'.
-    default: true
-    required: false
-  theme:
-    description: Set to `dark` to generate charts compatible with Github dark mode. Defaults to 'light'.
-    default: light
+    description: Metric collection frequency in seconds.
+    default: '5'
     required: false
 
 runs:
   using: composite
   steps:
-    - name: Set Checkout Token
-      uses: Lombiq/GitHub-Actions/.github/actions/set-checkout-token@dev
-      with:
-        checkout-token: ${{ inputs.github_token }}
-
     - name: Collect Workflow Telemetry
-      uses: catchpoint/workflow-telemetry-action@94c3c3d9567a0205de6da68a76c428ce4e769af1 # v2.0.0
+      uses: dev-hato/actions-workflow-metrics@c6b748e52274db07791b2117b97315c38660e333 # v0.0.8
       with:
-        github_token: ${{ env.CHECKOUT_TOKEN }}
-        metric_frequency: ${{ inputs.metric_frequency }}
-        proc_trace_min_duration: ${{ inputs.proc_trace_min_duration }}
-        proc_trace_sys_enable: ${{ inputs.proc_trace_sys_enable }}
-        proc_trace_chart_show: ${{ inputs.proc_trace_chart_show }}
-        proc_trace_chart_max_count: ${{ inputs.proc_trace_chart_max_count }}
-        proc_trace_table_show: ${{ inputs.proc_trace_table_show }}
-        comment_on_pr: ${{ inputs.comment_on_pr }}
-        job_summary: ${{ inputs.job_summary }}
-        theme: ${{ inputs.theme }}
+        github_token: ${{ inputs.github_token || github.token }}
+        interval_seconds: ${{ inputs.metric_frequency }}
