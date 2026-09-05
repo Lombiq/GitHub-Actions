@@ -1,9 +1,8 @@
 name: Add/Remove Label
 description: >
-  Runs buildsville/add-remove-label. Exists only to centralize which version of the action we use. Intentionally not
+  Adds or removes issue and pull request labels with the GitHub CLI. Intentionally not
   documented in Actions.md since it's only meant for internal use.
 
-# Copied from https://github.com/buildsville/add-remove-label/blob/master/action.yml.
 inputs:
   token:
     description: github token
@@ -26,9 +25,12 @@ runs:
   using: composite
   steps:
     - name: Add/Remove Label
-      uses: buildsville/add-remove-label@ac59c9f0aeb66eb12d6366eb1d69ec1906e9ef9a # v2.0.1
-      with:
-        token: ${{ inputs.token }}
-        labels: ${{ inputs.labels }}
-        label: ${{ inputs.label }}
-        type: ${{ inputs.type }}
+      shell: pwsh
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        LABELS: ${{ inputs.labels }}
+        LABEL: ${{ inputs.label }}
+        LABEL_OPERATION: ${{ inputs.type }}
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        & "$Env:ACTION_PATH/Update-Labels.ps1"

@@ -1,0 +1,24 @@
+name: Twitter, Together on Node.js 24
+description: Runs the pinned Twitter, together! bundle with Node.js 24 for post previews and publishing.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js
+      uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+      with:
+        node-version: '24'
+        package-manager-cache: 'false'
+
+    # Upstream's action.yml still specifies Node.js 20. Execute its self-contained bundle with our supported runtime.
+    # Keep the working directory and GitHub event environment intact for previews, media, threads, and posting.
+    - name: Run Twitter, Together
+      shell: bash
+      env:
+        TWITTER_TOGETHER_REF: 08857009da2aacd9bd08204550ec96e15d76b4da # v3.1.0
+      run: |
+        action_directory=$(mktemp -d "$RUNNER_TEMP/twitter-together.XXXXXX")
+        curl --fail --location --retry 3 \
+          "https://raw.githubusercontent.com/twitter-together/action/$TWITTER_TOGETHER_REF/dist/index.js" \
+          --output "$action_directory/index.cjs"
+        node "$action_directory/index.cjs"

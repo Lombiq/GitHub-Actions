@@ -276,8 +276,8 @@ on:
         type: string
         default: 'true'
         description: >
-          If "true" (the default), detailed telemetry about the workflow run will be collected with
-          https://github.com/catchpoint/workflow-telemetry-action.
+          If "true" (the default), CPU and memory usage charts and a JSON artifact will be generated with
+          https://github.com/dev-hato/actions-workflow-metrics. Private repositories require actions:read permission.
       log-disk-usage-depth:
         type: number
         default: 0
@@ -319,7 +319,7 @@ jobs:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/OSOE-1284
         with:
           github_token: ${{ secrets.CHECKOUT_TOKEN }}
 
