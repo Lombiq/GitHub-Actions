@@ -32,7 +32,7 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 
 The .NET, Orchard Core, and MSBuild build-and-test workflows collect CPU and memory usage by default. The job summary contains Mermaid charts, and a `workflow_metrics_*` artifact contains the raw JSON data. Private repositories need `actions: read` permission for the token used to collect telemetry. Set `collect-workflow-telemetry: 'false'` to disable collection.
 
-Telemetry uses [actions-workflow-metrics](https://github.com/dev-hato/actions-workflow-metrics), replacing Catchpoint's external chart service. Process traces, PR comments, chart themes, and the old `proc_trace_*`, `comment_on_pr`, `job_summary`, and `theme` action inputs are no longer supported. Internal callers retain `github_token` and `metric_frequency`. Charts and artifacts are generated during job cleanup; a runner that crashes before cleanup may not upload its metrics.
+Telemetry uses [actions-workflow-metrics](https://github.com/dev-hato/actions-workflow-metrics), replacing Catchpoint's external chart service. Process traces, PR comments, and chart themes are no longer supported. The old `proc_trace_*`, `comment_on_pr`, `job_summary`, and `theme` action inputs have been removed. Internal callers retain `github_token` and `metric_frequency`. Charts and artifacts are generated during job cleanup; a runner that crashes before cleanup may not upload its metrics.
 
 ## Productivity
 
