@@ -8,8 +8,8 @@ inputs:
     description: GitHub API access token. Requires actions:read for private repositories.
     default: ${{ github.token }}
     required: false
-  metric_frequency:
-    description: Metric collection frequency in seconds.
+  interval_seconds:
+    description: Interval between metrics collection in seconds.
     default: '5'
     required: false
 
@@ -20,4 +20,4 @@ runs:
       uses: dev-hato/actions-workflow-metrics@c6b748e52274db07791b2117b97315c38660e333 # v0.0.8
       with:
         github_token: ${{ inputs.github_token || github.token }}
-        interval_seconds: ${{ inputs.metric_frequency }}
+        interval_seconds: ${{ inputs.interval_seconds }}
