@@ -1,0 +1,17 @@
+name: Test Nested Workflow Telemetry
+
+on:
+  pull_request:
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  test:
+    uses: ./.github/workflows/test-workflow-telemetry-caller.yml
+    secrets:
+      # Synthetic credential: no external services or real credentials are used by these tests.
+      TEST_SECRET: telemetry-mask-regression

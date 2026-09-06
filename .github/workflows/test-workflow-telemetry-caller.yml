@@ -1,0 +1,18 @@
+name: Nested Telemetry Test Caller
+
+on:
+  workflow_call:
+    secrets:
+      TEST_SECRET:
+        required: true
+
+jobs:
+  test:
+    uses: ./.github/workflows/test-workflow-actions.yml
+    secrets:
+      # Match the nested build-and-test caller: preserve readable source while passing one JSON line as a secret.
+      ENVIRONMENT_VARIABLES_JSON: >-
+        {
+        "TELEMETRY_TEST_SECRET": "${{ secrets.TEST_SECRET }}",
+        "TELEMETRY_TEST_ENVIRONMENT": "production"
+        }

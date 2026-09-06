@@ -34,6 +34,23 @@ The .NET, Orchard Core, and MSBuild build-and-test workflows collect CPU and mem
 
 Telemetry uses [actions-workflow-metrics](https://github.com/dev-hato/actions-workflow-metrics). Charts and artifacts are generated during job cleanup; a runner that crashes before cleanup may not upload its metrics.
 
+### Passing environment variables through reusable workflows
+
+Pass `ENVIRONMENT_VARIABLES_JSON` as a single-line JSON secret. GitHub also masks each individual line of a multiline secret. A literal JSON block with standalone `{` and `}` lines therefore masks braces in unrelated output, including the Mermaid charts and their legends. This happens before any action runs, so compacting the JSON inside the called workflow cannot undo it.
+
+Use a folded YAML block (`>-`) in the caller. Keep every JSON line at the same indentation, including the braces:
+
+```yaml
+secrets:
+  ENVIRONMENT_VARIABLES_JSON: >-
+    {
+    "MY_API_TOKEN": "${{ secrets.MY_API_TOKEN }}",
+    "MY_ENVIRONMENT": "${{ inputs.environment }}"
+    }
+```
+
+YAML folds this into one line while keeping the workflow source readable. The JSON secret and its nonempty environment-variable values remain masked. Apply this formatting where the secret is first constructed, including in intermediate reusable workflows. Start a new run or rerun the calling workflow after updating the referenced workflow revision.
+
 ## Productivity
 
 - [Asset Linting](Workflows/Productivity/AssetLinting.md)

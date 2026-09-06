@@ -1,6 +1,10 @@
 name: Test Workflow Actions
 
 on:
+  workflow_call:
+    secrets:
+      ENVIRONMENT_VARIABLES_JSON:
+        required: false
   pull_request:
   push:
     branches: [dev]
@@ -24,6 +28,34 @@ jobs:
         uses: ./.github/actions/workflow-telemetry
         with:
           interval_seconds: '1'
+
+      - name: Set Environment Variables
+        uses: ./.github/actions/set-environment-variables
+        env:
+          ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
+
+      - name: Verify Nested Secret
+        shell: pwsh
+        env:
+          ENVIRONMENT_VARIABLES_JSON: ${{ secrets.ENVIRONMENT_VARIABLES_JSON }}
+        run: |
+          if ($Env:ENVIRONMENT_VARIABLES_JSON)
+          {
+              if ($Env:ENVIRONMENT_VARIABLES_JSON.Contains("`n") -or $Env:ENVIRONMENT_VARIABLES_JSON.Contains("`r"))
+              {
+                  throw 'The JSON secret must reach the nested workflow as a single line.'
+              }
+
+              if ($Env:TELEMETRY_TEST_SECRET -ne 'telemetry-mask-regression' -or
+                  $Env:TELEMETRY_TEST_ENVIRONMENT -ne 'production')
+              {
+                  throw 'The environment variables were not preserved through the nested workflow call.'
+              }
+
+              # Inspect the run log: the synthetic credential must be masked, while chart syntax stays intact.
+              Write-Output "Synthetic credential: $Env:TELEMETRY_TEST_SECRET"
+              Write-Output 'Telemetry syntax: {}'
+          }
 
       - name: Test Label Updates
         shell: pwsh
