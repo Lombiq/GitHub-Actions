@@ -5,6 +5,7 @@ $artifactPath = Join-Path $PSScriptRoot "artifacts/$([Guid]::NewGuid().ToString(
 New-Item -ItemType Directory -Path $artifactPath -Force | Out-Null
 
 $savedEnvironment = @{}
+
 foreach ($name in @('PATH', 'GITHUB_ACTIONS', 'GITHUB_OUTPUT', 'GITHUB_STEP_SUMMARY', 'GITHUB_WORKSPACE', 'LGHA_TEST_FAILURE'))
 {
     $savedEnvironment[$name] = [Environment]::GetEnvironmentVariable($name)
@@ -20,6 +21,7 @@ function Invoke-Scenario($Name, $Target, $Filter, $ExpectedExitCode = 0)
     $Env:GITHUB_OUTPUT = Join-Path $artifactPath "$Name-output.txt"
     $Env:GITHUB_STEP_SUMMARY = Join-Path $artifactPath "$Name-summary.md"
     $logPath = Join-Path $artifactPath "$Name.log"
+
     $arguments = @(
         '-NoProfile', '-File', "$actionPath/Invoke-SolutionOrProjectTests.ps1"
         '-SolutionOrProject', $Target
@@ -32,6 +34,7 @@ function Invoke-Scenario($Name, $Target, $Filter, $ExpectedExitCode = 0)
 
     # Run in a child process so the action's exit and environment changes don't affect the test harness.
     & (Join-Path $PSHOME 'pwsh') @arguments *> $logPath
+
     if ($LASTEXITCODE -ne $ExpectedExitCode)
     {
         Get-Content $logPath | Write-Output
@@ -40,6 +43,7 @@ function Invoke-Scenario($Name, $Target, $Filter, $ExpectedExitCode = 0)
 }
 
 Push-Location $PSScriptRoot
+
 try
 {
     $Env:PATH = (Join-Path $repositoryPath 'Scripts') + [IO.Path]::PathSeparator + $Env:PATH

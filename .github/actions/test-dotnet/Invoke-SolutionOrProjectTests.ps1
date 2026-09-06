@@ -95,7 +95,9 @@ if ($SolutionOrProject -imatch '\.slnx?$')
                 '-getProperty:IsTestingPlatformApplication,IsTestProject'
                 '-verbosity:quiet'
             )
+
             $properties = dotnet msbuild $absolutePath @evaluationSwitches | Out-String
+
             if ($LASTEXITCODE -ne 0)
             {
                 Write-GitHub "Failed to evaluate test project properties for `"$absolutePath`"."
@@ -103,6 +105,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
             }
 
             $properties = ($properties | ConvertFrom-Json).Properties
+
             if ($useMtp)
             {
                 if ($properties.IsTestingPlatformApplication -eq 'true')
@@ -111,7 +114,7 @@ if ($SolutionOrProject -imatch '\.slnx?$')
                 }
                 elseif ($properties.IsTestProject -eq 'true')
                 {
-                    Write-GitHub "The test project `"$absolutePath`" does not support Microsoft.Testing.Platform. Migrate it or use test-platform: VSTest."
+                    Write-GitHub "The test project `"$absolutePath`" does not support Microsoft.Testing.Platform. Migrate it or use test-platform VSTest."
                     exit 1
                 }
 
