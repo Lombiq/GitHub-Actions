@@ -23,7 +23,7 @@ jobs:
       - name: Collect Workflow Telemetry
         uses: ./.github/actions/workflow-telemetry
         with:
-          metric_frequency: '1'
+          interval_seconds: '1'
 
       - name: Test Label Updates
         shell: pwsh
