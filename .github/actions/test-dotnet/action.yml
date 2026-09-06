@@ -5,12 +5,18 @@ description: >
   artifacts.
 
 inputs:
+  test-platform:
+    required: false
+    default: Microsoft.Testing.Platform
+    description: >
+      Test platform: Microsoft.Testing.Platform (requires .NET 10+, the global.json test runner setting, and the
+      GitHubActionsReport and TrxReport extensions) or VSTest for legacy test projects.
   blame-hang-timeout:
     required: false
     default: ''
     description: >
-      Run the tests in blame mode and collects a hang dump when a test exceeds the given timeout. See
-      https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details on available values.
+      Collect a hang dump after the given period without test activity. Bare values are milliseconds.
+      Requires Microsoft.Testing.Extensions.HangDump in MTP mode; uses VSTest blame mode otherwise.
   build-directory:
     required: false
     default: .
@@ -35,7 +41,7 @@ inputs:
   test-filter:
     required: false
     description: >
-      Filter expression for dotnet test. See:
+      Filter expression for dotnet test (supported by xUnit 4+ in MTP mode). See:
       https://learn.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests.
   test-configuration:
     required: false
@@ -57,8 +63,7 @@ inputs:
     required: false
     default: 'false'
     description: >
-      Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files, to
-      be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
+      Enables diagnostic mode with MTP's --diagnostic flag (VSTest: --diag) and uploads diagnostic logs as artifacts.
   show-time-remaining-until-timeout:
     required: false
     default: 'false'
@@ -97,7 +102,7 @@ runs:
         Set-GitHubEnv 'Lombiq_Tests_UI__OrchardCoreUITestExecutorConfiguration__RetryIntervalSeconds' ${{ inputs.ui-test-retry-interval-seconds }}
 
     - name: Install dotnet-dump
-      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@issue/OSOE-1308
       with:
         name: dotnet-dump
         version: 8.0.510501
@@ -108,6 +113,7 @@ runs:
       working-directory: ${{ inputs.build-directory }}
       run: |
         $switches = @{
+          TestPlatform = '${{ inputs.test-platform }}'
           SolutionOrProject = Get-SolutionOrProjectPath ${{ inputs.solution-path }}
           Verbosity = "${{ inputs.test-verbosity }}"
           Filter = "${{ inputs.test-filter }}"
@@ -135,7 +141,7 @@ runs:
     # Under Windows this can fail with "ENOENT: no such file or directory" if the path is too long, see
     # https://github.com/actions/upload-artifact/issues/240.
     - name: Upload UI Testing Artifacts
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1308
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
@@ -154,7 +160,7 @@ runs:
     # Under Windows this can fail with "ENOENT: no such file or directory" if the path is too long, see
     # https://github.com/actions/upload-artifact/issues/240.
     - name: Upload UI Testing Artifacts
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1308
       # We don't need additional conditions, because of the "if-no-files-found" setting.
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
       with:
@@ -170,7 +176,7 @@ runs:
       run: Merge-BlameHangDumps -Directory "${{ inputs.build-directory }}" -Configuration "${{ inputs.test-configuration }}"
 
     - name: Upload Blame Hang Dumps
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1308
       if: |
         failure() &&
         steps.run-tests.outputs.test-count != 0 &&
@@ -183,7 +189,7 @@ runs:
         retention-days: ${{ inputs.artifact-retention-days }}
 
     - name: Upload Dotnet Test Hang Dumps
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1308
       if: (success() || failure()) && steps.run-tests.outputs.test-count != 0 && steps.run-tests.outputs.dotnet-test-hang-dump != 0
       with:
         name: dotnet-test-hang-dump-${{ steps.setup.outputs.artifact-name-suffix }}
@@ -192,7 +198,7 @@ runs:
         retention-days: ${{ inputs.artifact-retention-days }}
 
     - name: Upload Diagnostic Logs
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1308
       # always() is needed because if the test process hangs and the workflow times out, we still need the diagnostic
       # logs. We don't need additional conditions, because of the "if-no-files-found" setting.
       if: always() && steps.run-tests.outputs.test-count != 0
@@ -204,10 +210,19 @@ runs:
 
     - name: Test Report
       uses: phoenix-actions/test-reporting@7317eea6e13c47348dd0bb318669485157c518d6 # v16
-      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0 && inputs.test-platform == 'VSTest'
       with:
         name: Test Results (${{inputs.build-directory}}|${{ steps.setup.outputs.runner-suffix }}
         path: ${{inputs.build-directory}}/**/*.trx
         reporter: dotnet-trx
         fail-on-error: 'false'
         output-to: step-summary
+
+    - name: Upload Test Results
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1308
+      if: (success() || failure()) && steps.run-tests.outputs.test-count != 0 && inputs.test-platform == 'Microsoft.Testing.Platform'
+      with:
+        name: test-results-${{ steps.setup.outputs.artifact-name-suffix }}
+        path: ${{ inputs.build-directory }}/**/*.trx
+        if-no-files-found: ignore
+        retention-days: ${{ inputs.artifact-retention-days }}
