@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+$errorActionPreference = 'Stop'
 $actionPath = (Resolve-Path "$PSScriptRoot/..").Path
 $repositoryPath = (Resolve-Path "$PSScriptRoot/../../../..").Path
 $artifactPath = Join-Path $PSScriptRoot "artifacts/$([Guid]::NewGuid().ToString('N'))"

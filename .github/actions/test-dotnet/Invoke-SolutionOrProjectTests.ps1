@@ -90,8 +90,12 @@ if ($SolutionOrProject -imatch '\.slnx?$')
             $absolutePath = (Resolve-Path -Path (Join-Path -Path $solutionDirectory -ChildPath $PSItem)).Path
 
             # Evaluate project properties instead of relying on project names or localized test runner output.
-            $properties = dotnet msbuild $absolutePath "-p:Configuration=$Configuration" `
-                '-getProperty:IsTestingPlatformApplication,IsTestProject' -verbosity:quiet | Out-String
+            $evaluationSwitches = @(
+                "-p:Configuration=$Configuration"
+                '-getProperty:IsTestingPlatformApplication,IsTestProject'
+                '-verbosity:quiet'
+            )
+            $properties = dotnet msbuild $absolutePath @evaluationSwitches | Out-String
             if ($LASTEXITCODE -ne 0)
             {
                 Write-GitHub "Failed to evaluate test project properties for `"$absolutePath`"."
