@@ -233,7 +233,7 @@ on:
         default: 'true'
         description: >
           If "true" (the default), CPU and memory usage charts and a JSON artifact will be generated with
-          https://github.com/dev-hato/actions-workflow-metrics. Private repositories require actions:read permission.
+          https://github.com/dev-hato/actions-workflow-metrics. Private repositories require actions: read permission.
 
 jobs:
   # While the below steps seem suitable to DRY with build-and-test-orchard-core, since reusable workflows can't call

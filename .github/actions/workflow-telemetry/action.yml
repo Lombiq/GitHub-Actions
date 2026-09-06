@@ -5,7 +5,7 @@ description: >
 
 inputs:
   github_token:
-    description: GitHub API access token. Requires actions:read for private repositories.
+    description: GitHub API access token. Requires actions: read for private repositories.
     default: ${{ github.token }}
     required: false
   interval_seconds:
