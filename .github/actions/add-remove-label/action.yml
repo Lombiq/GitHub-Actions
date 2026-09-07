@@ -24,6 +24,11 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+
     - name: Add/Remove Label
       shell: pwsh
       env:
@@ -31,7 +36,6 @@ runs:
         LABELS: ${{ inputs.labels }}
         LABEL: ${{ inputs.label }}
         LABEL_OPERATION: ${{ inputs.type }}
-        ACTION_PATH: ${{ github.action_path }}
       run: |
         $parameters = @{
             EventPath = $Env:GITHUB_EVENT_PATH
@@ -40,4 +44,5 @@ runs:
             Label = $Env:LABEL
             Operation = $Env:LABEL_OPERATION
         }
-        & "$Env:ACTION_PATH/Update-Labels.ps1" @parameters
+        
+        Update-Labels @parameters
