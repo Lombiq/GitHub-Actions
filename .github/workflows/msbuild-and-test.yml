@@ -184,7 +184,8 @@ jobs:
         if: inputs.collect-workflow-telemetry == 'true'
         uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/OSOE-1284
         with:
-          github_token: ${{ secrets.CHECKOUT_TOKEN }}
+          # Telemetry reads the caller's workflow run, which may be in a different repository from checkout.
+          github_token: ${{ github.token }}
 
       - name: Set Environment Variables
         uses: Lombiq/GitHub-Actions/.github/actions/set-environment-variables@dev

@@ -30,7 +30,7 @@ These features are designed to reduce resource usage (like paid GitHub Actions m
 
 ## Workflow telemetry
 
-The .NET, Orchard Core, and MSBuild build-and-test workflows collect CPU and memory usage by default. The job summary contains Mermaid charts, and a `workflow_metrics_*` artifact contains the raw JSON data. Private repositories need `actions: read` permission for the token used to collect telemetry. Set `collect-workflow-telemetry: 'false'` to disable collection.
+The .NET, Orchard Core, and MSBuild build-and-test workflows collect CPU and memory usage by default. The job summary contains Mermaid charts, and a `workflow_metrics_*` artifact contains the raw JSON data. Telemetry uses the calling repository's `GITHUB_TOKEN`, which needs `actions: read` permission for private repositories. Grant this permission in the caller job's `permissions` block. The separate `CHECKOUT_TOKEN` only authenticates checkout and may have access to different repositories. Set `collect-workflow-telemetry: 'false'` to disable collection.
 
 Telemetry uses [actions-workflow-metrics](https://github.com/dev-hato/actions-workflow-metrics). Charts and artifacts are generated during job cleanup; a runner that crashes before cleanup may not upload its metrics.
 
