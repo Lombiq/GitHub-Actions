@@ -30,7 +30,7 @@ function Assert-True($Condition, $Message)
     if (-not $Condition) { throw $Message }
 }
 
-function Invoke-TestUpdate($EventJson, $Operation, $Label = '', $Labels = '')
+function Invoke-TestUpdate($EventJson, $Operation, $Labels = '')
 {
     $testState.Calls.Clear()
     Set-Content -LiteralPath $eventPath -Value $EventJson
@@ -38,7 +38,6 @@ function Invoke-TestUpdate($EventJson, $Operation, $Label = '', $Labels = '')
         EventPath = $eventPath
         Repository = 'owner/repo'
         Operation = $Operation
-        Label = $Label
         Labels = $Labels
     }
     & "$PSScriptRoot/Update-Labels.ps1" @parameters
@@ -46,24 +45,24 @@ function Invoke-TestUpdate($EventJson, $Operation, $Label = '', $Labels = '')
 
 try
 {
-    Invoke-TestUpdate -EventJson '{"pull_request":{"number":42}}' -Operation add -Label 'a, single label'
+    Invoke-TestUpdate -EventJson '{"pull_request":{"number":42}}' -Operation add -Labels 'a, single label'
     Assert-True ($testState.Calls.Count -eq 1) 'Adding a label must make one edit call.'
     $arguments = $testState.Calls[0].Arguments
     Assert-True (($arguments[0..4] -join '|') -ceq 'issue|edit|42|--repo|owner/repo') 'PR labels must use issue edit.'
-    Assert-True ($arguments[5] -ceq '--add-label' -and $arguments[6] -ceq '"a, single label"') 'Single label must be CSV quoted.'
+    Assert-True ($arguments[5] -ceq '--add-label' -and $arguments[6] -ceq '"a","single label"') 'Comma-separated labels must be CSV quoted.'
 
-    Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation add -Label ignored -Labels ' first, ,second '
+    Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation add -Labels ' first, ,second '
     $arguments = $testState.Calls[0].Arguments
     Assert-True (($arguments[0..4] -join '|') -ceq 'issue|edit|7|--repo|owner/repo') 'Wrong issue edit command.'
-    Assert-True ($arguments[6] -ceq '"first","second"') 'Plural labels must take precedence and be trimmed.'
+    Assert-True ($arguments[6] -ceq '"first","second"') 'Labels must be trimmed and unique values maintained.'
 
     $specialLabel = 'quote" slash/ # & $(never-execute)'
-    Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation add -Label $specialLabel
+    Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation add -Labels $specialLabel
     $expectedLabel = '"quote"" slash/ # & $(never-execute)"'
     Assert-True ($testState.Calls[0].Arguments[6] -ceq $expectedLabel) 'Quotes must be escaped as CSV data.'
 
     $testState.ExistingLabels = @($specialLabel)
-    Invoke-TestUpdate -EventJson '{"pull_request":{"number":42}}' -Operation remove -Label $specialLabel
+    Invoke-TestUpdate -EventJson '{"pull_request":{"number":42}}' -Operation remove -Labels $specialLabel
     Assert-True (($testState.Calls[0].Arguments[0..2] -join '|') -ceq 'pr|view|42') 'PR labels must be read with pr view.'
     $arguments = $testState.Calls[1].Arguments
     Assert-True ($arguments[0] -ceq 'issue' -and $arguments[5] -ceq '--remove-label') 'PR label removal must use issue edit.'
@@ -74,14 +73,14 @@ try
     Assert-True ($testState.Calls.Count -eq 2) 'Removal should make one view and one edit call.'
     Assert-True ($testState.Calls[1].Arguments[6] -ceq '"present"') 'Only existing, unique labels should be removed.'
 
-    Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation remove -Label PRESENT
+    Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation remove -Labels PRESENT
     Assert-True ($testState.Calls[1].Arguments[6] -ceq '"present"') 'Lookup must preserve the existing label casing.'
 
     $testState.ExistingLabels = @()
-    Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation remove -Label present
+    Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation remove -Labels present
     Assert-True ($testState.Calls.Count -eq 1) 'Removing an absent label must succeed without an edit.'
 
-    Invoke-TestUpdate -EventJson '{"ref":"refs/heads/dev"}' -Operation add -Label example
+    Invoke-TestUpdate -EventJson '{"ref":"refs/heads/dev"}' -Operation add -Labels example
     Assert-True ($testState.Calls.Count -eq 0) 'Push events must not make label requests.'
     Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation add
     Assert-True ($testState.Calls.Count -eq 0) 'Empty labels must not make requests.'
@@ -94,7 +93,7 @@ try
         try
         {
             $operation = $method -eq '--add-label' ? 'add' : 'remove'
-            Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation $operation -Label present
+            Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation $operation -Labels present
         }
         catch { $failed = $true }
         Assert-True $failed "A failed $method command must fail the action."
@@ -102,7 +101,7 @@ try
 
     $failed = $false
     $testState.FailureMethod = ''
-    try { Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation invalid -Label example }
+    try { Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation invalid -Labels example }
     catch { $failed = $true }
     Assert-True $failed 'Invalid operations must fail.'
 

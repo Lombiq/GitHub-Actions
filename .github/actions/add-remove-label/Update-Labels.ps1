@@ -3,7 +3,6 @@ param(
     [string] $EventPath,
     [Parameter(Mandatory)]
     [string] $Repository,
-    [string] $Label = '',
     [string] $Labels = '',
     [Parameter(Mandatory)]
     [string] $Operation
@@ -25,15 +24,10 @@ if ($Operation -cnotin @('add', 'remove'))
     throw 'The label operation must be add or remove.'
 }
 
-# The plural input takes precedence, while a single label can itself contain a comma.
 $labelsToUpdate = @(
     if ($Labels)
     {
         $Labels.Split(',').Trim() | Where-Object { $PSItem }
-    }
-    elseif ($Label)
-    {
-        $Label
     }
 )
 

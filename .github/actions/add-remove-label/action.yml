@@ -12,10 +12,6 @@ inputs:
     description: labels to edit
     required: false
     default: ''
-  label:
-    description: label to edit
-    required: false
-    default: ''
   type:
     description: add or remove
     required: true
@@ -34,14 +30,12 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.token }}
         LABELS: ${{ inputs.labels }}
-        LABEL: ${{ inputs.label }}
         LABEL_OPERATION: ${{ inputs.type }}
       run: |
         $parameters = @{
             EventPath = $Env:GITHUB_EVENT_PATH
             Repository = $Env:GITHUB_REPOSITORY
             Labels = $Env:LABELS
-            Label = $Env:LABEL
             Operation = $Env:LABEL_OPERATION
         }
 
