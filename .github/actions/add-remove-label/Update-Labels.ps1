@@ -51,9 +51,9 @@ if ($Operation -ceq 'remove')
 # gh parses label flags as CSV so labels should be escaped.
 $labelNames = (
     $labelsToUpdate |
-    Select-Object -Unique |
-    ForEach-Object { @{ Value = $PSItem } } |
-    ConvertTo-Csv -UseQuotes Always -NoHeader
+        Select-Object -Unique |
+        ForEach-Object { @{ Value = $PSItem } } |
+        ConvertTo-Csv -UseQuotes Always -NoHeader
 ) -join ','
 
 $labelFlag = "--$Operation-label"
