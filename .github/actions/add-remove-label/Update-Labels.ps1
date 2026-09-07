@@ -3,10 +3,10 @@ param(
     [string] $EventPath,
     [Parameter(Mandatory)]
     [string] $Repository,
-    [Parameter(Mandatory)]
-    [string] $Operation,
     [string] $Label = '',
-    [string] $Labels = ''
+    [string] $Labels = '',
+    [Parameter(Mandatory)]
+    [string] $Operation
 )
 
 $errorActionPreference = 'Stop'

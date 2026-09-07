@@ -36,8 +36,8 @@ runs:
         $parameters = @{
             EventPath = $Env:GITHUB_EVENT_PATH
             Repository = $Env:GITHUB_REPOSITORY
-            Operation = $Env:LABEL_OPERATION
-            Label = $Env:LABEL
             Labels = $Env:LABELS
+            Label = $Env:LABEL
+            Operation = $Env:LABEL_OPERATION
         }
         & "$Env:ACTION_PATH/Update-Labels.ps1" @parameters
