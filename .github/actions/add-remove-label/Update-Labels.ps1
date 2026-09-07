@@ -42,25 +42,20 @@ if ($labelsToUpdate.Count -eq 0)
     return
 }
 
-$endpoint = "repos/$Repository/issues/$number/labels"
+$command = $githubEvent.pull_request ? 'pr' : 'issue'
 
-if ($Operation -ceq 'add')
+if ($Operation -ceq 'remove')
 {
-    @{ labels = $labelsToUpdate } | ConvertTo-Json -Compress | gh api --method POST $endpoint --input - --silent
-    if ($LASTEXITCODE -ne 0) { throw 'Failed to add labels.' }
-    return
+    # Removing an absent label should succeed, including on repeated workflow runs.
+    $existingLabels = @(gh $command view $number --repo $Repository --json labels --jq '.labels[].name')
+    if ($LASTEXITCODE -ne 0) { throw 'Failed to read labels.' }
+
+    $labelsToUpdate = @($existingLabels | Where-Object { $labelsToUpdate -contains $PSItem })
+    if ($labelsToUpdate.Count -eq 0) { return }
 }
 
-# Removing an absent label should succeed, including on repeated workflow runs.
-$existingLabels = @(gh api --paginate $endpoint --jq '.[].name')
-if ($LASTEXITCODE -ne 0) { throw 'Failed to read labels.' }
-
-foreach ($labelToUpdate in ($labelsToUpdate | Select-Object -Unique))
-{
-    if ($existingLabels -contains $labelToUpdate)
-    {
-        $encodedLabel = [Uri]::EscapeDataString($labelToUpdate)
-        gh api --method DELETE "$endpoint/$encodedLabel" --silent
-        if ($LASTEXITCODE -ne 0) { throw "Failed to remove label '$labelToUpdate'." }
-    }
-}
+# gh parses label flags as CSV. Quote each field to preserve commas and double quotes within a single label.
+$labelNames = ($labelsToUpdate | Select-Object -Unique | ForEach-Object { '"' + $PSItem.Replace('"', '""') + '"' }) -join ','
+$labelFlag = "--$Operation-label"
+gh $command edit $number --repo $Repository $labelFlag $labelNames
+if ($LASTEXITCODE -ne 0) { throw "Failed to $Operation labels." }
