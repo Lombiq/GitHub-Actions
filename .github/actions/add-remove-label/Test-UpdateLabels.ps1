@@ -9,10 +9,11 @@ $testState = @{
 # Mock the CLI so these tests never change a real issue or pull request.
 function gh
 {
-    # Model a repo-scoped token without read:org: pr edit queries team reviewers even when only editing labels.
+    # Model a token that has "repo" scope, but no "read:org" scope. Calling "gh pr edit" queries team reviewers, even
+    # when only editing labels (see https://github.com/cli/cli/issues/13575).
     if ($args[0] -eq 'pr' -and $args[1] -eq 'edit')
     {
-        throw 'The pr edit reviewer query requires read:org.'
+        throw 'The "pr edit" query requires "read:org" OAuth scope.'
     }
 
     $testState.Calls.Add(@{ Arguments = @($args) })

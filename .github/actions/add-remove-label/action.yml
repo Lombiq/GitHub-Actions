@@ -1,7 +1,7 @@
 name: Add/Remove Label
 description: >
-  Adds or removes issue and pull request labels with the GitHub CLI. Intentionally not
-  documented in Actions.md since it's only meant for internal use.
+  Updates issue and pull request labels with the GitHub CLI. Intentionally not documented in Actions.md, because it's
+  only meant for internal use.
 
 inputs:
   token:
