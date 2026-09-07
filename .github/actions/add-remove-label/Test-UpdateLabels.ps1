@@ -28,12 +28,14 @@ function Invoke-TestUpdate($EventJson, $Operation, $Label = '', $Labels = '')
 {
     $testState.Calls.Clear()
     Set-Content -LiteralPath $eventPath -Value $EventJson
-    $Env:GITHUB_EVENT_PATH = $eventPath
-    $Env:GITHUB_REPOSITORY = 'owner/repo'
-    $Env:LABEL_OPERATION = $Operation
-    $Env:LABEL = $Label
-    $Env:LABELS = $Labels
-    & "$PSScriptRoot/Update-Labels.ps1"
+    $parameters = @{
+        EventPath = $eventPath
+        Repository = 'owner/repo'
+        Operation = $Operation
+        Label = $Label
+        Labels = $Labels
+    }
+    & "$PSScriptRoot/Update-Labels.ps1" @parameters
 }
 
 try

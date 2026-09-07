@@ -1,6 +1,17 @@
+param(
+    [Parameter(Mandatory)]
+    [string] $EventPath,
+    [Parameter(Mandatory)]
+    [string] $Repository,
+    [Parameter(Mandatory)]
+    [string] $Operation,
+    [string] $Label = '',
+    [string] $Labels = ''
+)
+
 $errorActionPreference = 'Stop'
 
-$githubEvent = Get-Content -LiteralPath $Env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
+$githubEvent = Get-Content -LiteralPath $EventPath -Raw | ConvertFrom-Json
 $number = $githubEvent.pull_request.number ?? $githubEvent.issue.number
 
 # Push and other events without an issue or pull request have no labels to update.
@@ -9,33 +20,33 @@ if (-not $number)
     return
 }
 
-if ($Env:LABEL_OPERATION -cnotin @('add', 'remove'))
+if ($Operation -cnotin @('add', 'remove'))
 {
     throw 'The label operation must be add or remove.'
 }
 
 # The plural input takes precedence, while a single label can itself contain a comma.
-$labels = @(
-    if ($Env:LABELS)
+$labelsToUpdate = @(
+    if ($Labels)
     {
-        $Env:LABELS.Split(',').Trim() | Where-Object { $PSItem }
+        $Labels.Split(',').Trim() | Where-Object { $PSItem }
     }
-    elseif ($Env:LABEL)
+    elseif ($Label)
     {
-        $Env:LABEL
+        $Label
     }
 )
 
-if ($labels.Count -eq 0)
+if ($labelsToUpdate.Count -eq 0)
 {
     return
 }
 
-$endpoint = "repos/$Env:GITHUB_REPOSITORY/issues/$number/labels"
+$endpoint = "repos/$Repository/issues/$number/labels"
 
-if ($Env:LABEL_OPERATION -ceq 'add')
+if ($Operation -ceq 'add')
 {
-    @{ labels = $labels } | ConvertTo-Json -Compress | gh api --method POST $endpoint --input - --silent
+    @{ labels = $labelsToUpdate } | ConvertTo-Json -Compress | gh api --method POST $endpoint --input - --silent
     if ($LASTEXITCODE -ne 0) { throw 'Failed to add labels.' }
     return
 }
@@ -44,12 +55,12 @@ if ($Env:LABEL_OPERATION -ceq 'add')
 $existingLabels = @(gh api --paginate $endpoint --jq '.[].name')
 if ($LASTEXITCODE -ne 0) { throw 'Failed to read labels.' }
 
-foreach ($label in ($labels | Select-Object -Unique))
+foreach ($labelToUpdate in ($labelsToUpdate | Select-Object -Unique))
 {
-    if ($existingLabels -contains $label)
+    if ($existingLabels -contains $labelToUpdate)
     {
-        $encodedLabel = [Uri]::EscapeDataString($label)
+        $encodedLabel = [Uri]::EscapeDataString($labelToUpdate)
         gh api --method DELETE "$endpoint/$encodedLabel" --silent
-        if ($LASTEXITCODE -ne 0) { throw "Failed to remove label '$label'." }
+        if ($LASTEXITCODE -ne 0) { throw "Failed to remove label '$labelToUpdate'." }
     }
 }

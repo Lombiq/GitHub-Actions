@@ -33,4 +33,11 @@ runs:
         LABEL_OPERATION: ${{ inputs.type }}
         ACTION_PATH: ${{ github.action_path }}
       run: |
-        & "$Env:ACTION_PATH/Update-Labels.ps1"
+        $parameters = @{
+            EventPath = $Env:GITHUB_EVENT_PATH
+            Repository = $Env:GITHUB_REPOSITORY
+            Operation = $Env:LABEL_OPERATION
+            Label = $Env:LABEL
+            Labels = $Env:LABELS
+        }
+        & "$Env:ACTION_PATH/Update-Labels.ps1" @parameters
