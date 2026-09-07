@@ -54,8 +54,14 @@ if ($Operation -ceq 'remove')
     if ($labelsToUpdate.Count -eq 0) { return }
 }
 
-# gh parses label flags as CSV. Quote each field to preserve commas and double quotes within a single label.
-$labelNames = ($labelsToUpdate | Select-Object -Unique | ForEach-Object { '"' + $PSItem.Replace('"', '""') + '"' }) -join ','
+# gh parses label flags as CSV so labels should be escaped.
+$labelNames = (
+    $labelsToUpdate |
+    Select-Object -Unique |
+    ForEach-Object { @{ Value = $PSItem } } |
+    ConvertTo-Csv -UseQuotes Always -NoHeader
+) -join ','
+
 $labelFlag = "--$Operation-label"
 # issue edit also supports PRs and only queries the edited fields. pr edit unconditionally fetches team reviewers,
 # requiring read:org even for label-only changes made with an otherwise sufficient repo-scoped token.
