@@ -9,6 +9,12 @@ $testState = @{
 # Mock the CLI so these tests never change a real issue or pull request.
 function gh
 {
+    # Model a repo-scoped token without read:org: pr edit queries team reviewers even when only editing labels.
+    if ($args[0] -eq 'pr' -and $args[1] -eq 'edit')
+    {
+        throw 'The pr edit reviewer query requires read:org.'
+    }
+
     $testState.Calls.Add(@{ Arguments = @($args) })
     $global:LASTEXITCODE = 0
     if ($testState.FailureMethod -and $args -contains $testState.FailureMethod)
@@ -42,7 +48,7 @@ try
     Invoke-TestUpdate -EventJson '{"pull_request":{"number":42}}' -Operation add -Label 'a, single label'
     Assert-True ($testState.Calls.Count -eq 1) 'Adding a label must make one edit call.'
     $arguments = $testState.Calls[0].Arguments
-    Assert-True (($arguments[0..4] -join '|') -ceq 'pr|edit|42|--repo|owner/repo') 'Wrong pull request edit command.'
+    Assert-True (($arguments[0..4] -join '|') -ceq 'issue|edit|42|--repo|owner/repo') 'PR labels must use issue edit.'
     Assert-True ($arguments[5] -ceq '--add-label' -and $arguments[6] -ceq '"a, single label"') 'Single label must be CSV quoted.'
 
     Invoke-TestUpdate -EventJson '{"issue":{"number":7}}' -Operation add -Label ignored -Labels ' first, ,second '
@@ -59,7 +65,7 @@ try
     Invoke-TestUpdate -EventJson '{"pull_request":{"number":42}}' -Operation remove -Label $specialLabel
     Assert-True (($testState.Calls[0].Arguments[0..2] -join '|') -ceq 'pr|view|42') 'PR labels must be read with pr view.'
     $arguments = $testState.Calls[1].Arguments
-    Assert-True ($arguments[0] -ceq 'pr' -and $arguments[5] -ceq '--remove-label') 'Wrong pull request removal command.'
+    Assert-True ($arguments[0] -ceq 'issue' -and $arguments[5] -ceq '--remove-label') 'PR label removal must use issue edit.'
     Assert-True ($arguments[6] -ceq $expectedLabel) 'Removal must preserve special characters.'
 
     $testState.ExistingLabels = @('present')

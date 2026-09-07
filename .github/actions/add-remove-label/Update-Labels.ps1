@@ -57,5 +57,7 @@ if ($Operation -ceq 'remove')
 # gh parses label flags as CSV. Quote each field to preserve commas and double quotes within a single label.
 $labelNames = ($labelsToUpdate | Select-Object -Unique | ForEach-Object { '"' + $PSItem.Replace('"', '""') + '"' }) -join ','
 $labelFlag = "--$Operation-label"
-gh $command edit $number --repo $Repository $labelFlag $labelNames
+# issue edit also supports PRs and only queries the edited fields. pr edit unconditionally fetches team reviewers,
+# requiring read:org even for label-only changes made with an otherwise sufficient repo-scoped token.
+gh issue edit $number --repo $Repository $labelFlag $labelNames
 if ($LASTEXITCODE -ne 0) { throw "Failed to $Operation labels." }
