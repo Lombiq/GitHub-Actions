@@ -44,5 +44,5 @@ runs:
             Label = $Env:LABEL
             Operation = $Env:LABEL_OPERATION
         }
-        
+
         Update-Labels @parameters
