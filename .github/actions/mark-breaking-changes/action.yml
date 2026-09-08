@@ -21,7 +21,7 @@ runs:
       uses: Lombiq/GitHub-Actions/.github/actions/add-remove-label@dev
       with:
         token: ${{ env.GITHUB_TOKEN }}
-        label: breaking-changes
+        labels: breaking-changes
         type: ${{ inputs.is-breaking == 'true' && 'add' || 'remove' }}
 
     - name: Update Pull Request Title

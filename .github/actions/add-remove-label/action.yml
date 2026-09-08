@@ -1,9 +1,8 @@
 name: Add/Remove Label
 description: >
-  Runs buildsville/add-remove-label. Exists only to centralize which version of the action we use. Intentionally not
-  documented in Actions.md since it's only meant for internal use.
+  Updates issue and pull request labels with the GitHub CLI. Intentionally not documented in Actions.md, because it's
+  only meant for internal use.
 
-# Copied from https://github.com/buildsville/add-remove-label/blob/master/action.yml.
 inputs:
   token:
     description: github token
@@ -11,10 +10,6 @@ inputs:
     default: ''
   labels:
     description: labels to edit
-    required: false
-    default: ''
-  label:
-    description: label to edit
     required: false
     default: ''
   type:
@@ -25,10 +20,23 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Setup Scripts
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+
     - name: Add/Remove Label
-      uses: buildsville/add-remove-label@ac59c9f0aeb66eb12d6366eb1d69ec1906e9ef9a # v2.0.1
-      with:
-        token: ${{ inputs.token }}
-        labels: ${{ inputs.labels }}
-        label: ${{ inputs.label }}
-        type: ${{ inputs.type }}
+      shell: pwsh
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        LABELS: ${{ inputs.labels }}
+        LABEL_OPERATION: ${{ inputs.type }}
+      run: |
+        $parameters = @{
+            EventPath = $Env:GITHUB_EVENT_PATH
+            Repository = $Env:GITHUB_REPOSITORY
+            Labels = $Env:LABELS
+            Operation = $Env:LABEL_OPERATION
+        }
+
+        Update-Labels @parameters
