@@ -322,7 +322,7 @@ jobs:
       # This has to be the first step so it can collect data about the whole workflow run.
       - name: Collect Workflow Telemetry
         if: inputs.collect-workflow-telemetry == 'true'
-        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@issue/OSOE-1284
+        uses: Lombiq/GitHub-Actions/.github/actions/workflow-telemetry@dev
         with:
           # Telemetry reads the caller's workflow run, which may be in a different repository from checkout.
           github_token: ${{ github.token }}
