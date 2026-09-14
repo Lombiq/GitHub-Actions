@@ -129,9 +129,9 @@ runs:
         if ($dotnetVersion.Major -lt 10)
         {
             $switches['TestPlatform'] = 'VSTest'
-            Write-GitHub "The test platform is set to `"VSTest`" because you are using .NET " +
+            Write-GitHub ("The test platform is set to `"VSTest`" because you are using .NET " +
                 "version ($dotnetVersion), older than .NET 10. Please set the `"test-platform`" input " +
-                "to `"VSTest`" explicitly to remove this warning." 'warning'
+                "to `"VSTest`" explicitly to remove this warning.") 'warning'
         }
 
         Invoke-SolutionOrProjectTests @switches
