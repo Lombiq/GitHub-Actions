@@ -58,7 +58,7 @@ runs:
 
     - name: Upload Files Causing Failure
       if: steps.verify-git-status-is-clean.outputs.has-files == 'true'
-      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@dev
+      uses: Lombiq/GitHub-Actions/.github/actions/upload-artifact@issue/OSOE-1308
       with:
         name: git-status-pending-changes-${{ steps.setup.outputs.artifact-name-suffix }}
         path: ${{ steps.verify-git-status-is-clean.outputs.artifact-path }}
