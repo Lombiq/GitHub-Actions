@@ -4,12 +4,8 @@ $repositoryPath = (Resolve-Path "$PSScriptRoot/../../../..").Path
 $artifactPath = Join-Path $PSScriptRoot "artifacts/$([Guid]::NewGuid().ToString('N'))"
 New-Item -ItemType Directory -Path $artifactPath -Force | Out-Null
 
-$savedEnvironment = @{}
-
-foreach ($name in @('PATH', 'GITHUB_ACTIONS', 'GITHUB_OUTPUT', 'GITHUB_STEP_SUMMARY', 'GITHUB_WORKSPACE', 'LGHA_TEST_FAILURE'))
-{
-    $savedEnvironment[$name] = [Environment]::GetEnvironmentVariable($name)
-}
+$environmentVariableNames = @('PATH', 'GITHUB_ACTIONS', 'GITHUB_OUTPUT', 'GITHUB_STEP_SUMMARY', 'GITHUB_WORKSPACE', 'LGHA_TEST_FAILURE')
+$savedEnvironment = Get-ChildItem Env: | Where-Object { $PSItem.Name -in $environmentVariableNames }
 
 function Assert-True($Condition, $Message)
 {
@@ -23,7 +19,8 @@ function Invoke-Scenario($Name, $Target, $Filter, $ExpectedExitCode = 0)
     $logPath = Join-Path $artifactPath "$Name.log"
 
     $arguments = @(
-        '-NoProfile', '-File', "$actionPath/Invoke-SolutionOrProjectTests.ps1"
+        '-NoProfile',
+        '-File', "$actionPath/Invoke-SolutionOrProjectTests.ps1"
         '-SolutionOrProject', $Target
         '-Filter', $Filter
         '-Verbosity', 'quiet'
@@ -77,9 +74,8 @@ try
 finally
 {
     Pop-Location
-    foreach ($entry in $savedEnvironment.GetEnumerator())
-    {
-        [Environment]::SetEnvironmentVariable($entry.Key, $entry.Value)
+    $savedEnvironment | ForEach-Object {
+        Set-Item ('Env:' + $PSItem.Key) -Value $PSItem.Value
     }
 }
 
