@@ -3,10 +3,14 @@ using Xunit;
 
 namespace TestDotnet;
 
-public class ActionFixture(ITestOutputHelper output)
+public class ActionFixture
 {
+    private readonly ITestOutputHelper _output;
+
+    public ActionFixture(ITestOutputHelper output) => _output = output;
+
     [Fact]
-    public void PassingTest() => output.WriteLine("Passing test output is preserved.");
+    public void PassingTest() => _output.WriteLine("Passing test output is preserved.");
 
     [Theory]
     [InlineData("spaces & punctuation")]
@@ -17,7 +21,7 @@ public class ActionFixture(ITestOutputHelper output)
     public void ControlledFailure()
     {
         // A success-looking log line must not override the process exit code.
-        output.WriteLine("Test Run Successful.");
+        _output.WriteLine("Test Run Successful.");
         Assert.NotEqual("true", Environment.GetEnvironmentVariable("LGHA_TEST_FAILURE"));
     }
 }
