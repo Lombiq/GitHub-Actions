@@ -125,6 +125,15 @@ runs:
           ShowTimeRemainingUntilTimeout = $${{ inputs.show-time-remaining-until-timeout }}
         }
 
+        $dotnetVersion = [Version](dotnet --version)
+        if ($dotnetVersion.Major -lt 10)
+        {
+            $switches['TestPlatform'] = 'VSTest'
+            Write-GitHub "The test platform is set to `"VSTest`" because you are using .NET " +
+                "version ($dotnetVersion), older than .NET 10. Please set the `"test-platform`" input " +
+                "to `"VSTest`" explicitly to remove this warning." 'warning'
+        }
+
         Invoke-SolutionOrProjectTests @switches
 
     # Note that uploading the test dumps would fail under Windows if the path were too long, regardless of
