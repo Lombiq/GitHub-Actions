@@ -8,10 +8,10 @@
     ],
     customManagers: [
         {
-            // .NET tool versions pinned via install-dotnet-tool calls across any .github/actions/*/action.yml file.
+            // .NET tool versions pinned via install-dotnet-tool calls across any .github action or workflow file.
             customType: 'regex',
             managerFilePatterns: [
-                '/(^|/)\\.github/actions/.+/action\\.yml$/',
+                '/(^|/)\\.github/(actions|workflows)/.+\\.yml$/',
             ],
             matchStrings: [
                 'install-dotnet-tool@dev\\s+with:\\s+name: (?<depName>\\S+)\\s+version: (?<currentValue>\\S+)',
