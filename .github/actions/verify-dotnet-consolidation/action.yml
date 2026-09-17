@@ -42,7 +42,7 @@ runs:
     - name: Set up .NET
       uses: Lombiq/GitHub-Actions/.github/actions/setup-dotnet@issue/OSOE-1322
       with:
-        dotnet-version: 10.0.400
+        dotnet-version: 8.0.319
 
     - name: Install dotnet-consolidate
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@issue/OSOE-1322

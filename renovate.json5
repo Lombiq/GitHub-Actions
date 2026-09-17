@@ -8,14 +8,13 @@
     ],
     customManagers: [
         {
-            // The dotnet-consolidate .NET tool version pinned in verify-dotnet-consolidation/action.yml.
-            depNameTemplate: 'dotnet-consolidate',
+            // .NET tool versions pinned via install-dotnet-tool calls across any .github/actions/*/action.yml file.
             customType: 'regex',
             managerFilePatterns: [
-                '/(^|/)verify-dotnet-consolidation/action\\.yml$/',
+                '/(^|/)\\.github/actions/.+/action\\.yml$/',
             ],
             matchStrings: [
-                'name: dotnet-consolidate\\s+version: (?<currentValue>[^\\s]+)',
+                'install-dotnet-tool@dev\\s+with:\\s+name: (?<depName>\\S+)\\s+version: (?<currentValue>\\S+)',
             ],
             datasourceTemplate: 'nuget',
             versioningTemplate: 'nuget',
