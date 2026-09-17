@@ -1,0 +1,3 @@
+<!-- Stop MSBuild's parent-directory search here so the fixture doesn't inherit the host repository's build settings
+     (including OSOCE's Orchard Core analyzer configuration) when this repository is checked out as a submodule. -->
+<Project />

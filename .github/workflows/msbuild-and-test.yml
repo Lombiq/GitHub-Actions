@@ -241,6 +241,7 @@ jobs:
           dotnet-test-process-timeout: ${{ inputs.dotnet-test-process-timeout }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
+          test-platform: VSTest
           test-configuration: ${{ inputs.test-configuration }}
 
       - name: Cancel Workflow on Failure

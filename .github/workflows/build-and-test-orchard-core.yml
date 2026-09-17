@@ -196,6 +196,10 @@ on:
         type: string
         default: 'false'
         description: Disables test execution completely if set to "true".
+      test-platform:
+        type: string
+        default: Microsoft.Testing.Platform
+        description: Test platform (Microsoft.Testing.Platform or VSTest). See the test-dotnet action for prerequisites.
       test-filter:
         type: string
         description: >
@@ -221,7 +225,7 @@ on:
         type: string
         default: 'false'
         description: >
-          Enables diagnostic mode for `dotnet test` with the `--diag` flag and writes diagnostic messages to log files,
+          Enables diagnostic mode for `dotnet test` with MTP's `--diagnostic` flag (VSTest: `--diag`) and writes log files,
           to be uploaded as artifacts. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test for details.
       test-show-time-remaining-until-timeout:
         type: string
@@ -431,6 +435,7 @@ jobs:
           solution-path: ${{ inputs.build-solution-path }}
           test-verbosity: ${{ inputs.build-verbosity }}
           test-filter: ${{ inputs.test-filter }}
+          test-platform: ${{ inputs.test-platform }}
           artifact-retention-days: ${{ inputs.test-artifact-retention-days }}
           xunit-max-parallel-threads: ${{ inputs.xunit-max-parallel-threads }}
           enable-diagnostic-mode: ${{ inputs.enable-test-diagnostic-mode }}
