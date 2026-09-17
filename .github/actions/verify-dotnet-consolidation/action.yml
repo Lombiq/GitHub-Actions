@@ -48,7 +48,7 @@ runs:
       uses: Lombiq/GitHub-Actions/.github/actions/install-dotnet-tool@issue/OSOE-1322
       with:
         name: dotnet-consolidate
-        version: 5.0.0
+        version: 4.2.0
 
     - name: Verify consolidation status
       shell: pwsh
