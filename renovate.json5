@@ -6,6 +6,21 @@
         // Due to having to update branch references, it's easier to test all dependencies at once.
         'github>Lombiq/renovate-config:all-dependencies.json5',
     ],
+    customManagers: [
+        {
+            // The dotnet-consolidate .NET tool version pinned in verify-dotnet-consolidation/action.yml.
+            depNameTemplate: 'dotnet-consolidate',
+            customType: 'regex',
+            managerFilePatterns: [
+                '/(^|/)verify-dotnet-consolidation/action\\.yml$/',
+            ],
+            matchStrings: [
+                'name: dotnet-consolidate\\s+version: (?<currentValue>[^\\s]+)',
+            ],
+            datasourceTemplate: 'nuget',
+            versioningTemplate: 'nuget',
+        },
+    ],
     packageRules: [
         {
             matchPackageNames: ['azure/webapps-deploy'],
