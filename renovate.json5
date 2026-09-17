@@ -6,6 +6,20 @@
         // Due to having to update branch references, it's easier to test all dependencies at once.
         'github>Lombiq/renovate-config:all-dependencies.json5',
     ],
+    customManagers: [
+        {
+            // .NET tool versions pinned via install-dotnet-tool calls across any .github action or workflow file.
+            customType: 'regex',
+            managerFilePatterns: [
+                '/(^|/)\\.github/(actions|workflows)/.+\\.yml$/',
+            ],
+            matchStrings: [
+                'install-dotnet-tool@dev\\s+with:\\s+name: (?<depName>\\S+)\\s+version: (?<currentValue>\\S+)',
+            ],
+            datasourceTemplate: 'nuget',
+            versioningTemplate: 'nuget',
+        },
+    ],
     packageRules: [
         {
             matchPackageNames: ['azure/webapps-deploy'],
