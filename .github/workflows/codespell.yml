@@ -18,7 +18,7 @@ on:
 jobs:
   codespell:
     name: Codespell
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Checkout
         uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev

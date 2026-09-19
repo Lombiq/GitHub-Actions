@@ -54,7 +54,7 @@ on:
 jobs:
   post-pull-request-checks-automation:
     name: Post Pull Request Checks Automation
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Check Further Steps Should Run
