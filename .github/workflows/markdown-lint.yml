@@ -43,7 +43,7 @@ on:
 jobs:
   markdown-linting:
     name: Markdown Linting
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Deprecation Warning
