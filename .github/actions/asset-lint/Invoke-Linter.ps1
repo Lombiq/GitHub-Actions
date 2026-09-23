@@ -49,8 +49,9 @@ function Invoke-Npx()
         Justification = 'False positive on Windows.')]
     param($Package, $ProjectAndGlob, $Type, $Parameters)
 
-    $relativePath = Resolve-Path -Path $ProjectAndGlob.Project -Relative -RelativeBasePath $basePath
-    $lintTarget = Join-Path -Path $ProjectAndGlob.Project -ChildPath $ProjectAndGlob.Glob
+    $projectPath = (Resolve-Path -Path $ProjectAndGlob.Project).Path
+    $relativePath = [IO.Path]::GetRelativePath($PWD, $projectPath)
+    $lintTarget = Join-Path -Path $relativePath -ChildPath $ProjectAndGlob.Glob
     $lintTargets = Resolve-Path -Path $lintTarget -ErrorAction SilentlyContinue
     if (-not $lintTargets) { $lintTargets = $lintTarget }
 
