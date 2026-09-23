@@ -23,37 +23,37 @@ jobs:
     name: Asset Linting
     uses: Lombiq/GitHub-Actions/.github/workflows/asset-lint.yml@dev
     with:
-    scripts: >
-      src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors,
-      src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors.Samples,
-      src/Modules/Lombiq.DataTables/Lombiq.DataTables,
-      src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
-      src/Modules/Lombiq.UIKit/Lombiq.UIKit,
-      src/Modules/Lombiq.Walkthroughs/Lombiq.Walkthroughs,
-      src/Modules/Lombiq.Hosting.Tenants/Lombiq.Hosting.Tenants.Maintenance,
-    styles: >-
-      src/Modules/Lombiq.ChartJs/Lombiq.ChartJs.Samples,
-      src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
-      src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor,
-      src/Modules/Lombiq.Privacy/Lombiq.Privacy,
-      src/Modules/Lombiq.UIKit/Lombiq.UIKit,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
-    texts: >-
-      src/Modules/Lombiq.ChartJs/Lombiq.ChartJs.Samples,
-      src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors,
-      src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors.Samples,
-      src/Modules/Lombiq.DataTables/Lombiq.DataTables,
-      src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
-      src/Modules/Lombiq.Hosting.Tenants/Lombiq.Hosting.Tenants.Maintenance,
-      src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor,
-      src/Modules/Lombiq.Privacy/Lombiq.Privacy,
-      src/Modules/Lombiq.UIKit/Lombiq.UIKit,
-      src/Modules/Lombiq.Walkthroughs/Lombiq.Walkthroughs,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
+      scripts: >
+        src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors,
+        src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors.Samples,
+        src/Modules/Lombiq.DataTables/Lombiq.DataTables,
+        src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
+        src/Modules/Lombiq.UIKit/Lombiq.UIKit,
+        src/Modules/Lombiq.Walkthroughs/Lombiq.Walkthroughs,
+        src/Modules/Lombiq.Hosting.Tenants/Lombiq.Hosting.Tenants.Maintenance,
+      styles: >-
+        src/Modules/Lombiq.ChartJs/Lombiq.ChartJs.Samples,
+        src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
+        src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor,
+        src/Modules/Lombiq.Privacy/Lombiq.Privacy,
+        src/Modules/Lombiq.UIKit/Lombiq.UIKit,
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core,
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native,
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
+      texts: >-
+        src/Modules/Lombiq.ChartJs/Lombiq.ChartJs.Samples,
+        src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors,
+        src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors.Samples,
+        src/Modules/Lombiq.DataTables/Lombiq.DataTables,
+        src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
+        src/Modules/Lombiq.Hosting.Tenants/Lombiq.Hosting.Tenants.Maintenance,
+        src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor,
+        src/Modules/Lombiq.Privacy/Lombiq.Privacy,
+        src/Modules/Lombiq.UIKit/Lombiq.UIKit,
+        src/Modules/Lombiq.Walkthroughs/Lombiq.Walkthroughs,
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core,
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native,
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
 ```
 
 This will lint the files in _wwwroot/js_ and _wwwwroot/css_ folders under the given folders, respectively. If you need linting in a different directory, you can also append `:{relative path or glob pattern}` after each project directory path. For example to lint scripts in the project root:
@@ -63,8 +63,8 @@ This will lint the files in _wwwroot/js_ and _wwwwroot/css_ folders under the gi
     name: Asset Linting
     uses: Lombiq/GitHub-Actions/.github/workflows/asset-lint.yml@dev
     with:
-    scripts: >
-      src/Libraries/Lombiq.EInvoiceValidator/Lombiq.EInvoiceValidator : .
+      scripts: >
+        src/Libraries/Lombiq.EInvoiceValidator/Lombiq.EInvoiceValidator : .
 ```
 
 For descriptions of all of the workflow inputs, see [the workflow file](../../../.github/workflows/asset-lint.yml).
