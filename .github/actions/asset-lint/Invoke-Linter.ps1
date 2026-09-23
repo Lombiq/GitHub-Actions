@@ -50,7 +50,11 @@ function Invoke-Npx()
     param($Package, $ProjectAndGlob, $Type, $Parameters)
 
     $relativePath = Resolve-Path -Path $ProjectAndGlob.Project -Relative -RelativeBasePath $basePath
-    npx $Package $ProjectAndGlob.Glob @Parameters || Write-GitHubError -Type $Type -RelativePath $relativePath
+    $lintTarget = Join-Path -Path $ProjectAndGlob.Project -ChildPath $ProjectAndGlob.Glob
+    $lintTargets = Resolve-Path -Path $lintTarget -ErrorAction SilentlyContinue
+    if (-not $lintTargets) { $lintTargets = $lintTarget }
+
+    npx $Package $lintTargets @Parameters || Write-GitHubError -Type $Type -RelativePath $relativePath
 }
 
 $scripts = ConvertTo-PathAndGlob -InputString $ScriptsString -DefaultGlob 'wwwroot/js'
