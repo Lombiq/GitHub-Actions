@@ -5,6 +5,8 @@ const textLintConfig = {
     },
     rules: {
         'common-misspellings': true,
+        // Text files are usually edited with word wrap, no need to enforce line length.
+        'line-length': false,
         'max-comma': true,
         'no-empty-section': true,
         'no-todo': true,
