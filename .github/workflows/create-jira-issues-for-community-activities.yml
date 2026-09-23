@@ -56,7 +56,7 @@ on:
 jobs:
   create-jira-issues-for-community-activities:
     name: Create Jira issues for community activities
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Create Jira issues for community activities
