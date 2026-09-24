@@ -90,7 +90,7 @@ jobs:
     name: Check Spelling
     outputs:
       followup: ${{ steps.check-spelling-action.outputs.followup }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: Deprecation Warning
@@ -135,7 +135,7 @@ jobs:
 
   comment-pr:
     name: Comment (PR)
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: check-spelling
     permissions:
       pull-requests: write
