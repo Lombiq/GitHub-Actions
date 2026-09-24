@@ -13,7 +13,7 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/asset-lint.yml@dev
 ```
 
-If you want to opt-in instead, then you'd typically consume the workflow by passing in a comma-separated list of the project paths where scripts, styles, or texts are to be linted:
+If you want to opt-in instead, then you'd typically consume the workflow by passing in a semicolon-separated list of the project paths where scripts, styles, or texts are to be linted:
 
 ```yaml
 ...
@@ -23,48 +23,48 @@ jobs:
     name: Asset Linting
     uses: Lombiq/GitHub-Actions/.github/workflows/asset-lint.yml@dev
     with:
-    scripts: >
-      src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors,
-      src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors.Samples,
-      src/Modules/Lombiq.DataTables/Lombiq.DataTables,
-      src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
-      src/Modules/Lombiq.UIKit/Lombiq.UIKit,
-      src/Modules/Lombiq.Walkthroughs/Lombiq.Walkthroughs,
-      src/Modules/Lombiq.Hosting.Tenants/Lombiq.Hosting.Tenants.Maintenance,
-    styles: >-
-      src/Modules/Lombiq.ChartJs/Lombiq.ChartJs.Samples,
-      src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
-      src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor,
-      src/Modules/Lombiq.Privacy/Lombiq.Privacy,
-      src/Modules/Lombiq.UIKit/Lombiq.UIKit,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
-    texts: >-
-      src/Modules/Lombiq.ChartJs/Lombiq.ChartJs.Samples,
-      src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors,
-      src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors.Samples,
-      src/Modules/Lombiq.DataTables/Lombiq.DataTables,
-      src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions,
-      src/Modules/Lombiq.Hosting.Tenants/Lombiq.Hosting.Tenants.Maintenance,
-      src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor,
-      src/Modules/Lombiq.Privacy/Lombiq.Privacy,
-      src/Modules/Lombiq.UIKit/Lombiq.UIKit,
-      src/Modules/Lombiq.Walkthroughs/Lombiq.Walkthroughs,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native,
-      src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples,
+      scripts: >
+        src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors;
+        src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors.Samples;
+        src/Modules/Lombiq.DataTables/Lombiq.DataTables;
+        src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions;
+        src/Modules/Lombiq.UIKit/Lombiq.UIKit;
+        src/Modules/Lombiq.Walkthroughs/Lombiq.Walkthroughs;
+        src/Modules/Lombiq.Hosting.Tenants/Lombiq.Hosting.Tenants.Maintenance;
+      styles: >-
+        src/Modules/Lombiq.ChartJs/Lombiq.ChartJs.Samples;
+        src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions;
+        src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor;
+        src/Modules/Lombiq.Privacy/Lombiq.Privacy;
+        src/Modules/Lombiq.UIKit/Lombiq.UIKit;
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core;
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native;
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples;
+      texts: >-
+        src/Modules/Lombiq.ChartJs/Lombiq.ChartJs.Samples;
+        src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors;
+        src/Modules/Lombiq.ContentEditors/Lombiq.ContentEditors.Samples;
+        src/Modules/Lombiq.DataTables/Lombiq.DataTables;
+        src/Modules/Lombiq.HelpfulExtensions/Lombiq.HelpfulExtensions;
+        src/Modules/Lombiq.Hosting.Tenants/Lombiq.Hosting.Tenants.Maintenance;
+        src/Modules/Lombiq.JsonEditor/Lombiq.JsonEditor;
+        src/Modules/Lombiq.Privacy/Lombiq.Privacy;
+        src/Modules/Lombiq.UIKit/Lombiq.UIKit;
+        src/Modules/Lombiq.Walkthroughs/Lombiq.Walkthroughs;
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Core;
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native;
+        src/Themes/Lombiq.BaseTheme/Lombiq.BaseTheme.Native.Samples;
 ```
 
-This will lint the files in _wwwroot/js_ and _wwwwroot/css_ folders under the given folders, respectively. If you need linting in a different directory, you can also append `:{relative path or glob pattern}` after each project directory path. For example to lint scripts in the project root:
+This will lint the files in _wwwroot/js_ and _wwwroot/css_ folders under the given folders, respectively. If you need linting in a different directory, you can also append `:{relative path or glob pattern}` after each project directory path. For example to lint scripts in the project root:
 
 ```yaml
   asset-linting:
     name: Asset Linting
     uses: Lombiq/GitHub-Actions/.github/workflows/asset-lint.yml@dev
     with:
-    scripts: >
-      src/Libraries/Lombiq.EInvoiceValidator/Lombiq.EInvoiceValidator : .
+      scripts: >
+        src/Libraries/Lombiq.EInvoiceValidator/Lombiq.EInvoiceValidator:.
 ```
 
 For descriptions of all of the workflow inputs, see [the workflow file](../../../.github/workflows/asset-lint.yml).
@@ -99,8 +99,11 @@ Markdown configuration files:
 2. Open PowerShell in the root directory of the repository you want to lint.
 3. Type `path-to-GHA/.github/actions/asset-lint/Invoke-Linter.ps1 -ScriptsString relative/path/to/project -StylesString relative/path/to/project`. You can omit either switches if you don't want to lint both.
 
+> [!WARNING]
+> To be safe, always quote parameters so PowerShell passes them correctly.
+
 ```pwsh
-.../Open-Source-Orchard-Core-Extensions/tools/Lombiq.GitHub.Actions/.github/actions/asset-lint/Invoke-Linter.ps1 -ScriptsString src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/js -StylesString src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/css -TextsString .
+.../Open-Source-Orchard-Core-Extensions/tools/Lombiq.GitHub.Actions/.github/actions/asset-lint/Invoke-Linter.ps1 -ScriptsString 'src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/js' -StylesString 'src/Modules/Lombiq.UIKit/Lombiq.UIKit:wwwroot/css' -TextsString .
 ```
 
 > [!TIP]
