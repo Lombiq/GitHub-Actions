@@ -33,6 +33,29 @@ runs:
           '--limit', '1'
           '--json', 'databaseId'
         )
-        $latestWorkflowRunDatabaseId = $(gh run list @listSwitches | ConvertFrom-Json)[0].databaseId
-        $currentEqualsLatest = ($latestWorkflowRunDatabaseId -eq ${{ inputs.current-workflow-id }})
+        # The run list can transiently come back empty (GitHub API hiccup), so retry and don't index into null.
+        $latestWorkflowRunDatabaseId = $null
+        foreach ($attempt in 1..3)
+        {
+            $runs = @(gh run list @listSwitches | ConvertFrom-Json)
+            if ($runs.Count -gt 0)
+            {
+                $latestWorkflowRunDatabaseId = $runs[0].databaseId
+                break
+            }
+
+            Start-Sleep -Seconds 5
+        }
+
+        if ($null -eq $latestWorkflowRunDatabaseId)
+        {
+            # The current run exists, so an empty list is an API problem, not proof that a newer run exists.
+            Write-Warning 'No workflow runs were returned, assuming the current workflow is the latest.'
+            $currentEqualsLatest = $true
+        }
+        else
+        {
+            $currentEqualsLatest = ($latestWorkflowRunDatabaseId -eq ${{ inputs.current-workflow-id }})
+        }
+
         Set-GitHubOutput 'is-latest' $currentEqualsLatest
