@@ -17,7 +17,7 @@ runs:
   using: composite
   steps:
     - name: Collect Workflow Telemetry
-      uses: dev-hato/actions-workflow-metrics@c6b748e52274db07791b2117b97315c38660e333 # v0.0.8
+      uses: dev-hato/actions-workflow-metrics@17543dcae6053a945244b76ec3224f0e4b9395c6 # v0.0.9
       with:
         github_token: ${{ inputs.github_token || github.token }}
         interval_seconds: ${{ inputs.interval_seconds }}
