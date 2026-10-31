@@ -152,14 +152,17 @@ runs:
                 Write-Output 'CompatibilitySuppressions.xml file(s) found:'
                 $compatibilitySuppressionsFiles | ForEach-Object { Write-Output "- $($PSItem.FullName)" }
 
-                $publishMajorVersion = ([Version]$version).Major
+                $publishVersion = [Version]$version
+                # When publishing from a tag, that tag already exists, so it mustn't be the version compared against.
+                $previousVersion = $tags | Where-Object { $PSItem -ne $publishVersion } | Select-Object -First 1
+                $previousVersion ??= [version]'0.0.0'
 
-                if ($publishMajorVersion -le $current.Major)
+                if ($publishVersion.Major -le $previousVersion.Major)
                 {
                     Write-Output ("::error::CompatibilitySuppressions.xml files indicate breaking changes. Following " +
-                        "Semantic Versioning, publish a new major version. The current version is $current, so the " +
-                        "publish version's major version must be greater than $($current.Major), but it is " +
-                        "$publishMajorVersion in `"$version`".")
+                        "Semantic Versioning, publish a new major version. The previous version is $previousVersion, " +
+                        "so the publish version's major version must be greater than $($previousVersion.Major), but " +
+                        "it is $($publishVersion.Major) in `"$version`".")
 
                     exit 1
                 }
