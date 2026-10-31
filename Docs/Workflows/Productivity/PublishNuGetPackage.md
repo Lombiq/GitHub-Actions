@@ -18,7 +18,7 @@ jobs:
       contents: write
       id-token: write
     with:
-      trusted-publishing-user: ${{ vars.NUGET_TRUSTED_PUBLISHING_USER }}
+      trusted-publishing-user: ${{ secrets.DEFAULT_NUGET_TRUSTED_PUBLISHING_USER }}
 ```
 
 The _publish.yml_ workflow is triggered on a tag pushed to any branch with the prefix `v` and should contain a [valid version number](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-basics), e.g. `v1.0.1`, which will be extracted and used to version the NuGet packages produced.
