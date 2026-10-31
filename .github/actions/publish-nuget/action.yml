@@ -6,14 +6,13 @@ inputs:
     required: false
     default: https://api.nuget.org/v3/index.json
     description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument.
-  trusted-publishing-user:
+  push:
     required: false
-    default: ''
+    default: 'true'
     description: >
-      The nuget.org username (not email address) of the owner of the Trusted Publishing policy. When set, the package
-      is pushed with a short-lived API key obtained via NuGet Trusted Publishing instead of the API_KEY environment
-      variable. This is the recommended approach for nuget.org. Requires the `id-token: write` permission. See
-      https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing.
+      If set to "false", the package is created, validated, and uploaded as the "NuGet-Package" artifact, but not pushed
+      and no GitHub release is created. Use this with the push-nuget action in a job of the calling workflow for NuGet
+      Trusted Publishing.
   verbosity:
     required: false
     default: minimal
@@ -75,6 +74,10 @@ inputs:
       When set to 'true', failed package validation against the baseline will mark the pull request with a title suffix,
       a breaking-changes label, and a guidance comment.
 
+outputs:
+  publish-version:
+    description: The NuGet package version used for publishing.
+    value: ${{ steps.setup.outputs.publish-version }}
 
 runs:
   using: composite
@@ -300,52 +303,26 @@ runs:
       run: |
         Write-Output "::notice::Package validation detected breaking changes compared to the baseline version."
 
-    - name: Log in to NuGet with Trusted Publishing
-      id: nuget-login
-      if: inputs.dry-run != 'true' && inputs.trusted-publishing-user != ''
-      uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
-      with:
-        user: ${{ inputs.trusted-publishing-user }}
-
     - name: Push with dotnet
-      if: inputs.dry-run != 'true'
+      if: inputs.dry-run != 'true' && inputs.push == 'true'
       shell: pwsh
-      env:
-        TRUSTED_PUBLISHING_USER: ${{ inputs.trusted-publishing-user }}
-        TRUSTED_PUBLISHING_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
       run: |
         $source = '${{ steps.setup.outputs.source-url }}'
 
-        if (-not [string]::IsNullOrWhiteSpace($Env:TRUSTED_PUBLISHING_USER))
+        if ([string]::IsNullOrWhiteSpace($Env:API_KEY))
         {
-            if ([string]::IsNullOrWhiteSpace($Env:TRUSTED_PUBLISHING_API_KEY))
-            {
-                Write-Output '::error::NuGet Trusted Publishing login did not return an API key.'
-                exit 1
-            }
-
-            $apiKey = $Env:TRUSTED_PUBLISHING_API_KEY
-        }
-        else
-        {
-            if ([string]::IsNullOrWhiteSpace($Env:API_KEY))
-            {
-                Write-Output ('::error::API_KEY is missing or empty. Set it or use Trusted Publishing via ' +
-                    'trusted-publishing-user.')
-                exit 1
-            }
-
-            if (([uri]$source).Host -like '*nuget.org')
-            {
-                Write-Output ('::warning::Publishing to nuget.org with a long-lived API key. Trusted Publishing is ' +
-                    'the recommended, more secure approach; set trusted-publishing-user to use it. See ' +
-                    'https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PublishNuGetPackage.md.')
-            }
-
-            $apiKey = $Env:API_KEY
+            Write-Output '::error::API_KEY is missing or empty.'
+            exit 1
         }
 
-        dotnet nuget push artifacts/*.nupkg --api-key $apiKey --source $source --skip-duplicate
+        if (([uri]$source).Host -like '*nuget.org')
+        {
+            Write-Output ('::warning::Publishing to nuget.org with a long-lived API key. Trusted Publishing is the ' +
+                'recommended, more secure approach. See ' +
+                'https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PublishNuGetPackage.md.')
+        }
+
+        dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source $source --skip-duplicate
 
     - name: Check for ignore-breaking-changes Label
       id: check-ignore-breaking
@@ -383,7 +360,7 @@ runs:
     - name: Create Release
       uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-1290
       # Also preventing creating releases when pushing tags for issue-specific pre-releases like v4.3.1-alpha.osoe-86.
-      if: inputs.dry-run != 'true' && !contains(steps.setup.outputs.publish-version, '-')
+      if: inputs.dry-run != 'true' && inputs.push == 'true' && !contains(steps.setup.outputs.publish-version, '-')
       with:
         allowUpdates: true
         generateReleaseNotes: true

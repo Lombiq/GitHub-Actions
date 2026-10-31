@@ -1,0 +1,51 @@
+name: Push to NuGet
+description: >
+  Pushes the "NuGet-Package" artifact created by the publish-nuget workflow with `push: 'false'` to nuget.org with NuGet
+  Trusted Publishing, and creates a GitHub release for non-prerelease versions. NuGet only accepts Trusted Publishing
+  from a job defined in the repository's own workflow file, so this needs to run in a job of the calling workflow, not
+  in a reusable workflow of another repository. Requires the `id-token: write` and `contents: write` permissions.
+
+inputs:
+  trusted-publishing-user:
+    required: true
+    description: The nuget.org username (not email address) of the owner of the Trusted Publishing policy.
+  publish-version:
+    required: true
+    description: >
+      The version of the package, i.e. the publish-version output of the publish-nuget workflow. Used to skip creating
+      a GitHub release for prereleases.
+  source:
+    required: false
+    default: https://api.nuget.org/v3/index.json
+    description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument.
+
+runs:
+  using: composite
+  steps:
+    - name: Download NuGet Package Artifact
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+      with:
+        name: NuGet-Package
+        path: artifacts
+
+    - name: Log in to NuGet with Trusted Publishing
+      id: nuget-login
+      uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+      with:
+        user: ${{ inputs.trusted-publishing-user }}
+
+    - name: Push with dotnet
+      shell: pwsh
+      env:
+        NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+        NUGET_SOURCE: ${{ inputs.source }}
+      run: dotnet nuget push artifacts/*.nupkg --api-key $Env:NUGET_API_KEY --source $Env:NUGET_SOURCE --skip-duplicate
+
+    - name: Create Release
+      uses: Lombiq/GitHub-Actions/.github/actions/release-action@issue/OSOE-1290
+      # Also preventing creating releases when pushing tags for issue-specific pre-releases like v4.3.1-alpha.osoe-86.
+      if: ${{ !contains(inputs.publish-version, '-') }}
+      with:
+        allowUpdates: true
+        generateReleaseNotes: true
+        artifacts: artifacts/*.nupkg, artifacts/*.snupkg
