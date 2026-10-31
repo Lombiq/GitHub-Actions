@@ -13,6 +13,11 @@ on:
         description: >
           The API key to authenticate with the NuGet server when pushing packages. Required unless
           `trusted-publishing-user` is set, which is the recommended approach for nuget.org.
+      TRUSTED_PUBLISHING_USER:
+        required: false
+        description: >
+          Alternative to the `trusted-publishing-user` input for passing the user from a secret, since secrets can't be
+          used in inputs. The input takes precedence if both are set.
       ENVIRONMENT_VARIABLES_JSON:
         required: false
         description: >
@@ -170,7 +175,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/publish-nuget@dev
         with:
           source: ${{ inputs.source }}
-          trusted-publishing-user: ${{ inputs.trusted-publishing-user }}
+          trusted-publishing-user: ${{ inputs.trusted-publishing-user || secrets.TRUSTED_PUBLISHING_USER }}
           verbosity: ${{ inputs.verbosity }}
           enable-corepack: ${{ inputs.enable-corepack }}
           dotnet-pack-ignore-warning: ${{ inputs.dotnet-pack-ignore-warning }}
