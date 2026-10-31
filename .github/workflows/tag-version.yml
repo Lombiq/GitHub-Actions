@@ -137,3 +137,6 @@ jobs:
         with:
           commit_message: Merge remote-tracking branch '${{ inputs.expected-ref }}' into ${{ inputs.merge-target }}
           skip_dirty_check: true
+          # The action's "git checkout" would abort the merge in progress. The fetch is only needed for the checkout.
+          skip_checkout: true
+          skip_fetch: true
