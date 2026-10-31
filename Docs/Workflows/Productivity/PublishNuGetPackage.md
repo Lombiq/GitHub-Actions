@@ -15,10 +15,11 @@ jobs:
     name: Publish to NuGet
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     permissions:
+      actions: write
       contents: write
       id-token: write
-    secrets:
-      TRUSTED_PUBLISHING_USER: ${{ secrets.DEFAULT_NUGET_TRUSTED_PUBLISHING_USER }}
+    with:
+      trusted-publishing-user: LombiqBot
 ```
 
 The _publish.yml_ workflow is triggered on a tag pushed to any branch with the prefix `v` and should contain a [valid version number](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-basics), e.g. `v1.0.1`, which will be extracted and used to version the NuGet packages produced.
@@ -32,12 +33,12 @@ There is no configuration required for automated Orchard Core extension manifest
 For nuget.org, use [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) as in the example above. It exchanges the workflow's GitHub OIDC token for a short-lived API key, so you don't need to store and regularly regenerate long-lived API keys. To set it up:
 
 1. Create a Trusted Publishing policy on nuget.org for the repository, with _publish-nuget.yml_ (or the file name of the calling workflow) as the workflow file. Create the policy from under a shared technical user rather than a personal account: policies are tied to the user who creates them, and they become inactive if that user leaves the organization (since [organizational policies are not yet available](https://github.com/NuGet/NuGetGallery/issues/10581)).
-2. Pass the nuget.org username (not the email address) of the policy owner in the `trusted-publishing-user` input or the `TRUSTED_PUBLISHING_USER` secret. The example above uses the `DEFAULT_NUGET_TRUSTED_PUBLISHING_USER` organization or repository secret.
-3. Grant the `id-token: write` permission to the calling job. When you specify permissions, all unspecified ones are set to none, so also grant `contents: write` for creating the GitHub release.
+2. Pass the nuget.org username (not the email address) of the policy owner in the `trusted-publishing-user` input. The example above uses Lombiq's shared technical user, `LombiqBot`.
+3. Grant the `id-token: write` permission to the calling job. When you specify permissions, all unspecified ones are set to none, so also grant `contents: write` for creating the GitHub release and `actions: write` for cancelling the workflow on failure.
 
 ### API key
 
-Trusted Publishing only works with nuget.org. For other feeds, or if you can't use Trusted Publishing, leave `trusted-publishing-user` and `TRUSTED_PUBLISHING_USER` empty and pass an API key in the `API_KEY` secret. When pushing to nuget.org with an API key, the workflow emits a warning recommending Trusted Publishing.
+Trusted Publishing only works with nuget.org. For other feeds, or if you can't use Trusted Publishing, leave `trusted-publishing-user` empty and pass an API key in the `API_KEY` secret. When pushing to nuget.org with an API key, the workflow emits a warning recommending Trusted Publishing.
 
 ## Further configuration
 
