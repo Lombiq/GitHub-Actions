@@ -6,6 +6,14 @@ inputs:
     required: false
     default: https://api.nuget.org/v3/index.json
     description: The NuGet server URL used by the `dotnet nuget push` command's `--source` argument.
+  trusted-publishing-user:
+    required: false
+    default: ''
+    description: >
+      The nuget.org username (not email address) of the owner of the Trusted Publishing policy. When set, the package
+      is pushed with a short-lived API key obtained via NuGet Trusted Publishing instead of the API_KEY environment
+      variable. This is the recommended approach for nuget.org. Requires the `id-token: write` permission. See
+      https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing.
   verbosity:
     required: false
     default: minimal
@@ -292,16 +300,52 @@ runs:
       run: |
         Write-Output "::notice::Package validation detected breaking changes compared to the baseline version."
 
+    - name: Log in to NuGet with Trusted Publishing
+      id: nuget-login
+      if: inputs.dry-run != 'true' && inputs.trusted-publishing-user != ''
+      uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+      with:
+        user: ${{ inputs.trusted-publishing-user }}
+
     - name: Push with dotnet
       if: inputs.dry-run != 'true'
       shell: pwsh
+      env:
+        TRUSTED_PUBLISHING_USER: ${{ inputs.trusted-publishing-user }}
+        TRUSTED_PUBLISHING_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
       run: |
-        if ([string]::IsNullOrWhiteSpace($Env:API_KEY))
+        $source = '${{ steps.setup.outputs.source-url }}'
+
+        if (-not [string]::IsNullOrWhiteSpace($Env:TRUSTED_PUBLISHING_USER))
         {
-            Write-Output "::error::API_KEY is missing or empty."
-            exit 1
+            if ([string]::IsNullOrWhiteSpace($Env:TRUSTED_PUBLISHING_API_KEY))
+            {
+                Write-Output '::error::NuGet Trusted Publishing login did not return an API key.'
+                exit 1
+            }
+
+            $apiKey = $Env:TRUSTED_PUBLISHING_API_KEY
         }
-        dotnet nuget push artifacts/*.nupkg --api-key $Env:API_KEY --source '${{ steps.setup.outputs.source-url }}' --skip-duplicate
+        else
+        {
+            if ([string]::IsNullOrWhiteSpace($Env:API_KEY))
+            {
+                Write-Output ('::error::API_KEY is missing or empty. Set it or use Trusted Publishing via ' +
+                    'trusted-publishing-user.')
+                exit 1
+            }
+
+            if (([uri]$source).Host -like '*nuget.org')
+            {
+                Write-Output ('::warning::Publishing to nuget.org with a long-lived API key. Trusted Publishing is ' +
+                    'the recommended, more secure approach; set trusted-publishing-user to use it. See ' +
+                    'https://github.com/Lombiq/GitHub-Actions/blob/dev/Docs/Workflows/Productivity/PublishNuGetPackage.md.')
+            }
+
+            $apiKey = $Env:API_KEY
+        }
+
+        dotnet nuget push artifacts/*.nupkg --api-key $apiKey --source $source --skip-duplicate
 
     - name: Check for ignore-breaking-changes Label
       id: check-ignore-breaking

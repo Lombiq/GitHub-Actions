@@ -14,15 +14,34 @@ jobs:
   publish-nuget:
     name: Publish to NuGet
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
-    secrets:
-      API_KEY: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
+    permissions:
+      contents: write
+      id-token: write
+    with:
+      trusted-publishing-user: ${{ vars.NUGET_TRUSTED_PUBLISHING_USER }}
 ```
 
 The _publish.yml_ workflow is triggered on a tag pushed to any branch with the prefix `v` and should contain a [valid version number](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-basics), e.g. `v1.0.1`, which will be extracted and used to version the NuGet packages produced.
 
 There is no configuration required for automated Orchard Core extension manifest versioning, all of the `Manifest.cs` files are looked up, and the existing `Version` properties are updated automatically inside the `Module` or `Theme` definition with the version pushed. Note that the `Version` property should be present and leave the version number on the default value (0.0.1). This is because we don't actually need to keep manifest version changes in the code.
 
-It takes one non-optional secret parameter, `API_KEY`, the organization API key for pushing to NuGet, and two optional parameters, `source` and `verbosity`. E.g.:
+## Authentication
+
+### Trusted Publishing (recommended)
+
+For nuget.org, use [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) as in the example above. It exchanges the workflow's GitHub OIDC token for a short-lived API key, so you don't need to store and regularly regenerate long-lived API keys. To set it up:
+
+1. Create a Trusted Publishing policy on nuget.org for the repository, with _publish.yml_ (the file name of the calling workflow) as the workflow file. Create the policy from under the shared technical user rather than a personal account: policies are tied to the user who creates them, and they become inactive if that user leaves the organization.
+2. Pass the nuget.org username (not the email address) of the policy owner in the `trusted-publishing-user` input. The example above uses the `NUGET_TRUSTED_PUBLISHING_USER` organization or repository variable.
+3. Grant the `id-token: write` permission to the calling job. When you specify permissions, all unspecified ones are set to none, so also grant `contents: write` for creating the GitHub release.
+
+### API key
+
+Trusted Publishing only works with nuget.org. For other feeds, or if you can't use Trusted Publishing, leave `trusted-publishing-user` empty and pass an API key in the `API_KEY` secret. When pushing to nuget.org with an API key, the workflow emits a warning recommending Trusted Publishing.
+
+## Further configuration
+
+The workflow also takes two optional parameters, `source` and `verbosity`. E.g.:
 
 ```yaml
 jobs:
