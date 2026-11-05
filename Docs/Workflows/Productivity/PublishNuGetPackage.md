@@ -14,15 +14,47 @@ jobs:
   publish-nuget:
     name: Publish to NuGet
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
-    secrets:
-      API_KEY: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
+    with:
+      push: 'false'
+
+  push-nuget:
+    name: Push to NuGet
+    needs: publish-nuget
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Push to NuGet
+        uses: Lombiq/GitHub-Actions/.github/actions/push-nuget@dev
+        with:
+          trusted-publishing-user: ${{ vars.DEFAULT_NUGET_TRUSTED_PUBLISHING_USER }}
+          publish-version: ${{ needs.publish-nuget.outputs.publish-version }}
 ```
 
 The _publish.yml_ workflow is triggered on a tag pushed to any branch with the prefix `v` and should contain a [valid version number](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-basics), e.g. `v1.0.1`, which will be extracted and used to version the NuGet packages produced.
 
 There is no configuration required for automated Orchard Core extension manifest versioning, all of the `Manifest.cs` files are looked up, and the existing `Version` properties are updated automatically inside the `Module` or `Theme` definition with the version pushed. Note that the `Version` property should be present and leave the version number on the default value (0.0.1). This is because we don't actually need to keep manifest version changes in the code.
 
-It takes one non-optional secret parameter, `API_KEY`, the organization API key for pushing to NuGet, and two optional parameters, `source` and `verbosity`. E.g.:
+## Authentication
+
+### Trusted Publishing (recommended)
+
+For nuget.org, use [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) as in the example above. It exchanges the workflow's GitHub OIDC token for a short-lived API key, so you don't need to store and regularly regenerate long-lived API keys.
+
+nuget.org only accepts Trusted Publishing from a job defined in the repository's own workflow file, not from a reusable workflow in another repository (see [NuGet/NuGetGallery#11000](https://github.com/NuGet/NuGetGallery/issues/11000)). Thus, the example uses two jobs: the reusable workflow with `push: 'false'` builds, validates, and uploads the package as an artifact, and then the `push-nuget` action pushes it and creates the GitHub release from a job in your workflow. To set it up:
+
+1. Create a Trusted Publishing policy on nuget.org for the repository, with the file name of your workflow (e.g. _publish.yml_) as the workflow file. Create the policy from under a shared technical user rather than a personal account: policies are tied to the user who creates them, and they become inactive if that user leaves the organization (since [organizational policies are not yet available](https://github.com/NuGet/NuGetGallery/issues/10581)).
+2. Pass the nuget.org username (not the email address) of the policy owner in the `trusted-publishing-user` input of the `push-nuget` action. The example above uses the `DEFAULT_NUGET_TRUSTED_PUBLISHING_USER` organization or repository variable.
+3. Grant the `id-token: write` and `contents: write` (for creating the GitHub release) permissions to the job running `push-nuget`.
+
+### API key
+
+Trusted Publishing only works with nuget.org. For other feeds, or if you can't use Trusted Publishing, use only the reusable workflow (without `push: 'false'`) and pass an API key in the `API_KEY` secret. When pushing to nuget.org with an API key, the workflow emits a warning recommending Trusted Publishing.
+
+## Further configuration
+
+The workflow also takes two optional parameters, `source` and `verbosity`. E.g.:
 
 ```yaml
 jobs:
