@@ -99,7 +99,7 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@f5812343210d12d75de32275b4df3df819288b51 # issue/ADHOC-675
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@bd4e6d3ad936894d42141389da656ced3ce731df # issue/ADHOC-675
 
       - name: Swap Web App Slots
         run: |
