@@ -145,7 +145,7 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_RESET_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@bd4e6d3ad936894d42141389da656ced3ce731df # issue/ADHOC-675
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@39235075a511403888dbc45cadf1ec7e8f23e7c6 # dev
 
       - name: Stop Web App Slot
         run: |
