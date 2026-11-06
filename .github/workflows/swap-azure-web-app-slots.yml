@@ -118,7 +118,7 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_APP_SERVICE_SWAP_AZURE_SUBSCRIPTION_ID }}
 
       - name: Initialize PowerShell modules
-        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@39235075a511403888dbc45cadf1ec7e8f23e7c6 # dev
+        uses: Lombiq/Infrastructure-Scripts/.github/actions/initialize@4f50ec164a1776e84fb39d1fed1bea4403fcfe49 # dev
 
       - name: Test Source Web App Slot
         run: |
