@@ -42,6 +42,8 @@ jobs:
 
       - name: Set up Node.js
         uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+        with:
+          node-version: 24.15.0
 
       - name: Lint Scripts, Styles, and Texts
         uses: Lombiq/GitHub-Actions/.github/actions/asset-lint@dev
